@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Ride Lab - community 3D models, print profiles and guides for electric scooter parts.">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B0B0C'/%3E%3Ctext x='16' y='23' font-family='Arial Narrow,Arial' font-size='20' font-weight='700' font-style='italic' text-anchor='middle' fill='%23F4C430'%3ER%3C/text%3E%3C/svg%3E">
+<style>*{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Ride Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,800&family=Caveat:wght@600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#0B0B0C;
+    --ink-2:#111113;
+    --surface:#161618;
+    --surface-2:#1E1E22;
+    --line:#2B2B31;
+    --line-soft:#212126;
+    --amber:#F4C430;
+    --amber-hi:#FFD65A;
+    --amber-deep:#B98C10;
+    --text:#F3F1EC;
+    --muted:#918D84;
+    --muted-2:#6B675F;
+    --sky-top:#171526;
+    --sky-mid:#4A2E3A;
+    --sky-low:#B8632E;
+    --sun:#F6B23C;
+
+    --display:"Barlow Condensed","Oswald","Arial Narrow",sans-serif;
+    --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+    --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+    --hand:"Caveat","Segoe Script",cursive;
+
+    --wrap:1180px;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:15px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:var(--wrap);
+    margin-inline:auto;
+    padding-inline:20px;
+  }
+
+  a{color:inherit;text-decoration:none}
+
+  :focus-visible{
+    outline:2px solid var(--amber);
+    outline-offset:2px;
+    border-radius:2px;
+  }
+
+  /* ---------- nav ---------- */
+
+  .nav{
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:rgba(11,11,12,.88);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-in{
+    display:flex;
+    align-items:center;
+    gap:26px;
+    padding-block:14px;
+  }
+  .mark{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:24px;
+    letter-spacing:.06em;
+    white-space:nowrap;
+  }
+  .mark em{font-style:normal;color:var(--amber)}
+
+  .nav-links{
+    display:flex;
+    gap:22px;
+    font-size:13.5px;
+    color:var(--muted);
+  }
+  .nav-links a:hover{color:var(--text)}
+
+  .nav-search{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:7px 14px;
+    max-width:300px;
+    margin-left:auto;
+  }
+  .nav-search svg{flex:none;color:var(--muted-2)}
+  .nav-search input{
+    flex:1;
+    min-width:0;
+    background:none;
+    border:0;
+    color:var(--text);
+    font:inherit;
+    font-size:13px;
+    outline:none;
+  }
+  .nav-search input::placeholder{color:var(--muted-2)}
+
+  .nav-auth{display:flex;align-items:center;gap:12px;flex:none}
+  .ghost{font-size:13.5px;color:var(--muted)}
+  .ghost:hover{color:var(--text)}
+  .pill{
+    background:var(--text);
+    color:var(--ink);
+    font-size:13px;
+    font-weight:600;
+    padding:7px 16px;
+    border-radius:999px;
+  }
+  .pill:hover{background:#fff}
+
+  /* ---------- hero ---------- */
+
+  .hero{
+    position:relative;
+    overflow:hidden;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .hero-art{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  .hero-scrim{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(100deg,rgba(11,11,12,.94) 0%,rgba(11,11,12,.78) 38%,rgba(11,11,12,.18) 68%,rgba(11,11,12,.45) 100%);
+  }
+  .hero-in{
+    position:relative;
+    padding-block:96px 84px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:32px;
+    align-items:center;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.22em;
+    color:var(--amber);
+    text-transform:uppercase;
+    margin:0 0 18px;
+  }
+  h1{
+    font-family:var(--display);
+    font-style:italic;
+    font-weight:800;
+    font-size:clamp(44px,7.4vw,92px);
+    line-height:.92;
+    letter-spacing:.005em;
+    margin:0;
+    text-wrap:balance;
+    text-transform:uppercase;
+  }
+  h1 span{color:var(--amber);display:block}
+  .hero-sub{
+    font-family:var(--mono);
+    font-size:12.5px;
+    letter-spacing:.16em;
+    color:var(--muted);
+    text-transform:uppercase;
+    margin:20px 0 30px;
+  }
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--display);
+    font-weight:600;
+    font-size:17px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:12px 26px;
+    border-radius:4px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .15s ease,background .15s ease,border-color .15s ease;
+  }
+  .btn-primary{background:var(--amber);color:#191400}
+  .btn-primary:hover{background:var(--amber-hi);transform:translateY(-1px)}
+  .btn-outline{background:rgba(20,20,22,.6);border-color:var(--line);color:var(--text)}
+  .btn-outline:hover{border-color:var(--muted-2);transform:translateY(-1px)}
+
+  .hand{
+    font-family:var(--hand);
+    font-size:28px;
+    line-height:1.25;
+    color:var(--text);
+    text-align:right;
+    opacity:.92;
+    transform:rotate(-4deg);
+    white-space:nowrap;
+  }
+
+  /* ---------- section chrome ---------- */
+
+  section{padding-block:60px}
+  .sec-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+  h2{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:30px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    margin:0;
+  }
+  .sec-link{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--amber);
+    letter-spacing:.04em;
+  }
+  .sec-link:hover{color:var(--amber-hi)}
+  .sec-note{
+    font-size:13.5px;
+    color:var(--muted);
+    margin:0;
+    max-width:62ch;
+  }
+
+  /* ---------- categories ---------- */
+
+  .cats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:12px;
+  }
+  .cat{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:8px;
+    padding:20px 12px 16px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    cursor:pointer;
+    transition:border-color .15s ease,background .15s ease;
+  }
+  .cat:hover{border-color:var(--amber-deep);background:var(--surface-2)}
+  .cat svg{color:var(--muted);transition:color .15s ease}
+  .cat:hover svg{color:var(--amber)}
+  .cat span{
+    font-family:var(--display);
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+
+  /* ---------- filters ---------- */
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+  .chip{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--muted);
+    background:transparent;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:5px 13px;
+    cursor:pointer;
+    transition:color .15s ease,border-color .15s ease,background .15s ease;
+  }
+  .chip:hover{color:var(--text);border-color:var(--muted-2)}
+  .chip[aria-pressed="true"]{
+    color:#191400;
+    background:var(--amber);
+    border-color:var(--amber);
+  }
+
+  /* ---------- model grid ---------- */
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--surface);
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    transition:border-color .18s ease,transform .18s ease;
+  }
+  .card:hover{border-color:var(--line);transform:translateY(-3px)}
+  .card-art{
+    aspect-ratio:4/3;
+    max-width:100%;
+    background:
+      radial-gradient(120% 90% at 50% 12%,#26262B 0%,#131315 72%);
+    display:grid;
+    place-items:center;
+    border-bottom:1px solid var(--line-soft);
+    position:relative;
+  }
+  .card-art svg{width:64%;height:64%;color:#9C978D}
+  .card:hover .card-art svg{color:#C9C3B7}
+  .card-fmt{
+    position:absolute;
+    top:10px;
+    left:10px;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.1em;
+    color:var(--muted-2);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:2px 6px;
+    background:rgba(11,11,12,.6);
+  }
+  .card-body{padding:13px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .card-name{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:19px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    line-height:1.1;
+  }
+  .card-fit{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--muted-2);
+    letter-spacing:.03em;
+    margin-top:3px;
+  }
+  .like{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    background:none;
+    border:0;
+    cursor:pointer;
+    color:var(--muted);
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-variant-numeric:tabular-nums;
+    padding:2px;
+    flex:none;
+    transition:color .15s ease;
+  }
+  .like:hover{color:var(--amber)}
+  .like[aria-pressed="true"]{color:var(--amber)}
+  .like[aria-pressed="true"] svg{fill:currentColor}
+
+  .specs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 10px;
+    margin-top:auto;
+    padding-top:10px;
+    border-top:1px dashed var(--line-soft);
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--muted-2);
+    letter-spacing:.02em;
+  }
+  .specs b{color:var(--muted);font-weight:500}
+
+  .empty{
+    grid-column:1/-1;
+    padding:40px 0;
+    text-align:center;
+    color:var(--muted-2);
+    font-family:var(--mono);
+    font-size:12.5px;
+  }
+
+  /* ---------- process ---------- */
+
+  .band{background:var(--ink-2);border-block:1px solid var(--line-soft)}
+  .steps{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:26px;
+  }
+  .step{display:flex;flex-direction:column;gap:8px}
+  .step-n{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.16em;
+    color:var(--amber);
+  }
+  .step h3{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:21px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    margin:0;
+    padding-top:8px;
+    border-top:2px solid var(--amber-deep);
+  }
+  .step p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.6}
+
+  /* ---------- stats ---------- */
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    gap:20px;
+  }
+  .stat-v{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:40px;
+    line-height:1;
+    letter-spacing:.02em;
+    font-variant-numeric:tabular-nums;
+  }
+  .stat-l{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--muted-2);
+    margin-top:6px;
+  }
+
+  /* ---------- cta ---------- */
+
+  .cta{
+    background:linear-gradient(102deg,#1B1A16 0%,#131315 62%);
+    border:1px solid var(--line);
+    border-left:3px solid var(--amber);
+    border-radius:10px;
+    padding:30px 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  .cta h2{margin-bottom:6px}
+  .cta p{margin:0;color:var(--muted);font-size:13.5px;max-width:52ch}
+
+  /* ---------- footer ---------- */
+
+  footer{
+    border-top:1px solid var(--line-soft);
+    padding-block:32px 40px;
+    color:var(--muted-2);
+    font-size:13px;
+  }
+  .foot-in{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+  .foot-links{display:flex;gap:18px;flex-wrap:wrap}
+  .foot-links a:hover{color:var(--text)}
+  .foot-note{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width:900px){
+    .nav-links{display:none}
+    .nav-search{max-width:none}
+    .hero-in{grid-template-columns:1fr;padding-block:64px 56px}
+    .hand{display:none}
+  }
+  @media (max-width:560px){
+    .nav-in{flex-wrap:wrap;gap:12px}
+    .nav-search{order:3;width:100%;max-width:none;margin-left:0}
+    .nav-auth{margin-left:auto}
+    .cta{padding:24px 22px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-in">
+    <a href="#" class="mark">RIDE<em>LAB</em></a>
+    <nav class="nav-links">
+      <a href="#models">Models</a>
+      <a href="#categories">Categories</a>
+      <a href="#community">Community</a>
+      <a href="#upload">Upload</a>
+    </nav>
+    <label class="nav-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+      <input id="search" type="search" placeholder="Search models, parts, scooters" autocomplete="off">
+    </label>
+    <div class="nav-auth">
+      <a href="#" class="ghost">Log in</a>
+      <a href="#" class="pill">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <svg class="hero-art" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#171526"/>
+        <stop offset="46%" stop-color="#4A2E3A"/>
+        <stop offset="78%" stop-color="#B8632E"/>
+        <stop offset="100%" stop-color="#E29A45"/>
+      </linearGradient>
+      <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFD07A" stop-opacity=".95"/>
+        <stop offset="100%" stop-color="#FFD07A" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <rect width="1200" height="620" fill="url(#sky)"/>
+    <circle cx="880" cy="418" r="190" fill="url(#glow)"/>
+    <circle cx="880" cy="418" r="46" fill="#F6B23C"/>
+    <path d="M0 372 L142 268 L232 322 L352 214 L468 330 L556 286 L664 366 L664 620 L0 620Z" fill="#2A2333" opacity=".92"/>
+    <path d="M1200 350 L1064 254 L968 318 L868 246 L764 336 L676 300 L560 384 L560 620 L1200 620Z" fill="#31283A" opacity=".92"/>
+    <path d="M0 452 L118 396 L244 442 L370 388 L512 448 L648 402 L790 452 L928 410 L1064 456 L1200 424 L1200 620 L0 620Z" fill="#1C1826"/>
+    <path d="M0 512 L160 486 L340 516 L520 484 L700 518 L880 488 L1060 520 L1200 498 L1200 620 L0 620Z" fill="#121017"/>
+    <g fill="#0C0B10">
+      <path d="M0 566 L1200 548 L1200 620 L0 620Z"/>
+    </g>
+    <g stroke="#0C0B10" stroke-linecap="round" fill="none">
+      <circle cx="742" cy="524" r="33" stroke-width="9"/>
+      <circle cx="968" cy="524" r="33" stroke-width="9"/>
+      <path d="M764 548 L946 548" stroke-width="16"/>
+      <path d="M694 520 a48 48 0 0 1 96 0" stroke-width="9"/>
+      <path d="M946 544 L996 392" stroke-width="13"/>
+      <path d="M996 392 L996 372" stroke-width="10"/>
+      <path d="M962 372 L1036 372" stroke-width="9"/>
+      <path d="M920 522 a48 48 0 0 1 96 0" stroke-width="7" opacity=".55"/>
+    </g>
+  </svg>
+  <div class="hero-scrim"></div>
+  <div class="wrap hero-in">
+    <div>
+      <p class="eyebrow">3D models · guides · community</p>
+      <h1>Ideas today<span>better rides</span>tomorrow</h1>
+      <p class="hero-sub">Printable parts for the scooter you actually ride</p>
+      <div class="hero-cta">
+        <a href="#models" class="btn btn-primary">Explore models</a>
+        <a href="#upload" class="btn btn-outline">Upload model</a>
+      </div>
+    </div>
+    <p class="hand">explore<br>modify<br>print<br>ride</p>
+  </div>
+</div>
+
+<section id="categories" class="wrap">
+  <div class="sec-head">
+    <h2>Browse by part</h2>
+    <p class="sec-note">Every file is tagged with the deck, stem and wheel sizes it was measured against.</p>
+  </div>
+  <div class="cats">
+    <button class="cat" data-cat="Fenders" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 24a12 12 0 0 1 24 0"/><path d="M8 24a8 8 0 0 1 16 0"/><path d="M4 24h3M25 24h3"/></svg>
+      <span>Fenders</span>
+    </button>
+    <button class="cat" data-cat="Decks" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="11" width="26" height="10" rx="3"/><path d="M8 15h1M12 15h1M16 15h1M20 15h1M24 15h1M8 18h1M12 18h1M16 18h1M20 18h1M24 18h1"/></svg>
+      <span>Decks</span>
+    </button>
+    <button class="cat" data-cat="Mounts" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="16" cy="9" r="4"/><path d="M16 13v7"/><path d="M9 20h14v6H9z"/><path d="M12 26v3M20 26v3"/></svg>
+      <span>Mounts</span>
+    </button>
+    <button class="cat" data-cat="Protection" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M16 3l11 4v9c0 7-5 11-11 13C10 27 5 23 5 16V7z"/><path d="M11 16l3.5 3.5L21 13"/></svg>
+      <span>Protection</span>
+    </button>
+    <button class="cat" data-cat="Accessories" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M11 21a5 5 0 1 1 0-10h10a5 5 0 1 1 0 10"/><path d="M13 16h6"/></svg>
+      <span>Accessories</span>
+    </button>
+    <button class="cat" data-cat="All" type="button">
+      <svg width="30" height="30" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="8" cy="16" r="1.6"/><circle cx="16" cy="16" r="1.6"/><circle cx="24" cy="16" r="1.6"/></svg>
+      <span>More</span>
+    </button>
+  </div>
+</section>
+
+<section id="models" class="wrap">
+  <div class="sec-head">
+    <h2>Trending models</h2>
+    <a href="#" class="sec-link">View all →</a>
+  </div>
+  <div class="chips" id="chips">
+    <button class="chip" type="button" data-cat="All" aria-pressed="true">All</button>
+    <button class="chip" type="button" data-cat="Fenders" aria-pressed="false">Fenders</button>
+    <button class="chip" type="button" data-cat="Decks" aria-pressed="false">Decks</button>
+    <button class="chip" type="button" data-cat="Mounts" aria-pressed="false">Mounts</button>
+    <button class="chip" type="button" data-cat="Protection" aria-pressed="false">Protection</button>
+    <button class="chip" type="button" data-cat="Accessories" aria-pressed="false">Accessories</button>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<div class="band">
+  <section class="wrap" id="community">
+    <div class="sec-head"><h2>From file to first ride</h2></div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-n">STEP 01</span>
+        <h3>Find the fit</h3>
+        <p>Filter by your scooter. Each model lists the stem clamp diameter and deck width it was measured on, so you know before you slice.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">STEP 02</span>
+        <h3>Modify</h3>
+        <p>Most uploads ship a parametric STEP file next to the STL. Change a bolt spacing, keep the rest, re-export.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">STEP 03</span>
+        <h3>Print it right</h3>
+        <p>Makers publish the profile that worked: material, layer height, wall count, infill. Start from theirs instead of guessing.</p>
+      </div>
+      <div class="step">
+        <span class="step-n">STEP 04</span>
+        <h3>Report back</h3>
+        <p>Log the print with kilometres ridden. Parts that survive a winter rise; parts that crack get flagged on the file.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section class="wrap">
+  <div class="stats">
+    <div>
+      <div class="stat-v">4,812</div>
+      <div class="stat-l">Models published</div>
+    </div>
+    <div>
+      <div class="stat-v">1,264</div>
+      <div class="stat-l">Makers uploading</div>
+    </div>
+    <div>
+      <div class="stat-v">96k</div>
+      <div class="stat-l">Files downloaded</div>
+    </div>
+    <div>
+      <div class="stat-v">7,390</div>
+      <div class="stat-l">Prints logged</div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="upload">
+  <div class="cta">
+    <div>
+      <h2>Made a part that held up?</h2>
+      <p>Upload the STL, the STEP if you have it, and the print profile that worked. Add the scooter you tested it on — that single field is what makes a file usable to someone else.</p>
+    </div>
+    <a href="#" class="btn btn-primary">Upload a model</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-in">
+    <div>
+      <a href="#" class="mark">RIDE<em>LAB</em></a>
+      <p class="foot-note" style="margin:6px 0 0">Community files · print at your own risk · check local road rules</p>
+    </div>
+    <nav class="foot-links">
+      <a href="#models">Models</a>
+      <a href="#categories">Categories</a>
+      <a href="#community">Guides</a>
+      <a href="#upload">Upload</a>
+      <a href="#">Licence</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var ART = {
+    fender:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M8 66a42 42 0 0 1 84 0"/><path d="M20 66a30 30 0 0 1 60 0"/><path d="M8 66h8M84 66h8"/><path d="M50 24v6M31 31l3 5M69 31l-3 5"/></svg>',
+    deck:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="8" y="26" width="84" height="28" rx="7"/><path d="M20 34h2M28 34h2M36 34h2M44 34h2M52 34h2M60 34h2M68 34h2M76 34h2M20 40h2M28 40h2M36 40h2M44 40h2M52 40h2M60 40h2M68 40h2M76 40h2M20 46h2M28 46h2M36 46h2M44 46h2M52 46h2M60 46h2M68 46h2M76 46h2" stroke-width="3.4" stroke-linecap="round"/></svg>',
+    mount:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><circle cx="50" cy="22" r="11"/><path d="M50 33v9"/><rect x="26" y="42" width="48" height="20" rx="5"/><path d="M36 62v8M64 62v8"/></svg>',
+    shield:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><path d="M50 8l30 10v22c0 18-13 28-30 32-17-4-30-14-30-32V18z"/><path d="M38 40l9 9 17-17"/></svg>',
+    riser:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="36" y="10" width="28" height="60" rx="6"/><circle cx="50" cy="24" r="4"/><circle cx="50" cy="40" r="4"/><circle cx="50" cy="56" r="4"/></svg>',
+    cradle:'<svg viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"><rect x="30" y="8" width="40" height="56" rx="6"/><path d="M22 24h8M22 48h8M70 24h8M70 48h8"/><path d="M44 58h12"/></svg>'
+  };
+
+  var MODELS = [
+    {name:'Mudguard',   cat:'Fenders',     art:'fender', likes:2100, fit:'Ninebot Max G30',  fmt:'STL · STEP', mat:'PETG', layer:'0.20 mm', infill:'35 %', time:'6 h 20'},
+    {name:'Deck Plate', cat:'Decks',       art:'deck',   likes:1300, fit:'Xiaomi M365 / 1S', fmt:'STL',        mat:'ABS',  layer:'0.24 mm', infill:'40 %', time:'9 h 05'},
+    {name:'Light Mount',cat:'Mounts',      art:'mount',  likes:900,  fit:'22.2 mm bar',      fmt:'STL · STEP', mat:'PETG', layer:'0.16 mm', infill:'50 %', time:'2 h 40'},
+    {name:'Brake Cover',cat:'Protection',  art:'shield', likes:610,  fit:'Zoom / Nutt disc', fmt:'STL',        mat:'ASA',  layer:'0.20 mm', infill:'45 %', time:'3 h 15'},
+    {name:'Stem Riser', cat:'Accessories', art:'riser',  likes:445,  fit:'Dualtron Mini',    fmt:'STEP',       mat:'PA-CF',layer:'0.20 mm', infill:'80 %', time:'5 h 50'},
+    {name:'Phone Cradle',cat:'Accessories',art:'cradle', likes:388,  fit:'Bars 22–32 mm',    fmt:'STL · STEP', mat:'TPU',  layer:'0.20 mm', infill:'25 %', time:'4 h 10'}
+  ];
+
+  var grid = document.getElementById('grid');
+  var chips = document.getElementById('chips');
+  var search = document.getElementById('search');
+  var activeCat = 'All';
+
+  function fmtLikes(n){ return n >= 1000 ? (n/1000).toFixed(1).replace('.0','') + 'k' : String(n); }
+
+  function heart(){
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.2-4.5-9.2-8.6C1.1 7.8 3.2 4.5 6.6 4.5c2 0 3.5 1.1 4.4 2.4l1 1.4 1-1.4c.9-1.3 2.4-2.4 4.4-2.4 3.4 0 5.5 3.3 3.8 6.9C19.2 15.5 12 20 12 20z"/></svg>';
+  }
+
+  function render(){
+    var q = (search.value || '').trim().toLowerCase();
+    var list = MODELS.filter(function(m){
+      var byCat = activeCat === 'All' || m.cat === activeCat;
+      var hay = (m.name + ' ' + m.cat + ' ' + m.fit + ' ' + m.mat).toLowerCase();
+      return byCat && (!q || hay.indexOf(q) !== -1);
+    });
+
+    if(!list.length){
+      grid.innerHTML = '<p class="empty">No models match that. Try a scooter name, a part, or a material.</p>';
+      return;
+    }
+
+    grid.innerHTML = list.map(function(m){
+      return '<article class="card">' +
+        '<div class="card-art"><span class="card-fmt">' + m.fmt + '</span>' + ART[m.art] + '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-top">' +
+            '<div><div class="card-name">' + m.name + '</div>' +
+            '<div class="card-fit">fits ' + m.fit + '</div></div>' +
+            '<button class="like" type="button" aria-pressed="false" data-base="' + m.likes + '" aria-label="Like ' + m.name + '">' +
+              heart() + '<span>' + fmtLikes(m.likes) + '</span>' +
+            '</button>' +
+          '</div>' +
+          '<div class="specs">' +
+            '<span><b>' + m.mat + '</b></span>' +
+            '<span>layer <b>' + m.layer + '</b></span>' +
+            '<span>infill <b>' + m.infill + '</b></span>' +
+            '<span>≈<b>' + m.time + '</b></span>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    }).join('');
+  }
+
+  grid.addEventListener('click', function(e){
+    var btn = e.target.closest('.like');
+    if(!btn) return;
+    var on = btn.getAttribute('aria-pressed') === 'true';
+    var base = parseInt(btn.getAttribute('data-base'), 10);
+    btn.setAttribute('aria-pressed', on ? 'false' : 'true');
+    btn.querySelector('span').textContent = fmtLikes(on ? base : base + 1);
+  });
+
+  function setCat(cat){
+    activeCat = cat;
+    Array.prototype.forEach.call(chips.querySelectorAll('.chip'), function(c){
+      c.setAttribute('aria-pressed', c.getAttribute('data-cat') === cat ? 'true' : 'false');
+    });
+    render();
+  }
+
+  chips.addEventListener('click', function(e){
+    var c = e.target.closest('.chip');
+    if(c) setCat(c.getAttribute('data-cat'));
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('.cat'), function(b){
+    b.addEventListener('click', function(){
+      setCat(b.getAttribute('data-cat'));
+      document.getElementById('models').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  search.addEventListener('input', render);
+
+  render();
+})();
+</script>
+</body>
+</html>
