@@ -19,7 +19,15 @@ function createAdminRouter(adminPath) {
     if (!setupToken) { setupToken = randomToken(9); console.log(`\n==============================\n ADMIN SETUP TOKEN: ${setupToken}\n Open ${adminPath} and set the password.\n==============================\n`); }
     return setupToken;
   }
-  ensureSetupToken().catch(() => {});
+  // Password recovery: set env ADMIN_RESET (any value) to clear the admin password
+  // on startup, returning the panel to first-run setup. Remove the variable afterwards.
+  async function maybeReset() {
+    if (process.env.ADMIN_RESET && (await passwordSet())) {
+      await db.setSetting('admin_password', ''); // setSetting also clears the settings cache
+      console.log('\n### ADMIN_RESET active — admin password cleared. Set a new one at ' + adminPath + ', then remove the ADMIN_RESET variable. ###\n');
+    }
+  }
+  maybeReset().then(ensureSetupToken).catch(() => {});
 
   router.use(express.urlencoded({ extended: false, limit: '256kb' }));
   router.use((req, res, next) => { res.setHeader('X-Robots-Tag', 'noindex, nofollow'); res.setHeader('Cache-Control', 'no-store'); next(); });
