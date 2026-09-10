@@ -75,8 +75,8 @@
   }
   function showMsg(form, text, cls) { var m = form.querySelector('[data-msg]'); if (!m) return; m.textContent = text; m.className = 'form-msg ' + (cls || ''); m.hidden = false; }
   var MSG = {
-    pl: { human: 'Zaznacz „Nie jestem robotem”.', fields: 'Uzupełnij wymagane pola.', generic: 'Coś poszło nie tak. Spróbuj ponownie.', rate: 'Za dużo prób. Odczekaj chwilę.' },
-    en: { human: 'Please tick "I\'m not a robot".', fields: 'Please fill in the required fields.', generic: 'Something went wrong. Please try again.', rate: 'Too many attempts. Please wait a moment.' }
+    pl: { human: 'Zaznacz „Nie jestem robotem”.', fields: 'Uzupełnij wymagane pola.', generic: 'Coś poszło nie tak. Spróbuj ponownie.', rate: 'Za dużo prób. Odczekaj chwilę.', location: 'Wskaż miejsce dostawy na mapie.', outside: 'Poza Chełmem — dostawa tylko w granicach miasta.' },
+    en: { human: 'Please tick "I\'m not a robot".', fields: 'Please fill in the required fields.', generic: 'Something went wrong. Please try again.', rate: 'Too many attempts. Please wait a moment.', location: 'Please set the delivery location on the map.', outside: 'Outside Chełm — delivery within the city only.' }
   }[lang];
 
   // ---------- request / contact forms ----------
@@ -148,7 +148,57 @@
     var products = {};
     var addrLabel = form.querySelector('[data-address]');
     function deliveryMethod() { var r = form.querySelector('input[name="delivery_method"]:checked'); return r ? r.value : 'pickup'; }
-    form.querySelectorAll('input[name="delivery_method"]').forEach(function (r) { r.addEventListener('change', function () { addrLabel.hidden = deliveryMethod() !== 'delivery'; addrLabel.querySelector('input').required = !addrLabel.hidden; renderTotals(); }); });
+    form.querySelectorAll('input[name="delivery_method"]').forEach(function (r) { r.addEventListener('change', function () { addrLabel.hidden = deliveryMethod() !== 'delivery'; renderTotals(); }); });
+
+    // ---- delivery map picker (Chełm only) ----
+    var latEl = form.querySelector('[data-lat]'), lngEl = form.querySelector('[data-lng]');
+    var chosenEl = form.querySelector('[data-chosen]'), chosenText = form.querySelector('[data-chosen-text]');
+    var modal = cartPage.querySelector('[data-map-modal]');
+    var mapErr = modal ? modal.querySelector('[data-map-err]') : null;
+    var confirmBtn = modal ? modal.querySelector('[data-map-confirm]') : null;
+    var lmap = null, marker = null, boundary = null, pending = null;
+    function ptIn(lat, lng, ring) {
+      var inside = false;
+      for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        var yi = ring[i][0], xi = ring[i][1], yj = ring[j][0], xj = ring[j][1];
+        if (((xi > lng) !== (xj > lng)) && (lat < (yj - yi) * (lng - xi) / (xj - xi) + yi)) inside = !inside;
+      }
+      return inside;
+    }
+    function pinIcon() { return L.divIcon({ className: 'rl-pin', html: '<svg width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C7 0 1 6 1 14c0 9 14 26 14 26s14-17 14-26C29 6 23 0 15 0z" fill="#F4C430" stroke="#191400" stroke-width="1.5"/><circle cx="15" cy="14" r="5" fill="#191400"/></svg>', iconSize: [30, 40], iconAnchor: [15, 40] }); }
+    function setPending(lat, lng) { pending = { lat: lat, lng: lng }; var ok = boundary && ptIn(lat, lng, boundary.ring); if (mapErr) mapErr.hidden = ok; if (confirmBtn) confirmBtn.disabled = !ok; }
+    function placeMarker(ll) {
+      if (!marker) { marker = L.marker(ll, { icon: pinIcon(), draggable: true }).addTo(lmap); marker.on('dragend', function () { var p = marker.getLatLng(); setPending(p.lat, p.lng); }); }
+      else marker.setLatLng(ll);
+      setPending(ll.lat, ll.lng);
+    }
+    function initMap() {
+      if (lmap || typeof L === 'undefined') return;
+      var bb = boundary.bbox;
+      lmap = L.map(modal.querySelector('[data-map]'), { center: boundary.center, zoom: 13, minZoom: 12, maxBounds: [[bb.minLat - 0.02, bb.minLng - 0.02], [bb.maxLat + 0.02, bb.maxLng + 0.02]], maxBoundsViscosity: 1 });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap', maxZoom: 19 }).addTo(lmap);
+      L.polygon(boundary.ring, { color: '#F4C430', weight: 2, fillColor: '#F4C430', fillOpacity: 0.06 }).addTo(lmap);
+      lmap.on('click', function (e) { placeMarker(e.latlng); });
+      if (latEl.value && lngEl.value) placeMarker({ lat: parseFloat(latEl.value), lng: parseFloat(lngEl.value) });
+    }
+    function openMap() {
+      if (!modal) return;
+      if (typeof L === 'undefined') { showMsg(form, MSG.generic, 'err'); return; }
+      function go() { modal.hidden = false; document.body.style.overflow = 'hidden'; setTimeout(function () { initMap(); if (lmap) lmap.invalidateSize(); }, 40); }
+      if (boundary) go(); else fetch('/static/chelm-boundary.json').then(function (r) { return r.json(); }).then(function (j) { boundary = j; go(); }).catch(function () { showMsg(form, MSG.generic, 'err'); });
+    }
+    function closeMap() { if (modal) { modal.hidden = true; document.body.style.overflow = ''; } }
+    cartPage.querySelectorAll('[data-map-open]').forEach(function (b) { b.addEventListener('click', openMap); });
+    if (modal) { modal.querySelectorAll('[data-map-close]').forEach(function (b) { b.addEventListener('click', closeMap); }); modal.addEventListener('click', function (e) { if (e.target === modal) closeMap(); }); }
+    if (confirmBtn) confirmBtn.addEventListener('click', function () {
+      if (!pending || !(boundary && ptIn(pending.lat, pending.lng, boundary.ring))) return;
+      latEl.value = pending.lat.toFixed(6); lngEl.value = pending.lng.toFixed(6);
+      chosenText.textContent = (lang === 'pl' ? 'Pinezka ustawiona' : 'Pin set') + ' · ' + pending.lat.toFixed(5) + ', ' + pending.lng.toFixed(5);
+      chosenEl.hidden = false;
+      var ob = form.querySelector('.map-pick-btn'); if (ob) ob.hidden = true;
+      var m = form.querySelector('[data-msg]'); if (m) m.hidden = true;
+      closeMap();
+    });
     function renderTotals() {
       var c = readCart(); var sub = 0;
       c.forEach(function (i) { var p = products[i.id]; if (p) sub += p.price_grosze * i.qty; });
@@ -157,23 +207,48 @@
       cartPage.querySelector('[data-delivery]').textContent = money(d);
       cartPage.querySelector('[data-total]').textContent = money(sub + d);
     }
+    var OPTL = { materials: lang === 'pl' ? 'Rodzaj plastiku' : 'Plastic type', colors: lang === 'pl' ? 'Kolor' : 'Colour', finishes: lang === 'pl' ? 'Wykończenie' : 'Finish' };
+    var OPTKEY = { materials: 'material', colors: 'color', finishes: 'finish' };
+    function optsFor(p, listName) { var l = p[listName] || []; return l; }
+    function selectHtml(p, listName, current) {
+      var opts = optsFor(p, listName); if (!opts.length) return '';
+      return '<label class="ci-opt"><span>' + OPTL[listName] + '</span><select data-opt="' + OPTKEY[listName] + '">' +
+        opts.map(function (o) { return '<option' + (o === current ? ' selected' : '') + '>' + esc(o) + '</option>'; }).join('') + '</select></label>';
+    }
     function render() {
       var c = readCart().filter(function (i) { return products[i.id] && products[i.id].active; });
+      // default & validate chosen options against what each product offers
+      c.forEach(function (i) {
+        var p = products[i.id];
+        ['materials', 'colors', 'finishes'].forEach(function (ln) {
+          var key = OPTKEY[ln]; var opts = p[ln] || [];
+          if (opts.length) { if (!i[key] || opts.indexOf(i[key]) < 0) i[key] = opts[0]; }
+          else if (i[key]) { delete i[key]; }
+        });
+      });
       writeCart(c);
       if (!c.length) { itemsEl.innerHTML = ''; emptyEl.hidden = false; side.hidden = true; return; }
       emptyEl.hidden = true; side.hidden = false;
       itemsEl.innerHTML = c.map(function (i) {
         var p = products[i.id]; var nm = (lang === 'en' && p.name_en) ? p.name_en : p.name_pl;
         var sub = p.stock >= i.qty ? (lang === 'pl' ? 'W magazynie' : 'In stock') : (lang === 'pl' ? 'Na zamówienie · ' + p.lead_days + ' dni' : 'Made to order · ' + p.lead_days + ' days');
+        var selects = selectHtml(p, 'materials', i.material) + selectHtml(p, 'colors', i.color) + selectHtml(p, 'finishes', i.finish);
         return '<div class="ci" data-id="' + p.id + '">' +
           (p.cover ? '<img src="/img/' + p.cover + '" alt="">' : '<div></div>') +
-          '<div><div class="ci-name">' + esc(nm) + '</div><div class="ci-sub">' + sub + ' · ' + money(p.price_grosze) + '</div></div>' +
+          '<div class="ci-mid"><div class="ci-name">' + esc(nm) + '</div><div class="ci-sub">' + sub + ' · ' + money(p.price_grosze) + '</div>' +
+          (selects ? '<div class="ci-opts">' + selects + '</div>' : '') + '</div>' +
           '<div class="ci-right"><div class="qty"><button type="button" data-dec aria-label="-">−</button><span>' + i.qty + '</span><button type="button" data-inc aria-label="+">+</button></div>' +
           '<div class="ci-price">' + money(p.price_grosze * i.qty) + '</div><button type="button" class="rm" data-rm>' + (lang === 'pl' ? 'usuń' : 'remove') + '</button></div></div>';
       }).join('');
       renderTotals();
     }
     function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    itemsEl.addEventListener('change', function (e) {
+      var s = e.target.closest('[data-opt]'); if (!s) return;
+      var row = e.target.closest('.ci'); if (!row) return; var id = parseInt(row.getAttribute('data-id'), 10);
+      var c = readCart(); var it = c.find(function (i) { return i.id === id; }); if (!it) return;
+      it[s.getAttribute('data-opt')] = s.value; writeCart(c);
+    });
     itemsEl.addEventListener('click', function (e) {
       var row = e.target.closest('.ci'); if (!row) return; var id = parseInt(row.getAttribute('data-id'), 10);
       var c = readCart(); var it = c.find(function (i) { return i.id === id; }); if (!it) return;
@@ -192,6 +267,7 @@
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var token = humanToken(form); if (!token) return showMsg(form, MSG.human, 'err');
+      if (deliveryMethod() === 'delivery' && (!latEl.value || !lngEl.value)) { showMsg(form, MSG.location, 'err'); openMap(); return; }
       var c = readCart(); if (!c.length) return;
       var data = { lang: lang, human: token, payment: payMode, items: c };
       form.querySelectorAll('input[name],textarea[name]').forEach(function (i) { if (i.type === 'radio') { if (i.checked) data[i.name] = i.value; } else data[i.name] = i.value; });
@@ -200,7 +276,9 @@
         .then(function (r) { return r.json().then(function (j) { return { s: r.status, j: j }; }); })
         .then(function (x) {
           if (x.s === 200 && x.j.redirect) { writeCart([]); location.href = x.j.redirect; return; }
-          showMsg(form, x.s === 429 ? MSG.rate : (x.j.error === 'human' ? MSG.human : x.j.error === 'fields' ? MSG.fields : MSG.generic), 'err');
+          var em = x.j.error;
+          var msg = x.s === 429 ? MSG.rate : em === 'human' ? MSG.human : em === 'fields' ? MSG.fields : em === 'location' ? MSG.location : em === 'outside' ? MSG.outside : MSG.generic;
+          showMsg(form, msg, 'err');
           form.querySelectorAll('button').forEach(function (b) { b.disabled = false; });
         }).catch(function () { showMsg(form, MSG.generic, 'err'); form.querySelectorAll('button').forEach(function (b) { b.disabled = false; }); });
     });

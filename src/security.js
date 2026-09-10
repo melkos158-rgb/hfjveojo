@@ -134,8 +134,8 @@ function securityHeaders(req, res, next) {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
   if (isSecure(req)) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   res.setHeader('Content-Security-Policy',
-    "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; " +
-    "script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com https://checkout.stripe.com; connect-src 'self'; form-action 'self' https://checkout.stripe.com; base-uri 'self'; object-src 'none'");
+    "default-src 'self'; img-src 'self' data: blob: https://*.tile.openstreetmap.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com; " +
+    "script-src 'self' https://challenges.cloudflare.com https://cdnjs.cloudflare.com; frame-src https://challenges.cloudflare.com https://checkout.stripe.com; connect-src 'self'; form-action 'self' https://checkout.stripe.com; base-uri 'self'; object-src 'none'");
   next();
 }
 

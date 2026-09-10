@@ -10,13 +10,13 @@ function layout(a, o) {
 <title>${esc(o.title)} · Ride Lab panel</title><meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="/static/admin.css?v=3"></head>
+<link rel="stylesheet" href="/static/admin.css?v=4"></head>
 <body class="admin">
 ${o.bare ? '' : `<header class="a-top"><a class="mark" href="${P}">RIDE<em>LAB</em> <small>panel</small></a>
 <nav>${nav.map(([h, l]) => `<a href="${P}${h}"${o.section === (h || '/') ? ' aria-current="page"' : ''}>${l}</a>`).join('')}</nav>
 <div class="a-top-right"><a href="/pl/" target="_blank" rel="noopener">Sklep ↗</a><form method="post" action="${P}/logout"><input type="hidden" name="_csrf" value="${esc(a.csrf || '')}"><button class="link" type="submit">Wyloguj</button></form></div></header>`}
 <main class="a-main">${o.flash ? `<div class="flash ${o.flash.type || 'ok'}">${esc(o.flash.text)}</div>` : ''}${o.body}</main>
-<script src="/static/admin.js?v=3" defer></script></body></html>`;
+<script src="/static/admin.js?v=4" defer></script></body></html>`;
 }
 
 const csrf = (a) => `<input type="hidden" name="_csrf" value="${esc(a.csrf)}">`;
@@ -138,7 +138,10 @@ ${csrf(a)}
   </div>
   <h2>Specyfikacja</h2>
   <label>Pasuje do (modele, po przecinku)<input name="fits" value="${esc((p.fits || []).join(', '))}" placeholder="Kukirin G4 2025, Kukirin G4"></label>
-  <div class="row2"><label>Materiał<input name="material" value="${v('material')}" placeholder="PETG"></label><label>Kolor<input name="color" value="${v('color')}" placeholder="Czarny mat"></label></div>
+  <p class="muted" style="margin:2px 0 -4px">Poniżej wpisz opcje po przecinku — klient wybierze je w koszyku, a w ogłoszeniu pokażą się jako dostępne.</p>
+  <label>Rodzaje plastiku — dostępne (po przecinku)<input name="materials" value="${esc((p.materials && p.materials.length ? p.materials : (p.material ? [p.material] : [])).join(', '))}" placeholder="PETG, ASA"></label>
+  <label>Kolory — dostępne (po przecinku)<input name="colors" value="${esc((p.colors && p.colors.length ? p.colors : (p.color ? [p.color] : [])).join(', '))}" placeholder="Czarny, Biały, Szary"></label>
+  <label>Wykończenie — opcje (po przecinku, opcjonalnie)<input name="finishes" value="${esc((p.finishes || []).join(', '))}" placeholder="Surowy, Polerowany"></label>
 </section>
 <section class="panel">
   <h2>Zdjęcia</h2>
@@ -185,12 +188,12 @@ function orderDetail(a, { o }) {
 <div class="two-col">
 <section class="panel"><h2>Klient</h2>
 <dl class="dl"><dt>Imię</dt><dd>${esc(o.customer_name)}</dd><dt>Telefon</dt><dd><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></dd><dt>E-mail</dt><dd>${esc(o.email || '—')}</dd>
-<dt>Odbiór</dt><dd>${o.delivery_method === 'delivery' ? 'Dostawa: ' + esc(o.address) : 'Odbiór osobisty'}</dd><dt>Uwagi</dt><dd>${esc(o.note || '—')}</dd>
+<dt>Odbiór</dt><dd>${o.delivery_method === 'delivery' ? 'Dostawa: ' + esc(o.address || '—') + (o.lat && o.lng ? ` · <a href="https://www.google.com/maps/search/?api=1&query=${o.lat},${o.lng}" target="_blank" rel="noopener">mapa →</a>` : '') : 'Odbiór osobisty'}</dd><dt>Uwagi</dt><dd>${esc(o.note || '—')}</dd>
 <dt>Płatność</dt><dd>${o.payment === 'stripe' ? 'Stripe online' + (o.paid_at ? ' — opłacone ' + esc(fmtDate(o.paid_at, 'pl')) : ' — <b class="warn-t">nieopłacone</b>') : 'Przy odbiorze'}</dd>
 <dt>Język</dt><dd>${o.lang}</dd><dt>Złożone</dt><dd>${esc(fmtDate(o.created_at, 'pl'))}</dd></dl>
 </section>
 <section class="panel"><h2>Pozycje</h2>
-<table class="tbl"><tbody>${(o.items || []).map((i) => `<tr><td>${esc(i.name_pl)}</td><td>× ${i.qty}</td><td>${money(i.price_grosze * i.qty, 'pl')}</td></tr>`).join('')}
+<table class="tbl"><tbody>${(o.items || []).map((i) => { const opts = [i.material, i.color, i.finish].filter(Boolean).join(' · '); return `<tr><td>${esc(i.name_pl)}${opts ? `<br><span class="muted">${esc(opts)}</span>` : ''}</td><td>× ${i.qty}</td><td>${money(i.price_grosze * i.qty, 'pl')}</td></tr>`; }).join('')}
 <tr><td>Dostawa</td><td></td><td>${money(o.delivery_grosze, 'pl')}</td></tr><tr class="total"><td><b>Razem</b></td><td></td><td><b>${money(o.total_grosze, 'pl')}</b></td></tr></tbody></table>
 <h2 style="margin-top:20px">Zmień status</h2>
 <div class="btn-row">${btn('paid', 'Opłacone')}${btn('fulfilled', 'Wydane klientowi')}${btn('new', 'Nowe', 'ghost')}${btn('cancelled', 'Anuluj', 'ghost danger')}</div>

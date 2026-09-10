@@ -113,18 +113,20 @@ function createAdminRouter(adminPath) {
     const b = req.body;
     const price = parsePrice(b.price); const compare = parsePrice(b.compare);
     const name_pl = String(b.name_pl || '').trim();
-    const draft = { ...b, id, price_grosze: price, compare_grosze: compare, stock: clampInt(b.stock, 0, 100000, 0), lead_days: clampInt(b.lead_days, 0, 365, 2), weight_g: b.weight_g ? clampInt(b.weight_g, 0, 100000, null) : null, fits: String(b.fits || '').split(',').map((s) => s.trim()).filter(Boolean), active: !!b.active, images: [] };
+    const list = (s) => String(s || '').split(',').map((x) => x.trim()).filter(Boolean).slice(0, 30);
+    const materials = list(b.materials); const colors = list(b.colors); const finishes = list(b.finishes);
+    const draft = { ...b, id, price_grosze: price, compare_grosze: compare, stock: clampInt(b.stock, 0, 100000, 0), lead_days: clampInt(b.lead_days, 0, 365, 2), weight_g: b.weight_g ? clampInt(b.weight_g, 0, 100000, null) : null, fits: list(b.fits), materials, colors, finishes, active: !!b.active, images: [] };
     if (!name_pl || price == null) return res.status(400).send(A.productForm(req.a, { p: draft, isNew: !id, error: 'Nazwa (PL) i cena są wymagane.' }));
     let slug = slugify(b.slug || b.name_en || name_pl);
     const clash = await db.one('SELECT id FROM products WHERE slug=$1 AND id <> $2', [slug, id || 0]);
     if (clash) slug += '-' + randomToken(3).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 4);
-    const vals = [slug, name_pl, String(b.name_en || '').trim(), String(b.tagline_pl || '').trim(), String(b.tagline_en || '').trim(), price, compare, draft.stock, draft.lead_days, draft.active, draft.fits, String(b.material || '').trim(), String(b.color || '').trim(), draft.weight_g, b.desc_pl || '', b.desc_en || '', b.install_pl || '', b.install_en || '', b.print_pl || '', b.print_en || ''];
+    const vals = [slug, name_pl, String(b.name_en || '').trim(), String(b.tagline_pl || '').trim(), String(b.tagline_en || '').trim(), price, compare, draft.stock, draft.lead_days, draft.active, draft.fits, materials[0] || '', colors[0] || '', draft.weight_g, b.desc_pl || '', b.desc_en || '', b.install_pl || '', b.install_en || '', b.print_pl || '', b.print_en || '', materials, colors, finishes];
     let pid = id;
     if (id) {
-      await db.q(`UPDATE products SET slug=$1,name_pl=$2,name_en=$3,tagline_pl=$4,tagline_en=$5,price_grosze=$6,compare_grosze=$7,stock=$8,lead_days=$9,active=$10,fits=$11,material=$12,color=$13,weight_g=$14,desc_pl=$15,desc_en=$16,install_pl=$17,install_en=$18,print_pl=$19,print_en=$20,updated_at=now() WHERE id=$21`, [...vals, id]);
+      await db.q(`UPDATE products SET slug=$1,name_pl=$2,name_en=$3,tagline_pl=$4,tagline_en=$5,price_grosze=$6,compare_grosze=$7,stock=$8,lead_days=$9,active=$10,fits=$11,material=$12,color=$13,weight_g=$14,desc_pl=$15,desc_en=$16,install_pl=$17,install_en=$18,print_pl=$19,print_en=$20,materials=$21,colors=$22,finishes=$23,updated_at=now() WHERE id=$24`, [...vals, id]);
     } else {
-      const r = await db.one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en)
-        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20) RETURNING id`, vals);
+      const r = await db.one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en,materials,colors,finishes)
+        VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23) RETURNING id`, vals);
       pid = r.id;
     }
     // images: removals, order, new uploads
@@ -154,9 +156,9 @@ function createAdminRouter(adminPath) {
     const p = await db.productById(req.params.id);
     if (!p) return res.redirect(adminPath + '/products');
     const slug = p.slug + '-kopia-' + randomToken(3).toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 4);
-    const r = await db.one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en)
-      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,false,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19) RETURNING id`,
-      [slug, p.name_pl + ' (kopia)', p.name_en ? p.name_en + ' (copy)' : '', p.tagline_pl, p.tagline_en, p.price_grosze, p.compare_grosze, p.stock, p.lead_days, p.fits, p.material, p.color, p.weight_g, p.desc_pl, p.desc_en, p.install_pl, p.install_en, p.print_pl, p.print_en]);
+    const r = await db.one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en,materials,colors,finishes)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,false,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22) RETURNING id`,
+      [slug, p.name_pl + ' (kopia)', p.name_en ? p.name_en + ' (copy)' : '', p.tagline_pl, p.tagline_en, p.price_grosze, p.compare_grosze, p.stock, p.lead_days, p.fits, p.material, p.color, p.weight_g, p.desc_pl, p.desc_en, p.install_pl, p.install_en, p.print_pl, p.print_en, p.materials || [], p.colors || [], p.finishes || []]);
     let sort = 0;
     for (const iid of p.images) {
       const im = await db.one('SELECT mime, bytes FROM images WHERE id=$1', [iid]);

@@ -15,7 +15,7 @@ async function createCheckoutSession(order, siteUrl) {
     quantity: i.qty,
     price_data: {
       currency: 'pln', unit_amount: i.price_grosze,
-      product_data: { name: lang === 'en' && i.name_en ? i.name_en : i.name_pl, images: i.image ? [siteUrl + '/img/' + i.image] : undefined },
+      product_data: { name: (lang === 'en' && i.name_en ? i.name_en : i.name_pl) + ([i.material, i.color, i.finish].filter(Boolean).length ? ' (' + [i.material, i.color, i.finish].filter(Boolean).join(', ') + ')' : ''), images: i.image ? [siteUrl + '/img/' + i.image] : undefined },
     },
   }));
   if (order.delivery_grosze > 0) {

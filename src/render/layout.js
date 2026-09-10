@@ -57,7 +57,7 @@ ${ogImg ? `<meta property="og:image" content="${esc(ogImg)}"><meta name="twitter
 <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
-<link rel="stylesheet" href="/static/site.css?v=3">
+<link rel="stylesheet" href="/static/site.css?v=4">
 ${jsonld}
 </head>
 <body data-lang="${lang}"${o.bodyClass ? ` class="${o.bodyClass}"` : ''}>
@@ -106,7 +106,7 @@ ${o.body}
   <div class="wrap foot-bottom"><span>© ${year} ${esc(settings.shop_name)} · Chełm. ${L('footer_rights')}</span></div>
 </footer>
 ${wa ? `<a class="wa-float" href="${wa}" rel="noopener" target="_blank" aria-label="WhatsApp">${icon('wa')}</a>` : ''}
-<script src="/static/site.js?v=3" defer></script>
+<script src="/static/site.js?v=4" defer></script>
 ${o.extraScripts || ''}
 </body>
 </html>`;

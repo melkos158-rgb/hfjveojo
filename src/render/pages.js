@@ -198,10 +198,14 @@ function product(ctx, { p, similar, settings }) {
     ${p.images.length > 1 ? `<div class="thumbs">${p.images.map((id, i) => `<button type="button" class="${i === 0 ? 'on' : ''}" data-thumb="${img(id)}" aria-label="Photo ${i + 1}"><img src="${img(id)}" alt="" loading="lazy" width="200" height="150"></button>`).join('')}</div>` : ''}
   </div>` : `<div class="gallery"><div class="gallery-main noimg">${icon('print')}</div></div>`;
 
+  const materials = (p.materials && p.materials.length) ? p.materials : (p.material ? [p.material] : []);
+  const colors = (p.colors && p.colors.length) ? p.colors : (p.color ? [p.color] : []);
+  const finishes = (p.finishes && p.finishes.length) ? p.finishes : [];
   const spec = [
     p.fits && p.fits.length ? [L('fits'), p.fits.join(', ')] : null,
-    p.material ? [L('spec_material'), p.material] : null,
-    p.color ? [L('spec_color'), p.color] : null,
+    materials.length ? [L('spec_material'), materials.join(', ')] : null,
+    colors.length ? [L('spec_color'), colors.join(', ')] : null,
+    finishes.length ? [L('spec_finish'), finishes.join(', ')] : null,
     p.weight_g ? [L('spec_weight'), p.weight_g + ' g'] : null,
     [L('spec_lead'), p.stock > 0 ? L('in_stock') : `${p.lead_days} ${L('days')}`],
     [L('spec_warranty'), L('warranty_val')],
@@ -259,8 +263,19 @@ ${similar.length ? `<section class="wrap sec"><div class="sec-head"><h2>${L('sim
 function cart(ctx, { settings, stripeEnabled }) {
   const { lang } = ctx; const L = (k, v) => t(lang, k, v);
   const dprice = money(settings.delivery_grosze, lang);
-  return `<section class="wrap sec cart" data-cart-page data-delivery-grosze="${settings.delivery_grosze}" data-lang="${lang}" data-shop-url="${url(lang, 'shop')}" data-order-url="${url(lang, 'order')}">
+  return `<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<section class="wrap sec cart" data-cart-page data-delivery-grosze="${settings.delivery_grosze}" data-lang="${lang}" data-shop-url="${url(lang, 'shop')}" data-order-url="${url(lang, 'order')}">
   <h1>${L('cart_title')}</h1>
+  <div class="map-modal" data-map-modal hidden>
+    <div class="map-card">
+      <div class="map-head"><b>${L('map_pick')}</b><button type="button" class="map-x" data-map-close aria-label="${L('map_close')}">×</button></div>
+      <p class="map-hint">${L('map_hint')}</p>
+      <div class="map-canvas" data-map></div>
+      <p class="map-err" data-map-err hidden>${L('map_outside')}</p>
+      <div class="map-actions"><button type="button" class="btn btn-outline btn-sm" data-map-close>${L('map_close')}</button><button type="button" class="btn btn-primary btn-sm" data-map-confirm disabled>${L('map_confirm')}</button></div>
+    </div>
+  </div>
   <div class="cart-grid">
     <div>
       <div data-cart-items class="cart-items"></div>
@@ -281,7 +296,13 @@ function cart(ctx, { settings, stripeEnabled }) {
           <label class="radio"><input type="radio" name="delivery_method" value="pickup" checked><span>${L('d_pickup')}</span></label>
           <label class="radio"><input type="radio" name="delivery_method" value="delivery"><span>${L('d_delivery', { price: dprice })}</span></label>
         </fieldset>
-        <label data-address hidden>${L('f_address')}<input name="address" maxlength="200" autocomplete="street-address"></label>
+        <div class="deliv-box" data-address hidden>
+          <input type="hidden" name="lat" data-lat>
+          <input type="hidden" name="lng" data-lng>
+          <button type="button" class="btn btn-outline btn-block map-pick-btn" data-map-open>${icon('pin')} <span>${L('map_pick')}</span></button>
+          <div class="deliv-chosen" data-chosen hidden>${icon('pin')}<div><b>${L('map_chosen')}</b><span data-chosen-text></span></div><button type="button" class="linklike" data-map-open>${L('map_change')}</button></div>
+          <label>${L('map_details')}<input name="address" maxlength="200" autocomplete="street-address"></label>
+        </div>
         <label>${L('f_note')}<textarea name="note" rows="2" maxlength="800"></textarea></label>
         ${botBox(ctx)}
         <div class="pay-buttons">
@@ -311,7 +332,7 @@ function orderPage(ctx, { order, settings, verifying }) {
   <div class="order-box">
     <h2>${L('order_items')}</h2>
     <table class="order-table"><tbody>
-      ${items.map((i) => `<tr><td>${esc(lang === 'en' && i.name_en ? i.name_en : i.name_pl)} × ${i.qty}</td><td>${money(i.price_grosze * i.qty, lang)}</td></tr>`).join('')}
+      ${items.map((i) => { const opts = [i.material, i.color, i.finish].filter(Boolean).join(' · '); return `<tr><td>${esc(lang === 'en' && i.name_en ? i.name_en : i.name_pl)} × ${i.qty}${opts ? `<br><span class="muted" style="font-size:12px">${esc(opts)}</span>` : ''}</td><td>${money(i.price_grosze * i.qty, lang)}</td></tr>`; }).join('')}
       <tr><td>${L('delivery')}</td><td>${money(order.delivery_grosze, lang)}</td></tr>
       <tr class="total"><td>${L('total')}</td><td>${money(order.total_grosze, lang)}</td></tr>
     </tbody></table>
@@ -320,7 +341,7 @@ function orderPage(ctx, { order, settings, verifying }) {
   <div class="order-box">
     <h2>${L('order_next')}</h2>
     <p>${L('order_next_text', { n: lead })}</p>
-    ${order.delivery_method === 'delivery' ? `<p><b>${L('order_delivery_to')}:</b> ${esc(order.address)}</p>` : `<p><b>${L('order_pickup_at')}:</b> ${esc(settings.address)}<br><span class="muted">${esc(settings.hours)}</span></p>`}
+    ${order.delivery_method === 'delivery' ? `<p><b>${L('order_delivery_to')}:</b> ${esc(order.address)}${order.lat && order.lng ? ` · <a href="https://www.google.com/maps/search/?api=1&query=${order.lat},${order.lng}" target="_blank" rel="noopener">${L('contact_map')} →</a>` : ''}</p>` : `<p><b>${L('order_pickup_at')}:</b> ${esc(settings.address)}<br><span class="muted">${esc(settings.hours)}</span></p>`}
     <p><b>${L('contact_phone')}:</b> <a href="tel:${esc(settings.phone.replace(/\s/g, ''))}">${esc(settings.phone)}</a></p>
   </div>
 </section>`;

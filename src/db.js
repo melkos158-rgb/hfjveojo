@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS products (
   price_grosze int NOT NULL DEFAULT 0, compare_grosze int,
   stock int NOT NULL DEFAULT 0, lead_days int NOT NULL DEFAULT 2, active boolean NOT NULL DEFAULT true,
   fits text[] NOT NULL DEFAULT '{}', material text NOT NULL DEFAULT '', color text NOT NULL DEFAULT '', weight_g int,
+  materials text[] NOT NULL DEFAULT '{}', colors text[] NOT NULL DEFAULT '{}', finishes text[] NOT NULL DEFAULT '{}',
   desc_pl text NOT NULL DEFAULT '', desc_en text NOT NULL DEFAULT '',
   install_pl text NOT NULL DEFAULT '', install_en text NOT NULL DEFAULT '',
   print_pl text NOT NULL DEFAULT '', print_en text NOT NULL DEFAULT '',
@@ -66,6 +67,12 @@ CREATE SEQUENCE IF NOT EXISTS order_seq;
 CREATE INDEX IF NOT EXISTS pageviews_day ON pageviews(day);
 CREATE INDEX IF NOT EXISTS orders_created ON orders(created_at);
 CREATE INDEX IF NOT EXISTS products_active ON products(active);
+-- additive columns for existing databases
+ALTER TABLE products ADD COLUMN IF NOT EXISTS materials text[] NOT NULL DEFAULT '{}';
+ALTER TABLE products ADD COLUMN IF NOT EXISTS colors text[] NOT NULL DEFAULT '{}';
+ALTER TABLE products ADD COLUMN IF NOT EXISTS finishes text[] NOT NULL DEFAULT '{}';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS lat double precision;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS lng double precision;
 `;
 
 // ---------- settings (cached) ----------
@@ -125,6 +132,7 @@ async function seedIfEmpty() {
     tagline_pl: 'Mocniejszy. Czystszy. Więcej ochrony.', tagline_en: 'Stronger. Cleaner. More protection.',
     price_grosze: 5900, compare_grosze: null, stock: 3, lead_days: 2, active: true,
     fits: ['Kukirin G4 2025', 'Kukirin G4'], material: 'PETG', color: 'Czarny mat / Matte black', weight_g: 180,
+    materials: ['PETG', 'ASA'], colors: ['Czarny / Black', 'Biały / White', 'Szary / Grey'], finishes: ['Surowy / Raw', 'Polerowany / Polished'],
     desc_pl: `Tylny błotnik zaprojektowany specjalnie pod Kukirin G4 2025. Zakrywa więcej koła niż fabryczny, więc mniej wody i błota trafia na plecy i na hamulec.
 
 - Dokładne dopasowanie do ramy G4 2025 — bez luzów i wibracji
@@ -164,9 +172,9 @@ Every fender is cleaned of supports after printing and checked on a test frame.
 
 Replacement: if the part cracks within 30 days of normal riding, we print a new one, no questions asked.`,
   };
-  const r = await one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en)
-    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20) RETURNING id`,
-    [sample.slug, sample.name_pl, sample.name_en, sample.tagline_pl, sample.tagline_en, sample.price_grosze, sample.compare_grosze, sample.stock, sample.lead_days, sample.active, sample.fits, sample.material, sample.color, sample.weight_g, sample.desc_pl, sample.desc_en, sample.install_pl, sample.install_en, sample.print_pl, sample.print_en]);
+  const r = await one(`INSERT INTO products(slug,name_pl,name_en,tagline_pl,tagline_en,price_grosze,compare_grosze,stock,lead_days,active,fits,material,color,weight_g,desc_pl,desc_en,install_pl,install_en,print_pl,print_en,materials,colors,finishes)
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23) RETURNING id`,
+    [sample.slug, sample.name_pl, sample.name_en, sample.tagline_pl, sample.tagline_en, sample.price_grosze, sample.compare_grosze, sample.stock, sample.lead_days, sample.active, sample.fits, sample.material, sample.color, sample.weight_g, sample.desc_pl, sample.desc_en, sample.install_pl, sample.install_en, sample.print_pl, sample.print_en, sample.materials, sample.colors, sample.finishes]);
   let sort = 0;
   for (const f of ['fender-1.jpg', 'fender-2.jpg', 'fender-3.jpg', 'fender-4.jpg']) {
     const buf = readImg(f);
