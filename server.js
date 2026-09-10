@@ -1,61 +1,51 @@
-// Minimal zero-dependency static server for Railway.
-// Serves the files in this folder; unknown paths fall back to index.html.
-
-const http = require('http');
-const fs = require('fs');
+'use strict';
+// Ride Lab — shop for ready-made 3D-printed e-scooter parts (Chełm, PL). See PLAN.md.
 const path = require('path');
+const express = require('express');
+const db = require('./src/db');
+const { securityHeaders } = require('./src/security');
+const publicRoutes = require('./src/routes/public');
+const apiRoutes = require('./src/routes/api');
+const { createAdminRouter } = require('./src/routes/admin');
 
 const PORT = process.env.PORT || 3000;
-const ROOT = __dirname;
+let ADMIN_PATH = process.env.ADMIN_PATH || '/admin';
+if (!ADMIN_PATH.startsWith('/')) ADMIN_PATH = '/' + ADMIN_PATH;
+ADMIN_PATH = ADMIN_PATH.replace(/\/+$/, '');
 
-const TYPES = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2',
-  '.txt': 'text/plain; charset=utf-8'
-};
+async function main() {
+  await db.migrate();
+  if (process.env.SITE_URL) await db.setSetting('site_url', process.env.SITE_URL.replace(/\/$/, ''));
 
-function send(res, status, body, type) {
-  res.writeHead(status, {
-    'Content-Type': type || 'text/plain; charset=utf-8',
-    'X-Content-Type-Options': 'nosniff'
+  const app = express();
+  app.set('trust proxy', 1);
+  app.disable('x-powered-by');
+  app.use(securityHeaders);
+
+  app.get('/healthz', (req, res) => res.type('text/plain').send('ok'));
+  app.use('/static', express.static(path.join(__dirname, 'public'), { maxAge: '7d', etag: true }));
+
+  // Stripe webhook needs the raw body, so it is mounted before any JSON parser.
+  app.post('/api/stripe/webhook', express.raw({ type: 'application/json', limit: '1mb' }), apiRoutes.webhook);
+  app.use('/api', apiRoutes);
+  app.use(ADMIN_PATH, createAdminRouter(ADMIN_PATH));
+  app.use(publicRoutes);
+
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
+    console.error(err);
+    if (res.headersSent) return;
+    if (req.path.startsWith('/api/')) return res.status(500).json({ error: 'server' });
+    res.status(500).type('text/plain').send('Server error');
   });
-  res.end(body);
+
+  // keep analytics table small
+  const cleanup = () => db.q("DELETE FROM pageviews WHERE day < (now() - interval '90 days')::date").catch(() => {});
+  setInterval(cleanup, 24 * 3600 * 1000).unref(); cleanup();
+
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`ride-lab listening on ${PORT} — admin at ${ADMIN_PATH}${ADMIN_PATH === '/admin' ? ' (set ADMIN_PATH to hide it)' : ''}`);
+  });
 }
 
-const server = http.createServer((req, res) => {
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
-    return send(res, 405, 'Method not allowed');
-  }
-
-  if (req.url === '/healthz') return send(res, 200, 'ok');
-
-  const url = decodeURIComponent(req.url.split('?')[0]);
-  const rel = url === '/' ? 'index.html' : url.replace(/^\/+/, '');
-  const target = path.resolve(ROOT, rel);
-
-  // Never serve outside the project folder.
-  if (!target.startsWith(ROOT)) return send(res, 403, 'Forbidden');
-
-  fs.readFile(target, (err, buf) => {
-    if (err) {
-      return fs.readFile(path.join(ROOT, 'index.html'), (e2, fallback) => {
-        if (e2) return send(res, 404, 'Not found');
-        send(res, 200, fallback, TYPES['.html']);
-      });
-    }
-    const type = TYPES[path.extname(target).toLowerCase()] || 'application/octet-stream';
-    send(res, 200, buf, type);
-  });
-});
-
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`ride-lab listening on ${PORT}`);
-});
+main().catch((e) => { console.error('Fatal:', e); process.exit(1); });

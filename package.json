@@ -2,13 +2,20 @@
   "name": "ride-lab",
   "version": "1.0.0",
   "private": true,
-  "description": "Ride Lab — community 3D models and print profiles for electric scooter parts.",
+  "description": "Ride Lab — shop for ready-made 3D-printed e-scooter parts (Chełm, PL). Express + PostgreSQL + Stripe.",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.22.2",
+    "multer": "^2.3.0",
+    "pg": "^8.23.0",
+    "stripe": "^17.7.0"
+  }
 }

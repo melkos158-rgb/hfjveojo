@@ -1,36 +1,49 @@
 # Ride Lab
 
-Community platform for 3D-printable electric scooter parts — models, print profiles and guides.
+Sklep z gotowymi, drukowanymi w 3D częściami do hulajnóg elektrycznych. Chełm, Polska.
+Shop for ready-made 3D-printed e-scooter parts. Chełm, Poland.
 
-Static single-page site served by a zero-dependency Node server, ready to deploy on Railway.
+Pełna specyfikacja: [PLAN.md](PLAN.md).
 
-## Files
+## Stack
 
-| File | What it is |
-| --- | --- |
-| `index.html` | The whole site — markup, styles and script inlined, no build step |
-| `server.js` | Static file server, no npm dependencies |
-| `package.json` | `npm start` → `node server.js` |
-| `railway.json` | Railway build/deploy config, health check on `/healthz` |
+Node 20+ · Express · PostgreSQL · Stripe Checkout · zero build step. Zdjęcia w bazie (`bytea`), strony renderowane po stronie serwera (PL + EN), panel admina pod ukrytym adresem.
 
-## Run locally
+## Uruchomienie lokalne
 
 ```bash
+npm install
+export DATABASE_URL=postgres://postgres@localhost:5432/ridelab
+export ADMIN_PATH=/panel-lokalny
 npm start
-# http://localhost:3000
+# http://localhost:3000  →  /pl/  |  /en/  |  /panel-lokalny
 ```
 
-Node 18 or newer. Nothing to install — there are no dependencies.
+Przy pierwszym starcie tworzą się tabele, przykładowy produkt i zdjęcia na stronę główną. W logu pojawia się `ADMIN SETUP TOKEN` — potrzebny do ustawienia hasła w panelu.
 
-## Deploy on Railway
+## Zmienne środowiskowe (Railway → Variables)
 
-1. Push this folder to GitHub.
-2. In Railway: **New Project → Deploy from GitHub repo** → pick this repo.
-3. Nixpacks detects `package.json` and runs `npm start`. No variables needed — Railway supplies `PORT`.
-4. **Settings → Networking → Generate Domain** for a public URL.
+| Zmienna | Wymagana | Opis |
+| --- | --- | --- |
+| `DATABASE_URL` | tak | `${{Postgres.DATABASE_URL}}` — referencja do serwisu PostgreSQL |
+| `ADMIN_PATH` | tak | ukryty adres panelu, np. `/panel-x7k2m9` |
+| `SITE_URL` | tak | publiczny adres, np. `https://twojadomena.pl` (sitemap, Stripe redirect) |
+| `STRIPE_SECRET_KEY` | do płatności online | `sk_live_…` z Stripe → Developers → API keys. Bez klucza działa tylko płatność przy odbiorze |
+| `STRIPE_WEBHOOK_SECRET` | nie | opcjonalny webhook `checkout.session.completed` na `/api/stripe/webhook` |
+| `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET` | nie | Cloudflare Turnstile zamiast wbudowanego testu „nie jestem robotem” |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | nie | powiadomienia o zamówieniach (można też ustawić w panelu) |
 
-## Design notes
+## Struktura
 
-Dark ground with a single amber accent (`#F4C430`). Barlow Condensed italic for display, IBM Plex Sans for body, IBM Plex Mono for specs and labels, Caveat for the hero annotation. The hero landscape and every part illustration are inline SVG, so the page ships as one file with no image requests.
-
-Model cards carry the fields that make a printable part actually usable: material, layer height, infill, print time, and the scooter the part was measured against.
+```
+server.js            start, routing, nagłówki bezpieczeństwa
+src/db.js            PostgreSQL, migracje, seed
+src/i18n.js          słowniki PL/EN, mapa adresów
+src/security.js      rate-limit, proof-of-work, sesje, hasła, CSRF
+src/payments.js      Stripe Checkout
+src/notify.js        Telegram
+src/render/          szablony: layout, strony publiczne, panel
+src/routes/          public, api, admin
+public/              site.css, site.js, admin.css, admin.js
+assets/seed/         zdjęcia przykładowego produktu
+```
