@@ -6,7 +6,7 @@ import { isAdmin } from "@/lib/auth/guards";
 export async function Nav() {
   const session = await getSession();
   return (
-    <header className="border-b border-line bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur">
       <div className="container-x flex h-16 items-center justify-between">
         <Link href="/" className="text-lg font-extrabold tracking-wide text-ink">
           {site.name}
@@ -30,7 +30,7 @@ export async function Nav() {
                 My orders
               </Link>
               {isAdmin(session) && (
-                <Link href="/admin" className="rounded-md bg-ink px-3 py-1.5 text-white hover:bg-ink-soft">
+                <Link href="/admin" className="rounded-md border border-line bg-card px-3 py-1.5 text-fg hover:bg-card-2">
                   Admin
                 </Link>
               )}

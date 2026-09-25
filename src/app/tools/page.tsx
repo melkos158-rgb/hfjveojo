@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { liveCatalog } from "@/lib/tools/catalog";
-import { ToolCard } from "@/components/ToolCard";
+import { ToolCard, toolCardProps } from "@/components/ToolCard";
 
 export const dynamic = "force-dynamic";
 
@@ -24,16 +24,7 @@ export default async function ToolsPage() {
             {catalog
               .filter((c) => c.def.category === cat)
               .map((c) => (
-                <ToolCard
-                  key={c.def.id}
-                  slug={c.def.slug}
-                  name={c.def.name}
-                  tagline={c.def.tagline}
-                  priceCents={c.priceCents}
-                  category={c.def.category}
-                  fulfillment={c.def.fulfillment}
-                  deliveryHours={c.def.sla.deliveryHours}
-                />
+                <ToolCard key={c.def.id} {...toolCardProps(c)} />
               ))}
           </div>
         </section>

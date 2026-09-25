@@ -44,8 +44,8 @@ export async function ogCard(opts: OgCardOptions): Promise<ImageResponse> {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "linear-gradient(135deg, #ffffff 0%, #f7f6f3 100%)",
-          color: "#0b0b0c",
+          background: "linear-gradient(135deg, #08090d 0%, #11131a 100%)",
+          color: "#f5f5f7",
           fontFamily: "sans-serif",
         }}
       >
@@ -59,20 +59,20 @@ export async function ogCard(opts: OgCardOptions): Promise<ImageResponse> {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ width: 18, height: 18, borderRadius: 9999, background: "#c48a2e" }} />
+            <div style={{ width: 18, height: 18, borderRadius: 9999, background: "linear-gradient(135deg, #8b5cf6, #d946ef)" }} />
             <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: 5 }}>{site.name}</div>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-            <div style={{ fontSize: 20, color: "#c48a2e", textTransform: "uppercase", letterSpacing: 3 }}>{opts.eyebrow}</div>
+            <div style={{ fontSize: 20, color: "#a78bfa", textTransform: "uppercase", letterSpacing: 3 }}>{opts.eyebrow}</div>
             <div style={{ fontSize: img ? 50 : 60, fontWeight: 800, lineHeight: 1.1 }}>{opts.title}</div>
-            <div style={{ fontSize: 25, color: "#55555b", lineHeight: 1.35 }}>{opts.subtitle}</div>
+            <div style={{ fontSize: 25, color: "#a1a1aa", lineHeight: 1.35 }}>{opts.subtitle}</div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 22, color: "#8a8a90" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: 22, color: "#8a8a93" }}>
             <div>{host}</div>
             {opts.badge ? (
-              <div style={{ background: "#0b0b0c", color: "#ffffff", padding: "8px 18px", borderRadius: 999, fontWeight: 700 }}>{opts.badge}</div>
+              <div style={{ background: "linear-gradient(135deg, #8b5cf6, #d946ef)", color: "#ffffff", padding: "8px 18px", borderRadius: 999, fontWeight: 700 }}>{opts.badge}</div>
             ) : null}
           </div>
         </div>

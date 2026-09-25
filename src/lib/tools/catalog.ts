@@ -11,7 +11,7 @@ export type CatalogItem = {
 
 /** Tools that are orderable (LIVE or VALIDATING) with their current DB price. Falls back to code defaults if the DB is empty. */
 export async function liveCatalog(category?: string): Promise<CatalogItem[]> {
-  const defs = allTools().filter((d) => !category || d.category === category);
+  const defs = allTools().filter((d) => d.active !== false && (!category || d.category === category));
   let rows: Array<{ id: string; status: string; products: Array<{ priceCents: number; currency: string; active: boolean; type: string }> }> = [];
   try {
     rows = await prisma.tool.findMany({ where: { id: { in: defs.map((d) => d.id) } }, include: { products: true } });
@@ -26,5 +26,6 @@ export async function liveCatalog(category?: string): Promise<CatalogItem[]> {
     const product = row?.products.find((p) => p.active && p.type === "ONE_TIME");
     items.push({ def, status, priceCents: product?.priceCents ?? def.pricing.priceCents, currency: product?.currency ?? def.pricing.currency });
   }
-  return items;
+  // featured first, then by price ascending so the cheapest "try it" tool is never buried
+  return items.sort((a, b) => Number(Boolean(b.def.featured)) - Number(Boolean(a.def.featured)) || a.priceCents - b.priceCents);
 }

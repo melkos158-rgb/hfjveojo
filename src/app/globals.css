@@ -1,23 +1,68 @@
 @import "tailwindcss";
 
 /*
- * Brand palette — "premium editorial" (light, warm neutrals, black primary action, amber accent).
- * Chosen 2026-09-26 from the 9 concept boards: white canvas + near-black type/buttons + warm photography.
+ * Brand palette — "dark premium SaaS" (owner's spec, 2026-09-26).
+ * Canvas #08090D · cards #11131A · text #F5F5F7 / #A1A1AA · accent #8B5CF6 (+ #D946EF for gradients) · success #22C55E.
+ * Rule of thumb: 80–90 % neutral dark, 10–20 % accent — accent only on primary CTAs, active states, key highlights.
+ *
+ * The default gray scale is INVERTED on purpose so `text-gray-600`, `bg-gray-100` etc. keep their meaning
+ * ("secondary text", "subtle surface") on a dark canvas without touching every component.
  */
 @theme {
-  --color-ink: #0b0b0c;        /* near-black type, primary buttons */
-  --color-ink-soft: #232326;   /* hover state of black surfaces */
-  --color-mist: #f7f6f3;       /* warm off-white section background */
-  --color-line: #e7e4de;       /* warm hairline borders */
-  --color-brand: #0b0b0c;      /* primary action = black (editorial, not "SaaS blue") */
-  --color-brand-dark: #2a2a2e; /* primary hover */
-  --color-accent: #c48a2e;     /* warm amber: eyebrows, small highlights */
-  --color-accent-soft: #f5ead8; /* amber tint for chips */
+  --color-bg: #08090d; /* page canvas */
+  --color-card: #11131a; /* cards, inputs, nav */
+  --color-card-2: #171a24; /* hover / elevated surface */
+  --color-line: #1f2230; /* hairlines */
+  --color-fg: #f5f5f7; /* primary text */
+  --color-fg-2: #a1a1aa; /* secondary text */
+
+  /* legacy names still used across the app */
+  --color-ink: #f5f5f7;
+  --color-ink-soft: #c4c4cc;
+  --color-mist: #0d0f15; /* alternate section background */
+
+  --color-brand: #8b5cf6; /* primary accent */
+  --color-brand-dark: #7c3aed; /* pressed / hover */
+  --color-brand-2: #d946ef; /* secondary accent (gradient end) */
+  --color-accent: #a78bfa; /* readable violet for small text on dark */
+  --color-accent-soft: rgba(139, 92, 246, 0.14);
+  --color-success: #22c55e;
+
+  /* inverted grays */
+  --color-gray-50: #0d0f15;
+  --color-gray-100: #161923;
+  --color-gray-200: #1f2230;
+  --color-gray-300: #2d3140;
+  --color-gray-400: #6b6b75;
+  --color-gray-500: #8a8a93;
+  --color-gray-600: #a1a1aa;
+  --color-gray-700: #c4c4cc;
+  --color-gray-800: #dcdce2;
+  --color-gray-900: #f5f5f7;
+  --color-gray-950: #ffffff;
+
+  /* status tints that read well on dark */
+  --color-green-50: #0f2a1a;
+  --color-green-600: #22c55e;
+  --color-green-700: #4ade80;
+  --color-green-800: #86efac;
+  --color-red-50: #2a1215;
+  --color-red-300: #7f1d1d;
+  --color-red-500: #f87171;
+  --color-red-700: #fca5a5;
+  --color-amber-50: #2a1f0a;
+  --color-amber-300: #a16207;
+  --color-amber-700: #fbbf24;
+  --color-amber-800: #fcd34d;
+  --color-amber-900: #fde68a;
+  --color-blue-50: #0f1a33;
+  --color-blue-700: #93c5fd;
+
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 @utility container-x {
@@ -25,7 +70,7 @@
 }
 
 @utility card {
-  @apply rounded-xl border border-line bg-white p-5 shadow-sm;
+  @apply rounded-xl border border-line bg-card p-5;
 }
 
 @utility badge {
@@ -33,11 +78,11 @@
 }
 
 @utility field-label {
-  @apply mb-1 block text-sm font-medium text-ink;
+  @apply mb-1 block text-sm font-medium text-fg;
 }
 
 @utility field-input {
-  @apply w-full rounded-lg border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20;
+  @apply w-full rounded-lg border border-line bg-bg px-3 py-2 text-sm text-fg placeholder:text-gray-500 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30;
 }
 
 @utility field-help {
@@ -46,17 +91,30 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  @apply bg-white text-ink antialiased;
+  @apply bg-bg text-fg antialiased;
 }
 
+/* Primary action: the one place the gradient lives. */
 .btn-primary {
-  @apply btn bg-brand text-white hover:bg-brand-dark;
+  @apply btn text-white shadow-[0_8px_30px_-12px_rgba(139,92,246,0.7)];
+  background-image: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
 }
 .btn-secondary {
-  @apply btn border border-line bg-white text-ink hover:bg-mist;
+  @apply btn border border-line bg-card text-fg hover:bg-card-2;
+}
+.btn-danger {
+  @apply btn text-white;
+  background-color: #dc2626;
+}
+.btn-danger:hover {
+  background-color: #b91c1c;
 }
 .btn-pill {
   @apply rounded-full px-3 py-1.5 text-xs whitespace-nowrap sm:px-4 sm:py-2 sm:text-sm;
@@ -64,8 +122,26 @@ body {
 .eyebrow {
   @apply text-xs font-semibold uppercase tracking-[0.18em] text-accent;
 }
-.btn-danger {
-  @apply btn bg-red-600 text-white hover:bg-red-700;
+/* Gradient text for the one highlighted phrase per page. */
+.text-gradient {
+  background-image: linear-gradient(90deg, #a78bfa 0%, #d946ef 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+/* Soft violet glow used behind hero media (brand element, not decoration everywhere). */
+.glow {
+  position: relative;
+  isolation: isolate;
+}
+.glow::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(139, 92, 246, 0.28), transparent 70%);
+  filter: blur(24px);
 }
 
 .prose-basic h1 {

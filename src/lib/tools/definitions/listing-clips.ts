@@ -110,6 +110,13 @@ export const listingClipsTool: ToolDefinition<ListingClipsIntake> = {
   name: "Listing Clips",
   category: "real-estate",
   tagline: "Send one walkthrough video. Get 5 ready-to-post vertical clips with captions in 48 hours.",
+  io: {
+    input: "Walkthrough video link + listing facts",
+    output: "5 vertical clips (MP4) with price, stats and captions",
+    processingTime: "48 hours",
+    ctaLabel: "Create clips",
+  },
+  featured: true,
   description:
     "Turn one listing walkthrough into five captioned 9:16 clips for Instagram Reels, TikTok and YouTube Shorts — with price and property stats on screen, your branding, and captions plus hashtags written for you. Edited by a human, planned by AI, delivered in 48 hours.",
   fulfillment: "MANUAL",

@@ -156,6 +156,13 @@ export const photoPricingGuideTool: ToolDefinition<PricingGuideIntake> = {
   name: "Photographer Pricing Guide",
   category: "photography",
   tagline: "Your packages, written up and designed into a branded PDF pricing guide in minutes.",
+  io: {
+    input: "Your packages, prices and a few facts about you",
+    output: "Branded 5-page pricing guide (PDF)",
+    processingTime: "About 5 minutes",
+    ctaLabel: "Create my guide",
+  },
+  featured: true,
   description:
     "Answer ten questions about your packages and style. Get a polished, branded PDF pricing guide — cover, about page, packages with prices, add-ons, process, FAQ and policies — written in your voice and ready to send to enquiries.",
   fulfillment: "AUTO",

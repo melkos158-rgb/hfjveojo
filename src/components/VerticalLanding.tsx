@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { liveCatalog } from "@/lib/tools/catalog";
-import { ToolCard } from "@/components/ToolCard";
+import { ToolCard, toolCardProps } from "@/components/ToolCard";
 
 type Props = {
   category: string;
@@ -20,7 +20,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
   const first = catalog[0];
   return (
     <div>
-      <section className="bg-white">
+      <section className="relative overflow-hidden">
         <div className={`container-x grid items-center gap-10 py-14 sm:py-20 ${hero ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
           <div>
             <p className="eyebrow">{eyebrow}</p>
@@ -38,7 +38,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
             </div>
           </div>
           {hero ? (
-            <div className="relative overflow-hidden rounded-3xl shadow-[0_30px_80px_-30px_rgba(11,11,12,0.35)] ring-1 ring-line">
+            <div className="glow relative overflow-hidden rounded-3xl border border-line bg-card">
               <Image src={hero.src} alt={hero.alt} width={1200} height={671} priority unoptimized className="h-auto w-full" />
             </div>
           ) : null}
@@ -58,16 +58,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
         <h2 className="text-2xl font-bold">What you can order today</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {catalog.map((c) => (
-            <ToolCard
-              key={c.def.id}
-              slug={c.def.slug}
-              name={c.def.name}
-              tagline={c.def.tagline}
-              priceCents={c.priceCents}
-              category={c.def.category}
-              fulfillment={c.def.fulfillment}
-              deliveryHours={c.def.sla.deliveryHours}
-            />
+            <ToolCard key={c.def.id} {...toolCardProps(c)} />
           ))}
         </div>
         {proofNote ? <p className="mt-6 text-sm text-gray-500">{proofNote}</p> : null}

@@ -30,7 +30,7 @@ export function CookieConsent() {
   };
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-2xl rounded-xl border border-line bg-white p-4 text-sm shadow-lg">
+    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-2xl rounded-xl border border-line bg-card p-4 text-sm shadow-lg">
       <p className="text-gray-700">
         We use only essential cookies: to keep you signed in, remember where you came from, and count visits without
         identifying you. No advertising trackers. See our <a className="underline" href="/privacy">privacy policy</a>.

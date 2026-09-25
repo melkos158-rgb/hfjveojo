@@ -83,6 +83,18 @@ export type PipelineContext<TIntake> = {
   step: (name: string, note?: string) => void;
 };
 
+/** What the customer hands over and what comes back — shown on every card so the result is obvious in seconds. */
+export type ToolIo = {
+  /** e.g. "Walkthrough video link + listing facts" */
+  input: string;
+  /** e.g. "5 vertical clips (MP4) with captions" */
+  output: string;
+  /** Human-readable time to result, e.g. "48 hours" or "About 5 minutes" */
+  processingTime: string;
+  /** Card / hero button label, e.g. "Create clips" */
+  ctaLabel: string;
+};
+
 export type ToolDefinition<TIntake = Record<string, unknown>> = {
   id: string;
   slug: string;
@@ -90,6 +102,12 @@ export type ToolDefinition<TIntake = Record<string, unknown>> = {
   category: string; // real-estate | photography | handymen | ...
   tagline: string;
   description: string;
+  /** Input → output summary for cards and share images. */
+  io: ToolIo;
+  /** Featured tools are shown first on the home page. Non-featured tools still appear in /tools and their category. */
+  featured?: boolean;
+  /** Hide a tool from public listings without removing it (orders and admin still work). Default true. */
+  active?: boolean;
   fulfillment: Fulfillment;
   initialStatus: ToolStatus;
   version: number;

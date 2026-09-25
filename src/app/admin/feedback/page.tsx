@@ -22,7 +22,10 @@ export default async function AdminFeedback() {
                     #{f.order.number} {f.order.tool.name}
                   </Link>
                 ) : (
-                  f.source
+                  <>
+                    {f.source === "tool_request" ? <span className="badge bg-blue-50 text-blue-700">tool request</span> : f.source}
+                    {f.tags.length ? <span className="ml-2">{f.tags.join(" · ")}</span> : null}
+                  </>
                 )}
               </span>
               <span className="text-accent">{f.rating ? "★".repeat(f.rating) : "no rating"}</span>
