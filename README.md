@@ -1,49 +1,78 @@
-# Ride Lab
+# ORVIONIS
 
-Sklep z gotowymi, drukowanymi w 3D częściami do hulajnóg elektrycznych. Chełm, Polska.
-Shop for ready-made 3D-printed e-scooter parts. Chełm, Poland.
+One brand, many tools, revenue first. ORVIONIS turns a customer's inputs into a finished, branded deliverable — paid per result through Stripe, fulfilled by an AI pipeline with quality gates, or by a human (concierge) using an AI-drafted plan. Every tool is configuration; every order, payment, AI call and marketing dollar is measured so the business can be run from data.
 
-Pełna specyfikacja: [PLAN.md](PLAN.md).
+**Live tools (V1)**
+
+| Tool | Slug | Customer | Price | Fulfilment |
+| --- | --- | --- | --- | --- |
+| Listing Clips | `/tools/listing-clips` | Real-estate agents | $49 / listing | MANUAL (concierge, AI-drafted plan), 48h |
+| Photographer Pricing Guide | `/tools/photographer-pricing-guide` | Photographers | $29 | AUTO (AI → QA → PDF), minutes |
+
+Vertical landings: `/real-estate`, `/photographers`. Catalog: `/tools`. Admin (AI CEO console): `/admin`.
 
 ## Stack
 
-Node 20+ · Express · PostgreSQL · Stripe Checkout · zero build step. Zdjęcia w bazie (`bytea`), strony renderowane po stronie serwera (PL + EN), panel admina pod ukrytym adresem.
+Next.js 15 (App Router, TypeScript, Tailwind v4) · Prisma 6 (Rust-free client + `@prisma/adapter-pg`) · PostgreSQL · Stripe hosted Checkout + webhooks · OpenAI (Anthropic fallback, mock provider for tests) · `@react-pdf/renderer` · Resend (HTTP API) · Postgres-backed job queue with a worker process · Railway.
 
-## Uruchomienie lokalne
+## Quick start (local)
 
 ```bash
-npm install
-export DATABASE_URL=postgres://postgres@localhost:5432/ridelab
-export ADMIN_PATH=/panel-lokalny
-npm start
-# http://localhost:3000  →  /pl/  |  /en/  |  /panel-lokalny
+npm install                       # also runs `prisma generate`
+cp .env.example .env.local        # fill DATABASE_URL, AUTH_SECRET, SIGNING_SECRET, ADMIN_EMAILS; keep AI_PROVIDER=mock to run without keys
+npx prisma migrate deploy         # apply migrations (or `npm run db:migrate` while developing schema changes)
+npm run db:seed                   # tools, products, admin users, experiments, channels
+npm run dev                       # http://localhost:3000
 ```
 
-Przy pierwszym starcie tworzą się tabele, przykładowy produkt i zdjęcia na stronę główną. W logu pojawia się `ADMIN SETUP TOKEN` — potrzebny do ustawienia hasła w panelu.
+With `JOBS_INLINE=true` (default in `.env.example` for dev) orders are fulfilled inside the web process, so no worker is needed locally. In production run the worker: `npm run worker`.
 
-## Zmienne środowiskowe (Railway → Variables)
+Sign in at `/login` — with `EMAIL_PROVIDER=console` the magic link is printed in the server log and returned to the login form in non-production.
 
-| Zmienna | Wymagana | Opis |
-| --- | --- | --- |
-| `DATABASE_URL` | tak | `${{Postgres.DATABASE_URL}}` — referencja do serwisu PostgreSQL |
-| `ADMIN_PATH` | tak | ukryty adres panelu, np. `/panel-x7k2m9` |
-| `SITE_URL` | tak | publiczny adres, np. `https://twojadomena.pl` (sitemap, Stripe redirect) |
-| `STRIPE_SECRET_KEY` | do płatności online | `sk_live_…` z Stripe → Developers → API keys. Bez klucza działa tylko płatność przy odbiorze |
-| `STRIPE_WEBHOOK_SECRET` | nie | opcjonalny webhook `checkout.session.completed` na `/api/stripe/webhook` |
-| `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET` | nie | Cloudflare Turnstile zamiast wbudowanego testu „nie jestem robotem” |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | nie | powiadomienia o zamówieniach (można też ustawić w panelu) |
+Stripe locally: `stripe listen --forward-to localhost:3000/api/stripe/webhook` and put the printed `whsec_…` into `STRIPE_WEBHOOK_SECRET`.
 
-## Struktura
+## Scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` / `npm run build` / `npm start` | Next.js |
+| `npm run start:railway` | `prisma migrate deploy && next start` (production start command) |
+| `npm run worker` | Background worker (jobs, daily report, maintenance) |
+| `npm run db:migrate` / `npm run db:deploy` / `npm run db:seed` | Prisma migrations and seed |
+| `npm run smoke` | End-to-end pipeline test without Stripe or API keys (`AI_PROVIDER=mock`) |
+| `npm test` / `npm run typecheck` | Vitest (needs a Postgres at `TEST_DATABASE_URL`) / `tsc` |
+| `npm run ceo:report` | Generate the AI CEO daily report now (`-- WEEKLY` for the weekly one) |
+
+## Repository map
 
 ```
-server.js            start, routing, nagłówki bezpieczeństwa
-src/db.js            PostgreSQL, migracje, seed
-src/i18n.js          słowniki PL/EN, mapa adresów
-src/security.js      rate-limit, proof-of-work, sesje, hasła, CSRF
-src/payments.js      Stripe Checkout
-src/notify.js        Telegram
-src/render/          szablony: layout, strony publiczne, panel
-src/routes/          public, api, admin
-public/              site.css, site.js, admin.css, admin.js
-assets/seed/         zdjęcia przykładowego produktu
+prisma/schema.prisma            data model (26 tables) · prisma/migrations · prisma/seed.ts
+src/app                         pages, API routes, admin (server components + server actions)
+src/lib/tools                   Tool engine: types, registry, QA rules, definitions/<tool>.ts
+src/lib/ai                      provider abstraction (openai | anthropic | mock), routing, budgets, cost logging
+src/lib/orders                  order creation (server-side pricing), fulfilment pipeline, delivery, refunds
+src/lib/stripe                  Stripe client + idempotent webhook handlers
+src/lib/jobs                    Postgres job queue (SKIP LOCKED) + runner · scripts/worker.ts
+src/lib/analytics · src/lib/ceo first-party events, KPIs, AI CEO report
+src/lib/storage · src/lib/email storage (db | s3) and email (resend | console) adapters
+src/lib/security                signed tokens, rate limiting, upload sniffing, link allow-list
+docs/                           ARCHITECTURE, DEPLOY_RAILWAY, EXPERIMENTS, OUTREACH, RUNBOOK, LEGAL_FLAGS, AI_CEO, ADDING_A_TOOL
 ```
+
+## Adding a tool (the whole point)
+
+1. Create `src/lib/tools/definitions/<slug>.ts` exporting a `ToolDefinition`: intake fields + zod schema, pricing, SLA, landing copy, SEO, delivery email, and a `run(ctx)` function that returns outputs + QC result (`needsHuman: true` for concierge).
+2. Register it in `src/lib/tools/registry.ts`.
+3. `npm run db:seed` (syncs Tool + Product rows). Set status in `/admin/tools`.
+
+You get for free: landing page with JSON-LD, intake form, Stripe Checkout, webhook → job → pipeline, QC gate, delivery email + order page, admin queue, analytics, AI cost tracking, sitemap entry. See `docs/ADDING_A_TOOL.md`.
+
+## Non-negotiable rules (enforced in code, repeated here on purpose)
+
+- Secrets live only in `.env.local` (git-ignored) and Railway Variables. `.env.example` has placeholders only. CI runs gitleaks.
+- The client never decides price, payment status, permissions, credits or admin status. Prices come from the `Product` table; payment state comes from verified Stripe webhooks; admin = signed session **and** `ADMIN_EMAILS`.
+- Every Stripe event is recorded once (`StripeEvent.id`) and processed at most once.
+- Every AI call is logged with tokens and cost; daily and per-order budgets stop runaway spend; `/admin/system` has a kill switch.
+- Schema changes ship as migrations. Never edit production schema by hand.
+- Nothing ships to a customer without passing QC rules or a human approval.
+- Refunds, price changes and tool pauses are admin-only and audited (`AdminAction`).

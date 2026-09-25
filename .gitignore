@@ -1,7 +1,33 @@
+# dependencies
 node_modules/
-npm-debug.log*
+.pnp
+.pnp.js
+
+# next.js
+.next/
+out/
+dist/
+
+# env — secrets never enter git. Only .env.example is committed.
 .env
 .env.*
+!.env.example
+
+# local storage / generated
+storage/
+*.pem
+*.key
+
+# logs & misc
+npm-debug.log*
+*.log
 .DS_Store
 Thumbs.db
-.railway/
+*.tsbuildinfo
+next-env.d.ts
+
+# tests
+coverage/
+
+# prisma
+prisma/*.db

@@ -1,0 +1,14 @@
+# gitleaks configuration: default rules + allowlist for documented placeholders
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholders that are not credentials"
+regexes = [
+  '''sk_test_(local|xxx)''',
+  '''whsec_(local|xxx)''',
+  '''sk-xxx''',
+]
+paths = [
+  '''\.env\.example$''',
+]

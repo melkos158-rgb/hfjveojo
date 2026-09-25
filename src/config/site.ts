@@ -1,0 +1,29 @@
+/**
+ * Public site configuration (safe for the browser). Legal identity fields MUST be verified by a human
+ * before launch — see docs/LEGAL_FLAGS.md. Values marked VERIFY are placeholders, not legal facts.
+ */
+export const site = {
+  name: process.env.NEXT_PUBLIC_BRAND_NAME ?? "ORVIONIS",
+  url: process.env.NEXT_PUBLIC_APP_URL ?? "https://orvionis.com",
+  tagline: "AI-made deliverables for busy professionals — done in hours, not weeks.",
+  description:
+    "ORVIONIS turns your inputs into finished, branded deliverables: listing clips for real-estate agents, pricing guides for photographers, and more. Pay per result, no subscription required.",
+  supportEmail: "hello@orvionis.com",
+  legal: {
+    entityName: "ORVIONIS (sole proprietorship) — VERIFY legal entity name",
+    address: "VERIFY registered address",
+    country: "Poland — VERIFY",
+    governingLaw: "VERIFY governing law and venue",
+    vatNote: "VERIFY VAT / OSS obligations for digital services sold to EU consumers",
+    lastUpdated: "2026-09-25",
+  },
+  social: {
+    instagram: "",
+    tiktok: "",
+    youtube: "",
+  },
+  verticals: [
+    { slug: "real-estate", name: "Real estate", blurb: "Listing clips, captions and marketing copy for agents." },
+    { slug: "photographers", name: "Photographers", blurb: "Pricing guides and client documents in your brand." },
+  ],
+} as const;

@@ -1,0 +1,607 @@
+// ORVIONIS — database schema (PostgreSQL)
+// Every change to this file MUST ship with a migration (npm run db:migrate). Never edit production schema by hand.
+
+generator client {
+  provider        = "prisma-client-js"
+  // Rust-free client: TypeScript query compiler + driver adapter (@prisma/adapter-pg).
+  // No engine binary downloads at build time; same setup Prisma 7 uses by default, so upgrading is a config change.
+  engineType      = "client"
+  previewFeatures = ["queryCompiler"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Users & auth ----------
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  name             String?
+  role             UserRole  @default(CUSTOMER)
+  stripeCustomerId String?   @unique
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  lastLoginAt      DateTime?
+
+  orders        Order[]
+  subscriptions Subscription[]
+  credits       CreditLedger[]
+  feedback      Feedback[]
+  files         File[]
+  events        Event[]
+  adminActions  AdminAction[]
+  aiRequests    AiRequest[]
+}
+
+model MagicLinkToken {
+  id        String    @id @default(cuid())
+  email     String
+  tokenHash String    @unique
+  redirect  String?
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([email])
+}
+
+// ---------- Tool engine ----------
+
+enum ToolStatus {
+  DRAFT
+  VALIDATING
+  LIVE
+  PAUSED
+  DEPRECATED
+}
+
+enum Fulfillment {
+  AUTO
+  MANUAL
+  HYBRID
+}
+
+model Tool {
+  id          String      @id // stable slug-like id, e.g. "listing-clips"
+  slug        String      @unique
+  name        String
+  category    String
+  tagline     String?
+  status      ToolStatus  @default(DRAFT)
+  fulfillment Fulfillment @default(AUTO)
+  version     Int         @default(1)
+  config      Json // snapshot of the ToolDefinition (without prompts' secrets)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  versions ToolVersion[]
+  products Product[]
+  orders   Order[]
+  runs     ToolRun[]
+}
+
+model ToolVersion {
+  id        String   @id @default(cuid())
+  toolId    String
+  version   Int
+  config    Json
+  createdAt DateTime @default(now())
+
+  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
+
+  @@unique([toolId, version])
+}
+
+// ---------- Catalog & billing ----------
+
+enum ProductType {
+  ONE_TIME
+  SUBSCRIPTION
+  CREDIT_PACK
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  sku             String      @unique
+  toolId          String?
+  name            String
+  description     String?
+  type            ProductType @default(ONE_TIME)
+  priceCents      Int
+  currency        String      @default("usd")
+  credits         Int? // for CREDIT_PACK / SUBSCRIPTION allowances
+  stripeProductId String?
+  stripePriceId   String?
+  active          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  tool          Tool?          @relation(fields: [toolId], references: [id])
+  orders        Order[]
+  subscriptions Subscription[]
+}
+
+enum OrderStatus {
+  PENDING // created, awaiting payment
+  PAID // payment verified by Stripe webhook, not yet started
+  PROCESSING // job running / concierge in progress
+  REVIEW // output produced, waiting for manual QC (HYBRID/MANUAL tools or QC failure)
+  COMPLETED // delivered
+  FAILED // gave up after retries; needs admin action
+  RETRYING
+  REFUNDED
+  CANCELED
+}
+
+enum QcStatus {
+  NOT_RUN
+  PASSED
+  FLAGGED
+  APPROVED_BY_HUMAN
+  REJECTED
+}
+
+model Order {
+  id                      String      @id @default(cuid())
+  number                  Int         @unique @default(autoincrement())
+  userId                  String?
+  customerEmail           String
+  customerName            String?
+  toolId                  String
+  toolVersion             Int         @default(1)
+  productId               String
+  status                  OrderStatus @default(PENDING)
+  intake                  Json // validated intake payload (never trust raw client data)
+  amountCents             Int
+  currency                String      @default("usd")
+  stripeCheckoutSessionId String?     @unique
+  stripePaymentIntentId   String?     @unique
+  paidAt                  DateTime?
+  startedAt               DateTime?
+  deliveredAt             DateTime?
+  dueAt                   DateTime? // concierge SLA
+  accessToken             String      @unique // signed link for guests to view status/result
+  attribution             Json? // utm_*, ref, landing path, first-touch
+  experimentId            String?
+  variantId               String?
+  qcStatus                QcStatus    @default(NOT_RUN)
+  qcNotes                 String?
+  attempts                Int         @default(0)
+  errorMessage            String?
+  adminNotes              String?
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
+
+  user       User?              @relation(fields: [userId], references: [id])
+  tool       Tool               @relation(fields: [toolId], references: [id])
+  product    Product            @relation(fields: [productId], references: [id])
+  experiment Experiment?        @relation(fields: [experimentId], references: [id])
+  variant    ExperimentVariant? @relation(fields: [variantId], references: [id])
+  payments   Payment[]
+  refunds    Refund[]
+  jobs       Job[]
+  runs       ToolRun[]
+  outputs    GeneratedOutput[]
+  files      File[]
+  feedback   Feedback[]
+  aiRequests AiRequest[]
+  events     Event[]
+
+  @@index([status, createdAt])
+  @@index([customerEmail])
+  @@index([toolId, status])
+}
+
+enum PaymentStatus {
+  SUCCEEDED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String
+  stripePaymentIntentId String?       @unique
+  stripeChargeId        String?       @unique
+  amountCents           Int
+  amountRefundedCents   Int           @default(0)
+  currency              String
+  status                PaymentStatus
+  receiptUrl            String?
+  raw                   Json?
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  order   Order    @relation(fields: [orderId], references: [id])
+  refunds Refund[]
+}
+
+enum RefundStatus {
+  REQUESTED
+  SUCCEEDED
+  FAILED
+}
+
+model Refund {
+  id             String       @id @default(cuid())
+  orderId        String
+  paymentId      String
+  amountCents    Int
+  reason         String?
+  stripeRefundId String?      @unique
+  status         RefundStatus @default(REQUESTED)
+  createdById    String?
+  createdAt      DateTime     @default(now())
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  payment Payment @relation(fields: [paymentId], references: [id])
+}
+
+// Idempotency ledger for Stripe webhooks — every event id is processed at most once.
+model StripeEvent {
+  id          String    @id // Stripe event id (evt_...)
+  type        String
+  receivedAt  DateTime  @default(now())
+  processedAt DateTime?
+  error       String?
+  payload     Json
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+  INCOMPLETE
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String
+  productId            String
+  stripeSubscriptionId String             @unique
+  status               SubscriptionStatus
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
+
+model CreditLedger {
+  id        String   @id @default(cuid())
+  userId    String
+  delta     Int // positive = granted, negative = consumed
+  reason    String
+  orderId   String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+// ---------- Jobs, runs, AI usage ----------
+
+enum JobStatus {
+  QUEUED
+  RUNNING
+  DONE
+  FAILED
+}
+
+model Job {
+  id          String    @id @default(cuid())
+  type        String // e.g. "fulfill_order", "send_email", "daily_report"
+  payload     Json
+  status      JobStatus @default(QUEUED)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  runAt       DateTime  @default(now())
+  lockedAt    DateTime?
+  lockedBy    String?
+  lastError   String?
+  orderId     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  order Order? @relation(fields: [orderId], references: [id])
+
+  @@index([status, runAt])
+}
+
+enum RunStatus {
+  RUNNING
+  SUCCEEDED
+  FAILED
+  QC_FLAGGED
+}
+
+model ToolRun {
+  id          String    @id @default(cuid())
+  orderId     String
+  toolId      String
+  toolVersion Int
+  status      RunStatus @default(RUNNING)
+  steps       Json // [{step, status, ms, note}]
+  costMicros  Int       @default(0) // AI cost in micro-dollars
+  error       String?
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+
+  order      Order       @relation(fields: [orderId], references: [id])
+  tool       Tool        @relation(fields: [toolId], references: [id])
+  aiRequests AiRequest[]
+  outputs    GeneratedOutput[]
+}
+
+model AiRequest {
+  id           String   @id @default(cuid())
+  orderId      String?
+  toolRunId    String?
+  userId       String?
+  toolId       String?
+  provider     String
+  model        String
+  tier         String // cheap | standard | best
+  purpose      String // generate | qa | report | ...
+  inputTokens  Int      @default(0)
+  outputTokens Int      @default(0)
+  costMicros   Int      @default(0)
+  latencyMs    Int      @default(0)
+  ok           Boolean  @default(true)
+  error        String?
+  createdAt    DateTime @default(now())
+
+  order Order?   @relation(fields: [orderId], references: [id])
+  run   ToolRun? @relation(fields: [toolRunId], references: [id])
+  user  User?    @relation(fields: [userId], references: [id])
+
+  @@index([createdAt])
+  @@index([toolId, createdAt])
+}
+
+// ---------- Files & outputs ----------
+
+enum FileKind {
+  INPUT
+  OUTPUT
+}
+
+enum StorageBackend {
+  DB
+  S3
+}
+
+model File {
+  id        String         @id @default(cuid())
+  orderId   String?
+  userId    String?
+  kind      FileKind
+  name      String
+  mime      String
+  sizeBytes Int
+  sha256    String
+  storage   StorageBackend @default(DB)
+  key       String? // S3 object key
+  data      Bytes? // DB storage (small files only)
+  expiresAt DateTime?
+  createdAt DateTime       @default(now())
+
+  order   Order?            @relation(fields: [orderId], references: [id])
+  user    User?             @relation(fields: [userId], references: [id])
+  outputs GeneratedOutput[]
+
+  @@index([orderId])
+}
+
+enum OutputType {
+  PDF
+  MARKDOWN
+  JSON
+  ZIP
+  LINK
+}
+
+model GeneratedOutput {
+  id          String     @id @default(cuid())
+  orderId     String
+  toolRunId   String?
+  type        OutputType
+  title       String
+  fileId      String?
+  content     Json? // structured result (e.g. captions), or {url} for LINK
+  previewText String?
+  version     Int        @default(1)
+  createdAt   DateTime   @default(now())
+
+  order Order    @relation(fields: [orderId], references: [id])
+  run   ToolRun? @relation(fields: [toolRunId], references: [id])
+  file  File?    @relation(fields: [fileId], references: [id])
+}
+
+// ---------- Experiments & analytics ----------
+
+enum ExperimentStatus {
+  PLANNED
+  RUNNING
+  WON
+  LOST
+  PAUSED
+}
+
+model Experiment {
+  id              String           @id @default(cuid())
+  key             String           @unique
+  name            String
+  hypothesis      String
+  targetCustomer  String
+  offer           String
+  channel         String
+  priceCents      Int?
+  status          ExperimentStatus @default(PLANNED)
+  startAt         DateTime?
+  endAt           DateTime?
+  successCriteria String
+  failureCriteria String
+  expected        Json? // {orders, revenueCents, costCents, conversion}
+  actual          Json? // computed snapshot
+  conclusion      String?
+  nextAction      String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  variants ExperimentVariant[]
+  orders   Order[]
+  events   Event[]
+  costs    ChannelCost[]
+}
+
+model ExperimentVariant {
+  id           String   @id @default(cuid())
+  experimentId String
+  key          String
+  name         String
+  config       Json? // e.g. {priceCents, headline}
+  weight       Int      @default(50)
+  createdAt    DateTime @default(now())
+
+  experiment Experiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  orders     Order[]
+
+  @@unique([experimentId, key])
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  name         String // page_view, cta_click, intake_started, checkout_started, order_paid, ...
+  sessionId    String?
+  userId       String?
+  orderId      String?
+  experimentId String?
+  path         String?
+  referrer     String?
+  utm          Json?
+  props        Json?
+  ipHash       String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  user       User?       @relation(fields: [userId], references: [id])
+  order      Order?      @relation(fields: [orderId], references: [id])
+  experiment Experiment? @relation(fields: [experimentId], references: [id])
+
+  @@index([name, createdAt])
+  @@index([sessionId])
+}
+
+model MarketingChannel {
+  id        String   @id @default(cuid())
+  key       String   @unique // reddit, facebook_groups, instagram_dm, etsy, seo, referral
+  name      String
+  notes     String?
+  createdAt DateTime @default(now())
+
+  costs ChannelCost[]
+}
+
+model ChannelCost {
+  id           String   @id @default(cuid())
+  channelId    String
+  experimentId String?
+  date         DateTime
+  costCents    Int
+  hours        Float? // founder time, for honest CAC
+  note         String?
+  createdAt    DateTime @default(now())
+
+  channel    MarketingChannel @relation(fields: [channelId], references: [id])
+  experiment Experiment?      @relation(fields: [experimentId], references: [id])
+}
+
+// ---------- Feedback, admin, ops ----------
+
+model Feedback {
+  id        String   @id @default(cuid())
+  orderId   String?
+  userId    String?
+  email     String?
+  rating    Int? // 1..5
+  text      String
+  tags      String[] @default([])
+  source    String   @default("order_page")
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  order Order? @relation(fields: [orderId], references: [id])
+  user  User?  @relation(fields: [userId], references: [id])
+}
+
+model AdminAction {
+  id         String   @id @default(cuid())
+  adminId    String
+  action     String
+  targetType String
+  targetId   String
+  details    Json?
+  createdAt  DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id])
+
+  @@index([createdAt])
+}
+
+enum ReportPeriod {
+  DAILY
+  WEEKLY
+}
+
+model CeoReport {
+  id              String       @id @default(cuid())
+  period          ReportPeriod
+  periodStart     DateTime
+  periodEnd       DateTime
+  metrics         Json
+  summary         String
+  recommendations Json
+  costMicros      Int          @default(0)
+  createdAt       DateTime     @default(now())
+
+  @@index([period, periodStart])
+}
+
+model ErrorLog {
+  id        String   @id @default(cuid())
+  level     String   @default("error")
+  message   String
+  stack     String?
+  context   Json?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model RateLimit {
+  key         String
+  windowStart DateTime
+  count       Int      @default(0)
+
+  @@id([key, windowStart])
+}
+
+model Setting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+}
