@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { log } from "@/lib/logger";
 import { reportError } from "@/lib/errors";
 import { complete, completeStructured, type AiCall, type AiCallContext } from "@/lib/ai";
+import { AiProviderError } from "@/lib/ai/types";
 import { getToolById } from "@/lib/tools/registry";
 import type { PipelineContext, PipelineResult } from "@/lib/tools/types";
 import { putFile } from "@/lib/storage";
@@ -73,6 +74,19 @@ export async function fulfillOrder(orderId: string): Promise<void> {
       where: { id: run.id },
       data: { status: "FAILED", error: message, steps: steps as object[], costMicros, finishedAt: new Date() },
     });
+    // A configuration problem (missing API key, invalid model) will not fix itself in 2 minutes: park the order
+    // for a human right away instead of burning retries, and tell the admin exactly what to fix.
+    const configProblem = err instanceof AiProviderError && !err.retryable;
+    if (configProblem) {
+      await prisma.order.update({ where: { id: orderId }, data: { status: "REVIEW", errorMessage: message } });
+      await reportError(err, { orderId, runId: run.id, attempts, configProblem: true });
+      await notifyAdmins(
+        `Order #${order.number} needs you — AI provider not usable`,
+        `Tool: ${def.name}\nProblem: ${message}\nFix the configuration (Railway → Variables) and press "Retry" on /admin/orders/${orderId}, or fulfil it by hand and deliver.`,
+      );
+      await track("order_parked", { orderId, props: { tool: def.id, reason: "ai_config" } });
+      return;
+    }
     const giveUp = attempts >= MAX_ORDER_ATTEMPTS;
     await prisma.order.update({
       where: { id: orderId },
