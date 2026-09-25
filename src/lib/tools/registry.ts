@@ -1,14 +1,12 @@
 import { prisma } from "@/lib/db";
 import type { ToolDefinition, ToolConfigSnapshot } from "@/lib/tools/types";
-import { listingClipsTool } from "@/lib/tools/definitions/listing-clips";
-import { photoPricingGuideTool } from "@/lib/tools/definitions/photo-pricing-guide";
+import { TOOL_DEFINITIONS } from "@/lib/tools/definitions";
 
 /**
- * The registry is the single list of tools the platform knows about.
- * To add a tool: create src/lib/tools/definitions/<slug>.ts and add it here. Run `npm run db:seed` to sync.
+ * The registry: the tool list (see src/lib/tools/definitions/index.ts — add new tools there) plus the
+ * DB-backed helpers (snapshot, sync). Run `npm run db:seed` after adding a tool.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const definitions: ToolDefinition<any>[] = [listingClipsTool, photoPricingGuideTool];
+const definitions = TOOL_DEFINITIONS;
 
 export function allTools(): ToolDefinition[] {
   return definitions as ToolDefinition[];

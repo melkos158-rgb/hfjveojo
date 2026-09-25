@@ -39,12 +39,13 @@ Rule: no secrets in this file — only names, ids, paths and states.
 2. [x] Background jobs without a worker service — done 2026-09-26 via the embedded loop (owner asked for no new Railway services). A dedicated worker is only needed for throughput; if added, set `EMBEDDED_WORKER=false` on web.
 3. [x] Hero/OG visuals for /real-estate and /photographers (Higgsfield images, `public/img/`), `opengraph-image` routes — done 2026-09-26. To regenerate: Higgsfield `generate_image_batch` (gpt_image_2_5, 16:9) → resize 1200px WebP q60 + 900px JPEG for the OG renderer (WebP is not decoded by it).
 4. [ ] Clean legacy Ride Lab variables on Railway (`ADMIN_PATH`, `SITE_URL`, `ADMIN_RESET`) — harmless, low priority.
-5. [ ] GitHub Actions: confirm CI passes on `main` (needs repo Actions enabled).
+5. [x] GitHub Actions: CI green on `main` (runs #1–#9 checked 2026-09-26).
 6. [ ] After first paid orders: review /admin/analytics, update experiments E1/E2 conclusions, decide next tool.
 7. [ ] Share-preview check after deploy: paste https://orvionis.com/real-estate into a preview debugger (opengraph.xyz or the Facebook Sharing Debugger) once; the card is cached by platforms for ~24h after first share.
 
 ## Session log
 
 - 2026-09-25 22:55–23:35 UTC+2: repo replaced, 6 deploy iterations (gitignore `storage/` bug, devDependencies under NODE_ENV=production, vitest in type-check, P3005 non-empty DB → own schema), seed-on-start, Stripe webhook, variables. Production verified via HTTP.
+- 2026-09-26 01:05–01:20 UTC+2: share/SEO fix for tool pages — title no longer doubles "| ORVIONIS", per-tool Open Graph card at `/tools/[slug]/opengraph-image` (dynamic, hero by category + price), `twitter:card=summary_large_image`, page titles now flow into og:title (root openGraph.title removed). `src/lib/tools/definitions/index.ts` holds the pure tool list (registry adds DB helpers).
 - 2026-09-26 00:45–01:05 UTC+2: embedded job loop (`src/lib/jobs/loop.ts` shared with `scripts/worker.ts`, started by `src/instrumentation.ts`), inline-enqueue race fixed (inline jobs are created locked; jobs with a future `runAt` are now really scheduled instead of running at once), `/api/health` reports the loop heartbeat. Verified locally: 23 tests, build, `next start` picked up a hand-inserted QUEUED job within one poll.
 - 2026-09-26 00:05–00:45 UTC+2: hero visuals + OG cards (commit `b1ded03`). Verified locally: typecheck, 20 unit tests, `next build` (OG routes prerender as static PNGs), Playwright screenshots at 1280 px and 390 px. Files transferred to the owner's clone as a tarball (checksums matched), committed and pushed from there. Note for future sessions: `device_commit_files` refuses paths inside `.git/`; write to the repo root and `mv` afterwards.

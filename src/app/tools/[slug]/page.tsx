@@ -15,12 +15,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const def = getToolBySlug(slug);
   if (!def) return { title: "Not found" };
+  // The layout template appends "| ORVIONIS"; strip a brand suffix from the definition so it is never doubled.
+  const brand = site.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const title = def.seo.title.replace(new RegExp(`\\s*[|\u2014-]\\s*${brand}\\s*$`, "i"), "");
   return {
-    title: def.seo.title,
+    title,
     description: def.seo.description,
     keywords: def.seo.keywords,
     alternates: { canonical: `/tools/${def.slug}` },
-    openGraph: { title: def.seo.title, description: def.seo.description, url: `${site.url}/tools/${def.slug}` },
+    openGraph: { type: "website", title: `${title} | ${site.name}`, description: def.seo.description, url: `${site.url}/tools/${def.slug}` },
   };
 }
 

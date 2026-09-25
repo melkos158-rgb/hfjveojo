@@ -10,7 +10,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: `${site.name} — ${site.tagline}`, template: `%s | ${site.name}` },
   description: site.description,
-  openGraph: { siteName: site.name, type: "website", url: site.url, title: site.name, description: site.description },
+  // No openGraph.title/description here on purpose: each page's own title/description then flows into og:* tags.
+  openGraph: { siteName: site.name, type: "website", url: site.url },
+  twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
   alternates: { canonical: "/" },
 };
