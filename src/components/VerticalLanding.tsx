@@ -20,25 +20,25 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
   const first = catalog[0];
   return (
     <div>
-      <section className="bg-ink text-white">
-        <div className={`container-x grid items-center gap-10 py-16 sm:py-20 ${hero ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
+      <section className="bg-white">
+        <div className={`container-x grid items-center gap-10 py-14 sm:py-20 ${hero ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
           <div>
-            <p className="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>
-            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl">{headline}</h1>
-            <p className="mt-5 max-w-2xl text-lg text-gray-300">{sub}</p>
+            <p className="eyebrow">{eyebrow}</p>
+            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-[1.08] tracking-tight text-ink sm:text-4xl">{headline}</h1>
+            <p className="mt-5 max-w-2xl text-lg text-gray-600">{sub}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               {first ? (
                 <Link href={`/tools/${first.def.slug}`} className="btn-primary">
                   Order {first.def.name} →
                 </Link>
               ) : null}
-              <a href="#tools" className="btn bg-white text-ink hover:bg-gray-100">
+              <a href="#tools" className="btn-secondary">
                 See tools and prices
               </a>
             </div>
           </div>
           {hero ? (
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+            <div className="relative overflow-hidden rounded-3xl shadow-[0_30px_80px_-30px_rgba(11,11,12,0.35)] ring-1 ring-line">
               <Image src={hero.src} alt={hero.alt} width={1200} height={671} priority unoptimized className="h-auto w-full" />
             </div>
           ) : null}

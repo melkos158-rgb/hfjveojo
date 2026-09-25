@@ -6,6 +6,17 @@ import { ToolCard } from "@/components/ToolCard";
 
 export const dynamic = "force-dynamic";
 
+/** Home hero photo. Swap the file in /public/img to change it; keep 3:2. */
+const HOME_HERO = { src: "/img/hero-home.webp", alt: "A modern house at dusk with warm light in the windows and a still pool in front" };
+
+/** Facts only — every line here is a real product promise, not a vanity metric. */
+const trustRow = [
+  { k: "48 hours", v: "Listing clips delivered, edited by a human" },
+  { k: "Minutes", v: "Pricing guide PDF generated from your packages" },
+  { k: "$29–$49", v: "Per result. No subscription, ever" },
+  { k: "Stripe", v: "Secure checkout, receipt and refund policy" },
+];
+
 const verticalCards = [
   {
     href: "/real-estate",
@@ -31,21 +42,39 @@ export default async function HomePage() {
   const catalog = await liveCatalog();
   return (
     <div>
-      <section className="bg-ink text-white">
-        <div className="container-x py-20 sm:py-28">
-          <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">Done-for-you, priced per result</p>
-          <h1 className="max-w-3xl text-4xl font-extrabold leading-tight sm:text-5xl">
-            Send us what you have. Get the finished thing back — in hours.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-gray-300">{site.description}</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/real-estate" className="btn-primary">
-              I&apos;m a real-estate agent
-            </Link>
-            <Link href="/photographers" className="btn bg-white text-ink hover:bg-gray-100">
-              I&apos;m a photographer
-            </Link>
+      <section className="bg-white">
+        <div className="container-x grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1fr_1.05fr]">
+          <div>
+            <p className="eyebrow mb-4">Done-for-you, priced per result</p>
+            <h1 className="max-w-2xl text-4xl font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+              Premium visuals. Real results.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg text-gray-600">{site.description}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/real-estate" className="btn-primary">
+                I&apos;m a real-estate agent
+              </Link>
+              <Link href="/photographers" className="btn-secondary">
+                I&apos;m a photographer
+              </Link>
+            </div>
           </div>
+          <div className="relative overflow-hidden rounded-3xl shadow-[0_30px_80px_-30px_rgba(11,11,12,0.35)] ring-1 ring-line">
+            <Image src={HOME_HERO.src} alt={HOME_HERO.alt} width={1024} height={688} priority unoptimized className="h-auto w-full" />
+          </div>
+        </div>
+        <div className="container-x pb-12">
+          <dl className="grid gap-4 border-t border-line pt-8 sm:grid-cols-4">
+            {trustRow.map((t) => (
+              <div key={t.k} className="flex items-start gap-3">
+                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden />
+                <div>
+                  <dt className="text-base font-bold text-ink">{t.k}</dt>
+                  <dd className="text-sm text-gray-600">{t.v}</dd>
+                </div>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
@@ -58,7 +87,7 @@ export default async function HomePage() {
                 <Image src={v.image} alt={v.alt} fill sizes="(min-width: 640px) 50vw, 100vw" unoptimized className="object-cover transition duration-500 group-hover:scale-[1.03]" />
               </div>
               <div className="p-5">
-                <div className="text-xs font-semibold uppercase tracking-widest text-brand">{v.eyebrow}</div>
+                <div className="eyebrow">{v.eyebrow}</div>
                 <h3 className="mt-1 text-lg font-bold">{v.title}</h3>
                 <p className="mt-1 text-sm text-gray-600">{v.blurb}</p>
                 <span className="mt-3 inline-block text-sm font-semibold text-brand">{v.cta} →</span>
@@ -102,7 +131,7 @@ export default async function HomePage() {
             { t: "After", d: "Clips ready to post. A branded PDF ready to send. Files you own — delivered to your inbox and your order page." },
           ].map((s) => (
             <div key={s.t} className="card">
-              <div className="text-xs font-semibold uppercase tracking-widest text-brand">{s.t}</div>
+              <div className="eyebrow">{s.t}</div>
               <p className="mt-2 text-gray-700">{s.d}</p>
             </div>
           ))}
@@ -118,7 +147,7 @@ export default async function HomePage() {
             ["Pay and receive", "Stripe checkout. Instant tools deliver in minutes; concierge tools within the promised window. One revision included."],
           ].map(([t, d], i) => (
             <li key={t} className="card">
-              <div className="mb-2 text-sm font-bold text-brand">Step {i + 1}</div>
+              <div className="eyebrow mb-2">Step {i + 1}</div>
               <div className="font-semibold">{t}</div>
               <p className="mt-1 text-sm text-gray-600">{d}</p>
             </li>

@@ -8,8 +8,9 @@ export const contentType = OG_CONTENT_TYPE;
 export default function Image() {
   return ogCard({
     eyebrow: "Done-for-you, priced per result",
-    title: "Send us what you have. Get the finished thing back — in hours.",
+    title: "Premium visuals. Real results.",
     subtitle: "Listing clips for real-estate agents. Pricing guides for photographers. Pay once, keep the files.",
+    image: "img/hero-home.jpg",
     badge: "No subscription",
   });
 }

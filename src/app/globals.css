@@ -1,13 +1,18 @@
 @import "tailwindcss";
 
+/*
+ * Brand palette — "premium editorial" (light, warm neutrals, black primary action, amber accent).
+ * Chosen 2026-09-26 from the 9 concept boards: white canvas + near-black type/buttons + warm photography.
+ */
 @theme {
-  --color-ink: #0b1020;
-  --color-ink-soft: #1c2338;
-  --color-mist: #f5f6fa;
-  --color-line: #e4e7ef;
-  --color-brand: #3b5bfd;
-  --color-brand-dark: #2b46d6;
-  --color-accent: #ffb547;
+  --color-ink: #0b0b0c;        /* near-black type, primary buttons */
+  --color-ink-soft: #232326;   /* hover state of black surfaces */
+  --color-mist: #f7f6f3;       /* warm off-white section background */
+  --color-line: #e7e4de;       /* warm hairline borders */
+  --color-brand: #0b0b0c;      /* primary action = black (editorial, not "SaaS blue") */
+  --color-brand-dark: #2a2a2e; /* primary hover */
+  --color-accent: #c48a2e;     /* warm amber: eyebrows, small highlights */
+  --color-accent-soft: #f5ead8; /* amber tint for chips */
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -52,6 +57,12 @@ body {
 }
 .btn-secondary {
   @apply btn border border-line bg-white text-ink hover:bg-mist;
+}
+.btn-pill {
+  @apply rounded-full px-3 py-1.5 text-xs whitespace-nowrap sm:px-4 sm:py-2 sm:text-sm;
+}
+.eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.18em] text-accent;
 }
 .btn-danger {
   @apply btn bg-red-600 text-white hover:bg-red-700;

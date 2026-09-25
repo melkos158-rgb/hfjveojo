@@ -19,6 +19,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 | Email | `EMAIL_PROVIDER=console` (no Resend key yet) → customer emails are only written to Railway logs |
 | AI | `AI_PROVIDER=openai`, **`OPENAI_API_KEY` not set** → automated orders will fail until the owner adds it in Railway Variables |
 | Admin | `ADMIN_EMAILS=melkos158@gmail.com`; sign-in link appears in Railway deploy logs while email is in console mode |
+| Brand style | Owner chose concept **№2 "premium editorial"** (2026-09-26): white canvas, near-black type and primary buttons (`#0B0B0C`), warm off-white sections (`#F7F6F3`), hairlines `#E7E4DE`, amber accent `#C48A2E` for eyebrows. Tokens live in `src/app/globals.css` (`@theme`); heroes are light with the photo on the right; OG cards use the same palette. Do not reintroduce dark/neon hero blocks |
 
 ## Status (update every session)
 
@@ -46,6 +47,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 ## Session log
 
 - 2026-09-25 22:55–23:35 UTC+2: repo replaced, 6 deploy iterations (gitignore `storage/` bug, devDependencies under NODE_ENV=production, vitest in type-check, P3005 non-empty DB → own schema), seed-on-start, Stripe webhook, variables. Production verified via HTTP.
+- 2026-09-26 01:20–01:45 UTC+2: brand restyle to concept №2 (owner's pick from 9 boards): palette tokens, light heroes with photo right, nav "Get started" pill, factual trust row on home, per-page eyebrows in amber, OG cards in the new palette; new Higgsfield hero `public/img/hero-home.webp` (dusk villa, 1024×688) + JPEG twin for OG. Verified: typecheck, tests, build, Playwright at 1280/390 px.
 - 2026-09-26 01:05–01:20 UTC+2: share/SEO fix for tool pages — title no longer doubles "| ORVIONIS", per-tool Open Graph card at `/tools/[slug]/opengraph-image` (dynamic, hero by category + price), `twitter:card=summary_large_image`, page titles now flow into og:title (root openGraph.title removed). `src/lib/tools/definitions/index.ts` holds the pure tool list (registry adds DB helpers).
 - 2026-09-26 00:45–01:05 UTC+2: embedded job loop (`src/lib/jobs/loop.ts` shared with `scripts/worker.ts`, started by `src/instrumentation.ts`), inline-enqueue race fixed (inline jobs are created locked; jobs with a future `runAt` are now really scheduled instead of running at once), `/api/health` reports the loop heartbeat. Verified locally: 23 tests, build, `next start` picked up a hand-inserted QUEUED job within one poll.
 - 2026-09-26 00:05–00:45 UTC+2: hero visuals + OG cards (commit `b1ded03`). Verified locally: typecheck, 20 unit tests, `next build` (OG routes prerender as static PNGs), Playwright screenshots at 1280 px and 390 px. Files transferred to the owner's clone as a tarball (checksums matched), committed and pushed from there. Note for future sessions: `device_commit_files` refuses paths inside `.git/`; write to the repo root and `mv` afterwards.

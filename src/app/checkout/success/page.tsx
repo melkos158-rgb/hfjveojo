@@ -20,7 +20,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   return (
     <div className="container-x max-w-2xl py-16">
       <div className="card">
-        <p className="text-xs font-semibold uppercase tracking-widest text-brand">Order #{order.number}</p>
+        <p className="eyebrow">Order #{order.number}</p>
         <h1 className="mt-2 text-2xl font-bold">Thanks — we&apos;re on it.</h1>
         <p className="mt-3 text-gray-700">
           {order.status === "PENDING"

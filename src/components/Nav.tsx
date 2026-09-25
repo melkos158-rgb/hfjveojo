@@ -11,7 +11,7 @@ export async function Nav() {
         <Link href="/" className="text-lg font-extrabold tracking-wide text-ink">
           {site.name}
         </Link>
-        <nav className="flex items-center gap-5 text-sm font-medium text-gray-700">
+        <nav className="flex items-center gap-3 whitespace-nowrap text-sm font-medium text-gray-700 sm:gap-5">
           <Link href="/real-estate" className="hidden hover:text-ink sm:inline">
             Real estate
           </Link>
@@ -40,6 +40,9 @@ export async function Nav() {
               Sign in
             </Link>
           )}
+          <Link href="/tools" className="btn-primary btn-pill">
+            Get started
+          </Link>
         </nav>
       </div>
     </header>

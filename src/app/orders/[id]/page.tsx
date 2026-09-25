@@ -33,7 +33,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
       <OrderStatusLive orderId={order.id} token={t} initialStatus={order.status} />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-brand">Order #{order.number}</p>
+          <p className="eyebrow">Order #{order.number}</p>
           <h1 className="mt-1 text-2xl font-bold">{order.tool.name}</h1>
         </div>
         <span className={`badge ${tones[st.tone]}`}>{st.label}</span>

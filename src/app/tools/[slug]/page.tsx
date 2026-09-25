@@ -57,8 +57,8 @@ export default async function ToolPage({ params }: Params) {
 
       <section className="bg-mist">
         <div className="container-x py-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-brand">{def.category.replace("-", " ")} · {def.fulfillment === "AUTO" ? "instant" : `${def.sla.deliveryHours}h delivery`}</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-extrabold sm:text-4xl">{l.headline}</h1>
+          <p className="eyebrow">{def.category.replace("-", " ")} · {def.fulfillment === "AUTO" ? "instant" : `${def.sla.deliveryHours}h delivery`}</p>
+          <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{l.headline}</h1>
           <p className="mt-4 max-w-2xl text-lg text-gray-700">{l.subheadline}</p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <a href="#order" className="btn-primary">
@@ -79,7 +79,7 @@ export default async function ToolPage({ params }: Params) {
             <ul className="mt-4 space-y-2">
               {l.bullets.map((b) => (
                 <li key={b} className="flex gap-3 text-gray-700">
-                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand" />
+                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
                   <span>{b}</span>
                 </li>
               ))}
