@@ -25,7 +25,7 @@ npm run db:seed                   # tools, products, admin users, experiments, c
 npm run dev                       # http://localhost:3000
 ```
 
-With `JOBS_INLINE=true` (default in `.env.example` for dev) orders are fulfilled inside the web process, so no worker is needed locally. In production run the worker: `npm run worker`.
+With `JOBS_INLINE=true` orders are fulfilled inside the web process right after the Stripe webhook, and the embedded job loop (`EMBEDDED_WORKER=true`, started from `src/instrumentation.ts`) handles retries, hourly maintenance and the daily report — so one service is enough. A dedicated worker (`npm run worker`) is optional for throughput.
 
 Sign in at `/login` — with `EMAIL_PROVIDER=console` the magic link is printed in the server log and returned to the login form in non-production.
 
@@ -37,7 +37,7 @@ Stripe locally: `stripe listen --forward-to localhost:3000/api/stripe/webhook` a
 | --- | --- |
 | `npm run dev` / `npm run build` / `npm start` | Next.js |
 | `npm run start:railway` | `prisma migrate deploy && next start` (production start command) |
-| `npm run worker` | Background worker (jobs, daily report, maintenance) |
+| `npm run worker` | Optional dedicated worker (same job loop as the embedded one, higher concurrency) |
 | `npm run db:migrate` / `npm run db:deploy` / `npm run db:seed` | Prisma migrations and seed |
 | `npm run smoke` | End-to-end pipeline test without Stripe or API keys (`AI_PROVIDER=mock`) |
 | `npm test` / `npm run typecheck` | Vitest (needs a Postgres at `TEST_DATABASE_URL`) / `tsc` |
@@ -52,7 +52,7 @@ src/lib/tools                   Tool engine: types, registry, QA rules, definiti
 src/lib/ai                      provider abstraction (openai | anthropic | mock), routing, budgets, cost logging
 src/lib/orders                  order creation (server-side pricing), fulfilment pipeline, delivery, refunds
 src/lib/stripe                  Stripe client + idempotent webhook handlers
-src/lib/jobs                    Postgres job queue (SKIP LOCKED) + runner · scripts/worker.ts
+src/lib/jobs                    Postgres job queue (SKIP LOCKED) + runner + loop (embedded worker) · scripts/worker.ts
 src/lib/analytics · src/lib/ceo first-party events, KPIs, AI CEO report
 src/lib/storage · src/lib/email storage (db | s3) and email (resend | console) adapters
 src/lib/security                signed tokens, rate limiting, upload sniffing, link allow-list

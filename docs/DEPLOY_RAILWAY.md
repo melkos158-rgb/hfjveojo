@@ -1,6 +1,6 @@
 # Deploying ORVIONIS on Railway (replacing Ride Lab on orvionis.com)
 
-Target topology: **one Railway project, three services** — `web` (Next.js), `worker` (`npm run worker`), `postgres` (Railway Postgres plugin). Same GitHub repo for `web` and `worker`, different start commands.
+Target topology: **one Railway project, two services** — `web` (Next.js) and `postgres` (Railway Postgres plugin). The web process embeds the job loop (`EMBEDDED_WORKER=true`, see `src/instrumentation.ts`), so retries, hourly maintenance and the daily CEO report run without a separate worker. A dedicated `worker` service (`npm run worker`, same repo) is optional for higher throughput; when you add it, set `EMBEDDED_WORKER=false` on `web`.
 
 ## 0. Replace Ride Lab (one-time)
 
@@ -60,9 +60,11 @@ RESEND_API_KEY=re_...
 EMAIL_FROM=ORVIONIS <hello@orvionis.com>
 EMAIL_REPLY_TO=<your email>
 STORAGE_BACKEND=db                                # switch to s3 + S3_* when files grow (Cloudflare R2 works)
-JOBS_INLINE=false                                 # web: false (worker handles jobs). Set true only if you run without a worker
-WORKER_CONCURRENCY=2                              # worker only
-WORKER_POLL_MS=2000                               # worker only
+JOBS_INLINE=true                                  # web without a worker service: fulfil right after the webhook; false once a worker service exists
+EMBEDDED_WORKER=true                              # web: job loop in-process (retries, maintenance, daily report). false when a worker service exists
+EMBEDDED_WORKER_POLL_MS=10000                     # web only
+WORKER_CONCURRENCY=2                              # worker service only
+WORKER_POLL_MS=2000                               # worker service only
 CRON_SECRET=<openssl rand -hex 24>
 LOG_LEVEL=info
 ```
@@ -95,7 +97,7 @@ Add and verify the sending domain (`orvionis.com`) in Resend: SPF + DKIM DNS rec
 
 ## 7. Scheduled work
 
-The worker schedules the daily CEO report (06:10 UTC) and hourly maintenance itself. If you ever run **without** the worker, add a Railway cron service (or GitHub Actions schedule) that calls:
+The job loop (embedded in `web`, or the worker service) schedules the daily CEO report (06:10 UTC) and hourly maintenance itself; `/api/health` shows its heartbeat (`worker.lastTickAt`). Only if you run with `EMBEDDED_WORKER=false` **and** no worker service, add a Railway cron service (or GitHub Actions schedule) that calls:
 
 ```
 curl -X POST https://orvionis.com/api/internal/run-jobs -H "Authorization: Bearer $CRON_SECRET"      # every minute

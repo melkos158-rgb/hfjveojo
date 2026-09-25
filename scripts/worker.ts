@@ -3,73 +3,33 @@ import { hostname } from "node:os";
 import { prisma } from "../src/lib/db";
 import { env } from "../src/lib/env";
 import { log } from "../src/lib/logger";
-import { claimNextJob, requeueStaleJobs, enqueue } from "../src/lib/jobs/queue";
-import { runJob } from "../src/lib/jobs/runner";
+import { createJobLoop } from "../src/lib/jobs/loop";
 
 /**
- * Background worker: polls the Job table with SKIP LOCKED, runs jobs with bounded concurrency,
- * schedules the daily CEO report and maintenance. Run as a separate Railway service: `npm run worker`.
+ * Dedicated background worker (optional): the same job loop the web process embeds, with higher
+ * concurrency and a faster poll. Run as a separate Railway service with `npm run worker` and set
+ * EMBEDDED_WORKER=false on the web service so only one loop schedules the daily report/maintenance.
  */
 const e = env();
-const workerId = `${hostname()}-${process.pid}`;
-let running = 0;
-let stopping = false;
-
-async function scheduleDailyReportIfDue() {
-  const now = new Date();
-  // 06:10 UTC daily; guard against duplicates by checking today's report
-  if (now.getUTCHours() !== 6 || now.getUTCMinutes() > 14) return;
-  const start = new Date(now);
-  start.setUTCHours(0, 0, 0, 0);
-  const existing = await prisma.ceoReport.findFirst({ where: { period: "DAILY", createdAt: { gte: start } } });
-  const pending = await prisma.job.findFirst({ where: { type: "daily_report", status: { in: ["QUEUED", "RUNNING"] } } });
-  if (!existing && !pending) {
-    await enqueue("daily_report", { period: "DAILY" });
-    if (now.getUTCDay() === 1) await enqueue("daily_report", { period: "WEEKLY" });
-  }
-}
-
-async function scheduleMaintenanceIfDue() {
-  const now = new Date();
-  if (now.getUTCMinutes() > 4) return; // once per hour, first minutes
-  const recent = await prisma.job.findFirst({ where: { type: "maintenance", createdAt: { gte: new Date(Date.now() - 55 * 60_000) } } });
-  if (!recent) await enqueue("maintenance", {});
-}
-
-async function tick() {
-  if (stopping) return;
-  try {
-    await scheduleDailyReportIfDue();
-    await scheduleMaintenanceIfDue();
-    while (running < e.WORKER_CONCURRENCY) {
-      const job = await claimNextJob(workerId);
-      if (!job) break;
-      running++;
-      void runJob(job.id, workerId).finally(() => {
-        running--;
-      });
-    }
-  } catch (err) {
-    log.error("worker.tick_failed", { error: (err as Error).message });
-  }
-}
+const loop = createJobLoop({
+  workerId: `${hostname()}-${process.pid}`,
+  pollMs: e.WORKER_POLL_MS,
+  concurrency: e.WORKER_CONCURRENCY,
+  schedule: true,
+});
 
 async function main() {
-  log.info("worker.start", { workerId, concurrency: e.WORKER_CONCURRENCY, pollMs: e.WORKER_POLL_MS, provider: e.AI_PROVIDER });
-  await requeueStaleJobs();
-  const timer = setInterval(tick, e.WORKER_POLL_MS);
-  await tick();
+  log.info("worker.boot", { provider: e.AI_PROVIDER, inline: e.JOBS_INLINE });
+  await loop.start();
   const stop = async () => {
-    stopping = true;
-    clearInterval(timer);
-    log.info("worker.stopping", { running });
-    const deadline = Date.now() + 25_000;
-    while (running > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 250));
+    await loop.stop(25_000);
     await prisma.$disconnect();
     process.exit(0);
   };
-  process.on("SIGTERM", stop);
-  process.on("SIGINT", stop);
+  process.on("SIGTERM", () => void stop());
+  process.on("SIGINT", () => void stop());
+  // keep the process alive (the loop timer is unref'd on purpose)
+  setInterval(() => undefined, 60_000);
 }
 
 main().catch((err) => {

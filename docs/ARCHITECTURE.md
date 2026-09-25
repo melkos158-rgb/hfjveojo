@@ -36,7 +36,7 @@ Secrets only in env; `NEXT_PUBLIC_` only for public values · security headers i
 
 ## Deployment
 
-Railway: `web` (Next), `worker` (`tsx scripts/worker.ts`), Postgres. `start:railway` runs migrations then the server. Healthcheck `/api/health`. CI: gitleaks, typecheck, vitest (Postgres service), build.
+Railway: `web` (Next, with the job loop embedded via `src/instrumentation.ts` → `src/lib/jobs/loop.ts`), optional `worker` (`tsx scripts/worker.ts`, same loop), Postgres. `start:railway` runs migrations then the server. Healthcheck `/api/health`. CI: gitleaks, typecheck, vitest (Postgres service), build.
 
 ## Deliberately not in V1
 

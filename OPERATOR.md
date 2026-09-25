@@ -14,7 +14,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 | Railway web service | `hfjveojo` (id `5630800b-857d-4f7e-aec2-22e2fcbe7994`), domain `orvionis.com`, region EU West, auto-deploys from GitHub `main` |
 | Railway Postgres | service `Postgres`; ORVIONIS lives in schema `orvionis` (`DATABASE_URL=${{Postgres.DATABASE_URL}}?schema=orvionis`); legacy Ride Lab tables remain in `public` (do not drop without owner approval) |
 | Start command | `npm run start:railway` = `prisma migrate deploy && tsx prisma/seed.ts && next start` |
-| Worker | none yet — `JOBS_INLINE=true` on the web service (fulfilment runs after the webhook response via `after()`) |
+| Worker | no separate service — `JOBS_INLINE=true` (fulfilment runs right after the webhook response via `after()`) + embedded job loop in the web process (`EMBEDDED_WORKER`, default on; `src/instrumentation.ts`) for retries, hourly maintenance and the 06:10 UTC CEO report. `/api/health` → `worker.lastTickAt` is the heartbeat |
 | Stripe | account "jarvis sandbox" (test mode, acct `acct_1UIuDh2cM37Fu7zW`); webhook destination `orvionis-production` (`we_1UJgdu2cM37Fu7zWW3FeZqvh`) → `https://orvionis.com/api/stripe/webhook`, 7 events; `STRIPE_SECRET_KEY` is a **test** key — live mode not activated |
 | Email | `EMAIL_PROVIDER=console` (no Resend key yet) → customer emails are only written to Railway logs |
 | AI | `AI_PROVIDER=openai`, **`OPENAI_API_KEY` not set** → automated orders will fail until the owner adds it in Railway Variables |
@@ -23,6 +23,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 ## Status (update every session)
 
 - 2026-09-25 — Ride Lab replaced by ORVIONIS on the same repo/service/domain. Production ACTIVE at https://orvionis.com (home, /tools, tool pages, legal pages, /api/health). Migrations applied in schema `orvionis`; seed runs on every start. Stripe test webhook created. Variables set (secrets generated per environment, not stored here).
+- 2026-09-26 — Brand visuals live: Higgsfield-generated heroes (`public/img/hero-*.webp`, JPEG twins for OG) on /real-estate, /photographers and the home "Who is this for?" cards; static Open Graph cards for /, /real-estate, /photographers (`src/lib/og.tsx`, rendered at build time). Vertical pages now have a primary CTA to the tool page and a `#tools` anchor.
 
 ## Owner actions needed (cannot be done by the operator)
 
@@ -35,12 +36,15 @@ Rule: no secrets in this file — only names, ids, paths and states.
 ## Operator TODO (priority order)
 
 1. [ ] Verify end-to-end test purchase on production (Stripe test card 4242…) once OPENAI_API_KEY is set: order → webhook → fulfilment → delivery email in logs → /admin/orders.
-2. [ ] Add a `worker` Railway service (`npm run worker`) and set `JOBS_INLINE=false` on web — enables the nightly AI CEO report and maintenance without cron.
-3. [ ] Hero/OG visuals for /real-estate and /photographers (Higgsfield images, `public/img/`), `opengraph-image` routes.
+2. [x] Background jobs without a worker service — done 2026-09-26 via the embedded loop (owner asked for no new Railway services). A dedicated worker is only needed for throughput; if added, set `EMBEDDED_WORKER=false` on web.
+3. [x] Hero/OG visuals for /real-estate and /photographers (Higgsfield images, `public/img/`), `opengraph-image` routes — done 2026-09-26. To regenerate: Higgsfield `generate_image_batch` (gpt_image_2_5, 16:9) → resize 1200px WebP q60 + 900px JPEG for the OG renderer (WebP is not decoded by it).
 4. [ ] Clean legacy Ride Lab variables on Railway (`ADMIN_PATH`, `SITE_URL`, `ADMIN_RESET`) — harmless, low priority.
 5. [ ] GitHub Actions: confirm CI passes on `main` (needs repo Actions enabled).
 6. [ ] After first paid orders: review /admin/analytics, update experiments E1/E2 conclusions, decide next tool.
+7. [ ] Share-preview check after deploy: paste https://orvionis.com/real-estate into a preview debugger (opengraph.xyz or the Facebook Sharing Debugger) once; the card is cached by platforms for ~24h after first share.
 
 ## Session log
 
 - 2026-09-25 22:55–23:35 UTC+2: repo replaced, 6 deploy iterations (gitignore `storage/` bug, devDependencies under NODE_ENV=production, vitest in type-check, P3005 non-empty DB → own schema), seed-on-start, Stripe webhook, variables. Production verified via HTTP.
+- 2026-09-26 00:45–01:05 UTC+2: embedded job loop (`src/lib/jobs/loop.ts` shared with `scripts/worker.ts`, started by `src/instrumentation.ts`), inline-enqueue race fixed (inline jobs are created locked; jobs with a future `runAt` are now really scheduled instead of running at once), `/api/health` reports the loop heartbeat. Verified locally: 23 tests, build, `next start` picked up a hand-inserted QUEUED job within one poll.
+- 2026-09-26 00:05–00:45 UTC+2: hero visuals + OG cards (commit `b1ded03`). Verified locally: typecheck, 20 unit tests, `next build` (OG routes prerender as static PNGs), Playwright screenshots at 1280 px and 390 px. Files transferred to the owner's clone as a tarball (checksums matched), committed and pushed from there. Note for future sessions: `device_commit_files` refuses paths inside `.git/`; write to the repo root and `mv` afterwards.

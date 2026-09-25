@@ -43,7 +43,7 @@ QC notes list what failed (missing price, placeholder text, model QA issue). Opt
 
 | Symptom | Check | Fix |
 | --- | --- | --- |
-| Orders stuck in PAID | worker down (`/api/health` shows queued jobs growing) | restart worker service; or call `/api/internal/run-jobs` with `CRON_SECRET` |
+| Orders stuck in PAID | job loop down (`/api/health`: `worker.lastTickAt` stale or `jobs.queued` growing) | redeploy `web` (embedded loop restarts) or restart the worker service; or call `/api/internal/run-jobs` with `CRON_SECRET` |
 | Payment made, order still PENDING | Stripe → Webhooks → deliveries failing | fix `STRIPE_WEBHOOK_SECRET`/URL, then *Resend* the event in Stripe; handler is idempotent |
 | Emails not arriving | Resend domain not verified / `EMAIL_PROVIDER=console` | verify DNS; check Resend logs |
 | AI failures | `/admin/ai-costs` failed calls; provider status page | fallback provider via `ANTHROPIC_API_KEY`; retry orders |

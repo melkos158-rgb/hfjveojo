@@ -13,14 +13,17 @@ export type JobPayloads = {
 };
 
 /**
- * Enqueue a background job. With JOBS_INLINE=true (dev/test) the job runs immediately in-process,
- * so the full pipeline can be exercised without a worker.
+ * Enqueue a background job. With JOBS_INLINE=true the job runs immediately in-process (dev/test, and
+ * production without a dedicated worker), so the full pipeline works without a worker. Inline jobs are
+ * created already RUNNING/locked so a concurrent job loop (embedded worker) cannot claim them too;
+ * if the process dies mid-run they are requeued as stale and retried by the loop.
  */
 export async function enqueue<T extends JobType>(
   type: T,
   payload: JobPayloads[T],
   opts: { runAt?: Date; orderId?: string; maxAttempts?: number; defer?: boolean } = {},
 ): Promise<Job> {
+  const inline = env().JOBS_INLINE && !opts.runAt;
   const job = await prisma.job.create({
     data: {
       type,
@@ -28,9 +31,10 @@ export async function enqueue<T extends JobType>(
       runAt: opts.runAt ?? new Date(),
       orderId: opts.orderId,
       maxAttempts: opts.maxAttempts ?? 3,
+      ...(inline ? { status: "RUNNING", lockedAt: new Date(), lockedBy: "inline", attempts: 1 } : {}),
     },
   });
-  if (env().JOBS_INLINE) {
+  if (inline) {
     const { runJob } = await import("@/lib/jobs/runner");
     const run = () => runJob(job.id, "inline");
     if (opts.defer) {

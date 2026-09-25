@@ -54,6 +54,14 @@ const schema = z.object({
     .transform((v) => v === "true" || v === "1"),
   WORKER_CONCURRENCY: z.coerce.number().int().positive().default(2),
   WORKER_POLL_MS: z.coerce.number().int().positive().default(2000),
+  /** Job loop inside the web process (single-service deployments). Set false once a dedicated worker runs. */
+  EMBEDDED_WORKER: z
+    .string()
+    .optional()
+    .default("true")
+    .transform((v) => !(v === "false" || v === "0")),
+  EMBEDDED_WORKER_CONCURRENCY: z.coerce.number().int().positive().default(1),
+  EMBEDDED_WORKER_POLL_MS: z.coerce.number().int().positive().default(10_000),
   CRON_SECRET: z.string().min(1).default("change-me"),
 
   SENTRY_DSN: z.string().optional().default(""),
