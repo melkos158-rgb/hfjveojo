@@ -23,6 +23,7 @@ export default function PhotographersPage() {
         "Writing about yourself is the one thing you can't outsource to a template.",
       ]}
       proofNote="Pricing context: Etsy pricing-guide templates sell for $10–$20 and require hours of copywriting and layout; CRM plans that bundle documents cost $29–$129/month (public price pages, Sept 2026)."
+      hero={{ src: "/img/hero-photographers.webp", alt: "A printed wedding photography pricing guide open on a wooden desk next to a camera" }}
     />
   );
 }

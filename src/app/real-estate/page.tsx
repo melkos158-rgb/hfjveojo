@@ -23,6 +23,7 @@ export default function RealEstatePage() {
         "Writing hooks and captions that don't sound like every other agent takes longer than the shoot.",
       ]}
       proofNote="Pricing context: Fiverr real-estate edits run $15–$65 per single video; real-estate editing subscriptions start around $195/month for 10 clips (public price pages, Sept 2026)."
+      hero={{ src: "/img/hero-real-estate.webp", alt: "A phone on a tripod filming a bright, staged living room and kitchen for a listing walkthrough" }}
     />
   );
 }

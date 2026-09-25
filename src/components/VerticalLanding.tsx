@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard } from "@/components/ToolCard";
@@ -9,18 +10,38 @@ type Props = {
   sub: string;
   pains: string[];
   proofNote?: string;
+  /** Optional hero visual from /public (WebP, 1200×671). Rendered next to the headline on large screens. */
+  hero?: { src: string; alt: string };
 };
 
 /** Shared layout for /real-estate, /photographers, ... — one brand, many verticals, zero custom code per vertical. */
-export async function VerticalLanding({ category, eyebrow, headline, sub, pains, proofNote }: Props) {
+export async function VerticalLanding({ category, eyebrow, headline, sub, pains, proofNote, hero }: Props) {
   const catalog = await liveCatalog(category);
+  const first = catalog[0];
   return (
     <div>
       <section className="bg-ink text-white">
-        <div className="container-x py-16 sm:py-20">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>
-          <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight">{headline}</h1>
-          <p className="mt-5 max-w-2xl text-lg text-gray-300">{sub}</p>
+        <div className={`container-x grid items-center gap-10 py-16 sm:py-20 ${hero ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-widest text-accent">{eyebrow}</p>
+            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight sm:text-4xl">{headline}</h1>
+            <p className="mt-5 max-w-2xl text-lg text-gray-300">{sub}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {first ? (
+                <Link href={`/tools/${first.def.slug}`} className="btn-primary">
+                  Order {first.def.name} →
+                </Link>
+              ) : null}
+              <a href="#tools" className="btn bg-white text-ink hover:bg-gray-100">
+                See tools and prices
+              </a>
+            </div>
+          </div>
+          {hero ? (
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/10">
+              <Image src={hero.src} alt={hero.alt} width={1200} height={671} priority unoptimized className="h-auto w-full" />
+            </div>
+          ) : null}
         </div>
       </section>
       <section className="container-x py-14">
@@ -33,7 +54,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
           ))}
         </ul>
       </section>
-      <section className="container-x pb-16">
+      <section id="tools" className="container-x scroll-mt-24 pb-16">
         <h2 className="text-2xl font-bold">What you can order today</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {catalog.map((c) => (

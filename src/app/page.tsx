@@ -1,9 +1,31 @@
+import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/config/site";
 import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard } from "@/components/ToolCard";
 
 export const dynamic = "force-dynamic";
+
+const verticalCards = [
+  {
+    href: "/real-estate",
+    image: "/img/hero-real-estate.webp",
+    alt: "A phone on a tripod filming a bright, staged living room for a listing walkthrough",
+    eyebrow: "Real-estate agents",
+    title: "Listing clips from your walkthrough video",
+    blurb: "Five vertical clips with price, beds/baths and your branding — captions included, delivered in 48 hours.",
+    cta: "See how it works",
+  },
+  {
+    href: "/photographers",
+    image: "/img/hero-photographers.webp",
+    alt: "A printed photography pricing guide open on a desk next to a camera",
+    eyebrow: "Photographers",
+    title: "A branded pricing guide from your real packages",
+    blurb: "Answer ten questions, get a polished PDF in your voice and colors — ready to send to the next enquiry.",
+    cta: "See how it works",
+  },
+];
 
 export default async function HomePage() {
   const catalog = await liveCatalog();
@@ -28,6 +50,25 @@ export default async function HomePage() {
       </section>
 
       <section className="container-x py-16">
+        <h2 className="text-2xl font-bold">Who is this for?</h2>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          {verticalCards.map((v) => (
+            <Link key={v.href} href={v.href} className="group overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+              <div className="relative aspect-[16/9] overflow-hidden bg-mist">
+                <Image src={v.image} alt={v.alt} fill sizes="(min-width: 640px) 50vw, 100vw" unoptimized className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+              </div>
+              <div className="p-5">
+                <div className="text-xs font-semibold uppercase tracking-widest text-brand">{v.eyebrow}</div>
+                <h3 className="mt-1 text-lg font-bold">{v.title}</h3>
+                <p className="mt-1 text-sm text-gray-600">{v.blurb}</p>
+                <span className="mt-3 inline-block text-sm font-semibold text-brand">{v.cta} →</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="container-x pb-16">
         <div className="mb-8 flex items-end justify-between">
           <div>
             <h2 className="text-2xl font-bold">Tools you can order right now</h2>
