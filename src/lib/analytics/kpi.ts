@@ -27,7 +27,24 @@ export type Kpis = {
   feedbackCount: number;
   byTool: Array<{ toolId: string; name: string; paid: number; revenueCents: number; aiCostCents: number }>;
   byChannel: Array<{ source: string; visits: number; paid: number; revenueCents: number }>;
+  /** Estimated card fees (2.9 % + $0.30 per paid order) until balance transactions are pulled from Stripe. */
+  stripeFeesCents: number;
+  /** gross contribution − estimated Stripe fees */
+  netContributionCents: number;
+  /** revenue ÷ founder hours logged as channel cost (null when no hours logged) */
+  revenuePerFounderHourCents: number | null;
+  customers: number;
+  repeatCustomers: number;
+  repeatRate: number;
+  aiCostPerPaidOrderCents: number;
+  freeToolUses: number;
 };
+
+export const STRIPE_FEE_PCT = 0.029;
+export const STRIPE_FEE_FIXED_CENTS = 30;
+export function estimateStripeFeesCents(orders: Array<{ amountCents: number }>): number {
+  return Math.round(orders.reduce((s, o) => s + o.amountCents * STRIPE_FEE_PCT + STRIPE_FEE_FIXED_CENTS, 0));
+}
 
 function sourceOf(utm: unknown): string {
   const u = (utm ?? {}) as Record<string, string | undefined>;
@@ -37,14 +54,14 @@ function sourceOf(utm: unknown): string {
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeStarted, checkoutStarted, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools] =
+  const [pageViews, intakeStarted, checkoutStarted, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses] =
     await Promise.all([
       prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true } }),
       prisma.event.count({ where: { name: "intake_started", createdAt: range } }),
       prisma.event.count({ where: { name: "checkout_started", createdAt: range } }),
       prisma.order.findMany({
         where: { paidAt: range },
-        select: { id: true, toolId: true, amountCents: true, attribution: true, paidAt: true, deliveredAt: true, status: true },
+        select: { id: true, toolId: true, amountCents: true, attribution: true, paidAt: true, deliveredAt: true, status: true, customerEmail: true },
       }),
       prisma.order.count({ where: { deliveredAt: range } }),
       prisma.refund.aggregate({ _sum: { amountCents: true }, _count: true, where: { createdAt: range, status: "SUCCEEDED" } }),
@@ -54,6 +71,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.channelCost.aggregate({ _sum: { costCents: true, hours: true }, where: { date: range } }),
       prisma.feedback.aggregate({ _avg: { rating: true }, _count: true, where: { createdAt: range } }),
       prisma.tool.findMany({ select: { id: true, name: true } }),
+      prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
     ]);
 
   const sessions = new Set(pageViews.map((p) => p.sessionId).filter(Boolean) as string[]);
@@ -72,6 +90,12 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     const ai = aiAgg.find((a) => a.toolId === t.id)?._sum.costMicros ?? 0;
     return { toolId: t.id, name: t.name, paid: orders.length, revenueCents: orders.reduce((s, o) => s + o.amountCents, 0), aiCostCents: Math.round(microsToCents(ai)) };
   });
+
+  const stripeFeesCents = estimateStripeFeesCents(paidOrders);
+  const byCustomer = new Map<string, number>();
+  for (const o of paidOrders) byCustomer.set(o.customerEmail, (byCustomer.get(o.customerEmail) ?? 0) + 1);
+  const customers = byCustomer.size;
+  const repeatCustomers = [...byCustomer.values()].filter((n) => n >= 2).length;
 
   const channelMap = new Map<string, { visits: number; paid: number; revenueCents: number }>();
   for (const pv of pageViews) {
@@ -114,6 +138,14 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     feedbackCount: feedbackAgg._count,
     byTool,
     byChannel: [...channelMap.entries()].map(([source, v]) => ({ source, ...v })).sort((a, b) => b.revenueCents - a.revenueCents),
+    stripeFeesCents,
+    netContributionCents: revenueCents - refundedCents - aiCostCents - channelCostCents - stripeFeesCents,
+    revenuePerFounderHourCents: founderHours > 0 ? Math.round(revenueCents / founderHours) : null,
+    customers,
+    repeatCustomers,
+    repeatRate: customers ? repeatCustomers / customers : 0,
+    aiCostPerPaidOrderCents: paidOrders.length ? Math.round(aiCostCents / paidOrders.length) : 0,
+    freeToolUses,
   };
 }
 

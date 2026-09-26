@@ -16,3 +16,12 @@ describe("AI pricing", () => {
     expect(formatUsd(4900)).toBe("$49.00");
   });
 });
+
+import { estimateStripeFeesCents } from "@/lib/analytics/kpi";
+
+describe("stripe fee estimate", () => {
+  it("applies 2.9% + 30¢ per paid order", () => {
+    expect(estimateStripeFeesCents([{ amountCents: 900 }, { amountCents: 2900 }])).toBe(Math.round(900 * 0.029 + 30 + 2900 * 0.029 + 30));
+    expect(estimateStripeFeesCents([])).toBe(0);
+  });
+});

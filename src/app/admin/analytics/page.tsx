@@ -29,7 +29,10 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
         <Kpi label="Visits / sessions" value={`${k.visits} / ${k.uniqueSessions}`} />
         <Kpi label="Funnel" value={`${k.intakeStarted} → ${k.checkoutStarted} → ${k.ordersPaid}`} sub="intake → checkout → paid" />
         <Kpi label="Revenue" value={formatUsd(k.revenueCents)} sub={`avg order ${formatUsd(k.avgOrderCents)} · refunds ${formatUsd(k.refundedCents)}`} />
-        <Kpi label="Gross contribution" value={formatUsd(k.grossContributionCents)} sub={`AI ${formatUsd(k.aiCostCents)} · channels ${formatUsd(k.channelCostCents)} · ${k.founderHours}h`} />
+        <Kpi label="Net contribution" value={formatUsd(k.netContributionCents)} sub={`AI ${formatUsd(k.aiCostCents)} · Stripe ≈${formatUsd(k.stripeFeesCents)} · channels ${formatUsd(k.channelCostCents)} · ${k.founderHours}h`} />
+        <Kpi label="Revenue / founder hour" value={k.revenuePerFounderHourCents === null ? "—" : formatUsd(k.revenuePerFounderHourCents)} sub="log hours in Experiments → channel cost" />
+        <Kpi label="Customers / repeat" value={`${k.customers} / ${k.repeatCustomers}`} sub={`${(k.repeatRate * 100).toFixed(0)}% bought twice · AI ${formatUsd(k.aiCostPerPaidOrderCents)} per paid order`} />
+        <Kpi label="Free tool uses" value={`${k.freeToolUses}`} sub="checker + calculator sessions" />
         <Kpi label="Visit → paid" value={`${(k.conversionVisitToPaid * 100).toFixed(2)}%`} />
         <Kpi label="Checkout → paid" value={`${(k.conversionCheckoutToPaid * 100).toFixed(1)}%`} />
         <Kpi label="Delivered / review / failed" value={`${k.ordersDelivered} / ${k.ordersInReview} / ${k.ordersFailed}`} />
