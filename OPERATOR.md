@@ -34,6 +34,16 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Owner actions needed (cannot be done by the operator)
 
+**Current, 2026-09-26 22:00 UTC+2. Do these first; the older numbered items below are history.**
+- **Google Ads, live campaign `E8 Virtual Staging - Search - US` (id 24292280138).** The auto-mode safety check blocks the operator from editing a live campaign ("real-world transactions"). The owner does these:
+  - (a) add the campaign-level negative keywords (list in `docs/GOOGLE_ADS_EXPERIMENT.md`);
+  - (b) Recommendations → Auto-apply → untick everything;
+  - (c) optional: campaign Settings → Campaign URL options → Final URL suffix (value in the doc);
+  - (d) before the first paid ad order is uploaded: create the conversion action "ORVIONIS paid order" (Import → clicks).
+- **Fiverr:** only *Manage Orders* proves an order exists (owner rule, `docs/FIVERR_EXPERIMENT.md`). Fiverr's "It needs a human touch" check is solved by the owner only.
+- **90-day reinvestment policy:** no withdrawals on days 1–90 (Day 1 = 2026-09-26). Every material spend follows `docs/BUSINESS_METRICS.md` → Spend register.
+
+
 0. **Stripe key is from the Ride Lab sandbox** — replace `STRIPE_SECRET_KEY` in Railway with the secret key of sandbox "orvionis sandbox" (`acct_1UIuDh2cM37Fu7zW`, https://dashboard.stripe.com/acct_1UIuDh2cM37Fu7zW/test/apikeys), then Deploy; `/admin/system` → Stripe card must show that account id and "webhook … enabled · all 7 events". (Earlier note, now explained:) **Stripe shows "Pay Ride Lab" on the checkout page** (verified 2026-09-26 by creating a test-mode checkout session). Stripe Dashboard → Settings → Business → Public details: business name `ORVIONIS`, support email `hello@orvionis.com`, website `https://orvionis.com`; Settings → Branding: icon/logo, brand color `#8B5CF6`, background `#08090D`. Do it in the sandbox now and again on the live account when it is activated.
 1. Add `OPENAI_API_KEY` in Railway → hfjveojo → Variables (then click Deploy). Until then: Photographer Pricing Guide orders fail after retries; Listing Clips orders still arrive (concierge) but without the AI clip plan.
 2. Resend: create account, verify domain `orvionis.com` (SPF/DKIM), add `RESEND_API_KEY` and set `EMAIL_PROVIDER=resend`. Until then customers get no ORVIONIS emails — but in live mode Stripe's own receipt (now always sent, with the private order link in its description) covers the essentials.
@@ -57,6 +67,18 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Session log
 
+- 2026-09-26 21:25–22:25 UTC+2 (Google Ads launch, Fiverr live, security):
+  - **Google Ads E8 published** (campaign id 24292280138, in Google review). Search only, US presence, English, 15 exact/phrase keywords, 1 RSA (15 headlines / 4 descriptions, ad strength "Good"), Maximize clicks capped at €1.50, AI Max and text/URL automation off, **campaign total budget €30 for 26 Sep – 1 Oct**. Every setting was verified on the review page after a full reload.
+    - Google asked the owner to verify identity at the Budget step; the owner did it.
+    - The review summary can be stale after a failed save; only a reload shows the server state.
+    - Ad-level and campaign-level "Final URL suffix" did not persist in the draft, even with real typing, so the suffix is an owner item. Attribution still works through the gclid.
+    - After publishing, the auto-mode check blocked edits to the live campaign; negatives and auto-apply went to the owner.
+  - **Fiverr gig Active** (0 impressions so far). Within an hour, 3 phishing "order placed, confirm at <link>" messages arrived from Sept-2026 accounts. Manage Orders showed 0 in every status.
+    - primemaple299 and w0ng_v_175: reported and blocked (reason "communicate outside of Fiverr").
+    - jake_ilj_03906: shows no messages in the thread; left unreported and unverified.
+    - Fiverr's bot check hit `/inbox` once and the owner passed it. Keep Fiverr navigation slow and minimal.
+  - **Deploy `96c843f` verified in production:** the "Google Ads conversions" card is on `/admin/analytics`.
+  - **Owner policies recorded:** the 90-day reinvestment policy, and Fiverr order verification (`docs/DECISIONS.md`, `docs/BUSINESS_METRICS.md`).
 - 2026-09-26 19:00–19:25 UTC+2: official brand mark rolled out (Stripe branding via the Dashboard upload fields — `file_upload` works with files in the session's outputs folder, not with paths in the connected repo; site, icons, manifest, OG, emails; `e72a409`). The Stripe Dashboard tab in the owner's hidden window freezes often; the reliable check is `/admin/system` (reads branding through the API).
 - 2026-09-26 18:25–18:45 UTC+2: Stripe live, operator side — webhook URL verified for the owner, live destination created from `/admin/system`, owner's staged Railway variable deployed, live probe verified; checkout-down message fix `bbb6746`. Railway stages variable edits ("Apply N changes") until someone presses Deploy — a saved variable is not live before that. The safety classifier blocks the operator from adding production variables itself (`STRIPE_MODE`) — owner action.
 - 2026-09-26 17:50–18:20 UTC+2: **multi-room Virtual Staging** (up to 6 photos, $15 each; `rooms` field, `ToolDefinition.quantity/photoInputs`, `pricing.unit`, `landing.ctaLabelMany`, `Order.quantity`) and **run leases** (`src/lib/orders/runs.ts`: 30 s heartbeat, takeover after 2 min of silence, shutdown hands the order back, conditional claim, abandoned runs drop results) after finding that a deploy mid-fulfilment stranded the order in PROCESSING. `faa9882` deployed; production pages checked in Chrome. Note: the owner's hidden Chrome window also freezes `file_upload` (page never reaches document_idle) — upload flows are verified locally with Playwright against a production build. orvionis.com is blocked from both the sandbox and the Cowork VM proxies; GitHub API works from the VM only.

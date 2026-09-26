@@ -22,12 +22,12 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
 
 | Setting | Value |
 | --- | --- |
-| Name | E8 Virtual Staging - Search - US |
+| Name | E8 Virtual Staging - Search - US (campaign id **24292280138**) |
 | Type | Search, created without goal guidance. **Not** Performance Max: the new-account wizard pushes PMax, but it spreads money over YouTube, Display and Gmail. |
 | Networks | Google Search only (Search partners off, Display off) |
 | Location | United States — "presence: people in or regularly in". US agents are the buyers; AB 723 disclosure copies fit California. |
 | Language | English |
-| Budget | €6/day for 5 days = €30 (the prepaid balance) |
+| Budget | **Campaign total €30, 26 Sep – 1 Oct 2026.** Google caps a total budget at the amount, and the €30 prepaid balance is a second hard stop. The budget type can't change after launch; the amount can. |
 | Bidding | Maximize clicks with a max CPC of €1.50. There's no conversion history yet, so bidding for conversions would be blind. |
 | Auto-apply recommendations | off (no automatic budget raises or broad match) |
 | AI Max / broad match | off. Keywords are exact and phrase match only. |
@@ -52,7 +52,7 @@ software, app, apps, free, jobs, job, career, careers, hiring, salary, tutorial,
 
 ### Ads
 
-Two responsive search ads. Every claim is true on the live site:
+One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Every claim is true on the live site:
 - $15 per photo;
 - 2 versions per photo;
 - free watermarked preview;
@@ -78,15 +78,17 @@ Two responsive search ads. Every claim is true on the live site:
 - ORVIONIS Virtual Staging
 
 **Descriptions (≤ 90 characters):**
-- Upload an empty room photo and get 2 realistic staged versions. $15 per photo.
+- Virtual staging: upload an empty room photo, get 2 realistic staged versions. $15/photo.
 - Only furniture and decor are added. Walls, floors and windows stay as photographed.
-- See a free watermarked preview of your own photo before you pay. 6 styles.
+- Free watermarked preview of your own listing photo before you pay. 6 staging styles.
 - Copies labeled "Virtually staged" included for MLS and California AB 723 disclosure.
 
 **URLs:**
 - Final URL: `https://orvionis.com/tools/virtual-staging`
 - Display path: `orvionis.com/virtual-staging/per-photo`
-- Final URL suffix: `utm_source=google&utm_medium=cpc&utm_campaign=e8_vs_search_us&utm_term={keyword}&utm_content={creative}&exp=e4-virtual-staging`
+- Final URL suffix (intended): `utm_source=google&utm_medium=cpc&utm_campaign=e8_vs_search_us&utm_term={keyword}&utm_content={creative}&exp=e4-virtual-staging`
+  - **Not set yet.** The wizard's draft did not persist it, neither at ad nor at campaign level, even with real typing. Owner item: campaign Settings → Campaign URL options.
+  - Until then attribution relies on the gclid (auto-tagging), which the middleware stores. Only `utm_term` (the keyword per order) is missing.
 
 ## CONVERSION TRACKING
 
@@ -104,7 +106,23 @@ Two responsive search ads. Every claim is true on the live site:
 
 ## STATUS
 
-Account and billing are done. The Search campaign is being configured.
+**Published 2026-09-26 22:15 UTC+2 and in Google's ad review.** Ads start after approval, usually within hours.
+
+Settings were verified on the review page after a full reload:
+- Search only, US presence, English;
+- 15 keywords, exact and phrase match;
+- 1 RSA;
+- Maximize clicks capped at €1.50;
+- AI Max, text customization and final URL expansion off;
+- campaign total €30, 26 Sep – 1 Oct.
+
+## OWNER ACTIONS (pending)
+
+The auto-mode safety check blocks the operator from editing the live campaign ("real-world transactions"). Exact steps were sent to the owner on 2026-09-26 22:20:
+1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
+2. **Auto-apply recommendations off:** Recommendations → Auto-apply → untick all → Save.
+3. Optional: Final URL suffix (campaign Settings → Campaign URL options).
+4. Before the first paid ad order is uploaded: create the conversion action "ORVIONIS paid order" (Goals → Conversions → + New → Import → Track conversions from clicks). Wait 6 h before the first upload.
 
 ## METRICS
 
@@ -128,22 +146,30 @@ Account and billing are done. The Search campaign is being configured.
   - landing page `/tools/virtual-staging`.
 - 2026-09-26: the wizard forced Performance Max. Switched to the expert flow: account without a campaign → EUR/Poland/GMT+2 → billing by the owner (€30 prepaid).
 - 2026-09-26: offline conversion tracking built into the site (gclid capture + CSV export). The privacy policy now says purchases by ad visitors may be reported to Google Ads.
+- 2026-09-26 21:25–22:15: keywords and the RSA entered, the RSA reaching ad strength "Good". The owner passed Google's identity check.
+  - Fixed after a reload: the budget had defaulted to the recommended €22.45/day, and it became a €30 campaign total for 26 Sep – 1 Oct.
+  - Verified location US, AI Max off and max CPC €1.50, then **published** (campaign id 24292280138, in review).
+- 2026-09-26 22:20: edits to the live campaign blocked by the safety check. Negatives and auto-apply off sent to the owner.
+
+## DISCOVERIES
+
+- Google asked the owner to verify identity ("Підтвердьте свою особу") at the Budget step. Until then the draft did not save ("Не вдалося зберегти зміни").
+- The review page summary can be stale after a failed save. It showed "All countries" and AI text automation "on" while the editors showed the right values. Only a full page reload shows the server truth. **Always verify the review after a reload.**
+- The wizard's draft keeps keywords, ads, location, AI Max and budget, but not the Final URL suffix.
+- The "total campaign budget" option exists for Search. It needs start and end dates, and the budget type is fixed after launch.
+- Estimated with US-only targeting: about €0.76–0.87 average CPC. €30 buys roughly 35–40 clicks.
 
 ## LAST COMPLETED ACTION
 
-Campaign wizard: business step (ORVIONIS, `/tools/virtual-staging`), then "no guidance" → Search → name → goals → Continue.
+Campaign published and all settings verified. Owner asked to add negatives and turn off auto-apply (22:20).
 
 ## NEXT EXACT ACTION
 
-Campaign settings:
-1. Networks: Search only.
-2. Location US, language English.
-3. Budget €6/day, bidding Maximize clicks with a €1.50 max CPC.
-4. Keywords and negatives as above.
-5. The 2 RSAs.
-6. Final URL suffix.
-7. Review, then publish. Publishing may need the owner's click.
+1. After the owner confirms: check that the negatives and auto-apply changes are visible.
+2. When the ads are approved: record the approval time. Check the first impressions and clicks, and the search terms report (add negatives through the owner).
+3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
+4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
 
 ## TIMESTAMP
 
-2026-09-26 21:15 UTC+2
+2026-09-26 22:25 UTC+2
