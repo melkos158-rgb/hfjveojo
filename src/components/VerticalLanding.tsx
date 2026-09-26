@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard, toolCardProps } from "@/components/ToolCard";
+import { categoryInfo } from "@/config/categories";
 
 type Props = {
   category: string;
@@ -18,6 +19,7 @@ type Props = {
 export async function VerticalLanding({ category, eyebrow, headline, sub, pains, proofNote, hero }: Props) {
   const catalog = await liveCatalog(category);
   const first = catalog[0];
+  const info = categoryInfo(category);
   return (
     <div>
       <section className="relative overflow-hidden">
@@ -62,8 +64,23 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
           ))}
         </div>
         {proofNote ? <p className="mt-6 text-sm text-gray-500">{proofNote}</p> : null}
+        {info && info.planned.length ? (
+          <div className="mt-10 rounded-2xl border border-line bg-card p-5 sm:p-6">
+            <h3 className="font-semibold text-fg">Next results for {info.title.toLowerCase()} — built in the order people ask</h3>
+            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+              {info.planned.map((l) => (
+                <li key={l} className="flex items-center justify-between gap-3 rounded-lg border border-line bg-bg px-3 py-2 text-sm">
+                  <span className="text-gray-700">{l}</span>
+                  <Link href={`/contact?topic=${encodeURIComponent(category)}`} className="shrink-0 text-xs font-semibold text-accent hover:underline">
+                    I&apos;d pay for this →
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         <p className="mt-6 text-sm text-gray-600">
-          Need something that is not listed? <Link className="underline" href="/contact">Tell us</Link> — the next tool gets built for the job people actually pay for.
+          Need something that is not listed? <Link className="underline" href={`/contact?topic=${encodeURIComponent(category)}`}>Tell us</Link> — the next tool gets built for the job people actually pay for.
         </p>
       </section>
     </div>

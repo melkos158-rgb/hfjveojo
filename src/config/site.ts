@@ -5,9 +5,9 @@
 export const site = {
   name: process.env.NEXT_PUBLIC_BRAND_NAME ?? "ORVIONIS",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "https://orvionis.com",
-  tagline: "AI-made deliverables for busy professionals — done in hours, not weeks.",
+  tagline: "Upload what you have. Get the finished result.",
   description:
-    "ORVIONIS turns your inputs into finished, branded deliverables: listing clips for real-estate agents, pricing guides for photographers, and more. Pay per result, no subscription required.",
+    "ORVIONIS turns what you already have into finished, branded deliverables: listing clips for real-estate agents, pricing guides for photographers, and more. Fixed price per result, no subscription.",
   supportEmail: "hello@orvionis.com",
   legal: {
     entityName: "ORVIONIS (sole proprietorship) — VERIFY legal entity name",

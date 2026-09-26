@@ -25,23 +25,24 @@ export default async function PricingPage() {
         <table className="w-full text-left text-sm">
           <thead className="bg-mist text-xs uppercase tracking-wide text-gray-600">
             <tr>
-              <th className="px-4 py-3">Tool</th>
-              <th className="px-4 py-3">For</th>
-              <th className="px-4 py-3">Delivery</th>
+              <th className="px-4 py-3">Result</th>
+              <th className="hidden px-4 py-3 md:table-cell">You provide</th>
+              <th className="px-4 py-3">Time</th>
               <th className="px-4 py-3 text-right">Price</th>
             </tr>
           </thead>
           <tbody>
             {catalog.map((c) => (
               <tr key={c.def.id} className="border-t border-line">
-                <td className="px-4 py-3 font-semibold">
-                  <Link href={`/tools/${c.def.slug}`} className="hover:underline">
+                <td className="px-4 py-3">
+                  <Link href={`/tools/${c.def.slug}`} className="font-semibold hover:text-accent">
                     {c.def.name}
                   </Link>
+                  <div className="text-xs text-gray-500">{c.def.io.output}</div>
                 </td>
-                <td className="px-4 py-3 capitalize text-gray-600">{c.def.category.replace("-", " ")}</td>
-                <td className="px-4 py-3 text-gray-600">{c.def.landing.deliveryPromise}</td>
-                <td className="px-4 py-3 text-right font-bold">{formatUsd(c.priceCents)}</td>
+                <td className="hidden px-4 py-3 text-gray-600 md:table-cell">{c.def.io.input}</td>
+                <td className="px-4 py-3 text-gray-600">{c.def.io.processingTime}</td>
+                <td className="px-4 py-3 text-right font-bold">{formatUsd(c.priceCents).replace(/\.00$/, "")}</td>
               </tr>
             ))}
           </tbody>

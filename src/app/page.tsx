@@ -4,6 +4,7 @@ import { site } from "@/config/site";
 import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard, toolCardProps } from "@/components/ToolCard";
 import { formatUsd } from "@/lib/ai/pricing";
+import { CATEGORIES } from "@/config/categories";
 
 export const dynamic = "force-dynamic";
 
@@ -19,39 +20,6 @@ const FLOW = [
   { n: "5", t: "Download", d: "Inbox + your order page, files kept 90 days" },
 ];
 
-/**
- * Categories: what is live today and what we are lining up next. "Planned" items link to the contact form so
- * demand is measured before anything is built — no fake "coming soon" launches.
- */
-const CATEGORIES = [
-  {
-    href: "/real-estate",
-    image: "/img/hero-real-estate.webp",
-    alt: "A phone on a tripod filming a bright, staged living room for a listing walkthrough",
-    title: "Real estate",
-    live: ["Raw walkthrough → 5 listing clips"],
-    planned: ["Room photos → virtual staging", "Listing facts → listing description", "Listing files → marketing package"],
-    cta: "See real-estate tools",
-  },
-  {
-    href: "/photographers",
-    image: "/img/hero-photographers.webp",
-    alt: "A printed photography pricing guide open on a desk next to a camera",
-    title: "Photographers",
-    live: ["Packages + prices → branded pricing guide (PDF)"],
-    planned: ["Your process → client welcome guide", "Business facts → branded documents", "Raw content → social posts"],
-    cta: "See photographer tools",
-  },
-  {
-    href: "/contact?topic=contractors",
-    image: null,
-    alt: "",
-    title: "Contractors",
-    live: [],
-    planned: ["Voice note + photos → proposal", "Job facts → estimate", "Photos → job documentation"],
-    cta: "Tell us what you need",
-  },
-];
 
 const FAQ = [
   { q: "What do I actually upload?", a: "As little as possible. For listing clips: a link to your walkthrough video plus the listing facts. For the pricing guide: your packages, prices and a few sentences about you. No accounts, no uploads of large files — links are fine." },
