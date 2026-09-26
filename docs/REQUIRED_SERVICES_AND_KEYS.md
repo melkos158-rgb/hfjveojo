@@ -104,8 +104,8 @@ Apple/Microsoft/Facebook sign-in is not in the code or the plan. Customers are a
 
 ### 4.1 OpenAI — ✅ configured
 
-- **Variables:** `AI_PROVIDER=openai`, `OPENAI_API_KEY`, `AI_MODEL_CHEAP` (`gpt-4.1-mini`), `AI_MODEL_STANDARD` (`gpt-4.1`), `AI_MODEL_BEST` (`gpt-4.1`), `AI_DAILY_BUDGET_CENTS`, `AI_MAX_COST_PER_ORDER_CENTS`, `AI_PRICE_TABLE_JSON` (optional price override for cost accounting)
-- **Purpose:** drafting every AUTO deliverable (listing description, pricing guide copy, clip plan) and model QA (`src/lib/ai`). Cost is metered per request into `AiRequest`; the daily budget and per-order cap are hard stops.
+- **Variables:** `AI_PROVIDER=openai`, `OPENAI_API_KEY`, `AI_MODEL_CHEAP` (`gpt-4.1-mini`), `AI_MODEL_STANDARD` (`gpt-4.1`), `AI_MODEL_BEST` (`gpt-4.1`), `AI_DAILY_BUDGET_CENTS`, `AI_MAX_COST_PER_ORDER_CENTS`, `AI_PRICE_TABLE_JSON` (optional price override for cost accounting); image edits: `AI_IMAGE_MODEL` (`gpt-image-1`), `AI_IMAGE_QUALITY` (`medium`), `AI_IMAGE_COST_CENTS` (≈ cost per output image, default 6 — used for cost accounting and the per-order cap)
+- **Purpose:** drafting every AUTO deliverable (listing description, pricing guide copy, clip plan) and model QA (`src/lib/ai`); **Virtual Staging** sends the customer's room photo to the Images API (`images.edit`, 2 outputs per order, ≈ $0.12–0.15 at medium quality). Cost is metered per request into `AiRequest`; the daily budget and per-order cap are hard stops (raise `AI_MAX_COST_PER_ORDER_CENTS` above ~15 only if staging orders start hitting it).
 - **Needed now:** yes. **Stage:** MVP.
 - **Where:** https://platform.openai.com/api-keys — create the key inside a **project** named ORVIONIS (Projects → Create), so usage and limits are separate from any other work. Add a monthly budget limit at https://platform.openai.com/settings/organization/limits.
 - **Credential type:** project API key (`sk-proj-…`).
@@ -115,7 +115,7 @@ Apple/Microsoft/Facebook sign-in is not in the code or the plan. Customers are a
 - **Separate project:** one OpenAI project "ORVIONIS" (not a separate organization).
 - **Callbacks/DNS:** none. **Scopes:** default (model access); no organization-admin permissions.
 - **Secret:** yes. **Railway:** safe. **Rotation:** on leak, or when a team member leaves; set a spend limit as the real safety net.
-- **Future image work (virtual staging, V2)** uses the same key (`gpt-image-1` on the Images API) — no new credential.
+- **Image work (Virtual Staging, live)** uses the same key (`gpt-image-1` on the Images API) — no new credential. The OpenAI project must have access to `gpt-image-1` (some accounts need identity verification at platform.openai.com → Organization → General before image models unlock; the admin pipeline test for `virtual-staging` shows the exact error if not).
 
 ### 4.2 Anthropic — FUTURE (V2), optional second provider
 

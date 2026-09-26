@@ -5,7 +5,7 @@ import { costMicros } from "@/lib/ai/pricing";
 import { openAiProvider } from "@/lib/ai/providers/openai";
 import { anthropicProvider } from "@/lib/ai/providers/anthropic";
 import { mockProvider } from "@/lib/ai/providers/mock";
-import { AiProviderError, type AiProvider, type AiTier, type CompletionResult } from "@/lib/ai/types";
+import { AiProviderError, type AiProvider, type AiTier, type CompletionResult, type ImageEditRequest } from "@/lib/ai/types";
 import { AppError } from "@/lib/errors";
 
 export type AiCallContext = {
@@ -181,4 +181,58 @@ export async function completeStructured<T>(
     }
   }
   throw lastErr ?? new Error("AI structured completion failed");
+}
+
+export type ImageEditCall = Omit<ImageEditRequest, "model" | "quality"> & { quality?: ImageEditRequest["quality"] };
+
+/**
+ * Image-to-image edit with the same budget guard and cost logging as text calls. Cost is a per-image
+ * estimate (AI_IMAGE_COST_CENTS) because image models bill per image, not per token.
+ */
+export async function editImage(call: ImageEditCall, ctx: AiCallContext): Promise<{ images: Buffer[]; costMicros: number }> {
+  await assertBudget(ctx);
+  const e = env();
+  const provider = providerFor(e.AI_PROVIDER === "anthropic" ? "openai" : e.AI_PROVIDER); // Anthropic has no image edit; OpenAI does
+  const model = e.AI_PROVIDER === "mock" ? "mock" : e.AI_IMAGE_MODEL;
+  if (!provider.editImage) throw new AiProviderError(`Provider ${provider.name} cannot edit images`, { retryable: false });
+  const started = Date.now();
+  try {
+    const res = await provider.editImage({ ...call, model, quality: call.quality ?? e.AI_IMAGE_QUALITY });
+    const micros = provider.name === "mock" ? 0 : Math.round(e.AI_IMAGE_COST_CENTS * 10_000 * res.images.length + 10_000);
+    await prisma.aiRequest.create({
+      data: {
+        orderId: ctx.orderId ?? undefined,
+        toolRunId: ctx.toolRunId ?? undefined,
+        toolId: ctx.toolId ?? undefined,
+        userId: ctx.userId ?? undefined,
+        provider: res.provider,
+        model: res.model,
+        tier: "standard",
+        purpose: ctx.purpose,
+        costMicros: micros,
+        latencyMs: res.latencyMs,
+        ok: true,
+      },
+    });
+    return { images: res.images, costMicros: micros };
+  } catch (err) {
+    const e2 = err as Error;
+    await prisma.aiRequest.create({
+      data: {
+        orderId: ctx.orderId ?? undefined,
+        toolRunId: ctx.toolRunId ?? undefined,
+        toolId: ctx.toolId ?? undefined,
+        userId: ctx.userId ?? undefined,
+        provider: provider.name,
+        model,
+        tier: "standard",
+        purpose: ctx.purpose,
+        latencyMs: Date.now() - started,
+        ok: false,
+        error: e2.message.slice(0, 1000),
+      },
+    });
+    log.warn("ai.image_failed", { provider: provider.name, model, error: e2.message });
+    throw err;
+  }
 }

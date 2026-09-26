@@ -1,6 +1,6 @@
 import type { z } from "zod";
 import type { Fulfillment, ToolStatus, OutputType } from "@prisma/client";
-import type { AiCall, AiCallContext } from "@/lib/ai";
+import type { AiCall, AiCallContext, ImageEditCall } from "@/lib/ai";
 
 /**
  * A Tool is configuration, not custom code paths in the app. Adding a tool = adding one definition file
@@ -70,7 +70,13 @@ export type LandingCopy = {
   sample?: SampleResult;
 };
 
-export type SeoMeta = { title: string; description: string; keywords: string[] };
+export type SeoMeta = {
+  title: string;
+  description: string;
+  keywords: string[];
+  /** Optional share-card picture (JPEG/PNG under /public, e.g. "img/sample-x-og.jpg", 540×630 works best); falls back to the category visual. */
+  ogImage?: string;
+};
 
 export type OutputDraft = {
   type: OutputType;
@@ -96,6 +102,7 @@ export type PipelineContext<TIntake> = {
   intake: TIntake;
   ai: {
     complete: (call: AiCall, purpose: string) => Promise<{ text: string; costMicros: number }>;
+    editImage: (call: ImageEditCall, purpose: string) => Promise<{ images: Buffer[]; costMicros: number }>;
     completeStructured: <T>(
       call: AiCall & { schemaName: string; jsonSchema: Record<string, unknown>; parse: (raw: unknown) => T },
       purpose: string,

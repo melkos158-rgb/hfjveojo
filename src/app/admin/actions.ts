@@ -221,10 +221,15 @@ export async function runPipelineTestAction(formData: FormData) {
   if (!(key.startsWith("sk_test_") || key.startsWith("rk_test_"))) throw new Error("Pipeline test is only allowed with a Stripe test key.");
   const { createOrderWithCheckout } = await import("@/lib/orders/create");
   const { handleStripeEvent } = await import("@/lib/stripe/webhooks");
-  const { TEST_INTAKES } = await import("@/lib/tools/samples/test-intakes");
+  const { TEST_INTAKES, hasFileRefs } = await import("@/lib/tools/samples/test-intakes");
   const toolSlug = z.string().regex(/^[a-z0-9-]+$/).parse(formData.get("tool") ?? "listing-description");
-  const intake = TEST_INTAKES[toolSlug];
+  let intake = TEST_INTAKES[toolSlug];
   if (!intake) throw new Error(`No test intake for tool ${toolSlug}`);
+  if (hasFileRefs(intake)) {
+    // e.g. virtual staging: upload the sample photo the way a customer's browser would, then reference its id
+    const { materializeTestIntake } = await import("@/lib/tools/samples/materialize");
+    intake = await materializeTestIntake(intake, { userId: admin.id });
+  }
   const { orderId } = await createOrderWithCheckout({
     toolSlug,
     email: admin.email,

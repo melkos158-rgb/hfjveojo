@@ -1,6 +1,6 @@
-import OpenAI from "openai";
+import OpenAI, { toFile } from "openai";
 import { env } from "@/lib/env";
-import { AiProviderError, type AiProvider, type CompletionRequest, type CompletionResult } from "@/lib/ai/types";
+import { AiProviderError, type AiProvider, type CompletionRequest, type CompletionResult, type ImageEditRequest, type ImageEditResult } from "@/lib/ai/types";
 
 let client: OpenAI | null = null;
 
@@ -56,6 +56,32 @@ export const openAiProvider: AiProvider = {
       const status = (err as { status?: number }).status;
       const retryable = !status || status === 429 || status >= 500;
       throw new AiProviderError(`OpenAI error: ${(err as Error).message}`, { retryable, status });
+    }
+  },
+
+  async editImage(req: ImageEditRequest): Promise<ImageEditResult> {
+    const started = Date.now();
+    try {
+      const ext = req.mime === "image/png" ? "png" : req.mime === "image/webp" ? "webp" : "jpg";
+      const file = await toFile(req.image, `room.${ext}`, { type: req.mime });
+      const res = await getClient().images.edit({
+        model: req.model,
+        image: file,
+        prompt: req.prompt,
+        n: req.n,
+        size: req.size,
+        quality: req.quality,
+      });
+      const images: Buffer[] = [];
+      for (const d of res.data ?? []) if (d.b64_json) images.push(Buffer.from(d.b64_json, "base64"));
+      if (images.length === 0) throw new AiProviderError("Image model returned no images", { retryable: true });
+      return { images, model: req.model, provider: "openai", latencyMs: Date.now() - started };
+    } catch (err) {
+      if (err instanceof AiProviderError) throw err;
+      const e = err as { status?: number; message?: string };
+      const status = e.status;
+      const retryable = status === undefined || status === 429 || status >= 500;
+      throw new AiProviderError(`OpenAI images: ${e.message ?? "request failed"}`, { retryable, status });
     }
   },
 };

@@ -4,7 +4,7 @@ import { AppError } from "@/lib/errors";
  * Upload validation: never trust the client's declared MIME type. Sniff magic bytes and enforce size caps.
  * V1 accepts small images only (logos for branded documents). Videos are accepted as links, not uploads.
  */
-export const MAX_IMAGE_BYTES = 2 * 1024 * 1024; // 2 MB
+export const MAX_IMAGE_BYTES = 8 * 1024 * 1024; // 8 MB — room photos for staging; logos are far smaller
 
 const signatures: Array<{ mime: string; ext: string; test: (b: Buffer) => boolean }> = [
   { mime: "image/png", ext: "png", test: (b) => b.length > 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47 },
@@ -14,7 +14,7 @@ const signatures: Array<{ mime: string; ext: string; test: (b: Buffer) => boolea
 
 export function sniffImage(buf: Buffer): { mime: string; ext: string } {
   if (buf.length === 0) throw new AppError("Empty file", 400, "empty_file");
-  if (buf.length > MAX_IMAGE_BYTES) throw new AppError("Image larger than 2 MB", 413, "file_too_large");
+  if (buf.length > MAX_IMAGE_BYTES) throw new AppError("Image larger than 8 MB", 413, "file_too_large");
   const hit = signatures.find((s) => s.test(buf));
   if (!hit) throw new AppError("Only PNG, JPEG or WebP images are accepted", 415, "unsupported_type");
   return hit;

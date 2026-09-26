@@ -41,6 +41,9 @@ AI_MODEL_STANDARD=gpt-4.1                           ⚙️ ✅
 AI_MODEL_BEST=gpt-4.1                               ⚙️ ✅
 AI_DAILY_BUDGET_CENTS=500                           ⚙️ ✅  hard stop per day
 AI_MAX_COST_PER_ORDER_CENTS=100                     ⚙️ ✅  hard stop per order
+AI_IMAGE_MODEL=gpt-image-1                          ⚙️ ✅  image edits (virtual staging); default in code
+AI_IMAGE_QUALITY=medium                             ⚙️ ✅  low | medium | high — quality/cost of staged photos
+AI_IMAGE_COST_CENTS=6                               ⚙️ ✅  assumed cost per output image (cost accounting)
 
 # Email (Resend) — key set; domain orvionis.com must be verified in Resend (DNS), see REQUIRED_SERVICES_AND_KEYS.md §3
 EMAIL_PROVIDER=resend                               ⚙️ ✅

@@ -40,6 +40,25 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   }
   const intake = parsed.data as Record<string, unknown>;
 
+  // Uploaded inputs (image fields) must be real, unclaimed INPUT files — never someone else's upload or an output.
+  const fileIds = def.intake.fields
+    .filter((f) => f.type === "image")
+    .map((f) => intake[f.key])
+    .filter((v): v is string => typeof v === "string" && v.length > 0);
+  if (fileIds.length > 0) {
+    const files = await prisma.file.findMany({
+      where: { id: { in: fileIds } },
+      select: { id: true, kind: true, orderId: true, userId: true, expiresAt: true, order: { select: { status: true, customerEmail: true } } },
+    });
+    for (const id of fileIds) {
+      const f = files.find((x) => x.id === id);
+      // A file already attached to an abandoned checkout of the same customer may be re-used (browser "back" → submit again).
+      const reusable = !f?.orderId || (f.order && ["PENDING", "CANCELED"].includes(f.order.status) && f.order.customerEmail === email);
+      const ok = f && f.kind === "INPUT" && reusable && (!f.expiresAt || f.expiresAt > new Date()) && (!f.userId || !input.userId || f.userId === input.userId);
+      if (!ok) throw new AppError("The uploaded photo could not be found — please upload it again.", 400, "upload_missing");
+    }
+  }
+
   // Experiment attribution (first-touch stored with the order)
   const experiment = input.attribution?.exp
     ? await prisma.experiment.findUnique({ where: { key: input.attribution.exp }, include: { variants: true } })
@@ -65,6 +84,14 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       dueAt: new Date(Date.now() + def.sla.deliveryHours * 3600 * 1000),
     },
   });
+
+  if (fileIds.length > 0) {
+    // Claim the uploads for this order and keep them as long as the outputs (the order page shows before/after).
+    await prisma.file.updateMany({
+      where: { id: { in: fileIds } },
+      data: { orderId: order.id, expiresAt: new Date(Date.now() + env().FILE_RETENTION_DAYS_OUTPUT * 24 * 3600 * 1000) },
+    });
+  }
 
   const successUrl = appUrl(`/checkout/success?order=${order.id}&t=${encodeURIComponent(order.accessToken)}`);
   const cancelUrl = appUrl(`/checkout/cancel?order=${order.id}&tool=${def.slug}`);

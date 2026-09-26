@@ -150,7 +150,7 @@ export const listingClipsTool: ToolDefinition<ListingClipsIntake> = {
         help: "Google Drive, Dropbox, WeTransfer, unlisted YouTube or Vimeo. Phone footage is fine — vertical or horizontal.",
       },
       { key: "brandColor", label: "Brand color (optional)", type: "color" },
-      { key: "logoFileId", label: "Logo (optional, PNG/JPG up to 2 MB)", type: "image" },
+      { key: "logoFileId", label: "Logo (optional, PNG/JPG up to 8 MB)", type: "image" },
       { key: "socialHandle", label: "Instagram / TikTok handle (optional)", type: "text", placeholder: "@jordanleehomes" },
       {
         key: "style",

@@ -90,7 +90,27 @@ async function main() {
     update: {},
   });
 
-  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide, e3-listing-description");
+  await prisma.experiment.upsert({
+    where: { key: "e4-virtual-staging" },
+    create: {
+      key: "e4-virtual-staging",
+      name: "E4 — Virtual Staging (automated, $15 per photo)",
+      hypothesis:
+        "Agents and listing photographers with an empty room photo will pay $15 for two photorealistic staged versions delivered in minutes, instead of $25–75 and 24–48 h at a staging company; the visual before/after also makes the strongest social proof for outreach.",
+      targetCustomer: "US listing agents and real-estate photographers with vacant listings; flippers and property managers",
+      offer: "Upload one room photo, pick room type + style, get 2 staged PNGs of the same photo in about 2 minutes, $15, one redo included",
+      channel: "instagram_dm + facebook_groups + seo",
+      priceCents: 1500,
+      status: "RUNNING",
+      startAt: new Date(),
+      successCriteria: "≥10 paid photos in 30 days with AI cost ≤ $0.40/order, ≤20% redo requests, ≥30% of buyers stage a second photo within 30 days",
+      failureCriteria: "<3 paid photos after 30 days with ≥300 tool-page views, or >30% of results parked for a human (structure changed / broken image)",
+      expected: { orders: 10, revenueCents: 15000, costCents: 300 },
+    },
+    update: {},
+  });
+
+  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide, e3-listing-description, e4-virtual-staging");
 }
 
 main()

@@ -121,6 +121,48 @@ describe("order → checkout → webhook → fulfilment", () => {
     expect((md?.content as { markdown: string }).markdown).toContain("## MLS description");
   });
 
+  it("fulfils a virtual-staging order end to end (mock image edit): upload claimed, 2 staged PNGs + details, delivered", async () => {
+    const { materializeTestIntake } = await import("@/lib/tools/samples/materialize");
+    const { TEST_INTAKES } = await import("@/lib/tools/samples/test-intakes");
+    const intake = await materializeTestIntake(TEST_INTAKES["virtual-staging"]);
+    const photoFileId = intake.photoFileId as string;
+    expect(photoFileId).toMatch(/^c[a-z0-9]{20,}$/);
+
+    // a made-up or foreign file id is refused before any money moves
+    await expect(createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: { ...intake, photoFileId: "clnotarealfileid00000000" } })).rejects.toMatchObject({ code: "upload_missing" });
+
+    const { orderId } = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: intake });
+    const claimed = await prisma.file.findUniqueOrThrow({ where: { id: photoFileId } });
+    expect(claimed.orderId).toBe(orderId);
+    expect(claimed.kind).toBe("INPUT");
+
+    // the same upload cannot be attached to another customer's order
+    await expect(createOrderWithCheckout({ toolSlug: "virtual-staging", email: "someone-else@example.com", intakeRaw: intake })).rejects.toMatchObject({ code: "upload_missing" });
+    // …but the same customer may retry an abandoned checkout with it
+    const retry = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: intake });
+    expect(retry.orderId).not.toBe(orderId);
+
+    await handleStripeEvent(checkoutCompletedEvent(retry.orderId, 1500));
+    const order = await prisma.order.findUniqueOrThrow({ where: { id: retry.orderId }, include: { outputs: { include: { file: true } }, runs: true } });
+    expect(order.amountCents).toBe(1500);
+    expect(order.status).toBe("COMPLETED");
+    const images = order.outputs.filter((o) => o.type === "IMAGE");
+    expect(images).toHaveLength(2);
+    expect(images.map((o) => o.file?.name).sort()).toEqual(["staged-living-room-modern-v1.jpg", "staged-living-room-modern-v2.jpg"]);
+    for (const img of images) {
+      expect(img.file?.kind).toBe("OUTPUT");
+      expect(img.file?.mime).toBe("image/jpeg");
+      expect(img.file?.sizeBytes ?? 0).toBeGreaterThan(20_000);
+      expect(img.file?.data?.slice(0, 3)).toEqual(new Uint8Array([0xff, 0xd8, 0xff])); // real JPEG bytes
+    }
+    const details = order.outputs.find((o) => o.type === "JSON");
+    expect((details?.content as { style: string; versions: number }).style).toBe("modern");
+    expect((details?.content as { versions: number }).versions).toBe(2);
+    const ai = await prisma.aiRequest.findMany({ where: { orderId: retry.orderId } });
+    expect(ai).toHaveLength(1);
+    expect(ai[0].purpose).toBe("stage");
+  });
+
   it("parks concierge orders in REVIEW and lets an admin deliver with a link", async () => {
     const { orderId } = await createOrderWithCheckout({ toolSlug: "listing-clips", email: "agent@example.com", intakeRaw: sampleListingClipsIntake });
     await handleStripeEvent(checkoutCompletedEvent(orderId, 4900));

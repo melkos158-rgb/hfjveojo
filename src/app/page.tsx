@@ -114,6 +114,24 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-8 grid gap-6 lg:grid-cols-2">
+            {/* Virtual staging — the most visual result, shown full width */}
+            <div className="card flex flex-col gap-4 lg:col-span-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-fg">Virtual Staging</h3>
+                <span className="badge bg-gray-100 text-gray-700">Example</span>
+              </div>
+              <div className="overflow-hidden rounded-xl border border-line bg-card-2">
+                <Image src="/img/sample-virtual-staging.webp" alt="Before and after: an empty living room, then the same photo virtually staged with a sofa, rug and coffee table" width={1420} height={480} unoptimized className="h-auto w-full" />
+              </div>
+              <div className="grid gap-2 text-xs text-gray-500 sm:grid-cols-2">
+                <div>Before · one photo of the empty room, room type, style</div>
+                <div className="sm:text-right">After · 2 staged versions of that exact photo, JPG, about 2 minutes, $15</div>
+              </div>
+              <Link href="/tools/virtual-staging#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
+                See the sample and the six styles →
+              </Link>
+            </div>
+
             {/* Listing clips */}
             <div className="card flex flex-col gap-4">
               <div className="flex items-center justify-between">

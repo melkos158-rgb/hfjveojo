@@ -1,4 +1,4 @@
-import type { AiProvider, CompletionRequest, CompletionResult } from "@/lib/ai/types";
+import type { AiProvider, CompletionRequest, CompletionResult, ImageEditRequest, ImageEditResult } from "@/lib/ai/types";
 
 /**
  * Deterministic provider for tests, CI and local development without API keys.
@@ -62,5 +62,10 @@ export const mockProvider: AiProvider = {
       provider: "mock",
       latencyMs: 1,
     };
+  },
+
+  /** Returns the source image n times so image pipelines run end to end without a model. */
+  async editImage(req: ImageEditRequest): Promise<ImageEditResult> {
+    return { images: Array.from({ length: req.n }, () => Buffer.from(req.image)), model: "mock", provider: "mock", latencyMs: 1 };
   },
 };

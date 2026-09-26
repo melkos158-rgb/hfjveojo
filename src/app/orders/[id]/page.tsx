@@ -9,6 +9,7 @@ import { formatUsd } from "@/lib/ai/pricing";
 import { site } from "@/config/site";
 import { CopyLink } from "@/components/CopyLink";
 import { DeliverableText } from "@/components/DeliverableText";
+import { getToolBySlug } from "@/lib/tools/registry";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -32,6 +33,11 @@ export default async function OrderPage({ params, searchParams }: Props) {
   const delivered = order.status === "COMPLETED";
   const markdownOut = order.outputs.find((o) => o.type === "MARKDOWN");
   const md = (markdownOut?.content as { markdown?: string } | null)?.markdown;
+  const images = order.outputs.filter((o) => o.type === "IMAGE" && o.fileId);
+  // For photo tools the customer's own upload is shown next to the results (before → after).
+  const imageField = getToolBySlug(order.tool.slug)?.intake.fields.find((f) => f.type === "image");
+  const beforeFileId = imageField ? (order.intake as Record<string, unknown>)[imageField.key] : undefined;
+  const beforeUrl = typeof beforeFileId === "string" && beforeFileId ? signedFileUrl(beforeFileId) : undefined;
 
   return (
     <div className="container-x max-w-3xl py-12">
@@ -78,9 +84,35 @@ export default async function OrderPage({ params, searchParams }: Props) {
       {delivered ? (
         <section className="mt-8">
           <h2 className="text-lg font-bold">Your files</h2>
+          {images.length > 0 ? (
+            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {beforeUrl ? (
+                <figure className="card p-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={beforeUrl} alt="Your original photo" className="h-auto w-full rounded-lg border border-line" />
+                  <figcaption className="mt-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">Before · your photo</figcaption>
+                </figure>
+              ) : null}
+              {images.map((o, i) => {
+                const url = signedFileUrl(o.fileId as string);
+                return (
+                  <figure key={o.id} className="card p-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt={o.title} className="h-auto w-full rounded-lg border border-line" />
+                    <figcaption className="mt-2 flex flex-col gap-2">
+                      <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">After · version {i + 1}</span>
+                      <a href={url} className="btn-secondary justify-center px-3 py-1.5 text-xs" download>
+                        Download photo
+                      </a>
+                    </figcaption>
+                  </figure>
+                );
+              })}
+            </div>
+          ) : null}
           <ul className="mt-3 space-y-2">
             {order.outputs
-              .filter((o) => o.fileId || o.type === "LINK")
+              .filter((o) => (o.fileId && o.type !== "IMAGE") || o.type === "LINK")
               .map((o) => {
                 const link = o.type === "LINK" ? (o.content as { url?: string })?.url : o.fileId ? signedFileUrl(o.fileId) : undefined;
                 return (

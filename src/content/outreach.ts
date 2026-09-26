@@ -21,6 +21,14 @@ export const outreachTemplates: OutreachTemplate[] = [
     personalize: "[name], [street]. Link with ?utm_source=instagram_dm&exp=e3-listing-description.",
   },
   {
+    key: "re-ig-dm-staging",
+    channel: "Instagram DM → agent or listing photographer who posted a vacant listing (empty rooms in the photos)",
+    when: "First contact when the listing is clearly empty. Strongest visual proof we have; the before/after does the selling.",
+    en: `Hey [name], the [street] listing photographs well but those empty rooms are working against you. I virtually stage a room photo — you upload the shot, pick a style, and two staged versions of that exact photo come back in about two minutes (same walls, floors and windows, furniture added). $15 a photo, no subscription, one redo included. Before/after sample here: orvionis.com/tools/virtual-staging#example. Want to try it on the living room?`,
+    ua: `Привіт, [name], лістинг на [street] добре знятий, але ці порожні кімнати працюють проти тебе. Я віртуально стейджу фото кімнати — ти завантажуєш кадр, обираєш стиль, і за близько дві хвилини отримуєш дві застейджені версії саме цього фото (ті самі стіни, підлога й вікна, додані меблі). $15 за фото, без підписки, одна переробка включена. Зразок до/після тут: orvionis.com/tools/virtual-staging#example. Хочеш спробувати на вітальні?`,
+    personalize: "[name], [street], the room you name (living room / primary bedroom). Link with ?utm_source=instagram_dm&exp=e4-virtual-staging. Only send to listings that are actually empty.",
+  },
+  {
     key: "re-free-checker",
     channel: "Reddit / Facebook group post or comment — value first, no paid pitch",
     when: "Where tools are allowed. Answer replies; the checker itself links to the $9 tool.",

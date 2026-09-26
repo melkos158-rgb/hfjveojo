@@ -5,7 +5,7 @@ import { AppError } from "@/lib/errors";
  * buffered in memory before validation. Checks Content-Length first; when absent, reads with a cap.
  */
 export const MAX_JSON_BYTES = 64 * 1024; // intake forms, auth, events
-export const MAX_FORM_BYTES = 3 * 1024 * 1024; // logo uploads (MAX_IMAGE_BYTES + multipart overhead)
+export const MAX_FORM_BYTES = 9 * 1024 * 1024; // image uploads (MAX_IMAGE_BYTES + multipart overhead)
 
 export function assertContentLength(req: Request, maxBytes: number): void {
   const len = Number(req.headers.get("content-length"));

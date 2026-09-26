@@ -23,6 +23,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   );
   const [email, setEmail] = useState(initialEmail ?? "");
   const [uploading, setUploading] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<Record<string, { url: string; name: string; sizeKb: number }>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const started = useRef(false);
@@ -36,10 +37,15 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
 
   const set = (key: string, v: string) => setValues((prev) => ({ ...prev, [key]: v }));
 
+  const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
   const upload = async (key: string, file: File | undefined) => {
     if (!file) return;
-    setUploading(key);
     setError(null);
+    if (file.size > MAX_UPLOAD_BYTES) {
+      setError(`That photo is ${(file.size / 1024 / 1024).toFixed(1)} MB — the limit is 8 MB. Export it as a JPG at 2,000–3,000 px wide and try again.`);
+      return;
+    }
+    setUploading(key);
     try {
       const fd = new FormData();
       fd.append("file", file);
@@ -47,6 +53,10 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const data = (await res.json()) as { fileId?: string; message?: string };
       if (!res.ok || !data.fileId) throw new Error(data.message ?? "Upload failed");
       set(key, data.fileId);
+      setPreviews((prev) => {
+        if (prev[key]) URL.revokeObjectURL(prev[key].url);
+        return { ...prev, [key]: { url: URL.createObjectURL(file), name: file.name, sizeKb: Math.round(file.size / 1024) } };
+      });
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -107,15 +117,27 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
               ))}
             </select>
           ) : f.type === "image" ? (
-            <div className="flex items-center gap-3">
-              <input
-                id={`f-${f.key}`}
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                className="text-sm"
-                onChange={(e) => upload(f.key, e.target.files?.[0])}
-              />
-              {uploading === f.key ? <span className="text-xs text-gray-500">Uploading…</span> : values[f.key] ? <span className="text-xs text-green-600">Uploaded ✓</span> : null}
+            <div>
+              <div className="flex items-center gap-3">
+                <input
+                  id={`f-${f.key}`}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="text-sm"
+                  onChange={(e) => upload(f.key, e.target.files?.[0])}
+                />
+                {uploading === f.key ? <span className="text-xs text-gray-500">Uploading…</span> : values[f.key] ? <span className="text-xs text-green-600">Uploaded ✓</span> : null}
+              </div>
+              {previews[f.key] ? (
+                <div className="mt-3 flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={previews[f.key].url} alt="" className="h-20 w-28 rounded-lg border border-line object-cover" />
+                  <div className="text-xs text-gray-500">
+                    <div className="max-w-[16rem] truncate text-fg">{previews[f.key].name}</div>
+                    <div>{previews[f.key].sizeKb} KB · uploaded, ready to go</div>
+                  </div>
+                </div>
+              ) : null}
             </div>
           ) : f.type === "color" ? (
             <div className="flex items-center gap-3">

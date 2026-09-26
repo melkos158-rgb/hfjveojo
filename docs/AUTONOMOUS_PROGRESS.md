@@ -6,7 +6,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 ## CURRENT STATUS
 
 - Production **live and healthy** at https://orvionis.com (Railway `courageous-flow` → service `hfjveojo`, EU West). Health: `/api/health` ok, embedded job loop ticking, hourly maintenance running.
-- 3 tools live: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto). Every tool page shows a real sample deliverable.
+- 4 tools: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, image model)** — the fourth is built and tested, production verification pending (see IN PROGRESS). Every tool page shows a real sample deliverable.
 - Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook now on the same account (verified in `/admin/system` 2026-09-26 03:55: webhook enabled, all 7 events). No real money possible until Stripe live activation (owner).
 - AI: OpenAI key live; smoke test in production answered "OK" (gpt-4.1-mini, 1.6 s, $0.0001). Budget guards: $5/day, $1/order.
 - Auth: magic link (email) + **Google sign-in** (verified end-to-end in production 2026-09-26 03:50). Admin = `ADMIN_EMAILS`.
@@ -19,7 +19,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 1. (P0, owner) Stripe live activation → live `STRIPE_SECRET_KEY` + live webhook destination + `STRIPE_WEBHOOK_SECRET`. Without it there is no revenue.
 2. (P1, owner) One sandbox purchase with the test card `4242…` on https://orvionis.com/tools/listing-description — the only untested link is Stripe's own card step → webhook delivery to our endpoint (the app side is proven); then the same in live with a real $9 order.
 4. (P2, operator) Conversion + acquisition assets: outreach kit with links to samples/free tool; second free tool for photographers (pricing calculator); admin metrics for the 90-day experiment (Stripe fees, revenue/hour, repeat purchases).
-5. (P2) AI cost control audit (§14 of the brief): input size caps per field, timeouts, retry limits, per-user/IP order rate limits — verify and tighten.
+5. (P2) AI cost control audit (§14): **verified 2026-09-26** — every intake field has a zod max length, orders are rate-limited per IP (10 / 10 min), uploads 20 / 10 min and 8 MB, OpenAI client timeout 120 s with 2 retries, 3 fulfilment attempts, daily budget $5 and $1 per order as hard stops; non-retryable provider errors park the order in REVIEW instead of burning retries. Nothing to tighten until real traffic shows a pattern.
 
 ## DONE (verified in production unless noted)
 
@@ -45,7 +45,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## IN PROGRESS
 
-- Nothing mid-flight. Next task starts from CURRENT PRIORITY.
+- **Virtual Staging tool** (`/tools/virtual-staging`, $15): implemented — OpenAI Images `images.edit` layer with cost accounting (`AI_IMAGE_*`), `OutputType.IMAGE` + migration, 8 MB uploads, upload ownership check + claim at order time, before/after on the order page, inline previews in admin, sample before/after (Higgsfield-made, md5-verified transfer), E4 experiment, outreach DM (`re-ig-dm-staging`), docs. Typecheck + 42 tests + `next build` green; full pipeline proven locally with the mock provider (order COMPLETED, 2 MLS-ready JPEGs via sharp — PNG fallback if the binary is missing — + details); share card with the real before/after; upload thumbnail + 8 MB client check in the intake form. **Not yet deployed**: the owner's computer went offline mid-session (git push runs there). Next: transfer → commit → push → Railway deploy → admin pipeline test `virtual-staging` in production (first real `gpt-image-1` call; if the OpenAI project lacks image-model access the test shows the exact error) → replace the sample "after" with the real output if better.
 
 ## BLOCKED (needs the owner)
 
@@ -59,7 +59,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 1. Stripe Dashboard → webhook `orvionis-production` → "Send test event" (checkout.session.completed) to prove signature + reachability of the endpoint from Stripe's side (needs the owner's Chrome; the app side is proven).
 2. Close test orders #2–#4 in /admin (button exists) once the owner has looked at them.
-3. Next tool by demand (`/admin/feedback` tool requests). Strongest owner signal: Virtual Staging (room photo → staged image, OpenAI Images) — build after the first paid orders or 3+ requests.
+3. Virtual Staging in production: run the pipeline test, read the Railway log for the image call, check cost per order in /admin/analytics (expected ≈ $0.13–0.15), then start the vacant-listing DM (`re-ig-dm-staging`).
 4. Stripe live: when the owner activates — swap keys, create the live webhook, run one real $9 order, enable "Successful payments" emails in Stripe.
 5. Deliverable quality loop: read the outputs of orders #2–#4 critically (tone, facts, fair-housing) and tighten prompts where needed; add a "regenerate section" option later if customers ask.
 6. Browser extension — only on demand.
@@ -76,11 +76,12 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## KNOWN BUGS
 
-- None open. Watch list: Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
+- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores ≈ 8 MB input + 2 PNG outputs; at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
 
 ## BUSINESS METRICS (real data only)
 
 - Revenue: $0 (no live payments possible yet). Orders: 0 paid. Visitors: no meaningful traffic yet (no outreach started).
+- AI budget note: `AI_DAILY_BUDGET_CENTS=500` allows ~35 staging orders/day at ≈13¢ each — raise it in Railway Variables once staging orders arrive (the guard parks orders in REVIEW, it never loses them).
 - Costs so far: Railway Hobby plan, OpenAI ≈ $0.01 (smoke test + one pipeline test order: 2 calls, 1,325 in / 492 out tokens → margin after AI on a $9 order ≈ $8.99 before Stripe fees ≈ $0.56). Instrumentation in place: `Event` table (visits, CTA, checkout, paid, delivered, free-tool use), `AiRequest` (cost per call), `ChannelCost` (hours/spend per channel), KPIs on `/admin/analytics`, daily CEO report.
 - First-profit forecast given to the owner 2026-09-26: first sale 2–5 days after Stripe live + daily outreach starts; infra breaks even after ~3–5 orders.
 

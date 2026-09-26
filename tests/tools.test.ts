@@ -46,6 +46,10 @@ describe("tool registry", () => {
         expect(existsSync(join(process.cwd(), "public", sample.preview.image))).toBe(true);
         if (sample.preview.href) expect(existsSync(join(process.cwd(), "public", sample.preview.href))).toBe(true);
       }
+      if (t.seo.ogImage) {
+        expect(t.seo.ogImage).toMatch(/\.(jpe?g|png)$/i); // the OG renderer cannot decode WebP
+        expect(existsSync(join(process.cwd(), "public", t.seo.ogImage))).toBe(true);
+      }
     }
     expect(SAMPLE_MLS_DESCRIPTION.length).toBeLessThanOrEqual(1000);
     expect(SAMPLE_MLS_DESCRIPTION.length).toBeGreaterThanOrEqual(400);
@@ -83,6 +87,23 @@ describe("tool registry", () => {
     expect(desc.intake.schema.safeParse(sampleListingDescriptionIntake).success).toBe(true);
     expect(desc.intake.schema.safeParse({ ...sampleListingDescriptionIntake, features: "short" }).success).toBe(false);
     expect(desc.intake.schema.safeParse({ ...sampleListingDescriptionIntake, mlsLimit: "999" }).success).toBe(false);
+
+    const staging = getToolBySlug("virtual-staging")!;
+    expect(staging.intake.schema.safeParse({ photoFileId: "clx123", roomType: "bedroom", style: "coastal" }).success).toBe(true);
+    expect(staging.intake.schema.safeParse({ photoFileId: "", roomType: "bedroom", style: "coastal" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ photoFileId: "clx123", roomType: "garage", style: "coastal" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ photoFileId: "clx123", style: "art deco" }).success).toBe(false);
+  });
+
+  it("virtual staging prompt keeps the architecture fixed and carries the customer's notes", async () => {
+    const { stagingPrompt } = await import("@/lib/tools/definitions/virtual-staging");
+    const p = stagingPrompt({ roomType: "home office", style: "scandinavian", notes: "keep the fireplace visible" });
+    expect(p).toContain("home office");
+    expect(p).toContain("scandinavian");
+    expect(p).toMatch(/walls, floors, ceiling, windows, doors/);
+    expect(p).toContain("no people");
+    expect(p).toContain("Customer notes: keep the fireplace visible");
+    expect(stagingPrompt({ roomType: "bedroom", style: "modern", notes: "" })).not.toContain("Customer notes");
   });
 });
 

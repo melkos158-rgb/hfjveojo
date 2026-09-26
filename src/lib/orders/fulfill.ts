@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { log } from "@/lib/logger";
 import { reportError } from "@/lib/errors";
-import { complete, completeStructured, type AiCall, type AiCallContext } from "@/lib/ai";
+import { complete, completeStructured, editImage, type AiCall, type AiCallContext } from "@/lib/ai";
 import { AiProviderError } from "@/lib/ai/types";
 import { getToolById } from "@/lib/tools/registry";
 import type { PipelineContext, PipelineResult } from "@/lib/tools/types";
@@ -57,6 +57,11 @@ export async function fulfillOrder(orderId: string): Promise<void> {
       },
       completeStructured: async (call, purpose) => {
         const r = await completeStructured(call, { ...aiCtx, purpose });
+        costMicros += r.costMicros;
+        return r;
+      },
+      editImage: async (call, purpose) => {
+        const r = await editImage(call, { ...aiCtx, purpose });
         costMicros += r.costMicros;
         return r;
       },

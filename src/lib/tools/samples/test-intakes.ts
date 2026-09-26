@@ -1,8 +1,11 @@
 import { PIPELINE_TEST_INTAKE as LISTING_DESCRIPTION } from "@/lib/tools/samples/listing-description";
+import { PIPELINE_TEST_INTAKE as VIRTUAL_STAGING } from "@/lib/tools/samples/virtual-staging";
 
 /**
  * One valid intake per tool for the admin pipeline test and the test-suite. Fictional data only.
  * Adding a tool: add its slug here so the admin can prove its pipeline in production.
+ * A value of the form `@file:<path under public/>` stands for an uploaded file; resolve it with
+ * materializeTestIntake() (server-only) before creating the order.
  */
 export const TEST_INTAKES: Record<string, Record<string, unknown>> = {
   "listing-description": LISTING_DESCRIPTION,
@@ -26,4 +29,12 @@ export const TEST_INTAKES: Record<string, Record<string, unknown>> = {
     style: "cinematic",
     musicVibe: "chill",
   },
+  "virtual-staging": VIRTUAL_STAGING,
 };
+
+export const FILE_REF_PREFIX = "@file:";
+
+/** True when the intake references a static file that must be uploaded first (see materializeTestIntake). */
+export function hasFileRefs(intake: Record<string, unknown>): boolean {
+  return Object.values(intake).some((v) => typeof v === "string" && v.startsWith(FILE_REF_PREFIX));
+}

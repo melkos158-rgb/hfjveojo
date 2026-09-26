@@ -414,6 +414,7 @@ enum OutputType {
   JSON
   ZIP
   LINK
+  IMAGE
 }
 
 model GeneratedOutput {

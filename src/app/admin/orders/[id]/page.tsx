@@ -60,12 +60,26 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         <section className="card">
           <h2 className="font-bold">Intake</h2>
           <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
-            {Object.entries(intake).map(([k, v]) => (
-              <div key={k}>
-                <dt className="text-xs uppercase text-gray-500">{k}</dt>
-                <dd className="whitespace-pre-wrap break-words">{typeof v === "string" && /^https?:\/\//.test(v) ? <a className="text-brand underline" href={v} target="_blank" rel="noreferrer">{v}</a> : String(v)}</dd>
-              </div>
-            ))}
+            {Object.entries(intake).map(([k, v]) => {
+              const isImage = def?.intake.fields.some((f) => f.key === k && f.type === "image") && typeof v === "string" && v.length > 0;
+              return (
+                <div key={k}>
+                  <dt className="text-xs uppercase text-gray-500">{k}</dt>
+                  <dd className="whitespace-pre-wrap break-words">
+                    {isImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={signedFileUrl(v as string)} alt={k} className="mt-1 max-h-60 w-auto rounded-lg border border-line" />
+                    ) : typeof v === "string" && /^https?:\/\//.test(v) ? (
+                      <a className="text-brand underline" href={v} target="_blank" rel="noreferrer">
+                        {v}
+                      </a>
+                    ) : (
+                      String(v)
+                    )}
+                  </dd>
+                </div>
+              );
+            })}
           </dl>
         </section>
 
@@ -90,6 +104,10 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
                   <summary className="cursor-pointer text-sm font-semibold">
                     {o.type} · {o.title} · v{o.version} · {fmtDate(o.createdAt)}
                   </summary>
+                  {o.fileId && o.type === "IMAGE" ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={signedFileUrl(o.fileId)} alt={o.title} className="mt-2 max-h-80 w-auto rounded-lg border border-line" />
+                  ) : null}
                   {o.fileId ? (
                     <a className="mt-2 inline-block text-sm text-brand underline" href={signedFileUrl(o.fileId)}>
                       Download file

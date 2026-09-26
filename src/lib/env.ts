@@ -32,6 +32,10 @@ const schema = z.object({
   AI_DAILY_BUDGET_CENTS: z.coerce.number().int().nonnegative().default(500),
   AI_MAX_COST_PER_ORDER_CENTS: z.coerce.number().int().nonnegative().default(100),
   AI_PRICE_TABLE_JSON: z.string().optional().default(""),
+  /** Image edits (virtual staging). Cost is charged per output image: AI_IMAGE_COST_CENTS × images (plus a small input charge). */
+  AI_IMAGE_MODEL: z.string().default("gpt-image-1"),
+  AI_IMAGE_QUALITY: z.enum(["low", "medium", "high"]).default("medium"),
+  AI_IMAGE_COST_CENTS: z.coerce.number().nonnegative().default(6),
 
   /** Google sign-in is offered on /login only when both are set (OAuth client → Authorized redirect URI: <APP_URL>/api/auth/google/callback). */
   GOOGLE_CLIENT_ID: z.string().optional().default(""),

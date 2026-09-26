@@ -19,7 +19,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     eyebrow: `${def.category.replace("-", " ")} · ${timing}`,
     title: def.name,
     subtitle: def.tagline,
-    image: categoryVisual(def.category)?.jpg,
+    image: def.seo.ogImage ?? categoryVisual(def.category)?.jpg,
     badge: `${formatUsd(def.pricing.priceCents)} · no subscription`,
   });
 }
