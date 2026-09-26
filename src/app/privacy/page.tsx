@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/config/site";
 import { LegalNotice } from "@/components/LegalNotice";
+import { gaMeasurementId } from "@/lib/ga";
 
 export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy" } };
 
@@ -17,6 +18,7 @@ const days = (value: string | undefined, fallback: number) => {
 export default function PrivacyPage() {
   const outputDays = days(process.env.FILE_RETENTION_DAYS_OUTPUT, 90);
   const inputDays = days(process.env.FILE_RETENTION_DAYS_INPUT, 30);
+  const gaOn = gaMeasurementId() !== null; // the same check that loads GA in the root layout
   return (
     <div className="container-x max-w-3xl py-12 prose-basic">
       <h1>Privacy Policy</h1>
@@ -107,14 +109,25 @@ export default function PrivacyPage() {
       </p>
 
       <h2>Google Analytics</h2>
-      <p>
-        Google Analytics 4 is built into the site but is currently switched off. If we switch it on, the cookie notice will
-        offer &ldquo;Accept Google Analytics&rdquo; and &ldquo;Decline&rdquo;. In the EEA, the UK and Switzerland Google
-        Analytics cookies are then set only after you accept; before that Google may receive cookieless measurement
-        requests. Elsewhere analytics is on by default and you can decline it. Advertising storage and ad personalisation
-        stay off, Google signals is off, page addresses are cleaned of order links, and purchase events contain only the
-        order ID, amount and product — never your name, email address or order links.
-      </p>
+      {gaOn ? (
+        <p>
+          We use Google Analytics 4 to measure page views and conversions. The cookie notice offers &ldquo;Accept Google
+          Analytics&rdquo; and &ldquo;Decline&rdquo;. In the EEA, the UK and Switzerland Google Analytics cookies are set
+          only after you accept; before that Google may receive cookieless measurement requests. Elsewhere analytics is on
+          by default and you can decline it. Advertising storage and ad personalisation stay off, Google signals is off,
+          page addresses are cleaned of order links, and purchase events contain only the order ID, amount and product —
+          never your name, email address or order links.
+        </p>
+      ) : (
+        <p>
+          Google Analytics 4 is built into the site but is currently switched off. If we switch it on, the cookie notice will
+          offer &ldquo;Accept Google Analytics&rdquo; and &ldquo;Decline&rdquo;. In the EEA, the UK and Switzerland Google
+          Analytics cookies are then set only after you accept; before that Google may receive cookieless measurement
+          requests. Elsewhere analytics is on by default and you can decline it. Advertising storage and ad personalisation
+          stay off, Google signals is off, page addresses are cleaned of order links, and purchase events contain only the
+          order ID, amount and product — never your name, email address or order links.
+        </p>
+      )}
 
       <h2>Retention</h2>
       <ul>
@@ -166,7 +179,7 @@ export default function PrivacyPage() {
       <p>
         Railway (hosting and database; our application runs in Railway&apos;s EU West region), Stripe (payments), OpenAI (AI
         generation), Resend (transactional email), Google (sign-in with Google, Google Ads purchase measurement for visitors
-        who came from our ads, and Google Analytics only if we switch it on) and Namecheap (forwards email sent to{" "}
+        who came from our ads{gaOn ? ", and Google Analytics" : ", and Google Analytics only if we switch it on"}) and Namecheap (forwards email sent to{" "}
         {site.supportEmail}). Marketplaces such as Fiverr act under their own terms when you order there.
       </p>
       <p>

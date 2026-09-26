@@ -26,6 +26,14 @@ export function validGaId(id: string | undefined | null): string | null {
 }
 
 /**
+ * The GA4 id in use, or null when GA is off: production only, with a valid id. The root layout (loads GA) and
+ * /privacy (describes it) both call this, so the policy can never say "off" while GA runs, or the other way round.
+ */
+export function gaMeasurementId(): string | null {
+  return process.env.APP_ENV === "production" ? validGaId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) : null;
+}
+
+/**
  * Inline snippet rendered by the root layout before hydration, so `window.gtag` exists before any component effect
  * runs. Consent Mode v2: ads storage always denied; analytics storage denied by default in the EEA/UK/CH and granted
  * elsewhere, then the visitor's saved choice. Page views are sent by hand (see GoogleAnalytics.tsx).

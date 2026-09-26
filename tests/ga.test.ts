@@ -34,3 +34,25 @@ describe("Google Analytics 4 wiring", () => {
     expect(() => gaEvent("purchase", { value: 9 })).not.toThrow();
   });
 });
+
+describe("gaMeasurementId (shared by the layout that loads GA and /privacy that describes it)", () => {
+  it("is on only in production with a valid G- id", async () => {
+    const { gaMeasurementId } = await import("@/lib/ga");
+    const saved = { app: process.env.APP_ENV, id: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID };
+    try {
+      process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-ABC123XYZ";
+      process.env.APP_ENV = "test";
+      expect(gaMeasurementId()).toBeNull();
+      process.env.APP_ENV = "production";
+      expect(gaMeasurementId()).toBe("G-ABC123XYZ");
+      process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = "<script>";
+      expect(gaMeasurementId()).toBeNull();
+      delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+      expect(gaMeasurementId()).toBeNull();
+    } finally {
+      process.env.APP_ENV = saved.app;
+      if (saved.id === undefined) delete process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+      else process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID = saved.id;
+    }
+  });
+});

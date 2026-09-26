@@ -7,12 +7,8 @@ import { Footer } from "@/components/Footer";
 import { CookieConsent } from "@/components/CookieConsent";
 import { Analytics } from "@/components/Analytics";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { gaInitScript, validGaId } from "@/lib/ga";
-
-/** GA4 only on production and only with a valid measurement id (a public value, not a secret). */
-function gaMeasurementId(): string | null {
-  return process.env.APP_ENV === "production" ? validGaId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) : null;
-}
+// GA4 only on production and only with a valid measurement id (a public value, not a secret); /privacy uses the same check.
+import { gaInitScript, gaMeasurementId } from "@/lib/ga";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
