@@ -56,6 +56,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Session log
 
+- 2026-09-26 17:30–17:40 UTC+2: `/guides/ab-723-virtual-staging` (checklist + sources, JSON-LD, sitemap, footer link). US spelling for customer-facing copy.
 - 2026-09-26 17:25 UTC+2: deploy of `1a665ae` failed on Railway (`@types/qrcode` in devDependencies — Railway installs production deps only; the previous deployment kept serving). **Rule: anything `next build` needs (types, typescript, tailwind, prisma) goes in `dependencies`; before pushing a dependency change, run a production-only install + `next build` in a copy of the repo** (`npm ci --omit=dev` then `npx next build`).
 - 2026-09-26 17:10–17:25 UTC+2: **disclosure pack** (AB 723 / MLS) for Virtual Staging: labelled copies, public original-photo page `/original/<token>` + QR, disclosure line; `Order.publicToken`; California DM variant. Also: `/api/admin/request-info` showed Railway replaces client-sent `X-Forwarded-For` — IP limits are sound.
 - 2026-09-26 16:58–17:10 UTC+2: **real Stripe fees in the KPIs** (`src/lib/stripe/fees.ts`: fee from the balance transaction, converted from the settlement currency with Stripe's exchange rate; maintenance back-fills unsettled ones) + gross/net revenue, revenue after AI, profit estimate and a per-tool funnel on `/admin/analytics` and in the CEO email.

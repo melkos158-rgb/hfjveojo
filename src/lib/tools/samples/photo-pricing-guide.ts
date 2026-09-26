@@ -69,7 +69,7 @@ export const SAMPLE_PRICING_GUIDE_RESULT: SampleResult = {
   label: "Sample guide for a fictional Denver wedding studio",
   input: [
     "Studio: Ember & Oak Photography · Maya Torres · Denver, CO",
-    "Genre: weddings · voice: warm · brand colour #8a6d3b",
+    "Genre: weddings · voice: warm · brand color #8a6d3b",
     "The Essentials | $2,400 | 6 hours, 400+ edited photos",
     "The Full Day | $3,800 | 10 hours, second shooter",
     "Add-ons: engagement session $450, extra hour $350, album from $900, rush $400",
@@ -92,5 +92,5 @@ export const SAMPLE_PRICING_GUIDE_RESULT: SampleResult = {
     { heading: "FAQ + policies", bullets: [...g.faq.map((f) => `${f.q} ${f.a}`), ...g.policies] },
   ],
   collapseAfter: 3,
-  note: "Your prices are copied exactly as you typed them. The PDF uses your brand colour, studio name and contact details.",
+  note: "Your prices are copied exactly as you typed them. The PDF uses your brand color, studio name and contact details.",
 };

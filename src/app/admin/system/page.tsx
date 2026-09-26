@@ -102,7 +102,7 @@ export default async function AdminSystem() {
           </form>
         ) : null}
         <p className="mt-3 text-xs text-gray-500">
-          Checkout branding target: name {STRIPE_BRAND.name}, brand colour {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon public/brand/icon-512.png — set in the Dashboard of each account (Stripe does not let an account edit its own name/branding through the API).
+          Checkout branding target: name {STRIPE_BRAND.name}, brand color {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon public/brand/icon-512.png — set in the Dashboard of each account (Stripe does not let an account edit its own name/branding through the API).
         </p>
       </div>
 

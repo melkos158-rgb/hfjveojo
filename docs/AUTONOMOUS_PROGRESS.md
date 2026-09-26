@@ -55,6 +55,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 17:10: proxy check with the new admin diagnostic: Railway rewrites `X-Forwarded-For` (a spoofed value never reaches the app), so per-IP limits cannot be dodged — watch-list item closed.
 - 17:10–17:25: **AB 723 / MLS disclosure pack** for Virtual Staging — California has required a disclosure next to digitally altered listing photos plus access to the unaltered original since 2026-01-01, and most MLS boards want a "virtually staged"/"digitally altered" label with the original next to it. Every staging order now gets: a labelled copy of each version ("Virtually staged" corner label, pre-rendered PNG), a public noindex page with the original photo (`/original/<token>`, unguessable token, paid orders only), a QR code PNG to it for flyers, and the line to paste — all in a "Disclosure pack" card on the order page (older orders get their token on first view). Tool page bullet + FAQ, sample, a California DM variant (`re-ig-dm-staging-ca`, EN + UA). Migration `20260926190000_order_public_token`; `qrcode` dependency. 75 tests.
 - 17:25: Railway build of `1a665ae` **failed** (production stayed on `a528e02`, site up): `@types/qrcode` was a devDependency and Railway installs production dependencies only, so `next build` could not type-check `qrcode`. Moved it to dependencies (like every other build-time type package here) and verified with a production-only install + `next build` before pushing the fix. New rule in OPERATOR.md.
+- 17:30: `41355e7` deployed; production checks: order #6 page shows the Disclosure pack card (token created on first view), `/original/<token>` renders the original (noindex), `/original/<token>/qr` returns a 600×600 PNG.
+- 17:30–17:40: **SEO/outreach asset** `/guides/ab-723-virtual-staging` — plain-English AB 723 guide with a 7-step checklist, MLS examples (SDMLS, Bay East), FAQ + Article JSON-LD, sources and a not-legal-advice note; linked from the footer, the disclosure card and the sitemap. Customer-facing copy switched to US spelling (labeled, color).
 
 ## IN PROGRESS
 
@@ -80,14 +82,14 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 17:10 UTC+2 — deploy of `184c26d` ACTIVE (Railway status success, CI green): `/api/health` ok, sandbox webhook probe verified end to end, sandbox checkout reaches Stripe, analytics KPIs render, free-preview UI live, GA4 code inactive until the measurement id is set. Stripe checkouts: **TEST** (live key not in Railway yet).
+- Last verified: 2026-09-26 17:30 UTC+2 — deploy of `41355e7` ACTIVE: disclosure pack live (order card, public original page, QR); earlier today on this code line: `/api/health` ok, sandbox webhook probe verified end to end, sandbox checkout reaches Stripe, analytics KPIs render, free-preview UI live, GA4 code inactive until the measurement id is set. Stripe checkouts: **TEST** (live key not in Railway yet).
 - Known warnings in logs: none open.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 - Uptime monitor: the GitHub workflow is correct (push run green) but GitHub's scheduler dropped almost all 15-minute runs today — treat it as best effort; a free UptimeRobot/Better Stack check on `/api/health` (keyword `"ok":true`) is the owner's 2-minute fix.
 
 ## LAST VERIFIED COMMIT
 
-- `184c26d` — deployed and checked (webhook probe, checkout creation, analytics). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's real-model call is not yet seen in production.
+- `41355e7` — deployed and checked (disclosure pack pages; before it: webhook probe, checkout creation, analytics on `184c26d`). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's and the labeled copies' real-model runs are not yet seen in production.
 
 ## KNOWN BUGS
 

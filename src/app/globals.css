@@ -162,3 +162,9 @@ body {
 .prose-basic li {
   @apply mb-1;
 }
+.prose-basic ol {
+  @apply mb-3 list-decimal pl-6 text-gray-700;
+}
+.prose-basic a:not(.btn-primary):not(.btn-secondary) {
+  @apply text-accent underline;
+}

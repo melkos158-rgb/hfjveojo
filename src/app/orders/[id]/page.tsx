@@ -159,7 +159,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
             <div className="card mt-6">
               <h3 className="font-semibold">Disclosure pack — California AB 723 and MLS rules</h3>
               <p className="mt-1 text-sm text-gray-600">
-                Virtually staged photos must be labelled, and buyers must be able to see the original. Use the labelled copies in ads and on social, put the line below next to the photo, and link or print the original.
+                Virtually staged photos must be labeled, and buyers must be able to see the original. Use the labeled copies in ads and on social, put the line below next to the photo, and link or print the original.
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto]">
                 <div className="space-y-3">
@@ -169,7 +169,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
                     <div className="flex flex-wrap gap-2">
                       {labeled.map((o, i) => (
                         <TrackedDownload key={o.id} href={signedFileUrl(o.fileId as string)} tool={order.tool.slug} kind="image_labeled" className="btn-secondary px-3 py-1.5 text-xs" download>
-                          Download version {((o.content ?? {}) as { version?: number }).version ?? i + 1} labelled
+                          Download version {((o.content ?? {}) as { version?: number }).version ?? i + 1} labeled
                         </TrackedDownload>
                       ))}
                     </div>
@@ -184,7 +184,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
                 </div>
               </div>
               <p className="mt-3 text-xs text-gray-500">
-                On the MLS, follow your board&apos;s labelling (usually &ldquo;virtually staged&rdquo; or &ldquo;digitally altered&rdquo;, with the original uploaded right after the staged photo). This helps you comply; it is not legal advice.
+                On the MLS, follow your board&apos;s labeling (usually &ldquo;virtually staged&rdquo; or &ldquo;digitally altered&rdquo;, with the original uploaded right after the staged photo). This helps you comply; it is not legal advice. <Link className="underline" href="/guides/ab-723-virtual-staging">The AB 723 checklist</Link>.
               </p>
             </div>
           ) : null}

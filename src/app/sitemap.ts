@@ -9,7 +9,7 @@ const CONTENT_UPDATED = new Date("2026-09-26T00:00:00Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = CONTENT_UPDATED;
-  const staticPages = ["", "/tools", "/pricing", "/real-estate", "/photographers", "/free", "/free/fair-housing-checker", "/free/photography-pricing-calculator", "/contact", "/terms", "/privacy", "/refund-policy"];
+  const staticPages = ["", "/tools", "/pricing", "/real-estate", "/photographers", "/free", "/free/fair-housing-checker", "/free/photography-pricing-calculator", "/guides/ab-723-virtual-staging", "/contact", "/terms", "/privacy", "/refund-policy"];
   return [
     ...staticPages.map((p) => ({ url: `${site.url}${p}`, lastModified: now, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 })),
     ...allTools()

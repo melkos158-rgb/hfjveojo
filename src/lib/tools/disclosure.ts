@@ -6,15 +6,15 @@ import { randomToken } from "@/lib/security/tokens";
 
 /**
  * Disclosure pack for digitally altered listing photos (virtual staging). California AB 723 (in force since
- * 2026-01-01) and most MLS boards want altered photos labelled ("virtually staged" / "digitally altered") and the
+ * 2026-01-01) and most MLS boards want altered photos labeled ("virtually staged" / "digitally altered") and the
  * unaltered original available next to them — on the agent's own site, or through a public link / QR code elsewhere.
- * Each staging order therefore gets: labelled copies, a public page with the original photo, a QR code to it and a
+ * Each staging order therefore gets: labeled copies, a public page with the original photo, a QR code to it and a
  * ready-to-paste disclosure line. Not legal advice; the agent stays responsible for their listing.
  */
 
 export const LABEL_TEXT = "Virtually staged";
 
-/** Output variant for labelled copies — kept out of the main before/after grid. */
+/** Output variant for labeled copies — kept out of the main before/after grid. */
 export const LABELED_VARIANT = "labeled";
 
 export function isLabeledOutput(o: { content: unknown }): boolean {
