@@ -126,7 +126,14 @@ export default async function OrderPage({ params, searchParams }: Props) {
 
       {showFiles ? (
         <section className="mt-8">
-          <h2 className="text-lg font-bold">{redoInProgress ? "Your files (last delivery)" : "Your files"}</h2>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-bold">{redoInProgress ? "Your files (last delivery)" : "Your files"}</h2>
+            {shown.filter((o) => o.fileId).length > 1 ? (
+              <TrackedDownload href={`/api/orders/${order.id}/zip${t ? `?t=${encodeURIComponent(t)}` : ""}`} tool={order.tool.slug} kind="zip" className="btn-secondary px-4 py-2 text-sm" download>
+                Download all (ZIP)
+              </TrackedDownload>
+            ) : null}
+          </div>
           {images.length > 0
             ? rooms.map((room) => (
                 <div key={room.n} className="mt-3">

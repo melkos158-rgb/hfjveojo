@@ -18,7 +18,12 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Orders</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold">Orders</h1>
+        <Link href="/admin/orders/new" className="btn-secondary px-4 py-2 text-sm">
+          + External order (Fiverr, Upwork, direct)
+        </Link>
+      </div>
       <form className="mt-4 flex flex-wrap gap-2 text-sm">
         <select name="status" defaultValue={status ?? ""} className="field-input w-auto">
           <option value="">All statuses</option>

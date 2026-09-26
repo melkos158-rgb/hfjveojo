@@ -91,18 +91,20 @@ export async function refundOrder(orderId: string, opts: { adminId: string; amou
   const order = await prisma.order.findUnique({ where: { id: orderId }, include: { payments: true } });
   if (!order) throw new AppError("Order not found", 404);
   const payment = order.payments.find((p) => p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED");
-  if (!payment || !payment.stripePaymentIntentId) throw new AppError("No refundable payment on this order", 400, "no_payment");
+  // Orders paid on a marketplace (Fiverr, Upwork…) are refunded there; here the refund is only recorded.
+  const external = payment && !payment.stripePaymentIntentId ? ((payment.raw ?? {}) as { provider?: string }).provider : undefined;
+  if (!payment || (!payment.stripePaymentIntentId && !external)) throw new AppError("No refundable payment on this order", 400, "no_payment");
   const remaining = payment.amountCents - payment.amountRefundedCents;
   const amount = Math.min(opts.amountCents ?? remaining, remaining);
   if (amount <= 0) throw new AppError("Nothing left to refund", 400, "nothing_to_refund");
 
   const refund = await prisma.refund.create({
-    data: { orderId, paymentId: payment.id, amountCents: amount, reason: opts.reason, createdById: opts.adminId },
+    data: { orderId, paymentId: payment.id, amountCents: amount, reason: opts.reason ?? (external ? `refunded on ${external}` : undefined), createdById: opts.adminId, ...(external ? { status: "SUCCEEDED" as const } : {}) },
   });
-  try {
+  if (!external) try {
     // The refund goes to the account that took the money: the order's own mode, whatever checkouts use today.
     const sr = await stripe(order.livemode ? "live" : "test").refunds.create(
-      { payment_intent: payment.stripePaymentIntentId, amount, reason: "requested_by_customer", metadata: { orderId, refundId: refund.id } },
+      { payment_intent: payment.stripePaymentIntentId ?? undefined, amount, reason: "requested_by_customer", metadata: { orderId, refundId: refund.id } },
       { idempotencyKey: `refund_${refund.id}` },
     );
     await prisma.refund.update({ where: { id: refund.id }, data: { stripeRefundId: sr.id, status: "SUCCEEDED" } });

@@ -32,7 +32,7 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
         <Kpi
           label="Net revenue"
           value={formatUsd(k.netRevenueCents)}
-          sub={`gross − refunds − Stripe fees ${formatUsd(k.stripeFeesCents)} (${k.stripeFeesActualCount}/${k.ordersPaid} actual, rest estimated)`}
+          sub={`gross − refunds − payment fees ${formatUsd(k.stripeFeesCents)} (Stripe + marketplaces; ${k.stripeFeesActualCount}/${k.ordersPaid} actual, rest estimated)`}
         />
         <Kpi label="Revenue after AI" value={formatUsd(k.revenueAfterAiCents)} sub={`gross − refunds − AI/API ${formatUsd(k.aiCostCents)}`} />
         <Kpi label="Profit estimate" value={formatUsd(k.netContributionCents)} sub={`net revenue − AI ${formatUsd(k.aiCostCents)} − channels ${formatUsd(k.channelCostCents)} · ${k.founderHours}h logged`} />

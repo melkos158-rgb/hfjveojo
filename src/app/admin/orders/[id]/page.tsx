@@ -114,7 +114,14 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
         ) : null}
 
         <section className="card">
-          <h2 className="font-bold">Outputs ({order.outputs.length})</h2>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-bold">Outputs ({order.outputs.length})</h2>
+            {withCustomer.size > 0 ? (
+              <a href={`/api/orders/${order.id}/zip`} className="btn-secondary px-3 py-1.5 text-xs" download>
+                Download delivered files (ZIP)
+              </a>
+            ) : null}
+          </div>
           <div className="mt-2 space-y-3">
             {order.outputs.map((o) => {
               const md = (o.content as { markdown?: string; url?: string } | null) ?? {};

@@ -23,6 +23,14 @@ type Props = {
    * `ctaMany` may use {n} and {total}.
    */
   perUnit?: { unitCents: number; one: string; many: string; ctaMany?: string };
+  /**
+   * Admin use (orders paid on a marketplace): submit the validated intake to this callback instead of starting a
+   * Stripe checkout. The email field and the terms line are hidden; `extraFields` renders above the button.
+   */
+  onSubmitIntake?: (p: { email: string; intake: Record<string, string> }) => Promise<void>;
+  extraFields?: React.ReactNode;
+  heading?: string;
+  submitLabel?: string;
 };
 
 type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
@@ -43,7 +51,7 @@ function initialValue(f: IntakeField): string {
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, initialValue(f)])));
   const [email, setEmail] = useState(initialEmail ?? "");
   const [uploading, setUploading] = useState<string | null>(null);
@@ -246,6 +254,15 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       }
     }
     setSubmitting(true);
+    if (onSubmitIntake) {
+      try {
+        await onSubmitIntake({ email, intake: values });
+      } catch (err) {
+        setError((err as Error).message);
+        setSubmitting(false);
+      }
+      return;
+    }
     try {
       const res = await fetch(`/api/tools/${toolSlug}/order`, {
         method: "POST",
@@ -275,7 +292,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   return (
     <form onSubmit={submit} onFocus={onFocus} className="card space-y-5" id="order">
       <div>
-        <h2 className="text-xl font-bold">Start your order</h2>
+        <h2 className="text-xl font-bold">{heading ?? "Start your order"}</h2>
         <p className="mt-1 text-sm text-gray-600">
           {priceLabel} · {deliveryPromise} · Secure payment via Stripe on the next step.
         </p>
@@ -455,12 +472,16 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
         </div>
       ) : null}
 
-      <div>
-        <label className="field-label" htmlFor="f-email">
-          Your email (for the order page and delivery) <span className="text-red-500">*</span>
-        </label>
-        <input id="f-email" type="email" required className="field-input" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
-      </div>
+      {onSubmitIntake ? null : (
+        <div>
+          <label className="field-label" htmlFor="f-email">
+            Your email (for the order page and delivery) <span className="text-red-500">*</span>
+          </label>
+          <input id="f-email" type="email" required className="field-input" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+        </div>
+      )}
+
+      {extraFields}
 
       {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
@@ -472,11 +493,13 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       ) : null}
 
       <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null}>
-        {submitting ? "Redirecting to secure checkout…" : buttonLabel}
+        {submitting ? (onSubmitIntake ? "Creating the order…" : "Redirecting to secure checkout…") : (submitLabel ?? buttonLabel)}
       </button>
-      <p className="text-center text-xs text-gray-500">
-        By ordering you agree to our <a className="underline" href="/terms">Terms</a> and <a className="underline" href="/refund-policy">Refund Policy</a>.
-      </p>
+      {onSubmitIntake ? null : (
+        <p className="text-center text-xs text-gray-500">
+          By ordering you agree to our <a className="underline" href="/terms">Terms</a> and <a className="underline" href="/refund-policy">Refund Policy</a>.
+        </p>
+      )}
     </form>
   );
 }

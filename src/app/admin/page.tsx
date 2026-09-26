@@ -20,7 +20,7 @@ export default async function AdminOverview() {
         <h1 className="text-2xl font-bold">Last 7 days</h1>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Kpi label="Revenue" value={formatUsd(k7.revenueCents)} sub={`${k7.ordersPaid} paid · 30d ${formatUsd(k30.revenueCents)}`} />
-          <Kpi label="Net contribution" value={formatUsd(k7.netContributionCents)} sub={`AI ${formatUsd(k7.aiCostCents)} · Stripe ≈${formatUsd(k7.stripeFeesCents)} · channels ${formatUsd(k7.channelCostCents)} · refunds ${formatUsd(k7.refundedCents)}`} />
+          <Kpi label="Net contribution" value={formatUsd(k7.netContributionCents)} sub={`AI ${formatUsd(k7.aiCostCents)} · payment fees ${formatUsd(k7.stripeFeesCents)} · channels ${formatUsd(k7.channelCostCents)} · refunds ${formatUsd(k7.refundedCents)}`} />
           <Kpi label="Visit → paid" value={`${(k7.conversionVisitToPaid * 100).toFixed(2)}%`} sub={`${k7.uniqueSessions} sessions · ${k7.checkoutStarted} checkouts`} />
           <Kpi label="Delivery" value={k7.avgDeliveryHours === null ? "—" : `${k7.avgDeliveryHours.toFixed(1)} h avg`} sub={`${k7.ordersDelivered} delivered · rating ${k7.feedbackAvgRating?.toFixed(1) ?? "—"}`} />
         </div>
