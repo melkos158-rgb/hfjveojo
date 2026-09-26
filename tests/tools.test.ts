@@ -3,12 +3,12 @@ import { allTools, getToolBySlug } from "@/lib/tools/registry";
 import { validateVideoLink } from "@/lib/security/files";
 import { checkFairHousing, checkNoPlaceholders } from "@/lib/tools/qa";
 import { parsePackages } from "@/lib/tools/definitions/photo-pricing-guide";
-import { sampleListingClipsIntake, samplePricingGuideIntake } from "./helpers";
+import { sampleListingClipsIntake, sampleListingDescriptionIntake, samplePricingGuideIntake } from "./helpers";
 
 describe("tool registry", () => {
   it("has unique ids, slugs and SKUs and complete landing copy", () => {
     const tools = allTools();
-    expect(tools.length).toBeGreaterThanOrEqual(2);
+    expect(tools.length).toBeGreaterThanOrEqual(3);
     expect(new Set(tools.map((t) => t.id)).size).toBe(tools.length);
     expect(new Set(tools.map((t) => t.slug)).size).toBe(tools.length);
     expect(new Set(tools.map((t) => t.pricing.sku)).size).toBe(tools.length);
@@ -20,6 +20,11 @@ describe("tool registry", () => {
       // every UI field must exist in the zod schema
       const keys = Object.keys((t.intake.schema as unknown as { shape: Record<string, unknown> }).shape);
       for (const f of t.intake.fields) expect(keys).toContain(f.key);
+      // the result-first card copy every tool must carry
+      expect(t.io.input.length).toBeGreaterThan(5);
+      expect(t.io.output.length).toBeGreaterThan(5);
+      expect(t.io.processingTime.length).toBeGreaterThan(2);
+      expect(t.io.ctaLabel.length).toBeGreaterThan(2);
     }
   });
 
@@ -32,6 +37,11 @@ describe("tool registry", () => {
     const guide = getToolBySlug("photographer-pricing-guide")!;
     expect(guide.intake.schema.safeParse(samplePricingGuideIntake).success).toBe(true);
     expect(guide.intake.schema.safeParse({ ...samplePricingGuideIntake, brandColor: "red" }).success).toBe(false);
+
+    const desc = getToolBySlug("listing-description")!;
+    expect(desc.intake.schema.safeParse(sampleListingDescriptionIntake).success).toBe(true);
+    expect(desc.intake.schema.safeParse({ ...sampleListingDescriptionIntake, features: "short" }).success).toBe(false);
+    expect(desc.intake.schema.safeParse({ ...sampleListingDescriptionIntake, mlsLimit: "999" }).success).toBe(false);
   });
 });
 

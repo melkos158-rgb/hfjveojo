@@ -57,3 +57,19 @@ export const sampleListingClipsIntake = {
   style: "cinematic",
   musicVibe: "chill",
 };
+
+export const sampleListingDescriptionIntake = {
+  address: "1420 Oak Hill Dr, Austin, TX",
+  price: "$549,000",
+  beds: "3",
+  baths: "2.5",
+  sqft: "1,980",
+  propertyType: "single-family",
+  features: "Renovated kitchen with quartz island (2024)\nCovered patio and fenced backyard\nPrimary suite with walk-in closet",
+  neighborhood: "Four blocks from Zilker Park",
+  tone: "warm",
+  mlsLimit: "1000",
+  openHouse: "Sunday 2–4 pm",
+  agentName: "Jordan Lee",
+  brokerage: "",
+};

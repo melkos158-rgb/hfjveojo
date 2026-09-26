@@ -70,7 +70,27 @@ async function main() {
     update: {},
   });
 
-  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide");
+  await prisma.experiment.upsert({
+    where: { key: "e3-listing-description" },
+    create: {
+      key: "e3-listing-description",
+      name: "E3 — Listing Description (automated, $9 entry product)",
+      hypothesis:
+        "A $9 instant MLS description + social captions is an easy first purchase for agents (new listing every few weeks), lowers the barrier to the $49 clips, and converts organic search traffic for 'listing description generator' queries.",
+      targetCustomer: "US residential agents with a new listing this week; also RE assistants and transaction coordinators",
+      offer: "MLS description within the MLS limit + web version + 3 captions + hashtags + email blurb, $9, about 5 minutes, one revision",
+      channel: "seo + instagram_dm + facebook_groups",
+      priceCents: 900,
+      status: "RUNNING",
+      startAt: new Date(),
+      successCriteria: "≥10 paid orders in 30 days with AI cost ≤ $0.10/order, ≥20% of buyers order again within 45 days, 0 fair-housing complaints",
+      failureCriteria: "<3 paid orders after 30 days with ≥300 tool-page views, or QC parks >30% of orders for a human",
+      expected: { orders: 10, revenueCents: 9000, costCents: 100 },
+    },
+    update: {},
+  });
+
+  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide, e3-listing-description");
 }
 
 main()

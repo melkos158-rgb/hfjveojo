@@ -1,6 +1,7 @@
 import type { ToolDefinition } from "@/lib/tools/types";
 import { listingClipsTool } from "@/lib/tools/definitions/listing-clips";
 import { photoPricingGuideTool } from "@/lib/tools/definitions/photo-pricing-guide";
+import { listingDescriptionTool } from "@/lib/tools/definitions/listing-description";
 
 /**
  * The static list of tool definitions — pure data + pipeline code, no database access — so pages that
@@ -9,7 +10,7 @@ import { photoPricingGuideTool } from "@/lib/tools/definitions/photo-pricing-gui
  * To add a tool: create src/lib/tools/definitions/<slug>.ts and add it here. Run `npm run db:seed` to sync.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const TOOL_DEFINITIONS: ToolDefinition<any>[] = [listingClipsTool, photoPricingGuideTool];
+export const TOOL_DEFINITIONS: ToolDefinition<any>[] = [listingClipsTool, photoPricingGuideTool, listingDescriptionTool];
 
 export function findToolBySlug(slug: string): ToolDefinition | undefined {
   return (TOOL_DEFINITIONS as ToolDefinition[]).find((t) => t.slug === slug);

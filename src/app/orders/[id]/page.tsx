@@ -87,9 +87,9 @@ export default async function OrderPage({ params, searchParams }: Props) {
               })}
           </ul>
           {md ? (
-            <details className="card mt-4">
+            <details className="card mt-4" open={!order.outputs.some((o) => o.type === "PDF" || o.type === "LINK")}>
               <summary className="cursor-pointer font-semibold">{markdownOut?.title ?? "Text version"}</summary>
-              <pre className="mt-3 whitespace-pre-wrap text-sm text-gray-700">{md}</pre>
+              <pre className="mt-3 font-sans text-sm whitespace-pre-wrap text-gray-700 select-all">{md}</pre>
             </details>
           ) : null}
           <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">

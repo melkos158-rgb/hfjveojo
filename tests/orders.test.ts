@@ -14,7 +14,7 @@ import { createOrderWithCheckout } from "@/lib/orders/create";
 import { handleStripeEvent } from "@/lib/stripe/webhooks";
 import { refundOrder, deliverOrder } from "@/lib/orders/service";
 import { AppError } from "@/lib/errors";
-import { resetDatabase, samplePricingGuideIntake, sampleListingClipsIntake } from "./helpers";
+import { resetDatabase, samplePricingGuideIntake, sampleListingClipsIntake, sampleListingDescriptionIntake } from "./helpers";
 import type Stripe from "stripe";
 
 function checkoutCompletedEvent(orderId: string, amount: number, id = `evt_${orderId}`): Stripe.Event {
@@ -73,6 +73,18 @@ describe("order → checkout → webhook → fulfilment", () => {
     expect(order.status).toBe("COMPLETED");
     expect(order.outputs.some((o) => o.type === "PDF")).toBe(true);
     expect(order.aiRequests.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("fulfils a listing-description order end to end (mock AI): markdown + file, delivered", async () => {
+    const { orderId } = await createOrderWithCheckout({ toolSlug: "listing-description", email: "agent@example.com", intakeRaw: sampleListingDescriptionIntake });
+    await handleStripeEvent(checkoutCompletedEvent(orderId, 900));
+    const order = await prisma.order.findUniqueOrThrow({ where: { id: orderId }, include: { outputs: { include: { file: true } } } });
+    expect(order.amountCents).toBe(900);
+    expect(order.status).toBe("COMPLETED");
+    const md = order.outputs.find((o) => o.type === "MARKDOWN");
+    expect(md).toBeTruthy();
+    expect(md?.file?.name).toMatch(/listing-copy\.md$/);
+    expect((md?.content as { markdown: string }).markdown).toContain("## MLS description");
   });
 
   it("parks concierge orders in REVIEW and lets an admin deliver with a link", async () => {

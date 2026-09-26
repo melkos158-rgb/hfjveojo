@@ -21,8 +21,8 @@ export const CATEGORIES: CategoryInfo[] = [
     image: "/img/hero-real-estate.webp",
     alt: "A phone on a tripod filming a bright, staged living room for a listing walkthrough",
     title: "Real estate",
-    live: ["Raw walkthrough → 5 listing clips"],
-    planned: ["Room photos → virtual staging", "Listing facts → listing description", "Listing files → marketing package"],
+    live: ["Raw walkthrough → 5 listing clips", "Listing facts → MLS description + social captions"],
+    planned: ["Room photos → virtual staging", "Listing files → marketing package"],
     cta: "See real-estate tools",
   },
   {
