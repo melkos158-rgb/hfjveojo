@@ -51,6 +51,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 16:50: `7a835e6` (Stripe dual mode) deployed and checked in production: `/admin/system` shows "Customer checkouts: TEST", sandbox column all green (acct_1UIuDh2cM37Fu7zW, charges + payouts enabled, destination enabled with all 7 events, last event processed), live column "key not set". The live account is `acct_1UIuDZGsFrMfnr38` (dashboard name "jarvis", no live destination yet). The Stripe Dashboard freezes in the operator's hidden Chrome window, so the live destination is created from `/admin/system` once the live key is in Railway.
 - 16:50–16:58: **GA4** (owner request): gtag snippet from the root layout (production + valid `NEXT_PUBLIC_GA_MEASUREMENT_ID` only), Consent Mode v2 (ads denied; analytics denied in EEA/UK/CH until "Accept analytics"), page views sent by hand with sanitised URLs (tokens never reach Google — verified in a local production build), events `view_item`, `tool_started`, `preview_*`, `free_tool_used`, `begin_checkout`, `purchase` (order id, charged amount, once, real orders only), `tool_completed`, `file_download`, `generate_lead`, `sign_up`/`login`. First-party beacons now also accept `preview_requested`, `preview_shown`, `file_download` (the preview client events were being dropped). Privacy page, legal flags, `docs/ANALYTICS.md` (event map + GA admin settings). 70 tests.
 - 16:58–17:10: **business analytics with real Stripe fees**: `Payment.feeCents/netCents/settlementCurrency/exchangeRate` from the charge's balance transaction (FX-converted — a Polish account settles in PLN/EUR), recorded with the payment and back-filled by the hourly maintenance job; revenue now counts what Stripe charged (promotion codes), KPIs gross revenue, net revenue (− refunds − actual fees), revenue after AI, profit estimate, per-tool funnel (views → started → previews → checkouts → paid); CEO email uses the same. Migration `20260926180000_payment_fees`. 72 tests.
+- 17:05–17:10: production checks after `184c26d`: `/admin/analytics` shows the new KPIs on real data (0 paid, AI spend $0.29 from tests → profit −$0.29, correct); **sandbox webhook probe from `/admin/system` → "event received — webhook path verified"** (the rewritten multi-secret webhook route works in production; the same button verifies live); a real sandbox checkout from the Listing Description page reached checkout.stripe.com ("orvionis sandbox", $9.00, card) and order #7 is flagged TEST + "Stripe sandbox" automatically. GitHub's scheduler has run the uptime workflow only twice today (07:59, 12:59) despite the 15-minute cron — not a reliable monitor; owner action: a free UptimeRobot check on `/api/health`.
 
 ## IN PROGRESS
 
@@ -76,14 +77,14 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 15:40 UTC+2 — deploy of `0afebf2` ACTIVE (GitHub status `courageous-flow - hfjveojo` = success); production serves the new staging sample (`sample-virtual-staging.webp` 33,426 B, OG JPEG 47,622 B, home caption updated). Earlier today: `2f1d6f2` verified with a real image edit (order #6), `/api/health` ok, worker ticking every 10 s.
+- Last verified: 2026-09-26 17:10 UTC+2 — deploy of `184c26d` ACTIVE (Railway status success, CI green): `/api/health` ok, sandbox webhook probe verified end to end, sandbox checkout reaches Stripe, analytics KPIs render, free-preview UI live, GA4 code inactive until the measurement id is set. Stripe checkouts: **TEST** (live key not in Railway yet).
 - Known warnings in logs: none open.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
-- Uptime monitor: run #1 (07:59 UTC) failed on a bug in the check itself, not the site; fixed check runs on every workflow change and at :07/:22/:37/:52.
+- Uptime monitor: the GitHub workflow is correct (push run green) but GitHub's scheduler dropped almost all 15-minute runs today — treat it as best effort; a free UptimeRobot/Better Stack check on `/api/health` (keyword `"ok":true`) is the owner's 2-minute fix.
 
 ## LAST VERIFIED COMMIT
 
-- `0afebf2` (real staging sample) — deployed, files and copy checked in production. `2f1d6f2` (staging prompt + gpt-image-2) remains the last pipeline change verified with a real image edit.
+- `184c26d` — deployed and checked (webhook probe, checkout creation, analytics). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's real-model call is not yet seen in production.
 
 ## KNOWN BUGS
 
