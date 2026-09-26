@@ -182,3 +182,13 @@ export async function requeueJobAction(formData: FormData) {
   await prisma.job.update({ where: { id }, data: { status: "QUEUED", runAt: new Date(), attempts: 0, lastError: null } });
   revalidatePath("/admin/system");
 }
+
+export async function applyStripeBrandingAction() {
+  const admin = await requireAdminApi();
+  const { applyStripeBranding } = await import("@/lib/stripe/branding");
+  const result = await applyStripeBranding();
+  const value = { ok: result.ok, message: result.message, at: new Date().toISOString() };
+  await prisma.setting.upsert({ where: { key: "stripe.branding_last" }, create: { key: "stripe.branding_last", value }, update: { value } });
+  await audit(admin.id, "stripe_branding_apply", "stripe", "account", value);
+  revalidatePath("/admin/system");
+}

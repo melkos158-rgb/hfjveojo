@@ -1,13 +1,14 @@
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
-import { enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
+import { applyStripeBrandingAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
+import { STRIPE_BRAND, stripeAccountSummary, type StripeAccountSummary } from "@/lib/stripe/branding";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
-  const [jobs, errors, kill, stripeEvents, counts] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, brandingLast, stripeAcct] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -18,7 +19,10 @@ export default async function AdminSystem() {
       prisma.job.count({ where: { status: "FAILED" } }),
       prisma.file.aggregate({ _sum: { sizeBytes: true }, _count: true }),
     ]),
+    prisma.setting.findUnique({ where: { key: "stripe.branding_last" } }),
+    stripeAccountSummary().catch((err: Error): StripeAccountSummary | { error: string } => ({ error: err.message.slice(0, 200) })),
   ]);
+  const lastBranding = brandingLast?.value as { ok: boolean; message: string; at: string } | null;
   const killOn = kill?.value === true;
   const [queued, running, failed, files] = counts;
 
@@ -39,6 +43,43 @@ export default async function AdminSystem() {
             </button>
           </form>
         </div>
+      </div>
+
+      <div className="card">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-bold">Stripe account (what the buyer sees on Checkout)</h2>
+          <form action={applyStripeBrandingAction}>
+            <button className="btn-secondary px-3 py-1.5" type="submit">
+              Apply {STRIPE_BRAND.name} branding
+            </button>
+          </form>
+        </div>
+        {"error" in stripeAcct ? (
+          <p className="mt-2 text-sm text-red-600">Cannot read the account: {stripeAcct.error}</p>
+        ) : (
+          <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
+            <dt className="text-gray-500">Account</dt>
+            <dd>
+              {stripeAcct.id} · <span className={stripeAcct.mode === "live" ? "font-semibold text-green-600" : "font-semibold text-amber-700"}>{stripeAcct.mode} key</span> · charges {stripeAcct.chargesEnabled ? "enabled" : "not enabled"}
+            </dd>
+            <dt className="text-gray-500">Business name</dt>
+            <dd className={stripeAcct.businessName === STRIPE_BRAND.name ? "" : "text-amber-700"}>{stripeAcct.businessName ?? "—"}</dd>
+            <dt className="text-gray-500">Support / URL</dt>
+            <dd>
+              {stripeAcct.supportEmail ?? "—"} · {stripeAcct.url ?? "—"}
+            </dd>
+            <dt className="text-gray-500">Branding</dt>
+            <dd>
+              {stripeAcct.primaryColor ?? "—"} / {stripeAcct.secondaryColor ?? "—"} · icon {stripeAcct.hasIcon ? "set" : "missing"} ·{" "}
+              {stripeAcct.matches ? <span className="text-green-600">matches the site</span> : <span className="text-amber-700">differs from the site — press Apply</span>}
+            </dd>
+          </dl>
+        )}
+        {lastBranding ? (
+          <p className={`mt-3 text-xs ${lastBranding.ok ? "text-gray-500" : "text-red-600"}`}>
+            Last apply {fmtDate(new Date(lastBranding.at))}: {lastBranding.message}
+          </p>
+        ) : null}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
