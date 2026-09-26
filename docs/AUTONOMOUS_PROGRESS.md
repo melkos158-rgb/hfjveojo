@@ -131,6 +131,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `15bb01a` (2026-09-27 ~00:00 UTC) — SEO release: CI + Railway success, live checks in Chrome (www → apex, new titles, WebSite graph, `/llms.txt`, `/icon`). Before it `a929437` (own site not a channel) — verified in `/admin/analytics`.
 - `faa9882` — deployed and checked (multi-room staging, run leases). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's, the labeled copies' and a multi-room order's real-model runs are not yet seen in production.
 
 ## KNOWN BUGS

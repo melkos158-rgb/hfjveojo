@@ -1,0 +1,344 @@
+{
+ "ledger_version": "1.0.0",
+ "suite_version": "3.1.0",
+ "created_at": "2026-09-26T23:24:49Z",
+ "request": {
+  "summary": "More qualified organic traffic and AI-search visibility for orvionis.com buyer-intent queries (virtual staging cost, AI virtual staging, AB 723 disclosure), implementing evidence-backed fixes in the owned codebase",
+  "mode": "end-to-end",
+  "authorized_boundary": "Research, audit, plan, implementation in the owned repo, release via git push/Railway auto-deploy under the owner's standing autonomous mandate; no provider mutations (no GSC/Bing access)"
+ },
+ "overall_state": "blocked",
+ "skills": [
+  {
+   "skill": "ai-search-research",
+   "state": "blocked",
+   "reason": "A contract-valid Research Pack needs dated US-locale answer captures from ChatGPT, Perplexity and Google AI Overviews/AI Mode.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [],
+   "blocker": "No authorized, repeatable access to US-locale AI engine answers: the operator shells cannot reach them and the only browser is the owner's (Poland, logged in). Needs an owner decision on using his accounts or a paid monitoring tool.",
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-aeo",
+   "state": "blocked",
+   "reason": "Formal AEO brief requires the Research Pack; answer-level fixes (AI FAQ, accurate home FAQ) were made under seo-content on conventional evidence.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [],
+   "blocker": "Depends on ai-search-research (blocked: no authorized US-locale AI engine access).",
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-geo",
+   "state": "blocked",
+   "reason": "Formal GEO brief requires the Research Pack; entity fixes (WebSite/Organization, one host, Ride Lab conflict plan) were made under schema/technical lanes.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [],
+   "blocker": "Depends on ai-search-research (blocked: no authorized US-locale AI engine access).",
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "ai-visibility-monitor",
+   "state": "blocked",
+   "reason": "Needs the Research Pack, a frozen query corpus and engine access.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [],
+   "blocker": "Depends on ai-search-research (blocked: no authorized US-locale AI engine access).",
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo",
+   "state": "completed",
+   "reason": "Router: scoped the goal, screened all 27 lanes, ran the applicable ones, shipped and verified the release.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md",
+    "docs/seo/orchestration-ledger.json"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-action-plan",
+   "state": "completed",
+   "reason": "Provisional action list with owners, acceptance, verification and rollback (no formal action-plan.json).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-agentic",
+   "state": "not-applicable",
+   "reason": "The requested outcome is organic and AI-search visibility; agent task completion in the order flow is outside it.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-architecture",
+   "state": "completed",
+   "reason": "Internal link graph captured; flagship linked sitewide (header lg+, footer); cost guide linked from the flagship and the other staging guides; header overflow at 640-720 px fixed.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "src/components/Nav.tsx",
+    "src/components/Footer.tsx"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-authority",
+   "state": "completed",
+   "reason": "Search Console Links: 0 external links; brand SERP owned by the old Ride Lab pages; README of the public repo now links the site; no link schemes, outreach only with linkable assets (plan).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "README.md",
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-audit",
+   "state": "completed",
+   "reason": "Bounded multi-lane audit with evidence, findings F1-F10, limitations and owners.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-commerce",
+   "state": "not-applicable",
+   "reason": "Services sold per order through Stripe Checkout; no physical products, merchant feeds or shopping surfaces. Product/Offer markup reviewed under seo-schema.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-competitor-pages",
+   "state": "completed",
+   "reason": "The cost guide (a comparison page) reviewed for fairness: every competitor price sourced and dated, our offer described like the others.",
+   "evidence_refs": [
+    "src/app/guides/virtual-staging-cost/page.tsx"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-content",
+   "state": "completed",
+   "reason": "Titles/descriptions and home copy aligned with the four live tools and prices; AI answer on the flagship; claims traced to the tool registry and pages.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "src/app/page.tsx",
+    "src/lib/tools/definitions/virtual-staging.ts"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-hreflang",
+   "state": "not-applicable",
+   "reason": "One language (English) and one market; no locale URL clusters (the legacy /pl and /en paths are old-site 404s handled as technical).",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-images",
+   "state": "completed",
+   "reason": "Image inventory reviewed: content images have alt text, logos are decorative (alt empty); OG image added to the fair-housing guide; some lazy images lack dimensions (minor backlog).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "src/app/guides/fair-housing-words-to-avoid/page.tsx"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-local",
+   "state": "not-applicable",
+   "reason": "Online service with no storefront, service area or business profile.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-news-discover",
+   "state": "not-applicable",
+   "reason": "Not a news publisher; guides are evergreen.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-page",
+   "state": "completed",
+   "reason": "Search-result presentation matrix for all 21 sitemap URLs (title, description, H1, canonical); new copy shipped and accepted for uniqueness.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md",
+    "src/app/page.tsx"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-plan",
+   "state": "completed",
+   "reason": "Sequenced: code actions shipped now; owner-gated provider operations next; weekly measurement plan.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-programmatic",
+   "state": "not-applicable",
+   "reason": "Four tool pages from one config template; no scaled page generation planned.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-research",
+   "state": "completed",
+   "reason": "Query families (near-term and head-term), dated SERP observations, brand SERP and index coverage map; no formal query-corpus.json (limitation).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-performance",
+   "state": "blocked",
+   "reason": "Baselines captured read-only (Search Console 3 months, first-party analytics 30 days); provider operations are waiting for the owner's yes.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": "Owner authorization for Search Console operations (request indexing, sitemap resubmission, removals) and the Bing Webmaster Tools import; asked 2026-09-27.",
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-schema",
+   "state": "completed",
+   "reason": "WebSite + Organization graph on the home page; Article datePublished/image/publisher; Product/Offer and FAQPage kept (truthful, no rich-result promise).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "src/app/page.tsx",
+    "src/app/guides/virtual-staging-cost/page.tsx"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-sitemap",
+   "state": "completed",
+   "reason": "21 canonical URLs, stable lastmod bumped to 2026-09-27; Search Console shows the sitemap last read on 26 Sep with 13 URLs.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "src/app/sitemap.ts"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-technical",
+   "state": "completed",
+   "reason": "Metadata streamed into body for Googlebot/AI crawlers fixed (htmlLimitedBots); www to apex 308; favicon verified live (64x64 PNG); legacy Ride Lab URLs confirmed 404; llms.txt validated.",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md",
+    "next.config.ts",
+    "src/lib/seo/host.ts"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md",
+    "src/app/llms.txt/route.ts"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "seo-video",
+   "state": "not-applicable",
+   "reason": "No watch pages or embedded players on the site.",
+   "evidence_refs": [],
+   "output_refs": [],
+   "blocker": null,
+   "owner_decision_ref": null
+  },
+  {
+   "skill": "optimise-seo",
+   "state": "completed",
+   "reason": "Implemented locally (107 tests, 5-user-agent crawl of 21 URLs), released as 15bb01a (CI and Railway success) and verified live at DOM level; raw-HTML live layer not reachable from operator shells (limitation).",
+   "evidence_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "output_refs": [
+    "docs/SEO_AUDIT.md"
+   ],
+   "blocker": null,
+   "owner_decision_ref": null
+  }
+ ],
+ "coverage_summary": "27 lanes screened: 15 completed (router, research, audit, page, technical, content, schema, images, sitemap, architecture, authority, competitor pages, plan, action plan, implementation and release), 5 blocked (AI-search research, AEO, GEO and AI visibility on US-locale AI engine access; Search Console and Bing operations on the owner's yes), 7 not applicable (hreflang, commerce, local, video, news, agentic, programmatic).",
+ "limitations": [
+  "orvionis.com is not reachable from the operator shells; raw HTML was verified on a local production build of the same commit and live checks were DOM-level in Chrome.",
+  "No formal Research Pack, query corpus, findings bundle or action-plan.json; findings and actions are provisional records in docs/SEO_AUDIT.md.",
+  "SERP observations came from a US web-search tool and from Google in the owner's browser (Poland, personalised).",
+  "Search Console data lags about 3 days and mostly reflects the old Ride Lab site."
+ ]
+}

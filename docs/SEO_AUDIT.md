@@ -100,4 +100,18 @@ Separate metric families, observational only:
 
 ## Status
 
-See `LAST COMPLETED ACTION` in GROWTH_EXPERIMENTS.md (E10) and the session log in OPERATOR.md.
+- **implemented-locally:** A1–A7 passed the local gate: 107 tests (new `tests/seo.test.ts`), typecheck, production build,
+  and a crawl of all 21 sitemap URLs with Chrome, Googlebot, GPTBot, ClaudeBot and PerplexityBot user agents — one title,
+  description and canonical in `<head>` everywhere, unique titles and descriptions, valid JSON-LD; `/llms.txt` passes the
+  plugin's validator; no header overflow from 360 to 1440 px.
+- **delivered-and-verified:** commit `15bb01a` — CI success, Railway deploy success (2026-09-27 ~00:00 UTC). Live checks in
+  Chrome: `www.orvionis.com/tools/virtual-staging` lands on the apex; Railway passes `Host`/`X-Forwarded-Host = orvionis.com`
+  (the request URL itself says `localhost:8080`); the flagship shows the new title, the AI answer, the cost-guide link and the
+  nav link; the home page has the new title/description, canonical and the Organization + WebSite graph; `/llms.txt` serves
+  `text/plain`; `/icon` is a 64×64 PNG. Limitation: the raw-HTML layer can't be fetched from the operator's shells or the
+  extension, so "metadata in `<head>`" was proven on the local build of the same commit.
+- **provider-outcome-pending:** indexing of the flagship and guides, removal of the Ride Lab URLs, new title in Google's
+  results, Bing coverage — all wait for the owner-approved operations O1–O4 and then for Google/Bing to recrawl.
+- Coverage ledger (27 lanes, validated): `docs/seo/orchestration-ledger.json`.
+- Next check: weekly `site:orvionis.com` and Search Console Pages/Performance; first-party channels `www.google.com`,
+  `bing.com` and AI referrers.

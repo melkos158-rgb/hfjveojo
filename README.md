@@ -1,13 +1,20 @@
 # ORVIONIS
 
+**Live site: [orvionis.com](https://orvionis.com)** — AI virtual staging, MLS listing descriptions, listing clips and
+photographer pricing guides, each at a fixed price per result.
+
 One brand, many tools, revenue first. ORVIONIS turns a customer's inputs into a finished, branded deliverable — paid per result through Stripe, fulfilled by an AI pipeline with quality gates, or by a human (concierge) using an AI-drafted plan. Every tool is configuration; every order, payment, AI call and marketing dollar is measured so the business can be run from data.
 
-**Live tools (V1)**
+**Live tools**
 
 | Tool | Slug | Customer | Price | Fulfilment |
 | --- | --- | --- | --- | --- |
+| Virtual Staging | `/tools/virtual-staging` | Real-estate agents | $15 / photo (up to 6 per order) | AUTO (AI image edit, 2 versions per photo, disclosure pack), ~2 min per photo |
+| Listing Description | `/tools/listing-description` | Real-estate agents | $9 / listing | AUTO (AI → fair-housing and QA checks), ~5 min |
 | Listing Clips | `/tools/listing-clips` | Real-estate agents | $49 / listing | MANUAL (concierge, AI-drafted plan), 48h |
 | Photographer Pricing Guide | `/tools/photographer-pricing-guide` | Photographers | $29 | AUTO (AI → QA → PDF), minutes |
+
+Guides: `/guides` (virtual staging cost, AB 723 checklist, room photo tips, fair-housing wording). Free tools: `/free`.
 
 Vertical landings: `/real-estate`, `/photographers`. Catalog: `/tools`. Admin (AI CEO console): `/admin`.
 
