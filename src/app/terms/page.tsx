@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { site } from "@/config/site";
 import { LegalNotice } from "@/components/LegalNotice";
 
-export const metadata: Metadata = { title: "Terms of Service", alternates: { canonical: "/terms" } };
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "The terms for ORVIONIS orders: what we deliver, payment through Stripe, your rights to your inputs and to the finished files, revisions and liability.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
   return (

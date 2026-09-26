@@ -5,8 +5,9 @@ import { ToolCard, toolCardProps } from "@/components/ToolCard";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "All tools",
-  description: "Every deliverable you can order: listing clips for real-estate agents, pricing guides for photographers, and more. Pay per result.",
+  title: "All tools: AI virtual staging, listing descriptions and more",
+  description:
+    "Four done-for-you tools, each with one fixed price: virtual staging $15 per photo, listing descriptions $9, listing clips $49 and photographer pricing guides $29. See what goes in, what comes out and the delivery time before you pay.",
   alternates: { canonical: "/tools" },
 };
 

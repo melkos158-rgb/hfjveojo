@@ -6,7 +6,7 @@ import { GUIDES } from "@/config/guides";
 export const dynamic = "force-dynamic";
 
 /** Bump when page content changes materially; a lastmod that changes on every request makes crawlers ignore it. */
-const CONTENT_UPDATED = new Date("2026-09-26T00:00:00Z");
+const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = CONTENT_UPDATED;

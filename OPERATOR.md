@@ -53,6 +53,19 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Owner actions needed (cannot be done by the operator)
 
+**New, 2026-09-27 — Search Console (biggest SEO lever; details in `docs/SEO_AUDIT.md`).** The Domain property
+`sc-domain:orvionis.com` exists and the operator can read it. Google has not indexed `/tools/virtual-staging` or any guide,
+still lists 16 old Ride Lab pages for this domain, and shows an old home-page title. The sitemap was last read on 26 Sep
+with 13 URLs (it now has 21). Clicking "Request indexing", resubmitting the sitemap or filing removals are actions in your
+Google account, so the operator needs your yes for each:
+1. **Yes/no:** the operator requests indexing for `/`, `/tools/virtual-staging`, `/guides/virtual-staging-cost` and
+   `/guides/ab-723-virtual-staging`, and resubmits `https://orvionis.com/sitemap.xml`.
+2. **Ride Lab** (`/pl/…`, `/en/…`, also on `www.`): does it live on another domain now (then its old pages get 301 redirects
+   there) or is it gone (then Removals → "Remove all URLs with this prefix" for `https://orvionis.com/pl/` and
+   `https://orvionis.com/en/`)? The pages already answer 404.
+3. **Bing Webmaster Tools** (https://www.bing.com/webmasters) → sign in → Import from Google Search Console → it takes the
+   site and sitemap (Bing also feeds ChatGPT search, Copilot and DuckDuckGo). The operator can do it with your yes.
+
 **Current, 2026-09-26 22:00 UTC+2. Do these first; the older numbered items below are history.**
 - **Google Ads, live campaign `E8 Virtual Staging - Search - US` (id 24292280138).** The auto-mode safety check blocks the operator from editing a live campaign ("real-world transactions"). The owner does these:
   - (a) add the campaign-level negative keywords (list in `docs/GOOGLE_ADS_EXPERIMENT.md`);
@@ -85,6 +98,16 @@ Rule: no secrets in this file — only names, ids, paths and states.
 7. [ ] Share-preview check after deploy: paste https://orvionis.com/real-estate into a preview debugger (opengraph.xyz or the Facebook Sharing Debugger) once; the card is cached by platforms for ~24h after first share.
 
 ## Session log
+
+- 2026-09-26 23:10 – 2026-09-27 00:20 UTC (SEO audit with the SEO-AEO-GEO Ultimate plugin, installed at the owner's request):
+  - The owner asked for the `claude-seo` skill (AgriciDaniel). It isn't in the Claude plugin catalog, and the operator does not
+    run third-party install scripts, so the closest catalog plugins were offered; the owner installed SEO-AEO-GEO Ultimate,
+    SearchFit SEO and Claude SEO and GEO Site Audit.
+  - Shipped `a929437`: own site never counted as an acquisition channel (verified in production: the "orvionis.com 465" row is
+    now "direct").
+  - Audit findings, evidence and the decision record: `docs/SEO_AUDIT.md`. Biggest: Google indexes 16 Ride Lab pages and none
+    of the guides or the flagship → owner actions above (Search Console). Code shipped: metadata always in `<head>`, www → apex,
+    WebSite markup, current titles/descriptions, flagship in the nav, cost guide cross-links, `/llms.txt`.
 
 - 2026-09-26 22:30–22:55 UTC+2 (privacy audit):
   - `/privacy` now describes production exactly. Audit table and checklist are in `docs/LEGAL_FLAGS.md`.

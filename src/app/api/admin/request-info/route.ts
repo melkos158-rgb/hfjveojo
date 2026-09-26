@@ -29,6 +29,10 @@ export async function GET(req: Request) {
       rateLimitIpIsProbe: probe ? used === probe : null,
       // The middleware marks cookies Secure when this is "https" (Railway terminates TLS in front of the app).
       forwardedProto: req.headers.get("x-forwarded-proto"),
+      // Which header carries the visitor's hostname (the www → apex redirect reads both). Hostnames are public values.
+      host: req.headers.get("host"),
+      forwardedHost: req.headers.get("x-forwarded-host"),
+      nextUrlHost: new URL(req.url).host,
     },
     { headers: { "Cache-Control": "no-store" } },
   );

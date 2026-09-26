@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { ATTRIBUTION_COOKIE, attributionFromUrl, nextAttribution, parseAttributionCookie, publicHost, serializeAttribution } from "@/lib/analytics/attribution";
+import { canonicalHostRedirect } from "@/lib/seo/host";
 
 const SESSION_COOKIE = "orv_session";
 const SESSION_ID_COOKIE = "orv_sid";
@@ -11,9 +12,13 @@ const SESSION_ID_COOKIE = "orv_sid";
  * 2) Attribution: UTM/ref/experiment params are captured once into a cookie for later orders (first touch), and a
  *    Google Ads click (gclid) replaces it so ad spend is credited — see src/lib/analytics/attribution.ts.
  * 3) Anonymous session id for funnel analytics (no PII).
+ * 0) Before all of that: requests for www.<apex> are redirected to the apex (src/lib/seo/host.ts).
  */
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
+  // www.orvionis.com → orvionis.com (permanent): one host for search engines, cookies and analytics.
+  const canonical = canonicalHostRedirect(req.headers, url.pathname, url.search);
+  if (canonical) return NextResponse.redirect(canonical, 308);
   const res = NextResponse.next();
   // Behind Railway's proxy the app sees plain http; the visitor's scheme is in x-forwarded-proto. Cookies set over
   // HTTPS are marked Secure so they are never sent over an unencrypted connection.
@@ -57,5 +62,5 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   // Static brand files, icons and the manifest need no cookies or auth checks.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|api/stripe/webhook|api/health|brand/|manifest.webmanifest|icon|apple-icon).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|llms.txt|api/stripe/webhook|api/health|brand/|manifest.webmanifest|icon|apple-icon).*)"],
 };

@@ -11,6 +11,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Metadata (title, description, canonical, OG) always rendered in <head>, for every user agent. Next 15.2+ otherwise
+  // streams it into <body> for Googlebot and for crawlers missing from its "HTML-limited bots" list (GPTBot, ClaudeBot,
+  // PerplexityBot…), and a canonical outside <head> is ignored. Our metadata is static, so blocking costs nothing.
+  htmlLimitedBots: /.*/,
   serverExternalPackages: ["@react-pdf/renderer", "@prisma/client"],
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];

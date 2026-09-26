@@ -97,6 +97,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
   - accurate cookie notice.
 
   Checklist in `docs/LEGAL_FLAGS.md`.
+- 2026-09-27 00:20 UTC: **SEO audit + fixes** (SEO-AEO-GEO Ultimate plugin; `docs/SEO_AUDIT.md`): metadata always in `<head>` (was in `<body>` for Googlebot/AI crawlers on 12 pages), www → apex 308, WebSite + Organization graph, current titles/descriptions, flagship in nav/footer, cost-guide cross-links, AI answer on the flagship, `/llms.txt` from the live catalog. `a929437`: own site no longer counted as a channel (verified in production).
 - 23:20: E10 guide **"How much does virtual staging cost in 2026?"** (`/guides/virtual-staging-cost`): every price is sourced and dated, our offer is described like the others. It is on the /guides hub and in the sitemap.
 
 ## IN PROGRESS
@@ -118,7 +119,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
 5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-6. SEO: two guides live (AB 723 checklist, photo tips); next: a sourced virtual-staging cost comparison. Request indexing of the guides in Search Console.
+6. SEO (`docs/SEO_AUDIT.md`): with the owner's yes, request indexing of the flagship and the guides, resubmit the sitemap, remove the 16 Ride Lab URLs from Google, import the site into Bing Webmaster Tools. Then weekly: `site:` coverage, Search Console queries, AI referrers.
 7. Browser extension — only on demand.
 
 ## PRODUCTION STATUS

@@ -14,10 +14,15 @@ export async function Nav() {
           <span>{site.name}</span>
         </Link>
         <nav className="flex items-center gap-3 whitespace-nowrap text-sm font-medium text-gray-700 sm:gap-5">
+          {/* The flagship tool, linked from every page (lg+ only: below 1024 px the row is already full). */}
+          <Link href="/tools/virtual-staging" className="hidden hover:text-ink lg:inline">
+            Virtual staging
+          </Link>
           <Link href="/real-estate" className="hidden hover:text-ink sm:inline">
             Real estate
           </Link>
-          <Link href="/photographers" className="hidden hover:text-ink sm:inline">
+          {/* md+ only: between 640 and 720 px the full row overflowed the screen (measured 2026-09-27). */}
+          <Link href="/photographers" className="hidden hover:text-ink md:inline">
             Photographers
           </Link>
           {/* Phones: "Get started" already leads to the tools, so this link only shows there for signed-in customers. */}

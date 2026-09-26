@@ -1,0 +1,103 @@
+# SEO / AI-search audit and decision record — persistent state
+
+Audit run with the SEO-AEO-GEO Ultimate plugin (`seo` router) on 2026-09-26/27 (UTC). Owner of the decision and of the code
+changes: the autonomous operator, under the owner's standing mandate (audit → plan → build → test → deploy → verify).
+Nothing here promises crawling, indexing, rankings, AI citations, traffic or sales.
+
+## Scope
+
+- Site: `https://orvionis.com` (Next.js 15.5 on Railway), English, US-first audience (real-estate agents, photographers).
+- Goal: qualified organic and AI-search visibility for buyer-intent query families:
+  - near-term: "virtual staging cost", "virtual staging per photo / no subscription", "AB 723 virtual staging disclosure",
+    "how to photograph rooms for virtual staging", "fair housing words to avoid";
+  - head-term leadership (kept on purpose, long-term): "virtual staging", "AI virtual staging".
+- Authorization states:
+  - implementation in the repo — **authorized** (standing mandate);
+  - release (git push → Railway auto-deploy) — **authorized** (standing mandate);
+  - provider operations (Search Console submissions, indexing requests, removals, Bing Webmaster Tools, IndexNow) —
+    **not done yet**: they act in the owner's accounts, so each needs the owner's yes (asked 2026-09-27). Reading Search
+    Console is fine and was done.
+
+## Evidence (captured 2026-09-26 23:20–23:45 UTC)
+
+- **Local crawl of the production build** (same commit as production, `NEXT_PUBLIC_APP_URL=https://orvionis.com`), all 21
+  sitemap URLs with a Googlebot user agent: raw HTML, title, description, canonical, robots, OG, JSON-LD, H1, links, images.
+  orvionis.com itself is not reachable from the operator's shells (egress allowlist), so live checks go through Chrome.
+- **Google index, `site:orvionis.com`** (Chrome, 3 result pages):
+  - 11 ORVIONIS URLs indexed: `/`, `/tools`, `/pricing`, `/free`, `/real-estate`, `/contact`, three tool pages
+    (listing clips, listing description, photographer pricing guide) and both free tools;
+  - **not indexed:** `/tools/virtual-staging` (the flagship and the Google Ads landing page), all four `/guides/*`, `/guides`,
+    `/photographers`, `/terms`, `/privacy`, `/refund-policy`;
+  - **16 URLs of an older site on this domain ("Ride Lab", 3D-printed e-scooter parts, Chełm)**: `/pl/`, `/en/`,
+    `/pl/sklep`, `/pl/produkt/…`, `/en/product/…` (also on `www.`), `/pl/o-nas`, `/en/about`, `/pl/kontakt`, `/en/contact`,
+    `/pl/faq`, `/en/faq`, `/pl/regulamin`, `/en/terms`, `/pl/polityka-prywatnosci`, `/en/privacy`. They return 404 +
+    `noindex` today (checked `/pl/sklep`), so Google will drop them after recrawling;
+  - the home page result still shows an old title ("ORVIONIS — AI-made deliverables for busy professionals").
+- **Brand query "orvionis"** on Google (from Poland): Ride Lab pages rank first and second, the ORVIONIS home page third.
+- **Other search index (WebSearch tool)**: `site:orvionis.com` and "orvionis" return nothing from the site.
+- **Hosts:** `https://www.orvionis.com/…` serves the site with 200 (no redirect); canonicals point to the apex.
+- **First-party baseline (last 30 days, `/admin/analytics`, first touch):** direct 473 visits, `www.google.com` 18,
+  Gmail app 6; 0 paid orders.
+- **Search Console baseline** (`sc-domain:orvionis.com`, read-only, 3 months to 2026-09-24): 2 clicks, 65 impressions,
+  CTR 3.1 %, average position 7.4; visible queries only "orvion" (4 impressions) and "ride lab" (3) — the Ride Lab era.
+  Page indexing: 17 indexed, 17 not indexed (11 "alternate page with proper canonical", 2 noindex, 2 redirect, 2 "crawled –
+  currently not indexed"). Sitemap submitted and last read 2026-09-26: success, 13 URLs discovered (21 today). Google's
+  generative-AI performance report is offered for the property (not yet read).
+- **SERP observations** (WebSearch, US, 2026-09-26): "virtual staging cost per photo 2026" = competitors' pricing guides with
+  price ranges in the title; "AI virtual staging" = app stores, NAR, established AI tools (head term, strong competition);
+  "AB 723 virtual staging disclosure" = MLS/association pages and vendor guides (winnable long tail).
+
+## Findings
+
+| ID | Finding | Class | Evidence |
+| --- | --- | --- | --- |
+| F1 | 12 of 21 pages (all guides, free tools, /contact, legal pages) put title, description, canonical and OG tags in `<body>` for Googlebot and for crawlers Next.js does not list (e.g. GPTBot, ClaudeBot, PerplexityBot): Next 15.2+ streams metadata unless the user agent is an "HTML-limited bot". A canonical in `<body>` is invalid HTML. | Confirmed layer mismatch (raw vs rendered) | crawl raw HTML; `next/dist/shared/lib/router/utils/html-bots.js` |
+| F2 | Flagship `/tools/virtual-staging` and all guides are not in Google's index. | Confirmed (indexing gap) | `site:` observation |
+| F3 | 16 Ride Lab URLs indexed on the domain; they own the brand SERP and mix two unrelated entities on one domain. | Confirmed | `site:` + brand SERP |
+| F4 | `www.orvionis.com` answers 200 instead of redirecting to the apex (one Ride Lab URL is indexed on `www`). | Confirmed | Chrome navigation |
+| F5 | No `WebSite` structured data on the home page; Google shows the site name as "orvionis". | Supported opportunity | crawl; Google site-names doc (updated 2025-12-10) |
+| F6 | Search-result copy out of date: home, `/tools` and `/real-estate` titles/descriptions don't mention virtual staging (the main product); `/pricing` gives no prices; `/terms`, `/privacy`, `/refund-policy` reuse the site description. | Confirmed (copy) | crawl |
+| F7 | The flagship is not linked from the header or footer; the cost guide is linked only from `/guides`. | Supported opportunity | crawl link graph |
+| F8 | `Article` markup: the cost guide lacks `datePublished`; no guide has `image`; the fair-housing guide has no OG image. | Minor | crawl JSON-LD |
+| F9 | The flagship page never says the staging is made by AI, while searchers use "AI virtual staging". | Supported opportunity | page text |
+| F10 | `/login` (noindex) inherits `canonical: /`. | Minor | crawl |
+
+Declined: `llms.txt` as a ranking or citation lever (it is optional; Google ignores it for Search), FAQ rich results (Google
+removed them for most sites), any AI-bot blocking change (robots.txt allows all crawlers; kept), link schemes.
+
+## Actions
+
+Operator (code), in this release:
+
+- A1 (F1) `htmlLimitedBots: /.*/` in `next.config.ts` → metadata always in `<head>`. Accept: all 21 sitemap URLs have exactly
+  one title, description and canonical inside `<head>` for Chrome, Googlebot, GPTBot, ClaudeBot and PerplexityBot user agents.
+  Rollback: remove the line.
+- A2 (F4) Permanent redirect `www.orvionis.com/*` → `https://orvionis.com/*` for pages (not `/api/*`). Accept: Chrome lands on
+  the apex after one redirect. Rollback: remove the middleware branch.
+- A3 (F5) `WebSite` + `Organization` graph on the home page only.
+- A4 (F6, F9) New titles/descriptions for the home page, `/tools`, `/pricing`, `/real-estate`, the flagship, the cost guide and
+  the legal pages; a visible FAQ answer on the flagship saying the staging is done by an AI image model. Every claim comes from
+  the tool registry or the page itself.
+- A5 (F7) "Virtual staging" in the header and footer; the cost guide linked from the flagship and from the other staging guides.
+- A6 (F8, F10) `datePublished` and `image` in guide markup, OG image on the fair-housing guide, no canonical on `/login`.
+- A7 Optional publisher guide `/llms.txt`, generated from the tool registry and guide list (stays in sync by construction).
+
+Provider operations (in the owner's Google/Bing accounts; each needs the owner's yes — asked 2026-09-27):
+
+- O1 Search Console: resubmit `https://orvionis.com/sitemap.xml` (last read with 13 URLs; now 21).
+- O2 URL Inspection → Request indexing: `/`, `/tools/virtual-staging`, `/guides/virtual-staging-cost`,
+  `/guides/ab-723-virtual-staging`.
+- O3 Owner decides what happens to the Ride Lab URLs: 301 to a new Ride Lab domain (keeps its rankings) or gone; if gone,
+  Search Console → Removals → prefix `https://orvionis.com/pl/` and `https://orvionis.com/en/`.
+- O4 Bing Webmaster Tools → import from Search Console → sitemap (Bing also feeds ChatGPT search, Copilot, DuckDuckGo).
+
+## Measurement plan
+
+Separate metric families, observational only:
+- Google index coverage (`site:` count of ORVIONIS vs Ride Lab URLs) — weekly until Search Console exists, then its Pages report;
+- organic visits by channel (`www.google.com`, `bing.com`, AI referrers such as `chatgpt.com`, `perplexity.ai`) in `/admin/analytics`;
+- Search Console clicks/impressions per query family once verified (baseline = first 28 days).
+
+## Status
+
+See `LAST COMPLETED ACTION` in GROWTH_EXPERIMENTS.md (E10) and the session log in OPERATOR.md.

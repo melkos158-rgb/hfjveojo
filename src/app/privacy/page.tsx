@@ -3,7 +3,11 @@ import { site } from "@/config/site";
 import { LegalNotice } from "@/components/LegalNotice";
 import { gaMeasurementId } from "@/lib/ga";
 
-export const metadata: Metadata = { title: "Privacy Policy", alternates: { canonical: "/privacy" } };
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "What ORVIONIS collects when you visit or order, why, which providers process it (Railway, Stripe, OpenAI, Resend, Google), how long files are kept and your rights.",
+  alternates: { canonical: "/privacy" },
+};
 
 /**
  * Every statement on this page describes what the production code and configuration actually do (audit 2026-09-26,

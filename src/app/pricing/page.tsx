@@ -6,8 +6,9 @@ import { formatUsd } from "@/lib/ai/pricing";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Pricing",
-  description: "Simple per-result pricing. No subscription. See every tool's price and delivery time.",
+  title: "Pricing: $9 to $49 per result, no subscription",
+  description:
+    "Every price on one page: virtual staging $15 per photo (up to 6 rooms per order), listing description $9, listing clips $49, photographer pricing guide $29. Paid once through Stripe, with delivery times and the refund policy.",
   alternates: { canonical: "/pricing" },
 };
 

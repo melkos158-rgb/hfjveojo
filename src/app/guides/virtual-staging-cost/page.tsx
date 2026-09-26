@@ -4,15 +4,18 @@ import { site } from "@/config/site";
 
 const SLUG = "virtual-staging-cost";
 const TITLE = "How much does virtual staging cost in 2026?";
+/** Search-result title: the answer's shape up front (searchers compare per-photo prices). */
+const SEO_TITLE = "Virtual staging cost in 2026: real prices per photo";
 const DESCRIPTION =
-  "Per-photo prices, AI subscriptions and what a whole listing costs — real prices checked in September 2026, plus NAR data on what staging does for a sale.";
+  "Human-edited virtual staging costs $24–$30 per photo; AI plans run $16–$79 a month. Real prices checked in September 2026, what a whole listing costs, and NAR data on what staging does for a sale.";
 const CHECKED = "September 26, 2026";
+const OG_IMAGE = "/img/sample-virtual-staging-og.jpg";
 
 export const metadata: Metadata = {
-  title: TITLE,
+  title: SEO_TITLE,
   description: DESCRIPTION,
   alternates: { canonical: `/guides/${SLUG}` },
-  openGraph: { type: "article", title: `${TITLE} | ${site.name}`, description: DESCRIPTION, url: `${site.url}/guides/${SLUG}`, images: [{ url: "/img/sample-virtual-staging-og.jpg", width: 540, height: 630 }] },
+  openGraph: { type: "article", title: `${SEO_TITLE} | ${site.name}`, description: DESCRIPTION, url: `${site.url}/guides/${SLUG}`, images: [{ url: OG_IMAGE, width: 540, height: 630 }] },
 };
 
 /** Prices as published by each provider on the day we checked (see Sources). */
@@ -61,9 +64,11 @@ export default function VirtualStagingCostGuide() {
     "@type": "Article",
     headline: TITLE,
     description: DESCRIPTION,
+    image: `${site.url}${OG_IMAGE}`,
+    datePublished: "2026-09-26",
     dateModified: "2026-09-26",
-    author: { "@type": "Organization", name: site.name },
-    publisher: { "@type": "Organization", name: site.name },
+    author: { "@type": "Organization", name: site.name, url: site.url },
+    publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
   };
   return (

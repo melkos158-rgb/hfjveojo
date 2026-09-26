@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/config/site";
@@ -10,24 +11,32 @@ import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description"
 
 export const dynamic = "force-dynamic";
 
+/** Search-result copy for the home page: every product and price here comes from the tool registry (see /pricing). */
+export const metadata: Metadata = {
+  title: { absolute: `${site.name} — AI virtual staging and listing marketing for agents` },
+  description:
+    "Upload what you have, get the finished result: AI virtual staging for $15 a photo (two versions in about two minutes), MLS listing descriptions for $9, listing clips for $49 and photographer pricing guides for $29. No subscription.",
+  alternates: { canonical: "/" },
+};
+
 /** Home hero photo. Swap the file in /public/img to change it; keep 3:2. */
 const HOME_HERO = { src: "/img/hero-home.webp", alt: "A modern house at dusk with warm light in the windows and a still pool in front" };
 
 /** The one thing a visitor must understand in the first seconds. */
 const FLOW = [
-  { n: "1", t: "Your input", d: "A video link, a few facts, your price list" },
-  { n: "2", t: "We do the work", d: "Drafted, checked, edited where a human is needed" },
-  { n: "3", t: "Finished result", d: "Clips, a PDF, copy — ready to use" },
+  { n: "1", t: "Your input", d: "Room photos, a few facts, a video link or your price list" },
+  { n: "2", t: "We do the work", d: "Made, checked, edited where a human is needed" },
+  { n: "3", t: "Finished result", d: "Staged photos, copy, clips or a PDF — ready to use" },
   { n: "4", t: "Pay once", d: "Stripe checkout, fixed price, no subscription" },
   { n: "5", t: "Download", d: "Inbox + your order page, files kept 90 days" },
 ];
 
 
 const FAQ = [
-  { q: "What do I actually upload?", a: "As little as possible. For listing clips: a link to your walkthrough video plus the listing facts. For the pricing guide: your packages, prices and a few sentences about you. No accounts, no uploads of large files — links are fine." },
-  { q: "How fast is it?", a: "The pricing guide is generated in about five minutes and lands in your inbox. Listing clips are edited by a person and delivered within 48 hours." },
-  { q: "What if I do not like the result?", a: "Every order includes one revision. If we cannot get it right, our refund policy applies — no arguing over a $29–$49 order." },
-  { q: "Do you use AI?", a: "Yes, for drafting and layout, with fixed checks after it (prices copied exactly, no invented facts, fair-housing wording) and a human editor on video work. You pay for the finished result, not for access to a model." },
+  { q: "What do I actually upload?", a: "Only what the result needs. Virtual staging: photos of the empty rooms (up to 8 MB each). Listing description: the address, price, beds and baths and a few facts worth mentioning. Listing clips: a link to your walkthrough video plus the listing facts. Pricing guide: your packages, prices and a few sentences about you." },
+  { q: "How fast is it?", a: "Virtual staging takes about two minutes per photo; listing descriptions and pricing guides about five minutes. Listing clips are edited by a person and delivered within 48 hours." },
+  { q: "What if I do not like the result?", a: "Every order includes one revision round. If we cannot deliver what the tool page promised, you get your money back — see the refund policy." },
+  { q: "Do you use AI?", a: "Yes. Staged photos are made by an AI image model that edits your own photo; descriptions and pricing guides are drafted by AI and checked automatically after it (prices copied exactly, fair-housing wording). Listing clips are edited by a person. You pay for the finished result, not for access to a model." },
   { q: "How do I pay?", a: "By card through Stripe Checkout. You get a Stripe receipt and an order page with the files. No subscription — you order again only when you have the next listing or enquiry." },
   { q: "Who owns the files?", a: "You do. Download them from your order page for 90 days; we do not resell or publish your material." },
 ];
@@ -37,14 +46,14 @@ export default async function HomePage() {
   const featured = catalog.filter((c) => c.def.featured).concat(catalog.filter((c) => !c.def.featured)).slice(0, 6);
   const fromPrice = catalog.length ? Math.min(...catalog.map((c) => c.priceCents)) : 2900;
   const from = formatUsd(fromPrice).replace(/\.00$/, "");
-  // Organization with the official logo: lets search engines show the ORVIONIS mark next to results.
+  // Organization (official logo) + WebSite (the site name Google shows next to results) — home page only, one graph.
+  const orgId = `${site.url}/#organization`;
   const orgLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: site.url,
-    logo: `${site.url}${brand.logo[512]}`,
-    email: site.supportEmail,
+    "@graph": [
+      { "@type": "Organization", "@id": orgId, name: site.name, url: `${site.url}/`, logo: `${site.url}${brand.logo[512]}`, email: site.supportEmail },
+      { "@type": "WebSite", "@id": `${site.url}/#website`, name: site.name, url: `${site.url}/`, inLanguage: "en", publisher: { "@id": orgId } },
+    ],
   };
   const faqLd = {
     "@context": "https://schema.org",
@@ -66,7 +75,8 @@ export default async function HomePage() {
               Upload what you have. Get the <span className="text-gradient">finished result.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-gray-600">
-              A walkthrough video becomes five listing clips. Your package list becomes a branded pricing guide. Fixed price from{" "}
+              An empty-room photo becomes a staged listing photo. A few listing facts become an MLS-ready description. A walkthrough
+              video becomes five listing clips. Fixed price from{" "}
               <span className="font-semibold text-fg">{from}</span>, most results in minutes, video edits in 48 hours.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">

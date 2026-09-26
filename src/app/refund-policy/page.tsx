@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { site } from "@/config/site";
 import { LegalNotice } from "@/components/LegalNotice";
 
-export const metadata: Metadata = { title: "Refund Policy", alternates: { canonical: "/refund-policy" } };
+export const metadata: Metadata = {
+  title: "Refund Policy",
+  description: "When ORVIONIS refunds an order — late delivery, a result that doesn't match the tool page after one revision, or a cancelled order — and how to ask within 7 days.",
+  alternates: { canonical: "/refund-policy" },
+};
 
 export default function RefundPolicyPage() {
   return (

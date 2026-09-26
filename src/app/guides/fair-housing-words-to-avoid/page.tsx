@@ -4,6 +4,7 @@ import { site } from "@/config/site";
 import { FAIR_HOUSING_RULES } from "@/lib/tools/qa";
 
 const PATH = "/guides/fair-housing-words-to-avoid";
+const OG_IMAGE = "/free/fair-housing-checker/opengraph-image";
 const TITLE = "Fair housing words to avoid in listing descriptions (2026)";
 const DESCRIPTION =
   "The Fair Housing Act bars ads that show a preference based on race, color, religion, sex, disability, familial status or national origin. What HUD's guidance allows, the phrases to rewrite, and a safer alternative for each.";
@@ -13,7 +14,8 @@ export const metadata: Metadata = {
   description: DESCRIPTION,
   keywords: ["fair housing words to avoid", "fair housing advertising words", "listing description words to avoid", "fair housing compliant listing description", "HUD advertising guidelines"],
   alternates: { canonical: PATH },
-  openGraph: { type: "article", title: `${TITLE} | ${site.name}`, description: DESCRIPTION, url: `${site.url}${PATH}` },
+  // A page-level openGraph replaces the inherited image, so name one: the fair-housing checker's card fits this topic.
+  openGraph: { type: "article", title: `${TITLE} | ${site.name}`, description: DESCRIPTION, url: `${site.url}${PATH}`, images: [{ url: OG_IMAGE, width: 1200, height: 630 }] },
 };
 
 const FAQ = [
@@ -48,9 +50,10 @@ export default function FairHousingWordsGuide() {
     "@type": "Article",
     headline: TITLE,
     description: DESCRIPTION,
+    image: `${site.url}${OG_IMAGE}`,
     datePublished: "2026-09-26",
     dateModified: "2026-09-26",
-    author: { "@type": "Organization", name: site.name },
+    author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}${PATH}`,
   };

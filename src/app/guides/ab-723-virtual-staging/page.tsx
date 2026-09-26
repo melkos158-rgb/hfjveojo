@@ -31,10 +31,11 @@ export default function Ab723GuidePage() {
     "@type": "Article",
     headline: TITLE,
     description: DESCRIPTION,
+    image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-09-26",
     dateModified: "2026-09-26",
-    author: { "@type": "Organization", name: site.name },
-    publisher: { "@type": "Organization", name: site.name },
+    author: { "@type": "Organization", name: site.name, url: site.url },
+    publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/ab-723-virtual-staging`,
   };
   const faqLd = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
@@ -86,6 +87,10 @@ export default function Ab723GuidePage() {
       <h2>How ORVIONIS handles it</h2>
       <p>
         Every <Link href="/tools/virtual-staging">Virtual Staging</Link> order ($15 per photo, two staged versions in about two minutes) comes with a <strong>disclosure pack</strong>: a labeled copy of each version, a public page with the unaltered original, a QR code to it for print, and the line to paste next to the photo. Walls, floors, windows and fixtures are left exactly as photographed. You can see a free, watermarked preview on your own photo before paying.
+      </p>
+      <p>
+        Comparing providers first? See <Link href="/guides/virtual-staging-cost">what virtual staging costs in 2026</Link> — human
+        editors, AI subscriptions and per-photo pricing side by side.
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">

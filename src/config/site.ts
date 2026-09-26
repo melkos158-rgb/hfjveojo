@@ -7,7 +7,7 @@ export const site = {
   url: process.env.NEXT_PUBLIC_APP_URL ?? "https://orvionis.com",
   tagline: "Upload what you have. Get the finished result.",
   description:
-    "ORVIONIS turns what you already have into finished, branded deliverables: listing clips for real-estate agents, pricing guides for photographers, and more. Fixed price per result, no subscription.",
+    "ORVIONIS turns what you already have into finished deliverables for real-estate agents and photographers: AI virtual staging, MLS listing descriptions, listing clips and branded pricing guides. Fixed price per result, no subscription.",
   supportEmail: "hello@orvionis.com",
   legal: {
     entityName: "ORVIONIS (sole proprietorship) — VERIFY legal entity name",

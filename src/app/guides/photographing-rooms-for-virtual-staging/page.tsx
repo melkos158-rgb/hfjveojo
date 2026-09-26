@@ -33,6 +33,7 @@ export default function PhotographingRoomsGuide() {
     "@type": "HowTo",
     name: TITLE,
     description: DESCRIPTION,
+    image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     step: TIPS.map((t, i) => ({ "@type": "HowToStep", position: i + 1, name: t.title, text: t.text })),
   };
   return (
@@ -52,7 +53,8 @@ export default function PhotographingRoomsGuide() {
       </ol>
       <h2>Then stage it</h2>
       <p>
-        Upload the photo to <Link href="/tools/virtual-staging">Virtual Staging</Link>, pick the room and one of six styles, and get two staged versions of that exact photo in about two minutes — $15, with a free watermarked preview first and a disclosure pack for the MLS. Selling in California? Read the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>.
+        Upload the photo to <Link href="/tools/virtual-staging">Virtual Staging</Link>, pick the room and one of six styles, and get two staged versions of that exact photo in about two minutes — $15, with a free watermarked preview first and a disclosure pack for the MLS. Selling in California? Read the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>. Comparing prices?
+        See <Link href="/guides/virtual-staging-cost">what virtual staging costs in 2026</Link>.
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">

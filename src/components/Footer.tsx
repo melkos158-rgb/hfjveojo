@@ -17,6 +17,9 @@ export function Footer() {
           <Link href="/tools" className="hover:text-ink">
             All tools
           </Link>
+          <Link href="/tools/virtual-staging" className="hover:text-ink">
+            Virtual staging
+          </Link>
           <Link href="/real-estate" className="hover:text-ink">
             Real estate
           </Link>

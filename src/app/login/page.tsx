@@ -3,7 +3,8 @@ import { LoginForm } from "@/components/LoginForm";
 import { googleEnabled } from "@/lib/auth/google";
 import { BrandMark } from "@/components/BrandMark";
 
-export const metadata: Metadata = { title: "Sign in", robots: { index: false } };
+// noindex, and no canonical: the root layout's canonical ("/") would otherwise point this page at the home page.
+export const metadata: Metadata = { title: "Sign in", robots: { index: false }, alternates: { canonical: null } };
 export const dynamic = "force-dynamic";
 
 type Props = { searchParams: Promise<{ next?: string; error?: string }> };
