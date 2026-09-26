@@ -20,6 +20,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 | Email | Resend, domain `orvionis.com` verified 2026-09-26 (`EMAIL_PROVIDER=resend`); sign-in, confirmation and delivery emails delivered in production |
 | AI | `AI_PROVIDER=openai` with `OPENAI_API_KEY` in Railway (smoke test OK); image edits on `gpt-image-2`; caps `AI_DAILY_BUDGET_CENTS` (daily) and `AI_MAX_COST_PER_ORDER_CENTS` (per order **unit**, e.g. per staged photo) |
 | Admin | `ADMIN_EMAILS=melkos158@gmail.com`; magic link by email or Google sign-in |
+| Brand mark | Official ORVIONIS mark supplied by the owner 2026-09-26 — master `public/brand/orvionis-logo-original.png`, all derivatives via `scripts/brand_assets.py`, usage rules `docs/BRAND.md`; Stripe live Icon + Logo set in the Dashboard |
 | Brand style | Owner's spec (2026-09-26, supersedes the earlier light concept): **dark premium SaaS** — canvas `#08090D`, cards `#11131A`, text `#F5F5F7`/`#A1A1AA`, primary accent `#8B5CF6` (+ `#D946EF` gradient on primary CTAs only), success `#22C55E`; 80–90 % neutral, 10–20 % accent. Tokens + inverted gray scale in `src/app/globals.css`. Site sells the *finished result*, not "AI": every card shows input → output → time → price → CTA |
 
 ## Status (update every session)
@@ -56,6 +57,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Session log
 
+- 2026-09-26 19:00–19:25 UTC+2: official brand mark rolled out (Stripe branding via the Dashboard upload fields — `file_upload` works with files in the session's outputs folder, not with paths in the connected repo; site, icons, manifest, OG, emails; `e72a409`). The Stripe Dashboard tab in the owner's hidden window freezes often; the reliable check is `/admin/system` (reads branding through the API).
 - 2026-09-26 18:25–18:45 UTC+2: Stripe live, operator side — webhook URL verified for the owner, live destination created from `/admin/system`, owner's staged Railway variable deployed, live probe verified; checkout-down message fix `bbb6746`. Railway stages variable edits ("Apply N changes") until someone presses Deploy — a saved variable is not live before that. The safety classifier blocks the operator from adding production variables itself (`STRIPE_MODE`) — owner action.
 - 2026-09-26 17:50–18:20 UTC+2: **multi-room Virtual Staging** (up to 6 photos, $15 each; `rooms` field, `ToolDefinition.quantity/photoInputs`, `pricing.unit`, `landing.ctaLabelMany`, `Order.quantity`) and **run leases** (`src/lib/orders/runs.ts`: 30 s heartbeat, takeover after 2 min of silence, shutdown hands the order back, conditional claim, abandoned runs drop results) after finding that a deploy mid-fulfilment stranded the order in PROCESSING. `faa9882` deployed; production pages checked in Chrome. Note: the owner's hidden Chrome window also freezes `file_upload` (page never reaches document_idle) — upload flows are verified locally with Playwright against a production build. orvionis.com is blocked from both the sandbox and the Cowork VM proxies; GitHub API works from the VM only.
 - 2026-09-26 17:40–17:50 UTC+2: photo-tips guide for staging inputs; `landing.guides` links on tool pages.
