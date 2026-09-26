@@ -17,9 +17,9 @@ Rule: no secrets in this file — only names, ids, paths and states.
 | Deploy status without the dashboard | Railway posts commit statuses to GitHub: `GET https://api.github.com/repos/melkos158-rgb/hfjveojo/commits/<sha>/status` → context `courageous-flow - hfjveojo` = production (`Success - orvionis.com`). Works from the Cowork VM (`device_bash` + curl); orvionis.com itself is not reachable from the VM or the sandbox — production pages are verified in the owner's Chrome |
 | Worker | no separate service — `JOBS_INLINE=true` (fulfilment runs right after the webhook response via `after()`) + embedded job loop in the web process (`EMBEDDED_WORKER`, default on; `src/instrumentation.ts`) for retries, hourly maintenance and the 06:10 UTC CEO report. `/api/health` → `worker.lastTickAt` is the heartbeat |
 | Stripe | sandbox "orvionis sandbox" (`acct_1UIuDh2cM37Fu7zW`): `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`, destination `orvionis-production` (`we_1UJgdu2cM37Fu7zWW3FeZqvh`) → `https://orvionis.com/api/stripe/webhook`, 7 events. Live: onboarding submitted 2026-09-26; `STRIPE_LIVE_SECRET_KEY` / `STRIPE_LIVE_WEBHOOK_SECRET` next to the sandbox pair, `STRIPE_MODE` picks the checkout pair — procedure `docs/STRIPE_LIVE.md` |
-| Email | `EMAIL_PROVIDER=console` (no Resend key yet) → customer emails are only written to Railway logs |
-| AI | `AI_PROVIDER=openai`, **`OPENAI_API_KEY` not set** → automated orders will fail until the owner adds it in Railway Variables |
-| Admin | `ADMIN_EMAILS=melkos158@gmail.com`; sign-in link appears in Railway deploy logs while email is in console mode |
+| Email | Resend, domain `orvionis.com` verified 2026-09-26 (`EMAIL_PROVIDER=resend`); sign-in, confirmation and delivery emails delivered in production |
+| AI | `AI_PROVIDER=openai` with `OPENAI_API_KEY` in Railway (smoke test OK); image edits on `gpt-image-2`; caps `AI_DAILY_BUDGET_CENTS` (daily) and `AI_MAX_COST_PER_ORDER_CENTS` (per order **unit**, e.g. per staged photo) |
+| Admin | `ADMIN_EMAILS=melkos158@gmail.com`; magic link by email or Google sign-in |
 | Brand style | Owner's spec (2026-09-26, supersedes the earlier light concept): **dark premium SaaS** — canvas `#08090D`, cards `#11131A`, text `#F5F5F7`/`#A1A1AA`, primary accent `#8B5CF6` (+ `#D946EF` gradient on primary CTAs only), success `#22C55E`; 80–90 % neutral, 10–20 % accent. Tokens + inverted gray scale in `src/app/globals.css`. Site sells the *finished result*, not "AI": every card shows input → output → time → price → CTA |
 
 ## Status (update every session)
@@ -56,6 +56,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Session log
 
+- 2026-09-26 17:50–18:20 UTC+2: **multi-room Virtual Staging** (up to 6 photos, $15 each; `rooms` field, `ToolDefinition.quantity/photoInputs`, `pricing.unit`, `landing.ctaLabelMany`, `Order.quantity`) and **run leases** (`src/lib/orders/runs.ts`: 30 s heartbeat, takeover after 2 min of silence, shutdown hands the order back, conditional claim, abandoned runs drop results) after finding that a deploy mid-fulfilment stranded the order in PROCESSING. `faa9882` deployed; production pages checked in Chrome. Note: the owner's hidden Chrome window also freezes `file_upload` (page never reaches document_idle) — upload flows are verified locally with Playwright against a production build. orvionis.com is blocked from both the sandbox and the Cowork VM proxies; GitHub API works from the VM only.
 - 2026-09-26 17:40–17:50 UTC+2: photo-tips guide for staging inputs; `landing.guides` links on tool pages.
 - 2026-09-26 17:30–17:40 UTC+2: `/guides/ab-723-virtual-staging` (checklist + sources, JSON-LD, sitemap, footer link). US spelling for customer-facing copy.
 - 2026-09-26 17:25 UTC+2: deploy of `1a665ae` failed on Railway (`@types/qrcode` in devDependencies — Railway installs production deps only; the previous deployment kept serving). **Rule: anything `next build` needs (types, typescript, tailwind, prisma) goes in `dependencies`; before pushing a dependency change, run a production-only install + `next build` in a copy of the repo** (`npm ci --omit=dev` then `npx next build`).

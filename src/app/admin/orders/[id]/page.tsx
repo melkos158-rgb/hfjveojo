@@ -7,6 +7,8 @@ import { signedFileUrl } from "@/lib/storage";
 import { orderUrl } from "@/lib/orders/service";
 import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, redoOrderAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
 import { deliveredOutputs } from "@/lib/orders/deliverables";
+import { photoInputsOf } from "@/lib/tools/photos";
+import type { ToolDefinition } from "@/lib/tools/types";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +34,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const canDeliver = ["REVIEW", "PROCESSING", "FAILED", "PAID", "RETRYING"].includes(order.status);
   const canRefund = order.payments.some((p) => p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED");
   const intake = order.intake as Record<string, unknown>;
+  const photos = photoInputsOf(def as ToolDefinition<unknown> | undefined, order.intake);
+  const photoIds = new Set(photos.map((p) => p.fileId));
   const withCustomer = new Set(deliveredOutputs(order.outputs).map((o) => o.id));
   const redos = await prisma.adminAction.count({ where: { action: "redo_order", targetType: "order", targetId: order.id } });
 
@@ -64,51 +68,37 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
 
         <section className="card">
           <h2 className="font-bold">Intake</h2>
+          {photos.length > 0 ? (
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {photos.map((p, idx) => (
+                <figure key={`${p.fileId}-${idx}`}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={signedFileUrl(p.fileId)} alt={p.label} className="max-h-40 w-full rounded-lg border border-line object-cover" />
+                  <figcaption className="mt-1 text-xs text-gray-600">{p.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+          ) : null}
           <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
-            {Object.entries(intake).map(([k, v]) => {
-              const isImage = def?.intake.fields.some((f) => f.key === k && f.type === "image") && typeof v === "string" && v.length > 0;
-              const isRooms = def?.intake.fields.some((f) => f.key === k && f.type === "rooms") && Array.isArray(v);
-              if (isRooms) {
-                const list = v as Array<{ photoFileId?: string; roomType?: string }>;
-                return (
-                  <div key={k} className="sm:col-span-2">
-                    <dt className="text-xs uppercase text-gray-500">
-                      {k} ({list.length})
-                    </dt>
-                    <dd className="mt-1 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                      {list.map((room, idx) => (
-                        <figure key={idx}>
-                          {room.photoFileId ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={signedFileUrl(room.photoFileId)} alt={`Room ${idx + 1}`} className="max-h-40 w-full rounded-lg border border-line object-cover" />
-                          ) : null}
-                          <figcaption className="mt-1 text-xs text-gray-600">
-                            Room {idx + 1} · {room.roomType ?? "?"}
-                          </figcaption>
-                        </figure>
-                      ))}
-                    </dd>
-                  </div>
-                );
-              }
-              return (
+            {Object.entries(intake)
+              // photos are shown above (any intake age: single photo, legacy photoFileId, or several rooms)
+              .filter(([k, v]) => !(typeof v === "string" && photoIds.has(v)) && !def?.intake.fields.some((f) => f.key === k && f.type === "rooms"))
+              .map(([k, v]) => (
                 <div key={k}>
                   <dt className="text-xs uppercase text-gray-500">{k}</dt>
                   <dd className="whitespace-pre-wrap break-words">
-                    {isImage ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={signedFileUrl(v as string)} alt={k} className="mt-1 max-h-60 w-auto rounded-lg border border-line" />
-                    ) : typeof v === "string" && /^https?:\/\//.test(v) ? (
+                    {typeof v === "string" && /^https?:\/\//.test(v) ? (
                       <a className="text-brand underline" href={v} target="_blank" rel="noreferrer">
                         {v}
                       </a>
+                    ) : typeof v === "object" && v !== null ? (
+                      JSON.stringify(v)
                     ) : (
                       String(v)
                     )}
                   </dd>
                 </div>
-              );
-            })}
+              ))}
           </dl>
         </section>
 
