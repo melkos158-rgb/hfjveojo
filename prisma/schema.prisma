@@ -223,6 +223,12 @@ model Payment {
   currency              String
   status                PaymentStatus
   receiptUrl            String?
+  /// Stripe's actual processing fee and net, converted to the payment currency (from the charge's balance
+  /// transaction; null until known — KPIs estimate those). Settlement currency and FX rate kept for audits.
+  feeCents              Int?
+  netCents              Int?
+  settlementCurrency    String?
+  exchangeRate          Float?
   raw                   Json?
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt

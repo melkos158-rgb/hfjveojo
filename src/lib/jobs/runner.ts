@@ -46,7 +46,13 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           where: { status: "PENDING", checkoutCompletedAt: null, createdAt: { lt: new Date(Date.now() - 24 * 3600 * 1000) } },
           data: { status: "CANCELED", errorMessage: "abandoned checkout (auto-closed after 24h)" },
         });
-        log.info("jobs.maintenance", { files, rateLimitRows: rl, stale, abandoned: abandoned.count });
+        // Stripe fees that were not settled yet when the payment was recorded.
+        const { syncMissingPaymentFees } = await import("@/lib/stripe/fees");
+        const fees = await syncMissingPaymentFees().catch((err: Error) => {
+          log.warn("jobs.fee_sync_failed", { error: err.message });
+          return 0;
+        });
+        log.info("jobs.maintenance", { files, rateLimitRows: rl, stale, abandoned: abandoned.count, fees });
         break;
       }
       default:

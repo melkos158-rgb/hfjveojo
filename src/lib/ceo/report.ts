@@ -14,12 +14,13 @@ export function kpiSummaryText(k: Kpis): string {
     `Period: ${k.from.toISOString().slice(0, 10)} → ${k.to.toISOString().slice(0, 10)}`,
     `Visits: ${k.visits} (unique sessions ${k.uniqueSessions}) · intake started: ${k.intakeStarted} · checkout started: ${k.checkoutStarted}`,
     `Paid orders: ${k.ordersPaid} · delivered: ${k.ordersDelivered} · refunded: ${k.ordersRefunded} · in review now: ${k.ordersInReview} · failed now: ${k.ordersFailed}`,
-    `Revenue: ${formatUsd(k.revenueCents)} · refunds: ${formatUsd(k.refundedCents)} · AI cost: ${formatUsd(k.aiCostCents)} · channel cost: ${formatUsd(k.channelCostCents)} · founder hours logged: ${k.founderHours}`,
-    `Gross contribution (revenue − refunds − AI − channel spend): ${formatUsd(k.grossContributionCents)} · est. Stripe fees: ${formatUsd(k.stripeFeesCents)} · net contribution: ${formatUsd(k.netContributionCents)} · revenue per founder hour: ${k.revenuePerFounderHourCents === null ? "n/a" : formatUsd(k.revenuePerFounderHourCents)}`,
+    `Gross revenue: ${formatUsd(k.revenueCents)} · refunds: ${formatUsd(k.refundedCents)} · Stripe fees: ${formatUsd(k.stripeFeesCents)} (${k.stripeFeesActualCount}/${k.ordersPaid} actual) · net revenue: ${formatUsd(k.netRevenueCents)}`,
+    `AI/API cost: ${formatUsd(k.aiCostCents)} · revenue after AI: ${formatUsd(k.revenueAfterAiCents)} · channel cost: ${formatUsd(k.channelCostCents)} · founder hours logged: ${k.founderHours}`,
+    `Profit estimate (net revenue − AI − channel spend): ${formatUsd(k.netContributionCents)} · revenue per founder hour: ${k.revenuePerFounderHourCents === null ? "n/a" : formatUsd(k.revenuePerFounderHourCents)}`,
     `Customers: ${k.customers} (repeat: ${k.repeatCustomers}, ${(k.repeatRate * 100).toFixed(0)}%) · AI cost per paid order: ${formatUsd(k.aiCostPerPaidOrderCents)} · free tool uses: ${k.freeToolUses}`,
     `Conversion visit→paid: ${(k.conversionVisitToPaid * 100).toFixed(2)}% · checkout→paid: ${(k.conversionCheckoutToPaid * 100).toFixed(1)}% · avg order: ${formatUsd(k.avgOrderCents)}`,
     `Avg delivery time: ${k.avgDeliveryHours === null ? "n/a" : `${k.avgDeliveryHours.toFixed(1)} h`} · feedback: ${k.feedbackCount} responses, avg rating ${k.feedbackAvgRating?.toFixed(2) ?? "n/a"}`,
-    `By tool: ${k.byTool.map((t) => `${t.name}: ${t.paid} paid, ${formatUsd(t.revenueCents)}, AI ${formatUsd(t.aiCostCents)}`).join(" | ") || "none"}`,
+    `By tool: ${k.byTool.map((t) => `${t.name}: ${t.views} views → ${t.started} started → ${t.checkouts} checkouts → ${t.paid} paid, ${formatUsd(t.revenueCents)}, AI ${formatUsd(t.aiCostCents)}`).join(" | ") || "none"}`,
     `By channel: ${k.byChannel.map((c) => `${c.source}: ${c.visits} visits, ${c.paid} paid, ${formatUsd(c.revenueCents)}`).join(" | ") || "none"}`,
   ].join("\n");
 }

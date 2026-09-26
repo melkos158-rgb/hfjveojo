@@ -13,8 +13,15 @@ export type Kpis = {
   ordersRefunded: number;
   ordersInReview: number;
   ordersFailed: number;
+  /** Gross revenue: what Stripe actually charged on paid orders (after promotion codes). */
   revenueCents: number;
   refundedCents: number;
+  /** gross − refunds − Stripe fees */
+  netRevenueCents: number;
+  /** gross − refunds − AI/API cost (variable cost of producing the orders) */
+  revenueAfterAiCents: number;
+  /** How many paid orders have Stripe's actual fee recorded (the rest are estimated). */
+  stripeFeesActualCount: number;
   aiCostCents: number;
   channelCostCents: number;
   founderHours: number;
@@ -25,7 +32,7 @@ export type Kpis = {
   avgDeliveryHours: number | null;
   feedbackAvgRating: number | null;
   feedbackCount: number;
-  byTool: Array<{ toolId: string; name: string; paid: number; revenueCents: number; aiCostCents: number }>;
+  byTool: Array<{ toolId: string; name: string; views: number; started: number; previews: number; checkouts: number; paid: number; revenueCents: number; aiCostCents: number }>;
   byChannel: Array<{ source: string; visits: number; paid: number; revenueCents: number }>;
   /** Estimated card fees (2.9 % + $0.30 per paid order) until balance transactions are pulled from Stripe. */
   stripeFeesCents: number;
@@ -57,14 +64,24 @@ function sourceOf(utm: unknown): string {
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeStarted, checkoutStarted, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions] =
+  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions] =
     await Promise.all([
-      prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true } }),
-      prisma.event.count({ where: { name: "intake_started", createdAt: range } }),
-      prisma.event.count({ where: { name: "checkout_started", createdAt: range } }),
+      prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true, path: true } }),
+      prisma.event.findMany({ where: { name: "intake_started", createdAt: range }, select: { props: true } }),
+      prisma.event.findMany({ where: { name: "checkout_started", createdAt: range }, select: { props: true } }),
       prisma.order.findMany({
         where: { paidAt: range, isTest: false },
-        select: { id: true, toolId: true, amountCents: true, attribution: true, paidAt: true, deliveredAt: true, status: true, customerEmail: true },
+        select: {
+          id: true,
+          toolId: true,
+          amountCents: true,
+          attribution: true,
+          paidAt: true,
+          deliveredAt: true,
+          status: true,
+          customerEmail: true,
+          payments: { select: { amountCents: true, feeCents: true }, orderBy: { createdAt: "asc" }, take: 1 },
+        },
       }),
       prisma.order.count({ where: { deliveredAt: range, isTest: false } }),
       prisma.refund.aggregate({ _sum: { amountCents: true }, _count: true, where: { createdAt: range, status: "SUCCEEDED" } }),
@@ -73,16 +90,21 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.aiRequest.groupBy({ by: ["toolId"], _sum: { costMicros: true }, where: { createdAt: range } }),
       prisma.channelCost.aggregate({ _sum: { costCents: true, hours: true }, where: { date: range } }),
       prisma.feedback.aggregate({ _avg: { rating: true }, _count: true, where: { createdAt: range } }),
-      prisma.tool.findMany({ select: { id: true, name: true } }),
+      prisma.tool.findMany({ select: { id: true, name: true, slug: true } }),
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
-      prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true } }),
+      prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
   const previewSessionIds = new Set(previewEvents.map((e) => e.sessionId).filter(Boolean) as string[]);
 
+  const intakeStarted = intakeEvents.length;
+  const checkoutStarted = checkoutEvents.length;
+  const toolOf = (props: unknown) => ((props ?? {}) as { tool?: string }).tool;
   const sessions = new Set(pageViews.map((p) => p.sessionId).filter(Boolean) as string[]);
-  const revenueCents = paidOrders.reduce((s, o) => s + o.amountCents, 0);
+  // What Stripe actually charged (promotion codes included); the priced amount only when no payment row exists (admin tests).
+  const charged = (o: (typeof paidOrders)[number]) => o.payments[0]?.amountCents ?? o.amountCents;
+  const revenueCents = paidOrders.reduce((s, o) => s + charged(o), 0);
   const refundedCents = refunded._sum.amountCents ?? 0;
   const aiCostCents = Math.round(microsToCents(aiAgg.reduce((s, r) => s + (r._sum.costMicros ?? 0), 0)));
   const channelCostCents = channelCosts._sum.costCents ?? 0;
@@ -95,10 +117,23 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const byTool = tools.map((t) => {
     const orders = paidOrders.filter((o) => o.toolId === t.id);
     const ai = aiAgg.find((a) => a.toolId === t.id)?._sum.costMicros ?? 0;
-    return { toolId: t.id, name: t.name, paid: orders.length, revenueCents: orders.reduce((s, o) => s + o.amountCents, 0), aiCostCents: Math.round(microsToCents(ai)) };
+    const matches = (props: unknown) => toolOf(props) === t.id || toolOf(props) === t.slug;
+    return {
+      toolId: t.id,
+      name: t.name,
+      views: pageViews.filter((p) => p.path === `/tools/${t.slug}`).length,
+      started: intakeEvents.filter((e) => matches(e.props)).length,
+      previews: previewEvents.filter((e) => matches(e.props)).length,
+      checkouts: checkoutEvents.filter((e) => matches(e.props)).length,
+      paid: orders.length,
+      revenueCents: orders.reduce((s, o) => s + charged(o), 0),
+      aiCostCents: Math.round(microsToCents(ai)),
+    };
   });
 
-  const stripeFeesCents = estimateStripeFeesCents(paidOrders);
+  // Stripe's actual fee where recorded (balance transaction), the estimate for the rest.
+  const stripeFeesCents = paidOrders.reduce((s, o) => s + (o.payments[0]?.feeCents ?? estimateStripeFeesCents([{ amountCents: charged(o) }])), 0);
+  const stripeFeesActualCount = paidOrders.filter((o) => o.payments[0]?.feeCents != null).length;
   const byCustomer = new Map<string, number>();
   for (const o of paidOrders) byCustomer.set(o.customerEmail, (byCustomer.get(o.customerEmail) ?? 0) + 1);
   const customers = byCustomer.size;
@@ -115,7 +150,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     const src = sourceOf(o.attribution);
     const row = channelMap.get(src) ?? { visits: 0, paid: 0, revenueCents: 0 };
     row.paid++;
-    row.revenueCents += o.amountCents;
+    row.revenueCents += charged(o);
     channelMap.set(src, row);
   }
 
@@ -133,6 +168,9 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     ordersFailed: failed,
     revenueCents,
     refundedCents,
+    netRevenueCents: revenueCents - refundedCents - stripeFeesCents,
+    revenueAfterAiCents: revenueCents - refundedCents - aiCostCents,
+    stripeFeesActualCount,
     aiCostCents,
     channelCostCents,
     founderHours,

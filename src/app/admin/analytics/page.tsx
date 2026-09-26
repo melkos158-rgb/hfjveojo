@@ -28,8 +28,14 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi label="Visits / sessions" value={`${k.visits} / ${k.uniqueSessions}`} />
         <Kpi label="Funnel" value={`${k.intakeStarted} → ${k.checkoutStarted} → ${k.ordersPaid}`} sub="intake → checkout → paid" />
-        <Kpi label="Revenue" value={formatUsd(k.revenueCents)} sub={`avg order ${formatUsd(k.avgOrderCents)} · refunds ${formatUsd(k.refundedCents)}`} />
-        <Kpi label="Net contribution" value={formatUsd(k.netContributionCents)} sub={`AI ${formatUsd(k.aiCostCents)} · Stripe ≈${formatUsd(k.stripeFeesCents)} · channels ${formatUsd(k.channelCostCents)} · ${k.founderHours}h`} />
+        <Kpi label="Gross revenue" value={formatUsd(k.revenueCents)} sub={`${k.ordersPaid} paid · AOV ${formatUsd(k.avgOrderCents)} · refunds ${formatUsd(k.refundedCents)}`} />
+        <Kpi
+          label="Net revenue"
+          value={formatUsd(k.netRevenueCents)}
+          sub={`gross − refunds − Stripe fees ${formatUsd(k.stripeFeesCents)} (${k.stripeFeesActualCount}/${k.ordersPaid} actual, rest estimated)`}
+        />
+        <Kpi label="Revenue after AI" value={formatUsd(k.revenueAfterAiCents)} sub={`gross − refunds − AI/API ${formatUsd(k.aiCostCents)}`} />
+        <Kpi label="Profit estimate" value={formatUsd(k.netContributionCents)} sub={`net revenue − AI ${formatUsd(k.aiCostCents)} − channels ${formatUsd(k.channelCostCents)} · ${k.founderHours}h logged`} />
         <Kpi label="Revenue / founder hour" value={k.revenuePerFounderHourCents === null ? "—" : formatUsd(k.revenuePerFounderHourCents)} sub="log hours in Experiments → channel cost" />
         <Kpi label="Customers / repeat" value={`${k.customers} / ${k.repeatCustomers}`} sub={`${(k.repeatRate * 100).toFixed(0)}% bought twice · AI ${formatUsd(k.aiCostPerPaidOrderCents)} per paid order`} />
         <Kpi label="Free tool uses" value={`${k.freeToolUses}`} sub="checker + calculator sessions" />
@@ -47,6 +53,7 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
             <thead className="text-xs uppercase text-gray-500">
               <tr>
                 <th className="py-1">Tool</th>
+                <th className="py-1" title="tool page views → order form started → free previews → checkouts">Funnel</th>
                 <th className="py-1">Paid</th>
                 <th className="py-1">Revenue</th>
                 <th className="py-1">AI cost</th>
@@ -57,6 +64,9 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
               {k.byTool.map((t) => (
                 <tr key={t.toolId} className="border-t border-line">
                   <td className="py-1">{t.name}</td>
+                  <td className="py-1 text-xs text-gray-600" title="views → started → previews → checkout">
+                    {t.views}→{t.started}→{t.previews}→{t.checkouts}
+                  </td>
                   <td className="py-1">{t.paid}</td>
                   <td className="py-1">{formatUsd(t.revenueCents)}</td>
                   <td className="py-1">{formatUsd(t.aiCostCents)}</td>

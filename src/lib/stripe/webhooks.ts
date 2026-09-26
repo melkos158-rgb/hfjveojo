@@ -10,6 +10,7 @@ import { sendEmail } from "@/lib/email";
 import { env } from "@/lib/env";
 import { getToolById } from "@/lib/tools/registry";
 import { checkoutMode, type StripeMode } from "@/lib/stripe/mode";
+import { balanceTransactionOf, feesFromBalanceTransaction, type PaymentFees } from "@/lib/stripe/fees";
 
 /**
  * Stripe is the source of truth for payment state. The frontend never marks anything paid.
@@ -124,12 +125,15 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session, livemode: boolea
   const piId = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id ?? null;
   let chargeId: string | null = null;
   let receiptUrl: string | null = null;
+  let fees: PaymentFees | null = null;
   if (piId) {
     try {
-      const pi = await stripe(modeOf(livemode)).paymentIntents.retrieve(piId, { expand: ["latest_charge"] });
+      const pi = await stripe(modeOf(livemode)).paymentIntents.retrieve(piId, { expand: ["latest_charge.balance_transaction"] });
       const charge = pi.latest_charge as Stripe.Charge | null;
       chargeId = charge?.id ?? null;
       receiptUrl = charge?.receipt_url ?? null;
+      const bt = balanceTransactionOf(charge);
+      if (bt) fees = feesFromBalanceTransaction(bt, session.currency ?? order.currency, session.amount_total ?? order.amountCents);
     } catch (err) {
       log.warn("stripe.pi_retrieve_failed", { piId, error: (err as Error).message });
     }
@@ -160,6 +164,7 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session, livemode: boolea
         currency: session.currency ?? order.currency,
         status: "SUCCEEDED",
         receiptUrl,
+        ...(fees ?? {}),
         raw: { sessionId: session.id, livemode } as object,
       },
     });

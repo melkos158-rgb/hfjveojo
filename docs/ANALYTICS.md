@@ -37,4 +37,19 @@ Subscriptions do not exist yet (no `subscription_started`).
 
 ## First-party analytics (authoritative)
 
-`Event` table (page views, intake starts, previews, checkout, paid, delivered, free-tool uses, downloads, sign-ups), `Order`/`Payment`/`Refund` (money), `AiRequest` (cost per AI call), `ChannelCost` (hours and spend per channel). `/admin/analytics` shows revenue, refunds, estimated Stripe fees, net contribution (revenue − refunds − AI − channel costs − Stripe fees), revenue per founder hour, AOV, customers and repeat rate, AI cost per paid order, conversion (visit → paid, checkout → paid), revenue and AI cost per tool, revenue per acquisition channel, free-tool uses and free previews. Test orders (admin pipeline tests, sandbox checkouts in production) are excluded everywhere.
+`Event` table (page views, intake starts, previews, checkout, paid, delivered, free-tool uses, downloads, sign-ups), `Order`/`Payment`/`Refund` (money), `AiRequest` (cost per AI call), `ChannelCost` (hours and spend per channel). Test orders (admin pipeline tests, sandbox checkouts in production) are excluded everywhere.
+
+`/admin/analytics` (and the daily CEO email):
+
+| KPI | Definition |
+| --- | --- |
+| Gross revenue | what Stripe actually charged on paid orders (promotion codes included) |
+| Refunds | refunds that succeeded in the period |
+| Stripe fees | Stripe's **actual** fee per payment from the charge's balance transaction (converted from the settlement currency — PLN/EUR for a Polish account — into the charge currency); payments whose fee is not settled yet are estimated (2.9 % + 30¢) and filled in by the maintenance job; the tile shows "n/n actual" |
+| Net revenue | gross − refunds − Stripe fees |
+| Revenue after AI | gross − refunds − AI/API cost |
+| Profit estimate | net revenue − AI/API cost − channel spend (hours are shown next to it) |
+| Orders, AOV, customers, repeat rate | paid non-test orders |
+| Conversion | visit → paid (sessions), checkout → paid |
+| Per tool | funnel views → form started → free previews → checkouts, then paid, revenue, AI cost, AI per order |
+| Per acquisition channel | first-touch source (utm_source, ref or referrer) — visits, paid, revenue |
