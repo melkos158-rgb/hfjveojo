@@ -214,18 +214,21 @@ export async function aiSmokeTestAction() {
  * Full pipeline test in the sandbox: real order row → synthetic checkout.session.completed (no money) →
  * PAID → real AI fulfilment → delivery email. Flagged isTest so metrics ignore it. Refused with a live key.
  */
-export async function runPipelineTestAction() {
+export async function runPipelineTestAction(formData: FormData) {
   const admin = await requireAdminApi();
   const { env } = await import("@/lib/env");
   const key = env().STRIPE_SECRET_KEY;
   if (!(key.startsWith("sk_test_") || key.startsWith("rk_test_"))) throw new Error("Pipeline test is only allowed with a Stripe test key.");
   const { createOrderWithCheckout } = await import("@/lib/orders/create");
   const { handleStripeEvent } = await import("@/lib/stripe/webhooks");
-  const { PIPELINE_TEST_INTAKE } = await import("@/lib/tools/samples/listing-description");
+  const { TEST_INTAKES } = await import("@/lib/tools/samples/test-intakes");
+  const toolSlug = z.string().regex(/^[a-z0-9-]+$/).parse(formData.get("tool") ?? "listing-description");
+  const intake = TEST_INTAKES[toolSlug];
+  if (!intake) throw new Error(`No test intake for tool ${toolSlug}`);
   const { orderId } = await createOrderWithCheckout({
-    toolSlug: "listing-description",
+    toolSlug,
     email: admin.email,
-    intakeRaw: PIPELINE_TEST_INTAKE,
+    intakeRaw: intake,
     attribution: { utm_source: "admin_pipeline_test" },
     userId: admin.id,
   });
@@ -253,7 +256,7 @@ export async function runPipelineTestAction() {
     },
   } as unknown as import("stripe").Stripe.Event;
   await handleStripeEvent(event);
-  await audit(admin.id, "pipeline_test", "order", orderId, { tool: "listing-description" });
+  await audit(admin.id, "pipeline_test", "order", orderId, { tool: toolSlug });
   revalidatePath("/admin/system");
   redirect(`/admin/orders/${orderId}`);
 }
