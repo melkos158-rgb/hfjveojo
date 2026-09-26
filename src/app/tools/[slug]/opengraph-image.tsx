@@ -20,6 +20,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
     title: def.name,
     subtitle: def.tagline,
     image: def.seo.ogImage ?? categoryVisual(def.category)?.jpg,
-    badge: `${formatUsd(def.pricing.priceCents)} · no subscription`,
+    badge: def.quantity && def.pricing.unit ? `${formatUsd(def.pricing.priceCents)} per ${def.pricing.unit.one} · no subscription` : `${formatUsd(def.pricing.priceCents)} · no subscription`,
   });
 }

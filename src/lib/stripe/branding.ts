@@ -10,7 +10,8 @@ export const STRIPE_BRAND = {
   name: site.name,
   primaryColor: "#08090D", // page/header background on Checkout
   secondaryColor: "#8B5CF6", // buttons and links
-  iconPath: join("public", "brand", "icon-512.png"),
+  /** Uploaded in the Dashboard (Settings → Business → Branding) as both Icon and Logo — the official mark, docs/BRAND.md. */
+  iconPath: join("public", "brand", "orvionis-mark-512.png"),
 };
 
 export type StripeAccountSummary = {
@@ -24,6 +25,7 @@ export type StripeAccountSummary = {
   primaryColor: string | null;
   secondaryColor: string | null;
   hasIcon: boolean;
+  hasLogo: boolean;
   chargesEnabled: boolean;
   payoutsEnabled: boolean;
   detailsSubmitted: boolean;
@@ -38,6 +40,7 @@ function summarize(acct: Stripe.Account, mode: StripeMode): StripeAccountSummary
   const primary = b?.primary_color ?? null;
   const secondary = b?.secondary_color ?? null;
   const hasIcon = Boolean(b?.icon);
+  const hasLogo = Boolean(b?.logo);
   return {
     id: acct.id,
     displayName: acct.settings?.dashboard?.display_name ?? null,
@@ -48,6 +51,7 @@ function summarize(acct: Stripe.Account, mode: StripeMode): StripeAccountSummary
     primaryColor: primary,
     secondaryColor: secondary,
     hasIcon,
+    hasLogo,
     chargesEnabled: Boolean(acct.charges_enabled),
     payoutsEnabled: Boolean(acct.payouts_enabled),
     detailsSubmitted: Boolean(acct.details_submitted),

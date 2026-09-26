@@ -102,7 +102,7 @@ export default async function AdminSystem() {
           </form>
         ) : null}
         <p className="mt-3 text-xs text-gray-500">
-          Checkout branding target: name {STRIPE_BRAND.name}, brand color {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon public/brand/icon-512.png — set in the Dashboard of each account (Stripe does not let an account edit its own name/branding through the API).
+          Checkout branding target: name {STRIPE_BRAND.name}, brand color {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon and logo = the official ORVIONIS mark (public/brand/orvionis-mark-512.png, docs/BRAND.md) — set in the Dashboard of each account (Stripe does not let an account edit its own name/branding through the API).
         </p>
       </div>
 
@@ -222,6 +222,18 @@ function StripeModePanel({ m, active }: { m: ModeData; active: boolean }) {
               {acct.id}
               {acct.displayName ? <span className="font-semibold"> · {acct.displayName}</span> : null}
               {acct.businessName ? ` · ${acct.businessName}` : ""}
+            </>
+          ) : (
+            "—"
+          )}
+        </dd>
+        <dt className="text-gray-500">Branding</dt>
+        <dd>
+          {acct ? (
+            <>
+              <Ok ok={acct.businessName === STRIPE_BRAND.name}>name {acct.businessName ?? "—"}</Ok> · <Ok ok={acct.hasIcon}>icon {acct.hasIcon ? "set" : "missing"}</Ok> · <Ok ok={acct.hasLogo}>logo {acct.hasLogo ? "set" : "missing"}</Ok> ·{" "}
+              <Ok ok={(acct.primaryColor ?? "").toLowerCase() === STRIPE_BRAND.primaryColor.toLowerCase()}>brand {acct.primaryColor ?? "—"}</Ok> ·{" "}
+              <Ok ok={(acct.secondaryColor ?? "").toLowerCase() === STRIPE_BRAND.secondaryColor.toLowerCase()}>accent {acct.secondaryColor ?? "—"}</Ok>
             </>
           ) : (
             "—"

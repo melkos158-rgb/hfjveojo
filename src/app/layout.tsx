@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { site } from "@/config/site";
+import { brand } from "@/config/brand";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CookieConsent } from "@/components/CookieConsent";
@@ -28,6 +29,9 @@ export const metadata: Metadata = {
     ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { other: { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } } : {}),
   },
 };
+
+/** Browser UI colour (mobile address bar, PWA splash) = the brand background. */
+export const viewport: Viewport = { themeColor: brand.colors.background };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const gaId = gaMeasurementId();

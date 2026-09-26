@@ -11,6 +11,7 @@ import { env } from "@/lib/env";
 import { getToolById } from "@/lib/tools/registry";
 import { checkoutMode, type StripeMode } from "@/lib/stripe/mode";
 import { balanceTransactionOf, feesFromBalanceTransaction, type PaymentFees } from "@/lib/stripe/fees";
+import { textToHtml } from "@/lib/email/layout";
 
 /**
  * Stripe is the source of truth for payment state. The frontend never marks anything paid.
@@ -180,20 +181,22 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session, livemode: boolea
 
   const def = getToolById(order.toolId);
   const link = orderUrl(order);
+  const confirmation = [
+    `Thanks — your payment went through.`,
+    def ? `${def.landing.deliveryPromise}` : "",
+    "",
+    `Track your order here: ${link}`,
+    receiptUrl ? `Receipt: ${receiptUrl}` : "",
+    "",
+    "Reply to this email if you need anything.",
+  ]
+    .filter((l) => l !== undefined)
+    .join("\n");
   await sendEmail({
     to: email,
     subject: `Order #${order.number} confirmed — ${def?.name ?? env().NEXT_PUBLIC_BRAND_NAME}`,
-    text: [
-      `Thanks — your payment went through.`,
-      def ? `${def.landing.deliveryPromise}` : "",
-      "",
-      `Track your order here: ${link}`,
-      receiptUrl ? `Receipt: ${receiptUrl}` : "",
-      "",
-      "Reply to this email if you need anything.",
-    ]
-      .filter((l) => l !== undefined)
-      .join("\n"),
+    text: confirmation,
+    html: textToHtml(confirmation),
   });
 
   await enqueue("fulfill_order", { orderId }, { orderId, defer: true });

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { brand } from "@/config/brand";
 import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard, toolCardProps } from "@/components/ToolCard";
 import { formatUsd } from "@/lib/ai/pricing";
@@ -36,6 +37,15 @@ export default async function HomePage() {
   const featured = catalog.filter((c) => c.def.featured).concat(catalog.filter((c) => !c.def.featured)).slice(0, 6);
   const fromPrice = catalog.length ? Math.min(...catalog.map((c) => c.priceCents)) : 2900;
   const from = formatUsd(fromPrice).replace(/\.00$/, "");
+  // Organization with the official logo: lets search engines show the ORVIONIS mark next to results.
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: site.name,
+    url: site.url,
+    logo: `${site.url}${brand.logo[512]}`,
+    email: site.supportEmail,
+  };
   const faqLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -44,6 +54,7 @@ export default async function HomePage() {
 
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       {/* HERO */}

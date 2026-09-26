@@ -1,5 +1,6 @@
 import { env } from "@/lib/env";
 import { log } from "@/lib/logger";
+import { brandedEmailHtml } from "@/lib/email/layout";
 
 export type EmailMessage = {
   to: string;
@@ -27,7 +28,7 @@ export async function sendEmail(msg: EmailMessage): Promise<{ id: string | null 
       to: [msg.to],
       subject: msg.subject,
       text: msg.text,
-      html: msg.html ?? undefined,
+      html: msg.html ? brandedEmailHtml(msg.html) : undefined,
       reply_to: msg.replyTo ?? e.EMAIL_REPLY_TO ?? undefined,
     }),
   });

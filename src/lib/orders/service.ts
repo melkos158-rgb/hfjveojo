@@ -9,6 +9,7 @@ import { stripe } from "@/lib/stripe/client";
 import { log } from "@/lib/logger";
 import { outputsToDeliver } from "@/lib/orders/deliverables";
 import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
+import { linkify } from "@/lib/email/layout";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
   return appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
@@ -24,8 +25,6 @@ export async function notifyAdmins(subject: string, text: string): Promise<void>
   }
 }
 
-const escapeHtml = (v: string) => v.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const linkify = (line: string) => escapeHtml(line).replace(/https?:\/\/[^\s<]+/g, (u) => `<a href="${u}">${u}</a>`);
 
 /**
  * Mark an order delivered and email the customer their private order page + download links.

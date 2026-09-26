@@ -66,5 +66,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|api/stripe/webhook|api/health).*)"],
+  // Static brand files, icons and the manifest need no cookies or auth checks.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|api/stripe/webhook|api/health|brand/|manifest.webmanifest|icon|apple-icon).*)"],
 };

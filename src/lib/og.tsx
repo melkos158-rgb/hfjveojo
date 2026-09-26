@@ -34,6 +34,8 @@ async function publicImageDataUri(rel: string): Promise<string | null> {
  */
 export async function ogCard(opts: OgCardOptions): Promise<ImageResponse> {
   const img = opts.image ? await publicImageDataUri(opts.image) : null;
+  // The official ORVIONIS mark (docs/BRAND.md) next to the name.
+  const mark = await publicImageDataUri("brand/orvionis-mark-128.png");
   const host = site.url.replace(/^https?:\/\//, "");
   const textWidth = img ? 660 : 1200;
 
@@ -59,7 +61,10 @@ export async function ogCard(opts: OgCardOptions): Promise<ImageResponse> {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            <div style={{ width: 18, height: 18, borderRadius: 9999, background: "linear-gradient(135deg, #8b5cf6, #d946ef)" }} />
+            {mark ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={mark} alt="" width={52} height={52} />
+            ) : null}
             <div style={{ fontSize: 28, fontWeight: 700, letterSpacing: 5 }}>{site.name}</div>
           </div>
 
