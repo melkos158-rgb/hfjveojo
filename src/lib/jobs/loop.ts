@@ -16,6 +16,8 @@ export type LoopOptions = {
   concurrency: number;
   /** Set false on a loop that only executes jobs (leave scheduling to another loop). */
   schedule?: boolean;
+  /** Other lock ids this process holds (e.g. inline jobs) — released together with the loop's own on shutdown. */
+  ownedLockIds?: string[];
 };
 
 export type LoopState = {
@@ -33,8 +35,12 @@ export type JobLoop = {
   tick: () => Promise<void>;
   /** Start polling. Idempotent. */
   start: () => Promise<void>;
-  /** Stop polling and wait (bounded) for in-flight jobs. */
-  stop: (graceMs?: number) => Promise<void>;
+  /**
+   * Stop polling and wait (bounded) for in-flight jobs. With `requeue: true` (the default) any job this
+   * loop still holds after the grace period goes straight back to the queue — so a deploy that kills the
+   * process mid-job costs the customer seconds, not the 15-minute stale-lock timeout.
+   */
+  stop: (graceMs?: number, opts?: { requeue?: boolean }) => Promise<{ requeued: number }>;
 };
 
 async function scheduleDailyReportIfDue(): Promise<void> {
@@ -103,13 +109,26 @@ export function createJobLoop(opts: LoopOptions): JobLoop {
     await tick();
   }
 
-  async function stop(graceMs = 25_000): Promise<void> {
+  async function stop(graceMs = 25_000, o: { requeue?: boolean } = {}): Promise<{ requeued: number }> {
     state.stopping = true;
     if (timer) clearInterval(timer);
     timer = null;
-    log.info("worker.stopping", { workerId: opts.workerId, running: state.running });
+    log.info("worker.stopping", { workerId: opts.workerId, running: state.running, graceMs });
     const deadline = Date.now() + graceMs;
-    while (state.running > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, 250));
+    while (state.running > 0 && Date.now() < deadline) await new Promise((r) => setTimeout(r, Math.min(100, graceMs)));
+    let requeued = 0;
+    if (o.requeue !== false) {
+      // Hand back every job this process still holds (loop claims and inline jobs alike, never a replica's).
+      // The claim counted an attempt; a shutdown is not the job's fault, so give it back too.
+      const res = await prisma.job.updateMany({
+        where: { status: "RUNNING", lockedBy: { in: [opts.workerId, ...(opts.ownedLockIds ?? [])] }, attempts: { gt: 0 } },
+        data: { status: "QUEUED", lockedAt: null, lockedBy: null, attempts: { decrement: 1 }, lastError: "requeued: worker shutdown" },
+      });
+      requeued = res.count;
+      if (requeued > 0) log.warn("worker.requeued_on_shutdown", { workerId: opts.workerId, count: requeued });
+    }
+    log.info("worker.stopped", { workerId: opts.workerId, abandoned: state.running, requeued });
+    return { requeued };
   }
 
   return { state, tick, start, stop };

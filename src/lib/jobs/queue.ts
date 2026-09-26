@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { log } from "@/lib/logger";
 import type { Job } from "@prisma/client";
+import { INLINE_WORKER_ID } from "@/lib/jobs/identity";
 
 export type JobType = "fulfill_order" | "send_email" | "daily_report" | "maintenance";
 
@@ -16,7 +17,7 @@ export type JobPayloads = {
  * Enqueue a background job. With JOBS_INLINE=true the job runs immediately in-process (dev/test, and
  * production without a dedicated worker), so the full pipeline works without a worker. Inline jobs are
  * created already RUNNING/locked so a concurrent job loop (embedded worker) cannot claim them too;
- * if the process dies mid-run they are requeued as stale and retried by the loop.
+ * if the process dies mid-run they are handed back on shutdown (or requeued as stale) and retried by the loop.
  */
 export async function enqueue<T extends JobType>(
   type: T,
@@ -31,12 +32,12 @@ export async function enqueue<T extends JobType>(
       runAt: opts.runAt ?? new Date(),
       orderId: opts.orderId,
       maxAttempts: opts.maxAttempts ?? 3,
-      ...(inline ? { status: "RUNNING", lockedAt: new Date(), lockedBy: "inline", attempts: 1 } : {}),
+      ...(inline ? { status: "RUNNING", lockedAt: new Date(), lockedBy: INLINE_WORKER_ID, attempts: 1 } : {}),
     },
   });
   if (inline) {
     const { runJob } = await import("@/lib/jobs/runner");
-    const run = () => runJob(job.id, "inline");
+    const run = () => runJob(job.id, INLINE_WORKER_ID);
     if (opts.defer) {
       // Inside a Next.js request (e.g. the Stripe webhook) run after the response is sent so Stripe gets a fast 200.
       // Outside a request scope (worker, tests, scripts) `after()` throws and we simply run now.

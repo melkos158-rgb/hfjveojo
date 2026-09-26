@@ -22,7 +22,7 @@ async function main() {
   log.info("worker.boot", { provider: e.AI_PROVIDER, inline: e.JOBS_INLINE });
   await loop.start();
   const stop = async () => {
-    await loop.stop(25_000);
+    await loop.stop(25_000); // jobs still running after the grace go back to the queue
     await prisma.$disconnect();
     process.exit(0);
   };

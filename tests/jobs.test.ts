@@ -43,7 +43,7 @@ describe("job queue", () => {
     const job = await enqueue("maintenance", {});
     const after = await prisma.job.findUniqueOrThrow({ where: { id: job.id } });
     expect(job.status).toBe("RUNNING");
-    expect(job.lockedBy).toBe("inline");
+    expect(job.lockedBy).toMatch(/^inline:/);
     expect(after.status).toBe("DONE");
     expect(after.attempts).toBe(1);
   });

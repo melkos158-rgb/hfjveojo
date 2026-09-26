@@ -51,14 +51,16 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
       default:
         throw new Error(`Unknown job type: ${job.type}`);
     }
-    await prisma.job.update({ where: { id: jobId }, data: { status: "DONE", lockedAt: null, lockedBy: null } });
-    log.info("jobs.done", { jobId, type: job.type, ms: Date.now() - started });
+    // Only the lock holder writes the result: a job handed back on shutdown (and possibly re-run elsewhere) is not ours any more.
+    const done = await prisma.job.updateMany({ where: { id: jobId, lockedBy: workerId }, data: { status: "DONE", lockedAt: null, lockedBy: null } });
+    if (done.count === 0) log.warn("jobs.lock_lost", { jobId, type: job.type, workerId });
+    else log.info("jobs.done", { jobId, type: job.type, ms: Date.now() - started });
   } catch (err) {
     const attempts = job.status === "RUNNING" ? job.attempts : job.attempts + 1;
     const giveUp = attempts >= job.maxAttempts;
     const backoffMs = Math.min(60_000 * 2 ** attempts, 30 * 60_000);
-    await prisma.job.update({
-      where: { id: jobId },
+    const failed = await prisma.job.updateMany({
+      where: { id: jobId, lockedBy: workerId },
       data: {
         status: giveUp ? "FAILED" : "QUEUED",
         runAt: giveUp ? undefined : new Date(Date.now() + backoffMs),
@@ -67,6 +69,7 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
         lastError: String((err as Error).message ?? err).slice(0, 2000),
       },
     });
-    await reportError(err, { jobId, type: job.type, attempts, giveUp });
+    if (failed.count === 0) log.warn("jobs.lock_lost", { jobId, type: job.type, workerId, error: (err as Error).message });
+    else await reportError(err, { jobId, type: job.type, attempts, giveUp });
   }
 }
