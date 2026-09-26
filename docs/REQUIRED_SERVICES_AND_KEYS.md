@@ -242,7 +242,7 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 ## 14. MONITORING — ✅ built-in today; Sentry = FUTURE (V1)
 
 - **Built-in:** structured JSON logs (Railway Logs), `ErrorLog` table + `/admin/system` "Recent errors", admin alert emails (`notifyAdmins`, via Resend), `/api/health` (DB, queue depth, worker heartbeat; Railway healthcheck), daily CEO report.
-- **Uptime:** Railway restarts on failure (`restartPolicyType ON_FAILURE`). External uptime check (optional, free): UptimeRobot or Better Stack pinging `https://orvionis.com/api/health` every 5 min with email alerts — no credential in the app; FUTURE V1, five minutes to set up: https://uptimerobot.com
+- **Uptime:** Railway restarts on failure (`restartPolicyType ON_FAILURE`). **GitHub Actions `uptime.yml`** pings `https://orvionis.com/api/health` every 15 minutes (health ok, worker heartbeat < 5 min, home page renders) — a failed run emails the repo owner; no credentials. UptimeRobot (1–5 min checks) stays optional: https://uptimerobot.com
 - **Error monitoring:** `SENTRY_DSN` is reserved in `env.ts` but the SDK is not installed (`src/lib/errors.ts` has the hook). When there are paying customers: create a Sentry project (Next.js) at https://sentry.io → the DSN is **public-ish** (it can only send events) but keep it in Railway anyway; install `@sentry/nextjs`. FUTURE V1.
 - **Log retention:** Railway keeps recent logs; for longer retention (V2) a log drain (Better Stack/Axiom) — token in Railway, FUTURE.
 

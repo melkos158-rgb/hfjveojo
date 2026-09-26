@@ -1,0 +1,38 @@
+name: Uptime
+
+# Free uptime monitor: GitHub pings production every 15 minutes. A failed run emails the repo owner
+# (GitHub's default notification for failed workflows). No credentials involved.
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  health:
+    name: orvionis.com health
+    runs-on: ubuntu-latest
+    steps:
+      - name: GET /api/health
+        run: |
+          set -euo pipefail
+          body=$(curl -sS --max-time 20 --retry 2 --retry-delay 5 https://orvionis.com/api/health)
+          echo "$body"
+          echo "$body" | python3 -c '
+          import sys, json, datetime
+          d = json.load(sys.stdin)
+          assert d.get("ok") is True and d.get("db") == "up", "health not ok"
+          w = d.get("worker") or {}
+          assert w.get("enabled") is True, "embedded worker disabled"
+          tick = w.get("lastTickAt")
+          assert tick, "no worker heartbeat"
+          age = (datetime.datetime.now(datetime.timezone.utc) - datetime.datetime.fromisoformat(tick.replace("Z", "+00:00"))).total_seconds()
+          assert age < 300, f"worker heartbeat is {int(age)}s old"
+          assert (d.get("jobs") or {}).get("failed", 0) < 5, "too many failed jobs"
+          print(f"ok · worker tick {int(age)}s ago · queue {d[\"jobs\"]}")
+          '
+      - name: Home page renders
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/home.html -w "%{http_code}" --max-time 20 https://orvionis.com/)
+          test "$code" = "200"
+          grep -q "Get the" /tmp/home.html
