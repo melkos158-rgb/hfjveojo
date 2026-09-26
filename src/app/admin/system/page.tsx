@@ -1,14 +1,14 @@
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
-import { aiSmokeTestAction, applyStripeBrandingAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
+import { aiSmokeTestAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
 import { STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
-  const [jobs, errors, kill, stripeEvents, counts, brandingLast, smokeLast, stripeAcct, webhook] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, smokeLast, stripeAcct, webhook] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -19,12 +19,10 @@ export default async function AdminSystem() {
       prisma.job.count({ where: { status: "FAILED" } }),
       prisma.file.aggregate({ _sum: { sizeBytes: true }, _count: true }),
     ]),
-    prisma.setting.findUnique({ where: { key: "stripe.branding_last" } }),
     prisma.setting.findUnique({ where: { key: "ai.smoke_test_last" } }),
     stripeAccountSummary().catch((err: Error): StripeAccountSummary | { error: string } => ({ error: err.message.slice(0, 200) })),
     stripeWebhookCheck().catch((err: Error): StripeWebhookCheck | { error: string } => ({ error: err.message.slice(0, 200) })),
   ]);
-  const lastBranding = brandingLast?.value as { ok: boolean; message: string; at: string } | null;
   const lastSmoke = smokeLast?.value as { ok: boolean; message: string; at: string } | null;
   const killOn = kill?.value === true;
   const [queued, running, failed, files] = counts;
@@ -65,12 +63,18 @@ export default async function AdminSystem() {
       <div className="card">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-bold">Stripe account (what the buyer sees on Checkout)</h2>
-          <form action={applyStripeBrandingAction}>
-            <button className="btn-secondary px-3 py-1.5" type="submit">
-              Apply {STRIPE_BRAND.name} branding
-            </button>
-          </form>
+          <a
+            href={"error" in stripeAcct ? "https://dashboard.stripe.com/settings/branding" : `https://dashboard.stripe.com/${stripeAcct.id}/${stripeAcct.mode === "live" ? "" : "test/"}settings/branding`}
+            target="_blank"
+            rel="noopener"
+            className="btn-secondary px-3 py-1.5"
+          >
+            Branding in Stripe →
+          </a>
         </div>
+        <p className="mt-1 text-xs text-gray-500">
+          Target: name {STRIPE_BRAND.name}, brand colour {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon public/brand/icon-512.png. Stripe does not allow an account to edit its own name/branding through the API, so this is set in the Dashboard (business name appears after activation).
+        </p>
         {"error" in stripeAcct ? (
           <p className="mt-2 text-sm text-red-600">Cannot read the account: {stripeAcct.error}</p>
         ) : (
@@ -107,15 +111,10 @@ export default async function AdminSystem() {
             <dt className="text-gray-500">Branding</dt>
             <dd>
               {stripeAcct.primaryColor ?? "—"} / {stripeAcct.secondaryColor ?? "—"} · icon {stripeAcct.hasIcon ? "set" : "missing"} ·{" "}
-              {stripeAcct.matches ? <span className="text-green-600">matches the site</span> : <span className="text-amber-700">differs from the site — press Apply</span>}
+              {stripeAcct.matches ? <span className="text-green-600">matches the site</span> : <span className="text-amber-700">differs from the site</span>}
             </dd>
           </dl>
         )}
-        {lastBranding ? (
-          <p className={`mt-3 text-xs ${lastBranding.ok ? "text-gray-500" : "text-red-600"}`}>
-            Last apply {fmtDate(new Date(lastBranding.at))}: {lastBranding.message}
-          </p>
-        ) : null}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">

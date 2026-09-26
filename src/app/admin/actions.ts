@@ -183,16 +183,6 @@ export async function requeueJobAction(formData: FormData) {
   revalidatePath("/admin/system");
 }
 
-export async function applyStripeBrandingAction() {
-  const admin = await requireAdminApi();
-  const { applyStripeBranding } = await import("@/lib/stripe/branding");
-  const result = await applyStripeBranding();
-  const value = { ok: result.ok, message: result.message, at: new Date().toISOString() };
-  await prisma.setting.upsert({ where: { key: "stripe.branding_last" }, create: { key: "stripe.branding_last", value }, update: { value } });
-  await audit(admin.id, "stripe_branding_apply", "stripe", "account", value);
-  revalidatePath("/admin/system");
-}
-
 /** Proves the AI provider works in this environment without a purchase: one cheap call, result stored for the System page. */
 export async function aiSmokeTestAction() {
   const admin = await requireAdminApi();

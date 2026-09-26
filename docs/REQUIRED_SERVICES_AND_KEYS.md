@@ -148,7 +148,7 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 - **Domains:** `orvionis.com` is set as the business URL; Checkout runs on `checkout.stripe.com` (no custom domain needed).
 - **DNS:** none. **Scopes:** see restricted-key permissions above.
 - **Secret:** both variables. **Railway:** safe. **Rotation:** roll the key in the Dashboard (Stripe supports a grace period); rotate the webhook secret by adding a new destination and deleting the old one.
-- **Branding / public business name:** editable via `/admin/system → Apply ORVIONIS branding` (uses the same secret key) or in the Dashboard after activation (Settings → Business → Public details, Branding).
+- **Branding / public business name:** Dashboard only — Stripe refuses account updates through the API on your own account ("you may only use it on connected accounts"). Settings → Business → Branding (colours/icon, works in a sandbox; set to `#08090D` / `#8B5CF6` on 2026-09-26) and Public details (business name — appears after activation; a sandbox keeps its creation name on Checkout). `/admin/system` shows the account the key points at and whether the webhook lives there.
 - **Customer emails:** Dashboard → Settings → Customer emails → enable "Successful payments" (live). Receipts already carry the order link because the app sets `receipt_email`.
 
 ---
