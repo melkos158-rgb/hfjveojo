@@ -4,6 +4,7 @@ import { loadOrderForViewer } from "@/lib/orders/access";
 import { errorResponse } from "@/lib/errors";
 import { track } from "@/lib/analytics/events";
 import { notifyAdmins } from "@/lib/orders/service";
+import { readJsonBody } from "@/lib/security/http";
 
 const schema = z.object({ rating: z.number().int().min(1).max(5).nullable().optional(), text: z.string().trim().min(3).max(4000) });
 
@@ -13,7 +14,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
     const t = new URL(req.url).searchParams.get("t");
     const order = await loadOrderForViewer(id, t);
     if (!order) return Response.json({ error: "not_found" }, { status: 404 });
-    const body = schema.parse(await req.json());
+    const body = schema.parse(await readJsonBody(req));
     await prisma.feedback.create({
       data: { orderId: order.id, userId: order.userId, email: order.customerEmail, rating: body.rating ?? null, text: body.text, source: "order_page" },
     });

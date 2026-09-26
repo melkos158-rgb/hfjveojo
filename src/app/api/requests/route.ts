@@ -4,6 +4,7 @@ import { errorResponse } from "@/lib/errors";
 import { track } from "@/lib/analytics/events";
 import { notifyAdmins } from "@/lib/orders/service";
 import { ipHash, rateLimit } from "@/lib/security/ratelimit";
+import { readJsonBody } from "@/lib/security/http";
 
 const PROFESSIONS = ["real-estate", "photography", "contractor", "other"] as const;
 
@@ -23,7 +24,7 @@ const schema = z.object({
 export async function POST(req: Request) {
   try {
     await rateLimit({ key: `requests:${ipHash(req)}`, limit: 5, windowSeconds: 3600 });
-    const body = schema.parse(await req.json());
+    const body = schema.parse(await readJsonBody(req));
     const tags = [body.profession, ...(body.topic ? [body.topic.slice(0, 60)] : [])];
     await prisma.feedback.create({
       data: { email: body.email || null, text: body.need, tags, source: "tool_request" },

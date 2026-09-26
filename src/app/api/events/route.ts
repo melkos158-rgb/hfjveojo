@@ -3,6 +3,7 @@ import { z } from "zod";
 import { track, ATTRIBUTION_COOKIE, SESSION_ID_COOKIE, parseAttributionCookie } from "@/lib/analytics/events";
 import { getSession } from "@/lib/auth/session";
 import { ipHash } from "@/lib/security/ratelimit";
+import { readJsonBody } from "@/lib/security/http";
 
 const schema = z.object({
   name: z.string().regex(/^[a-z_]{2,40}$/),
@@ -14,7 +15,7 @@ const schema = z.object({
 /** First-party analytics beacon. Accepts a small allow-listed set of client events. */
 export async function POST(req: Request) {
   try {
-    const body = schema.parse(await req.json());
+    const body = schema.parse(await readJsonBody(req, 8 * 1024));
     if (!["page_view", "cta_click", "intake_started", "faq_open", "free_tool_used"].includes(body.name)) return Response.json({ ok: true });
     const store = await cookies();
     const session = await getSession();
