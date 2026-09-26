@@ -60,6 +60,8 @@ export async function middleware(req: NextRequest) {
       login.searchParams.set("next", url.pathname);
       return NextResponse.redirect(login);
     }
+    // This device belongs to the team: keep its browsing out of the visitor funnel (see INTERNAL_COOKIE).
+    if (req.cookies.get("orv_internal")?.value !== "1") res.cookies.set("orv_internal", "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 365 * 24 * 3600 });
   }
 
   return res;

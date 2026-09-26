@@ -53,6 +53,8 @@ export type CreateOrderInput = {
   mode?: StripeMode;
   /** Mark as a test order (excluded from revenue). Sandbox orders in production are always test orders. */
   isTest?: boolean;
+  /** The owner's/operator's own device: the checkout does not count as a visitor funnel event. */
+  internal?: boolean;
 };
 
 /**
@@ -177,7 +179,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     throw new AppError(`Stripe returned a ${livemode ? "live" : "test"} session for a ${mode} checkout — check the ${mode} key`, 500, "stripe_mode_mismatch");
   }
   await prisma.order.update({ where: { id: order.id }, data: { stripeCheckoutSessionId: session.id, livemode } });
-  await track("checkout_started", {
+  if (!input.internal) await track("checkout_started", {
     orderId: order.id,
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,

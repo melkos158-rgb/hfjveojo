@@ -97,7 +97,7 @@ async function assertPreviewUploads(def: ToolDefinition<unknown>, intake: Record
 
 export type PreviewResult = { image: string; width: number; height: number; caption: string };
 
-export async function createPreview(input: { slug: string; intakeRaw: unknown; ip: string; sessionId?: string | null }): Promise<PreviewResult> {
+export async function createPreview(input: { slug: string; intakeRaw: unknown; ip: string; sessionId?: string | null; internal?: boolean }): Promise<PreviewResult> {
   const def = getToolBySlug(input.slug);
   if (!def?.preview) throw new AppError("This tool has no free preview", 404, "no_preview");
   const tool = await prisma.tool.findUnique({ where: { id: def.id }, select: { status: true } });
@@ -120,10 +120,10 @@ export async function createPreview(input: { slug: string; intakeRaw: unknown; i
       ai: { editImage: (call) => editImage({ ...call, n: 1, quality: call.quality ?? env().AI_PREVIEW_QUALITY }, { purpose: "preview", toolId: def.id }) },
     });
     const wm = await watermarkPreview(image);
-    await track("preview_ready", { sessionId: input.sessionId, props: { tool: def.id, ms: Date.now() - started } });
+    if (!input.internal) await track("preview_ready", { sessionId: input.sessionId, props: { tool: def.id, ms: Date.now() - started } });
     return { image: `data:image/jpeg;base64,${wm.data.toString("base64")}`, width: wm.width, height: wm.height, caption: def.preview.caption };
   } catch (err) {
-    await track("preview_failed", { sessionId: input.sessionId, props: { tool: def.id, error: String((err as Error).message ?? err).slice(0, 200) } });
+    await track("preview_failed", { sessionId: input.sessionId, props: { tool: def.id, internal: input.internal ? 1 : 0, error: String((err as Error).message ?? err).slice(0, 200) } });
     if (err instanceof AppError && err.status < 500) throw err;
     throw new AppError("The preview could not be made right now — please try again in a minute, or order directly (one redo is included).", 502, "preview_failed");
   }

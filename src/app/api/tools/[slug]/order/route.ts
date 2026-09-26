@@ -5,7 +5,7 @@ import { errorResponse } from "@/lib/errors";
 import { readJsonBody } from "@/lib/security/http";
 import { rateLimit, clientIp } from "@/lib/security/ratelimit";
 import { getSession } from "@/lib/auth/session";
-import { ATTRIBUTION_COOKIE, SESSION_ID_COOKIE, parseAttributionCookie } from "@/lib/analytics/events";
+import { ATTRIBUTION_COOKIE, INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisitor, parseAttributionCookie } from "@/lib/analytics/events";
 import { isAdmin } from "@/lib/auth/guards";
 import { AppError } from "@/lib/errors";
 
@@ -28,6 +28,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ slug: string }
       attribution: parseAttributionCookie(store.get(ATTRIBUTION_COOKIE)?.value),
       userId: session?.id ?? null,
       sessionId: store.get(SESSION_ID_COOKIE)?.value ?? null,
+      internal: isInternalVisitor(store.get(INTERNAL_COOKIE)?.value, session?.role),
       ...(body.sandbox ? { mode: "test" as const, isTest: true } : {}),
     });
     return Response.json(result);

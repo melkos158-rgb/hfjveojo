@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { track, ATTRIBUTION_COOKIE, SESSION_ID_COOKIE, parseAttributionCookie } from "@/lib/analytics/events";
+import { track, ATTRIBUTION_COOKIE, INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisitor, parseAttributionCookie } from "@/lib/analytics/events";
 import { getSession } from "@/lib/auth/session";
 import { ipHash } from "@/lib/security/ratelimit";
 import { readJsonBody } from "@/lib/security/http";
@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     if (!["page_view", "cta_click", "intake_started", "faq_open", "free_tool_used", "preview_requested", "preview_shown", "file_download"].includes(body.name)) return Response.json({ ok: true });
     const store = await cookies();
     const session = await getSession();
+    if (isInternalVisitor(store.get(INTERNAL_COOKIE)?.value, session?.role)) return Response.json({ ok: true, internal: true });
     await track(body.name, {
       sessionId: store.get(SESSION_ID_COOKIE)?.value,
       userId: session?.id,
