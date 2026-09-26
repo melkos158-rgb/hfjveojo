@@ -18,11 +18,11 @@ No secret values appear here or anywhere in the repository: keys live only in Ra
 
 | Variable | Holds | Status |
 | --- | --- | --- |
-| `STRIPE_SECRET_KEY` | sandbox secret key (`acct_1UIuDh2cM37Fu7zW`) | set — **leave it as it is** |
+| `STRIPE_SECRET_KEY` | sandbox secret key (`acct_1UIuDh2cM37Fu7zW`) | **2026-09-26 16:25 UTC: the owner pasted the live key here** — works (keys are recognised by prefix), but the sandbox is off until its key is back here and the live key moves to `STRIPE_LIVE_SECRET_KEY` |
 | `STRIPE_WEBHOOK_SECRET` | signing secret of the sandbox destination | set — leave it |
-| `STRIPE_LIVE_SECRET_KEY` | live secret key `sk_live_…` (or a restricted `rk_live_…`) | **owner adds** |
-| `STRIPE_LIVE_WEBHOOK_SECRET` | signing secret of the **live** destination (its own `whsec_…`) | **owner adds** |
-| `STRIPE_MODE` | `test` or `live` — which pair customer checkouts use | `test` until the checklist below is green |
+| `STRIPE_LIVE_SECRET_KEY` | live secret key `sk_live_…` (or a restricted `rk_live_…`) | not set (the live key sits in `STRIPE_SECRET_KEY` for now) |
+| `STRIPE_LIVE_WEBHOOK_SECRET` | signing secret of the **live** destination (its own `whsec_…`) | set by the owner, deployed 16:40 UTC — destination `we_1UJyViGsFrMfnr38ljrQ8d6L` (created 16:31 UTC from `/admin/system`, 7 events); **live probe verified 16:42 UTC** (`checkout.session.expired` received and processed) |
+| `STRIPE_MODE` | `test` or `live` — which pair customer checkouts use | `test` until the checklist below is green. While it says `test` and no sandbox key is set, checkout answers "try again in a few minutes" (nothing charged) and admins get an hourly alert |
 
 A restricted live key needs: Checkout Sessions *write*, Payment Intents *read*, Charges *read*, Refunds *write*, Webhook Endpoints *write*, Account *read*.
 
@@ -35,5 +35,7 @@ A restricted live key needs: Checkout Sessions *write*, Payment Intents *read*, 
 5. **Owner or operator:** Railway variable `STRIPE_MODE=live` → deploy. The admin page badge reads "Customer checkouts: LIVE".
 6. **Verify without spending money:** open a tool page, start checkout → Stripe's live page must show the right name, price and ORVIONIS branding (do not pay). Admins get a "pay in the Stripe sandbox" checkbox on the order form: with the test card the whole flow (webhook → fulfilment → emails) runs on the live site without real money.
 7. **First real payment** (owner's decision, e.g. the $9 Listing Description) → order page, delivery email, Stripe receipt, `/admin/analytics` revenue.
+
+Status 2026-09-26 16:45 UTC: steps 1–4 done (live key in `STRIPE_SECRET_KEY`, destination, signing secret, probe verified). Waiting for the owner: step 5 (`STRIPE_MODE=live` — the operator's attempt to add it was blocked by the safety classifier as a production change) and the live account's public details (business name and statement descriptor still "jarvis").
 
 Rollback at any time: `STRIPE_MODE=test` (live orders already paid keep working — refunds and events follow each order's own mode).
