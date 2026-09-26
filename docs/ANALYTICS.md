@@ -58,7 +58,7 @@ Subscriptions do not exist yet (no `subscription_started`).
 | Orders, AOV, customers, repeat rate | paid non-test orders |
 | Conversion | visit → paid (sessions), checkout → paid |
 | Per tool | funnel views → form started → free previews → checkouts, then paid, revenue, AI cost, AI per order |
-| Per acquisition channel | attributed source (utm_source; `google` for an auto-tagged ad click; else ref or referrer) — visits, paid, revenue. First touch wins, except a Google Ads click (gclid/gbraid/wbraid) replaces it and keeps the old source as `firstTouch` (`src/lib/analytics/attribution.ts`) |
+| Per acquisition channel | attributed source (utm_source; `google` for an auto-tagged ad click; else ref or referrer) — visits, paid, revenue. First touch wins, except a Google Ads click (gclid/gbraid/wbraid) replaces it and keeps the old source as `firstTouch` (`src/lib/analytics/attribution.ts`). Our own site is never a channel: behind Railway's proxy the request URL carries an internal host, so the middleware also compares the referrer with the public host from `NEXT_PUBLIC_APP_URL`, and the KPI report maps older cookies that recorded `orvionis.com` to `direct` (fixed 2026-09-27; before that "orvionis.com" showed as a channel with 465 visits) |
 
 
 ## Google Ads conversions (offline import)

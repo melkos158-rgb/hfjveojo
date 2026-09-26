@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { attributionFromUrl, isPaidClick, nextAttribution, parseAttributionCookie, serializeAttribution, sourceOf } from "@/lib/analytics/attribution";
+import { attributionFromUrl, isOwnHost, isPaidClick, nextAttribution, parseAttributionCookie, publicHost, serializeAttribution, sourceOf } from "@/lib/analytics/attribution";
 
 const GCLID = "Cj0KCQjw2t3VBhDcARIsAB_test-click_1";
 const at = new Date("2026-09-26T18:00:00.000Z");
@@ -39,5 +39,22 @@ describe("visit attribution", () => {
     expect(parseAttributionCookie(encodeURIComponent("[1,2]"))).toBeNull();
     expect(sourceOf({ ref: "partner" })).toBe("partner");
     expect(sourceOf(null)).toBe("direct");
+  });
+});
+
+describe("own-site referrers", () => {
+  it("treats our public host as internal even when the request URL carries the proxy's host", () => {
+    const at = new Date("2026-09-27T00:00:00Z");
+    expect(attributionFromUrl(new URL("http://localhost:3000/pricing"), "https://orvionis.com/tools", at, ["orvionis.com"])).toBeNull();
+    expect(attributionFromUrl(new URL("http://localhost:3000/pricing"), "https://www.orvionis.com/tools", at, ["orvionis.com"])).toBeNull();
+    expect(attributionFromUrl(new URL("http://localhost:3000/pricing"), "https://www.google.com/", at, ["orvionis.com"])?.referrer).toBe("www.google.com");
+  });
+
+  it("matches hosts and subdomains, not look-alikes", () => {
+    expect(isOwnHost("orvionis.com", ["orvionis.com"])).toBe(true);
+    expect(isOwnHost("www.orvionis.com", ["www.orvionis.com"])).toBe(true);
+    expect(isOwnHost("notorvionis.com", ["orvionis.com"])).toBe(false);
+    expect(publicHost("https://orvionis.com")).toBe("orvionis.com");
+    expect(publicHost("not a url")).toBeNull();
   });
 });

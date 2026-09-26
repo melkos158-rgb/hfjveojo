@@ -53,8 +53,29 @@ export function isPaidClick(attr: Attribution | null | undefined): boolean {
   return Boolean(attr && (attr.gclid || attr.gbraid || attr.wbraid));
 }
 
-/** Attribution carried by one request (landing URL + referrer), or null when it carries none. */
-export function attributionFromUrl(url: URL, referrer: string | null, now: Date = new Date()): Attribution | null {
+/** True when `host` is one of our own hosts (or a subdomain of one): such a referrer is internal navigation, not a channel. */
+export function isOwnHost(host: string, ownHosts: string[]): boolean {
+  const h = host.toLowerCase();
+  return ownHosts.some((o) => {
+    const own = o.toLowerCase().replace(/^www\./, "");
+    return own !== "" && (h === own || h.endsWith(`.${own}`));
+  });
+}
+
+/** Our public hostname from NEXT_PUBLIC_APP_URL (behind a proxy the request URL may carry an internal host instead). */
+export function publicHost(appUrl: string | undefined = process.env.NEXT_PUBLIC_APP_URL): string | null {
+  try {
+    return appUrl ? new URL(appUrl).hostname : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Attribution carried by one request (landing URL + referrer), or null when it carries none. `ownHosts` are our public
+ * hostnames: a referrer from them is internal navigation even when the request URL shows the proxy's internal host.
+ */
+export function attributionFromUrl(url: URL, referrer: string | null, now: Date = new Date(), ownHosts: string[] = []): Attribution | null {
   const attr: Attribution = {};
   let any = false;
   for (const k of CAMPAIGN_KEYS) {
@@ -74,7 +95,7 @@ export function attributionFromUrl(url: URL, referrer: string | null, now: Date 
   if (referrer) {
     try {
       const host = new URL(referrer).hostname;
-      if (host && host !== url.hostname && !host.endsWith(`.${url.hostname}`)) {
+      if (host && !isOwnHost(host, [url.hostname, ...ownHosts])) {
         attr.referrer = host.slice(0, 120);
         any = true;
       }

@@ -106,7 +106,7 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 
 ## STATUS
 
-**Published 2026-09-26 22:15 UTC+2 and in Google's ad review.** Ads start after approval, usually within hours.
+**Published 2026-09-26 22:15 UTC+2 (20:15 UTC).** Check at 2026-09-26 23:04 UTC (read-only): campaign **Enabled, "Придатна (навчання)"** (eligible, learning); 0 impressions, 0 clicks, €0 spent. Change history shows no negative keywords added yet.
 
 Settings were verified on the review page after a full reload:
 - Search only, US presence, English;
@@ -128,7 +128,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 | Date | Spend | Impressions | Clicks | CTR | CPC | Checkouts | Orders | Revenue | Profit | ROAS | CAC |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-26 (to 23:04 UTC) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -150,6 +150,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
   - Fixed after a reload: the budget had defaulted to the recommended €22.45/day, and it became a €30 campaign total for 26 Sep – 1 Oct.
   - Verified location US, AI Max off and max CPC €1.50, then **published** (campaign id 24292280138, in review).
 - 2026-09-26 22:20: edits to the live campaign blocked by the safety check. Negatives and auto-apply off sent to the owner.
+- 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 
 ## DISCOVERIES
 
@@ -161,7 +162,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LAST COMPLETED ACTION
 
-Campaign published and all settings verified. Owner asked to add negatives and turn off auto-apply (22:20).
+Read-only status check at 23:04 UTC: eligible (learning), 0 impressions, €0. Owner asked to add negatives and turn off auto-apply (22:20); not done yet.
 
 ## NEXT EXACT ACTION
 
@@ -172,4 +173,4 @@ Campaign published and all settings verified. Owner asked to add negatives and t
 
 ## TIMESTAMP
 
-2026-09-26 22:25 UTC+2
+2026-09-26 23:20 UTC

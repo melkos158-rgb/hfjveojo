@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { sourceOf } from "@/lib/analytics/attribution";
+import { isOwnHost, publicHost, sourceOf } from "@/lib/analytics/attribution";
 import { microsToCents } from "@/lib/ai/pricing";
 
 export type Kpis = {
@@ -137,14 +137,20 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const repeatCustomers = [...byCustomer.values()].filter((n) => n >= 2).length;
 
   const channelMap = new Map<string, { visits: number; paid: number; revenueCents: number }>();
+  // Our own site is never a channel: older attribution cookies recorded internal navigation as the referrer.
+  const own = publicHost();
+  const channelOf = (attr: unknown) => {
+    const src = sourceOf(attr);
+    return own && isOwnHost(src, [own]) ? "direct" : src;
+  };
   for (const pv of pageViews) {
-    const src = sourceOf(pv.utm);
+    const src = channelOf(pv.utm);
     const row = channelMap.get(src) ?? { visits: 0, paid: 0, revenueCents: 0 };
     row.visits++;
     channelMap.set(src, row);
   }
   for (const o of paidOrders) {
-    const src = sourceOf(o.attribution);
+    const src = channelOf(o.attribution);
     const row = channelMap.get(src) ?? { visits: 0, paid: 0, revenueCents: 0 };
     row.paid++;
     row.revenueCents += charged(o);

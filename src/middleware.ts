@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
-import { ATTRIBUTION_COOKIE, attributionFromUrl, nextAttribution, parseAttributionCookie, serializeAttribution } from "@/lib/analytics/attribution";
+import { ATTRIBUTION_COOKIE, attributionFromUrl, nextAttribution, parseAttributionCookie, publicHost, serializeAttribution } from "@/lib/analytics/attribution";
 
 const SESSION_COOKIE = "orv_session";
 const SESSION_ID_COOKIE = "orv_sid";
@@ -23,7 +23,8 @@ export async function middleware(req: NextRequest) {
     res.cookies.set(SESSION_ID_COOKIE, crypto.randomUUID(), { httpOnly: true, sameSite: "lax", secure, path: "/", maxAge: 180 * 24 * 3600 });
   }
 
-  const incoming = attributionFromUrl(url, req.headers.get("referer"));
+  const own = publicHost();
+  const incoming = attributionFromUrl(url, req.headers.get("referer"), new Date(), own ? [own] : []);
   if (incoming) {
     const next = nextAttribution(parseAttributionCookie(req.cookies.get(ATTRIBUTION_COOKIE)?.value), incoming);
     if (next) res.cookies.set(ATTRIBUTION_COOKIE, serializeAttribution(next), { httpOnly: true, sameSite: "lax", secure, path: "/", maxAge: 90 * 24 * 3600 });
