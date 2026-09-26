@@ -100,10 +100,52 @@ describe("tool registry", () => {
     const p = stagingPrompt({ roomType: "home office", style: "scandinavian", notes: "keep the fireplace visible" });
     expect(p).toContain("home office");
     expect(p).toContain("scandinavian");
-    expect(p).toMatch(/walls, floors, ceiling, windows, doors/);
+    expect(p).toContain("ONLY freestanding, movable furniture");
+    // the two failure modes seen in production test order #5: an added chandelier and an added built-in bookcase
+    expect(p).toMatch(/no ceiling lights, chandeliers, pendant lights/);
+    expect(p).toMatch(/no built-in shelving/);
+    expect(p).toMatch(/do not crop, zoom, reframe/);
     expect(p).toContain("no people");
     expect(p).toContain("Customer notes: keep the fireplace visible");
     expect(stagingPrompt({ roomType: "bedroom", style: "modern", notes: "" })).not.toContain("Customer notes");
+  });
+
+  it("image edits keep the photo's proportions on models that allow any size", async () => {
+    const { editSizeFor, wantsInputFidelity, supportsArbitrarySize } = await import("@/lib/ai/image-size");
+    expect(supportsArbitrarySize("gpt-image-2")).toBe(true);
+    expect(supportsArbitrarySize("gpt-image-2.5-flare")).toBe(true);
+    expect(supportsArbitrarySize("gpt-image-1")).toBe(false);
+    expect(editSizeFor("gpt-image-2", 1500, 1000)).toBe("1536x1024"); // 3:2 listing photo
+    expect(editSizeFor("gpt-image-2", 1024, 688)).toBe("1536x1040"); // the sample photo (1.488:1) — nearest multiple of 16
+    expect(editSizeFor("gpt-image-2", 4032, 3024)).toBe("1536x1152"); // 4:3 phone photo
+    expect(editSizeFor("gpt-image-2", 3024, 4032)).toBe("1152x1536"); // portrait
+    expect(editSizeFor("gpt-image-2", 1920, 1080)).toBe("1536x864"); // 16:9
+    expect(editSizeFor("gpt-image-2", 6000, 1000)).toBe("1536x512"); // clamped to 3:1
+    expect(editSizeFor("gpt-image-2")).toBe("1536x1024");
+    for (const s of ["1536x1024", "1536x1040", "1536x1152", "1152x1536", "1536x864", "1536x512"]) {
+      const [w, h] = s.split("x").map(Number);
+      expect(w % 16).toBe(0);
+      expect(h % 16).toBe(0);
+    }
+    expect(editSizeFor("gpt-image-1", 4032, 3024)).toBe("auto");
+    expect(wantsInputFidelity("gpt-image-1")).toBe(true);
+    expect(wantsInputFidelity("gpt-image-1.5")).toBe(true);
+    expect(wantsInputFidelity("gpt-image-1-mini")).toBe(false);
+    expect(wantsInputFidelity("gpt-image-2")).toBe(false);
+  });
+
+  it("staging input photos are auto-rotated from EXIF and capped at 2048 px", async () => {
+    const sharp = (await import("sharp")).default;
+    const { prepareInputPhoto } = await import("@/lib/tools/definitions/virtual-staging");
+    // a 3000×1000 landscape image stored with EXIF orientation 6 (rotate 90°) is a 1000×3000 portrait on screen
+    const raw = await sharp({ create: { width: 3000, height: 1000, channels: 3, background: "#c8b89a" } }).jpeg().withMetadata({ orientation: 6 }).toBuffer();
+    const out = await prepareInputPhoto(raw, "image/jpeg");
+    expect(out.mime).toBe("image/jpeg");
+    expect(out.width).toBe(683);
+    expect(out.height).toBe(2048);
+    const meta = await sharp(out.data).metadata();
+    expect([meta.width, meta.height]).toEqual([683, 2048]);
+    expect(meta.orientation === undefined || meta.orientation === 1).toBe(true);
   });
 });
 

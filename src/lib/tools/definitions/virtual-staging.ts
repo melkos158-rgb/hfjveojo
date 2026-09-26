@@ -44,13 +44,34 @@ export async function encodeForDelivery(png: Buffer): Promise<{ data: Buffer; mi
 export function stagingPrompt(i: Pick<VirtualStagingIntake, "roomType" | "style" | "notes">): string {
   return [
     `Virtually stage this empty ${i.roomType} in a ${i.style} style for a real-estate listing photo.`,
-    "Add realistic, well-proportioned furniture, a rug, lighting and tasteful decor appropriate to the room.",
-    "Keep the room's architecture exactly as photographed: walls, floors, ceiling, windows, doors, trim, built-ins, fixtures and the camera perspective must not change. Do not crop, reframe, zoom or change the aspect ratio — output the full original composition.",
-    "Match the existing light direction and colour temperature; shadows and reflections must be consistent. Photorealistic, no people, no pets, no text, no watermarks, no logos.",
+    "Add ONLY freestanding, movable furniture and decor that suits the room: seating or a bed, tables, a rug, cushions, plants, wall art on the existing walls, and floor or table lamps.",
+    "Do NOT add, remove or change anything attached to the building: no ceiling lights, chandeliers, pendant lights or ceiling fans (keep the existing ceiling fixture exactly as it is); no built-in shelving, niches, cabinetry, fireplaces, mouldings, wall panels, wallpaper or paint colour changes.",
+    "Walls, floor, ceiling, windows and their grids, doors, door hardware, trim, outlets and vents stay exactly as photographed, and so do the camera position, lens and framing — do not crop, zoom, reframe or change the aspect ratio.",
+    "Match the existing daylight direction and colour temperature with consistent shadows and reflections. Photorealistic, no people, no pets, no text, no watermarks, no logos.",
     i.notes ? `Customer notes: ${i.notes}` : "",
   ]
     .filter(Boolean)
     .join(" ");
+}
+
+/**
+ * Normalise the customer's photo before the image model sees it: apply the EXIF orientation (phone photos
+ * are often stored sideways), cap the long edge at 2048 px and send a clean JPEG. Falls back to the original
+ * bytes if sharp is unavailable, so a missing native binary can never fail a paid order.
+ */
+export async function prepareInputPhoto(data: Buffer, mime: string): Promise<{ data: Buffer; mime: string; width?: number; height?: number }> {
+  try {
+    const sharp = (await import("sharp")).default;
+    const { data: out, info } = await sharp(data)
+      .rotate()
+      .resize({ width: 2048, height: 2048, fit: "inside", withoutEnlargement: true })
+      .flatten({ background: "#ffffff" })
+      .jpeg({ quality: 90, mozjpeg: true })
+      .toBuffer({ resolveWithObject: true });
+    return { data: out, mime: "image/jpeg", width: info.width, height: info.height };
+  } catch {
+    return { data, mime };
+  }
 }
 
 export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
@@ -143,9 +164,13 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     const mime = file.file.mime;
     if (!/^image\/(png|jpeg|webp)$/.test(mime)) throw new AppError("The uploaded file is not a PNG, JPEG or WebP image.", 400, "photo_type");
 
-    ctx.step("ai_stage", `Staging a ${i.roomType} in ${i.style} style (${VIRTUAL_STAGING_VARIATIONS} versions)`);
+    const photo = await prepareInputPhoto(file.data, mime);
+    ctx.step("ai_stage", `Staging a ${i.roomType} in ${i.style} style (${VIRTUAL_STAGING_VARIATIONS} versions, input ${photo.width ?? "?"}×${photo.height ?? "?"})`);
     const prompt = stagingPrompt(i);
-    const { images, costMicros } = await ctx.ai.editImage({ image: file.data, mime, prompt, n: VIRTUAL_STAGING_VARIATIONS, size: "auto" }, "stage");
+    const { images, costMicros } = await ctx.ai.editImage(
+      { image: photo.data, mime: photo.mime, prompt, n: VIRTUAL_STAGING_VARIATIONS, size: "auto", inputWidth: photo.width, inputHeight: photo.height },
+      "stage",
+    );
 
     ctx.step("qa", `Checking ${images.length} images; AI cost ${costMicros} µ$`);
     const notes: string[] = [];

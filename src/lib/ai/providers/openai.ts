@@ -1,4 +1,5 @@
 import OpenAI, { toFile } from "openai";
+import { editSizeFor, wantsInputFidelity } from "@/lib/ai/image-size";
 import { env } from "@/lib/env";
 import { AiProviderError, type AiProvider, type CompletionRequest, type CompletionResult, type ImageEditRequest, type ImageEditResult } from "@/lib/ai/types";
 
@@ -69,8 +70,10 @@ export const openAiProvider: AiProvider = {
         image: file,
         prompt: req.prompt,
         n: req.n,
-        size: req.size,
+        // "auto" → the photo's own proportions on models that take any WIDTHxHEIGHT (the SDK type lists only the fixed sizes)
+        size: (req.size === "auto" ? editSizeFor(req.model, req.inputWidth, req.inputHeight) : req.size) as "auto",
         quality: req.quality,
+        ...(wantsInputFidelity(req.model) ? { input_fidelity: "high" as const } : {}),
       });
       const images: Buffer[] = [];
       for (const d of res.data ?? []) if (d.b64_json) images.push(Buffer.from(d.b64_json, "base64"));

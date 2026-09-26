@@ -26,8 +26,12 @@ export type ImageEditRequest = {
   prompt: string;
   model: string;
   n: number;
-  size: "1024x1024" | "1536x1024" | "1024x1536" | "auto";
+  /** "auto" = keep the input's aspect ratio where the model allows it (see src/lib/ai/image-size.ts), else a fixed WIDTHxHEIGHT. */
+  size: string;
   quality: "low" | "medium" | "high";
+  /** Input photo dimensions (after orientation), used to compute an aspect-preserving output size. */
+  inputWidth?: number;
+  inputHeight?: number;
 };
 
 export type ImageEditResult = {
