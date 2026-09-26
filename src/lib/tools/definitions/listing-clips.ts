@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { ToolDefinition } from "@/lib/tools/types";
+import { SAMPLE_LISTING_CLIPS_RESULT } from "@/lib/tools/samples/listing-clips";
 import { validateVideoLink } from "@/lib/security/files";
 import { checkFairHousing, checkNoPlaceholders, combine } from "@/lib/tools/qa";
 
@@ -209,6 +210,7 @@ export const listingClipsTool: ToolDefinition<ListingClipsIntake> = {
     ctaLabel: "Get my 5 clips — $49",
     guarantee: "Not happy with the clips after one revision? Full refund on your first order.",
     deliveryPromise: "Delivered within 48 hours (business days).",
+    sample: SAMPLE_LISTING_CLIPS_RESULT,
   },
   seo: {
     title: "Listing Clips — 5 vertical listing clips from one walkthrough | ORVIONIS",

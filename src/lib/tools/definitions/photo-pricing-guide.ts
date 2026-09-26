@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { ToolDefinition } from "@/lib/tools/types";
+import { SAMPLE_PRICING_GUIDE_RESULT } from "@/lib/tools/samples/photo-pricing-guide";
 import { checkContains, checkLength, checkNoPlaceholders, combine } from "@/lib/tools/qa";
 import { renderPricingGuidePdf, type PricingGuideDoc } from "@/lib/render/pricingGuidePdf";
 
@@ -250,6 +251,7 @@ export const photoPricingGuideTool: ToolDefinition<PricingGuideIntake> = {
     ctaLabel: "Create my pricing guide — $29",
     guarantee: "If the guide is unusable, tell us within 7 days and we refund you.",
     deliveryPromise: "Usually ready in under 5 minutes.",
+    sample: SAMPLE_PRICING_GUIDE_RESULT,
   },
   seo: {
     title: "Photographer Pricing Guide Generator — branded PDF in minutes | ORVIONIS",

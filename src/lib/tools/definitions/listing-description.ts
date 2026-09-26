@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { ToolDefinition } from "@/lib/tools/types";
+import { SAMPLE_LISTING_DESCRIPTION_RESULT } from "@/lib/tools/samples/listing-description";
 import { checkFairHousing, checkLength, checkNoPlaceholders, combine } from "@/lib/tools/qa";
 
 /**
@@ -187,6 +188,7 @@ export const listingDescriptionTool: ToolDefinition<ListingDescriptionIntake> = 
     ctaLabel: "Write my listing — $9",
     guarantee: "If the copy is unusable, tell us within 7 days and we refund you.",
     deliveryPromise: "Usually ready in about 5 minutes.",
+    sample: SAMPLE_LISTING_DESCRIPTION_RESULT,
   },
   seo: {
     title: "Listing Description Writer — MLS-ready copy + social captions in minutes",

@@ -37,27 +37,30 @@ export function checkLength(text: string, min: number, label = "Output"): string
 
 /**
  * Fair-housing lexicon for real-estate copy (US). Flags — does not auto-rewrite — so a human can judge.
+ * Word-boundary patterns: "mature maples" and "Christiansen Ave" are fine, "mature adults" and "Christian community" are not.
  * Not legal advice; the founder should verify local advertising rules.
  */
-const FAIR_HOUSING_TERMS = [
-  "perfect for families",
-  "family-friendly",
-  "bachelor pad",
-  "christian",
-  "no kids",
-  "adults only",
-  "safe neighborhood",
-  "exclusive neighborhood",
-  "walking distance to church",
-  "great for singles",
-  "mature",
-  "handicapped",
-  "ethnic",
+const FAIR_HOUSING_PATTERNS: Array<[string, RegExp]> = [
+  ["perfect for families", /\bperfect for famil(?:y|ies)\b/i],
+  ["family-friendly", /\bfamily[- ]friendly\b/i],
+  ["ideal for families", /\b(?:ideal|great|perfect) for (?:young |growing )?famil(?:y|ies)\b/i],
+  ["bachelor pad", /\bbachelor pad\b/i],
+  ["christian", /\bchristians?\b/i],
+  ["no kids", /\bno (?:kids|children)\b/i],
+  ["adults only", /\badults?[- ]only\b/i],
+  ["safe neighborhood", /\bsafe (?:neighbou?rhood|area|community)\b/i],
+  ["exclusive neighborhood", /\bexclusive (?:neighbou?rhood|area|community)\b/i],
+  ["walking distance to church", /\bwalking distance (?:to|from) (?:the )?(?:church|synagogue|mosque|temple)\b/i],
+  ["great for singles", /\b(?:great|perfect|ideal) for singles\b/i],
+  ["mature (people)", /\bmature (?:adults?|persons?|people|individuals?|couples?|community|residents?|buyers?|professionals?|only)\b/i],
+  ["handicapped", /\bhandicapped\b/i],
+  ["ethnic", /\bethnic\b/i],
+  ["empty nesters", /\bempty[- ]nesters?\b/i],
+  ["retirees", /\b(?:great|perfect|ideal) for retirees\b/i],
 ];
 
 export function checkFairHousing(text: string): string[] {
-  const lower = text.toLowerCase();
-  return FAIR_HOUSING_TERMS.filter((t) => lower.includes(t)).map((t) => `Fair-housing risk: phrase "${t}"`);
+  return FAIR_HOUSING_PATTERNS.filter(([, re]) => re.test(text)).map(([label]) => `Fair-housing risk: phrase "${label}"`);
 }
 
 export function combine(...lists: string[][]): QcResult {

@@ -37,6 +37,27 @@ export type ToolPricing = {
   compareAtText?: string;
 };
 
+/** One block of a sample deliverable as shown on the tool page. */
+export type SampleBlock = { heading?: string; text?: string; bullets?: string[] };
+
+/**
+ * A finished example of the deliverable, built from fictional input, shown on the tool page so buyers see
+ * exactly what they get before paying. Content is static (no AI call at request time).
+ */
+export type SampleResult = {
+  /** Names the fictional case, e.g. "Sample for a fictional 3-bed in Boise". */
+  label: string;
+  /** What the customer sent, one short line each. */
+  input: string[];
+  /** The deliverable, in the order it is delivered. */
+  output: SampleBlock[];
+  /** Blocks after this index sit behind "Show the rest" (default: all visible). */
+  collapseAfter?: number;
+  /** A real file of the sample (e.g. the PDF) with a page preview image. */
+  preview?: { image: string; alt: string; width: number; height: number; href?: string; downloadLabel?: string };
+  note?: string;
+};
+
 export type LandingCopy = {
   headline: string;
   subheadline: string;
@@ -46,6 +67,7 @@ export type LandingCopy = {
   ctaLabel: string;
   guarantee?: string;
   deliveryPromise: string;
+  sample?: SampleResult;
 };
 
 export type SeoMeta = { title: string; description: string; keywords: string[] };

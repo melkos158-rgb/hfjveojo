@@ -5,6 +5,7 @@ import { liveCatalog } from "@/lib/tools/catalog";
 import { ToolCard, toolCardProps } from "@/components/ToolCard";
 import { formatUsd } from "@/lib/ai/pricing";
 import { CATEGORIES } from "@/config/categories";
+import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description";
 
 export const dynamic = "force-dynamic";
 
@@ -134,7 +135,7 @@ export default async function HomePage() {
                     <div className="relative aspect-[9/16]">
                       <Image src="/img/hero-real-estate.webp" alt="Vertical listing clip with price and stats overlay" fill unoptimized className="object-cover" sizes="200px" />
                       <div className="absolute inset-x-0 top-0 p-2">
-                        <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold whitespace-nowrap text-white">$549,000 · 3bd · 2.5ba</span>
+                        <span className="rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-bold whitespace-nowrap text-white">$549K · 3bd · 2.5ba</span>
                       </div>
                       <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2 text-[10px] leading-tight text-white">
                         Renovated kitchen · open house Sun 2–4
@@ -144,6 +145,9 @@ export default async function HomePage() {
                   <div className="mt-2 text-center text-xs text-gray-500">Price, stats, captions, your branding</div>
                 </div>
               </div>
+              <Link href="/tools/listing-clips#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
+                See the full sample plan and captions →
+              </Link>
             </div>
 
             {/* Pricing guide */}
@@ -188,6 +192,39 @@ export default async function HomePage() {
                   <div className="mt-2 text-center text-xs text-gray-500">5 pages, your prices copied exactly</div>
                 </div>
               </div>
+              <Link href="/tools/photographer-pricing-guide#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
+                Open the sample PDF →
+              </Link>
+            </div>
+
+            {/* Listing description — text deliverable, shown in full */}
+            <div className="card flex flex-col gap-4 lg:col-span-2">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-fg">Listing Description</h3>
+                <span className="badge bg-gray-100 text-gray-700">Example</span>
+              </div>
+              <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-3 lg:grid-cols-[1fr_auto_2fr]">
+                <div>
+                  <div className="mb-2 text-xs tracking-wider text-gray-500 uppercase">Before · your facts</div>
+                  <pre className="overflow-hidden rounded-xl border border-line bg-bg p-3 text-[11px] leading-relaxed whitespace-pre-wrap text-gray-700">
+                    {"312 Maple Ct, Boise · $489,000\n3 bd · 2 ba · 1,820 sq ft\nRenovated kitchen with quartz counters\nCovered deck under mature maples\nOversized 2-car garage, EV outlet\nTone: warm · limit 1,000 chars · open Sat 11–1"}
+                  </pre>
+                  <div className="mt-2 text-xs text-gray-500">Five facts, one tone, one limit — two minutes</div>
+                </div>
+                <div className="self-center text-2xl text-brand">→</div>
+                <div>
+                  <div className="mb-2 text-xs tracking-wider text-gray-500 uppercase">After · MLS-ready copy</div>
+                  <div className="rounded-xl border border-line bg-white p-4 text-[12px] leading-relaxed text-neutral-800 shadow">
+                    <div className="text-[9px] tracking-[0.2em] text-neutral-500 uppercase">MLS description · {SAMPLE_MLS_DESCRIPTION.length} of 1,000 characters</div>
+                    <p className="mt-2 text-neutral-800">{SAMPLE_MLS_DESCRIPTION}</p>
+                    <div className="mt-3 text-[10px] text-neutral-500">+ long version for your website · 3 social captions · hashtags · email blurb</div>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-500">Fair-housing checked, within your limit, about 5 minutes after payment</div>
+                </div>
+              </div>
+              <Link href="/tools/listing-description#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
+                Read the full sample (captions, hashtags, email) →
+              </Link>
             </div>
           </div>
         </div>

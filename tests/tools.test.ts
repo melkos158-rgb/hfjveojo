@@ -1,8 +1,11 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { allTools, getToolBySlug } from "@/lib/tools/registry";
 import { validateVideoLink } from "@/lib/security/files";
 import { checkFairHousing, checkNoPlaceholders } from "@/lib/tools/qa";
 import { parsePackages } from "@/lib/tools/definitions/photo-pricing-guide";
+import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description";
 import { sampleListingClipsIntake, sampleListingDescriptionIntake, samplePricingGuideIntake } from "./helpers";
 
 describe("tool registry", () => {
@@ -25,6 +28,36 @@ describe("tool registry", () => {
       expect(t.io.output.length).toBeGreaterThan(5);
       expect(t.io.processingTime.length).toBeGreaterThan(2);
       expect(t.io.ctaLabel.length).toBeGreaterThan(2);
+    }
+  });
+
+  it("every live tool shows a finished sample that passes the same checks as a real delivery", () => {
+    for (const t of allTools().filter((x) => x.active !== false)) {
+      const sample = t.landing.sample;
+      expect(sample, `${t.slug} has no sample`).toBeDefined();
+      if (!sample) continue;
+      expect(sample.input.length).toBeGreaterThan(2);
+      expect(sample.output.length).toBeGreaterThan(2);
+      const text = [sample.label, ...sample.input, ...sample.output.flatMap((b) => [b.heading ?? "", b.text ?? "", ...(b.bullets ?? [])]), sample.note ?? ""].join("\n");
+      expect(checkNoPlaceholders(text)).toEqual([]);
+      expect(checkFairHousing(text)).toEqual([]);
+      if (sample.collapseAfter !== undefined) expect(sample.collapseAfter).toBeLessThan(sample.output.length);
+      if (sample.preview) {
+        expect(existsSync(join(process.cwd(), "public", sample.preview.image))).toBe(true);
+        if (sample.preview.href) expect(existsSync(join(process.cwd(), "public", sample.preview.href))).toBe(true);
+      }
+    }
+    expect(SAMPLE_MLS_DESCRIPTION.length).toBeLessThanOrEqual(1000);
+    expect(SAMPLE_MLS_DESCRIPTION.length).toBeGreaterThanOrEqual(400);
+  });
+
+  it("hand-written tool links in pages and config point at real slugs", () => {
+    const slugs = new Set(allTools().map((t) => t.slug));
+    for (const file of ["src/app/page.tsx", "src/config/categories.ts", "src/components/VerticalLanding.tsx"]) {
+      const src = readFileSync(join(process.cwd(), file), "utf8");
+      for (const m of src.matchAll(/["'`]\/tools\/([a-z0-9-]+)(?:[#?"'`])/g)) {
+        expect(slugs.has(m[1]), `${file} links to /tools/${m[1]} which is not a tool`).toBe(true);
+      }
     }
   });
 
@@ -67,6 +100,8 @@ describe("quality rules", () => {
     expect(checkNoPlaceholders("Welcome [insert name] to Lorem ipsum").length).toBeGreaterThanOrEqual(2);
     expect(checkNoPlaceholders("A clean, specific caption.")).toEqual([]);
     expect(checkFairHousing("Perfect for families near the church").length).toBeGreaterThan(0);
+    expect(checkFairHousing("A quiet street for mature adults only").length).toBe(2);
     expect(checkFairHousing("Quartz island and a covered patio.")).toEqual([]);
+    expect(checkFairHousing("Mature maples shade the deck; corner of Christiansen Ave.")).toEqual([]);
   });
 });

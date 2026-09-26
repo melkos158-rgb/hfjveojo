@@ -8,6 +8,7 @@ import { site } from "@/config/site";
 import { getSession } from "@/lib/auth/session";
 import Image from "next/image";
 import { categoryVisual } from "@/lib/tools/visuals";
+import { SampleResult } from "@/components/SampleResult";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +77,11 @@ export default async function ToolPage({ params }: Params) {
               <a href="#order" className="btn-primary">
                 {l.ctaLabel}
               </a>
+              {l.sample ? (
+                <a href="#example" className="btn-secondary">
+                  See an example
+                </a>
+              ) : null}
               <span className="text-sm text-gray-600">
                 {formatUsd(price)} one-time · {l.deliveryPromise}
               </span>
@@ -89,6 +95,8 @@ export default async function ToolPage({ params }: Params) {
           ) : null}
         </div>
       </section>
+
+      {l.sample ? <SampleResult sample={l.sample} toolName={def.name} /> : null}
 
       <section className="container-x grid gap-10 py-14 lg:grid-cols-5">
         <div className="space-y-10 lg:col-span-3">
