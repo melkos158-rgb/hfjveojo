@@ -92,6 +92,15 @@ export default async function OrderPage({ params, searchParams }: Props) {
               <pre className="mt-3 whitespace-pre-wrap text-sm text-gray-700">{md}</pre>
             </details>
           ) : null}
+          <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="font-semibold">Got another one?</h3>
+              <p className="text-sm text-gray-600">Same price, same turnaround — {order.tool.name} for the next listing or enquiry.</p>
+            </div>
+            <Link href={`/tools/${order.tool.slug}`} className="btn-primary">
+              Order again
+            </Link>
+          </div>
           <div className="card mt-6">
             <h3 className="font-semibold">How did we do?</h3>
             <p className="mb-3 text-sm text-gray-600">One revision round is included — tell us what to change, or what you loved.</p>

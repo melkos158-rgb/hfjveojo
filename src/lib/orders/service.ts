@@ -57,6 +57,7 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     ...fileLinks,
     "",
     "Reply to this email if anything is off — one revision round is included.",
+    ...(def ? ["", `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`] : []),
   ];
   await sendEmail({
     to: order.customerEmail,

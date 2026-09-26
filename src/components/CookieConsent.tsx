@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Minimal consent notice. The site sets only functional cookies (session, first-touch attribution, anonymous
@@ -9,6 +10,7 @@ import { useEffect, useState } from "react";
  */
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     try {
@@ -18,7 +20,8 @@ export function CookieConsent() {
     }
   }, []);
 
-  if (!visible) return null;
+  // Admin and checkout-return pages are not the place for a banner; the notice is on every public page anyway.
+  if (!visible || pathname?.startsWith("/admin") || pathname?.startsWith("/checkout")) return null;
 
   const accept = () => {
     try {
