@@ -10,6 +10,7 @@ import Image from "next/image";
 import { categoryVisual } from "@/lib/tools/visuals";
 import { SampleResult } from "@/components/SampleResult";
 import { isAdmin } from "@/lib/auth/guards";
+import { GaViewItem } from "@/components/GaEvents";
 import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
 
 export const dynamic = "force-dynamic";
@@ -60,6 +61,7 @@ export default async function ToolPage({ params }: Params) {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
+      <GaViewItem tool={{ slug: def.slug, name: def.name }} priceCents={price} currency={item?.currency ?? def.pricing.currency} />
 
       <section className="bg-mist">
         <div className={`container-x grid items-center gap-10 py-14 ${visual ? "lg:grid-cols-[1.1fr_0.9fr]" : ""}`}>
@@ -159,6 +161,7 @@ export default async function ToolPage({ params }: Params) {
                 initialEmail={session?.email}
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
+                gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

@@ -5,6 +5,13 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { CookieConsent } from "@/components/CookieConsent";
 import { Analytics } from "@/components/Analytics";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { gaInitScript, validGaId } from "@/lib/ga";
+
+/** GA4 only on production and only with a valid measurement id (a public value, not a secret). */
+function gaMeasurementId(): string | null {
+  return process.env.APP_ENV === "production" ? validGaId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) : null;
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -23,14 +30,23 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const gaId = gaMeasurementId();
   return (
     <html lang="en">
+      {gaId ? (
+        <head>
+          {/* gtag must exist before any component effect runs (purchase / begin_checkout events) */}
+          <script dangerouslySetInnerHTML={{ __html: gaInitScript(gaId) }} />
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+        </head>
+      ) : null}
       <body className="flex min-h-screen flex-col">
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
-        <CookieConsent />
+        <CookieConsent analytics={Boolean(gaId)} />
         <Analytics />
+        {gaId ? <GoogleAnalytics /> : null}
       </body>
     </html>
   );

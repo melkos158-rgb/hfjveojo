@@ -5,6 +5,7 @@ import { exchangeGoogleCode, googleEnabled, readGoogleState, GOOGLE_STATE_COOKIE
 import { upsertUserByEmail } from "@/lib/auth/magic";
 import { setSessionCookie } from "@/lib/auth/session";
 import { track } from "@/lib/analytics/events";
+import { AUTH_EVENT_COOKIE } from "@/lib/auth/events";
 import { appUrl } from "@/lib/env";
 import { log } from "@/lib/logger";
 
@@ -26,10 +27,13 @@ export async function GET(req: Request) {
     const { next } = await readGoogleState(state, nonce);
     const profile = await exchangeGoogleCode(code);
     const user = await upsertUserByEmail(profile.email, profile.name);
+    const firstLogin = !user.lastLoginAt;
     await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
     await setSessionCookie({ id: user.id, email: user.email, role: user.role, name: user.name });
-    await track("login", { userId: user.id, props: { method: "google" } });
-    return NextResponse.redirect(appUrl(next));
+    await track(firstLogin ? "sign_up" : "login", { userId: user.id, props: { method: "google" } });
+    const res = NextResponse.redirect(appUrl(next));
+    res.cookies.set(AUTH_EVENT_COOKIE, `${firstLogin ? "sign_up" : "login"}:google`, { maxAge: 60, path: "/", sameSite: "lax" });
+    return res;
   } catch (err) {
     log.warn("auth.google_failed", { error: (err as Error).message });
     return fail((err as Error).message || "Sign-in with Google failed.");

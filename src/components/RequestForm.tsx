@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { gaEvent } from "@/lib/ga";
 
 const PROFESSIONS = [
   { value: "real-estate", label: "Real-estate agent / RE videographer" },
@@ -41,6 +42,7 @@ export function RequestForm({ topic }: { topic?: string }) {
       });
       if (!res.ok) throw new Error(((await res.json()) as { message?: string }).message ?? "Could not send your request");
       setDone(true);
+      gaEvent("generate_lead", { form: "tool_request" });
     } catch (err) {
       setError((err as Error).message);
     } finally {

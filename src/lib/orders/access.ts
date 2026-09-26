@@ -9,7 +9,12 @@ import { safeEqual } from "@/lib/security/tokens";
 export async function loadOrderForViewer(orderId: string, token?: string | null) {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
-    include: { tool: true, outputs: { orderBy: { createdAt: "desc" } }, feedback: { orderBy: { createdAt: "desc" }, take: 1 } },
+    include: {
+      tool: true,
+      outputs: { orderBy: { createdAt: "desc" } },
+      feedback: { orderBy: { createdAt: "desc" }, take: 1 },
+      payments: { select: { amountCents: true, currency: true, status: true }, orderBy: { createdAt: "asc" }, take: 1 },
+    },
   });
   if (!order) return null;
   const session = await getSession();
@@ -18,6 +23,9 @@ export async function loadOrderForViewer(orderId: string, token?: string | null)
   if (!owner && !byToken && !isAdmin(session)) return null;
   return order;
 }
+
+/** Statuses in which the customer has paid (for the GA4 purchase event; refunded/cancelled orders never report one). */
+export const PAID_STATUSES = ["PAID", "PROCESSING", "REVIEW", "COMPLETED", "RETRYING", "FAILED"];
 
 export function publicOrderStatus(status: string): { label: string; tone: "gray" | "blue" | "amber" | "green" | "red" } {
   switch (status) {

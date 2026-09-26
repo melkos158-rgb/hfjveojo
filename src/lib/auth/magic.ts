@@ -43,7 +43,7 @@ export async function issueMagicLink(emailRaw: string, redirect?: string): Promi
   return { url };
 }
 
-export async function consumeMagicLink(token: string): Promise<{ user: User; redirect: string }> {
+export async function consumeMagicLink(token: string): Promise<{ user: User; redirect: string; firstLogin: boolean }> {
   const row = await prisma.magicLinkToken.findUnique({ where: { tokenHash: sha256(token) } });
   if (!row || row.usedAt || row.expiresAt < new Date()) {
     throw new AppError("This sign-in link is invalid or expired. Request a new one.", 400, "invalid_magic_link");
@@ -51,5 +51,5 @@ export async function consumeMagicLink(token: string): Promise<{ user: User; red
   await prisma.magicLinkToken.update({ where: { id: row.id }, data: { usedAt: new Date() } });
   const user = await upsertUserByEmail(row.email);
   await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-  return { user, redirect: row.redirect ?? "/dashboard" };
+  return { user, redirect: row.redirect ?? "/dashboard", firstLogin: !user.lastLoginAt };
 }

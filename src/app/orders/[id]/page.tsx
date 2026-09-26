@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { loadOrderForViewer, publicOrderStatus } from "@/lib/orders/access";
+import { loadOrderForViewer, publicOrderStatus, PAID_STATUSES } from "@/lib/orders/access";
+import { GaPurchase, TrackedDownload } from "@/components/GaEvents";
 import { OrderStatusLive } from "@/components/OrderStatusLive";
 import { FeedbackForm } from "@/components/FeedbackForm";
 import { signedFileUrl } from "@/lib/storage";
@@ -49,6 +50,15 @@ export default async function OrderPage({ params, searchParams }: Props) {
   return (
     <div className="container-x max-w-3xl py-12">
       <OrderStatusLive orderId={order.id} token={t} initialStatus={order.status} />
+      {PAID_STATUSES.includes(order.status) && !order.isTest ? (
+        <GaPurchase
+          orderId={order.id}
+          tool={{ slug: order.tool.slug, name: order.tool.name }}
+          amountCents={order.payments[0]?.amountCents ?? order.amountCents}
+          currency={order.payments[0]?.currency ?? order.currency}
+          completed={delivered}
+        />
+      ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="eyebrow">Order #{order.number}</p>
@@ -114,9 +124,9 @@ export default async function OrderPage({ params, searchParams }: Props) {
                     <img src={url} alt={o.title} className="h-auto w-full rounded-lg border border-line" />
                     <figcaption className="mt-2 flex flex-col gap-2">
                       <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">After · version {i + 1}</span>
-                      <a href={url} className="btn-secondary justify-center px-3 py-1.5 text-xs" download>
+                      <TrackedDownload href={url} tool={order.tool.slug} kind="image" className="btn-secondary justify-center px-3 py-1.5 text-xs" download>
                         Download photo
-                      </a>
+                      </TrackedDownload>
                     </figcaption>
                   </figure>
                 );
@@ -132,9 +142,9 @@ export default async function OrderPage({ params, searchParams }: Props) {
                   <li key={o.id} className="card flex items-center justify-between">
                     <span className="font-medium">{o.title}</span>
                     {link ? (
-                      <a href={link} className="btn-primary px-4 py-2" target="_blank" rel="noopener noreferrer">
+                      <TrackedDownload href={link} tool={order.tool.slug} kind={o.type.toLowerCase()} className="btn-primary px-4 py-2">
                         {o.type === "LINK" ? "Open" : "Download"}
-                      </a>
+                      </TrackedDownload>
                     ) : null}
                   </li>
                 );

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/db";
 import { safeEqual } from "@/lib/security/tokens";
 import { site } from "@/config/site";
 import { CopyLink } from "@/components/CopyLink";
+import { GaPurchase } from "@/components/GaEvents";
+import { PAID_STATUSES } from "@/lib/orders/access";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Thanks — order received", robots: { index: false, follow: false } };
@@ -17,12 +19,23 @@ type Props = { searchParams: Promise<{ order?: string; t?: string }> };
 export default async function CheckoutSuccessPage({ searchParams }: Props) {
   const { order: orderId, t } = await searchParams;
   if (!orderId || !t) redirect("/");
-  const order = await prisma.order.findUnique({ where: { id: orderId }, include: { tool: true } });
+  const order = await prisma.order.findUnique({
+    where: { id: orderId },
+    include: { tool: true, payments: { select: { amountCents: true, currency: true }, orderBy: { createdAt: "asc" }, take: 1 } },
+  });
   if (!order || !safeEqual(order.accessToken, t)) redirect("/");
   const orderPath = `/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`;
 
   return (
     <div className="container-x max-w-2xl py-16">
+      {PAID_STATUSES.includes(order.status) && !order.isTest ? (
+        <GaPurchase
+          orderId={order.id}
+          tool={{ slug: order.tool.slug, name: order.tool.name }}
+          amountCents={order.payments[0]?.amountCents ?? order.amountCents}
+          currency={order.payments[0]?.currency ?? order.currency}
+        />
+      ) : null}
       <div className="card">
         <p className="eyebrow">Order #{order.number}</p>
         <h1 className="mt-2 text-2xl font-bold">Thanks — we&apos;re on it.</h1>

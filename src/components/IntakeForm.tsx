@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { IntakeField } from "@/lib/tools/types";
 import { trackClient } from "@/components/Analytics";
+import { gaEventThen, gaItem as toGaItem } from "@/lib/ga";
 
 type Props = {
   toolSlug: string;
@@ -15,6 +16,8 @@ type Props = {
   preview?: { label: string };
   /** Admins on a live site may pay in the Stripe sandbox (test card) to test the whole flow without real money. */
   adminSandbox?: boolean;
+  /** For the GA4 begin_checkout event (no personal data). */
+  gaItem?: { name: string; priceCents: number; currency: string };
 };
 
 type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
@@ -23,7 +26,7 @@ type ReadyPreview = { image: string; width?: number; height?: number; caption?: 
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map((f) => [f.key, f.type === "color" ? "#3b5bfd" : f.options?.[0]?.value ?? ""])),
   );
@@ -125,7 +128,13 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       });
       const data = (await res.json()) as { checkoutUrl?: string; message?: string };
       if (!res.ok || !data.checkoutUrl) throw new Error(data.message ?? "Could not start checkout");
-      window.location.href = data.checkoutUrl;
+      const url = data.checkoutUrl;
+      const go = () => {
+        window.location.href = url;
+      };
+      if (gaItem && !(adminSandbox && sandbox)) {
+        gaEventThen("begin_checkout", { currency: gaItem.currency.toUpperCase(), value: gaItem.priceCents / 100, items: [toGaItem({ slug: toolSlug, name: gaItem.name }, gaItem.priceCents)] }, go);
+      } else go();
     } catch (err) {
       setError((err as Error).message);
       setSubmitting(false);

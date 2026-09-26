@@ -24,7 +24,8 @@ Production values live only in Railway → service `hfjveojo` → Variables. Loc
 | FUTURE (V2, only if spam appears) | Cloudflare Turnstile | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` |
 | FUTURE (V2) | Anthropic (second AI provider) | `ANTHROPIC_API_KEY` |
 | FUTURE (V2/V3) | Browser extension, Chrome Web Store | none server-side |
-| not needed | Redis / queue service, Google Analytics, Tag Manager, Stripe publishable key, Stripe Price IDs | — |
+| ⏳ owner (2026-09-26) | Google Analytics 4 — traffic/marketing view; money stays first-party | `NEXT_PUBLIC_GA_MEASUREMENT_ID` (public `G-…`) — see `docs/ANALYTICS.md` |
+| not needed | Redis / queue service, Tag Manager, Stripe publishable key, Stripe Price IDs | — |
 
 ## 1. How to read the entries
 
@@ -206,7 +207,7 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 ## 10. ANALYTICS — first-party — ✅ no external service
 
 - **What exists:** page views, CTA clicks, intake starts, checkout, paid, delivered, free-tool use → `Event` table, sessions via `orv_sid` cookie, UTM attribution via `orv_attr` cookie, KPIs in `/admin/analytics`, daily CEO report. No cookies from third parties; the consent banner covers the first-party cookie.
-- **Google Analytics / Tag Manager:** **not needed** and not planned — they add a consent burden and duplicate what `/admin/analytics` already shows. Revisit only if you buy ads that require conversion pixels (then: Meta/Google Ads pixels, V2, public IDs only, no secrets).
+- **Google Analytics 4:** requested by the owner 2026-09-26 and integrated (production only, Consent Mode v2, sanitised URLs, business events) — needs only the public measurement id `NEXT_PUBLIC_GA_MEASUREMENT_ID`; setup and event map in `docs/ANALYTICS.md`. Revenue, fees, refunds and costs stay in `/admin/analytics` (first-party, authoritative). **Tag Manager:** not needed.
 - **Google Search Console:** see §11 — free, no API key; verification only.
 
 ---

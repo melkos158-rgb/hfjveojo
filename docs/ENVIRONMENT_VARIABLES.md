@@ -35,6 +35,7 @@ STRIPE_LIVE_SECRET_KEY=                             🔒 ⏳  LIVE secret key (s
 STRIPE_LIVE_WEBHOOK_SECRET=                         🔒 ⏳  signing secret of the LIVE destination (its own whsec_)
 STRIPE_MODE=test                                    ⚙️ ⏳  test | live — customer checkouts; set to live only after /admin/system verifies live
 STRIPE_CURRENCY=usd                                 ⚙️ ✅
+NEXT_PUBLIC_GA_MEASUREMENT_ID=                      🌐 ⏳  GA4 measurement id (G-…), public; GA loads only on APP_ENV=production (docs/ANALYTICS.md)
 
 # AI
 AI_PROVIDER=openai                                  ⚙️ ✅  openai | anthropic | mock
