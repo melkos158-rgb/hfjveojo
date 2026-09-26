@@ -67,6 +67,9 @@ const schema = z.object({
   EMBEDDED_WORKER_POLL_MS: z.coerce.number().int().positive().default(10_000),
   CRON_SECRET: z.string().min(1).default("change-me"),
 
+  /** Optional HTML-tag verification for Search Console / Bing (public values; DNS TXT verification needs none). */
+  NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional().default(""),
+  NEXT_PUBLIC_BING_SITE_VERIFICATION: z.string().optional().default(""),
   SENTRY_DSN: z.string().optional().default(""),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
