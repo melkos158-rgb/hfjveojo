@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import type { OrderStatus } from "@prisma/client";
 import { StatusBadge, fmtDate } from "@/components/admin/Kpi";
 import { formatUsd } from "@/lib/ai/pricing";
+import { sourceOf } from "@/lib/analytics/attribution";
 
 export const dynamic = "force-dynamic";
 
@@ -71,7 +72,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
                   <td className="px-3 py-2">{formatUsd(o.amountCents)}</td>
                   <td className="px-3 py-2 text-xs">{fmtDate(o.createdAt)}</td>
                   <td className="px-3 py-2 text-xs">{fmtDate(o.dueAt)}</td>
-                  <td className="px-3 py-2 text-xs text-gray-500">{attr.utm_source || attr.ref || attr.referrer || "direct"}</td>
+                  <td className="px-3 py-2 text-xs text-gray-500">{sourceOf(attr)}</td>
                 </tr>
               );
             })}

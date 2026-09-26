@@ -19,6 +19,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## CURRENT PRIORITY
 
+0. (P0, now) **Acquisition channels going live 2026-09-26:** Fiverr gig built (owner clicks Publish — `docs/FIVERR_EXPERIMENT.md`); Google Ads Search test on the owner's €30 prepaid balance being configured (`docs/GOOGLE_ADS_EXPERIMENT.md`). Paid orders from ads are tracked by gclid + offline conversion CSV.
 1. (P0, owner) First real order — e.g. the $9 Listing Description — to see Stripe's live card form, the receipt and the delivery end to end (the operator may not open live Checkout pages: the safety classifier treats it as a real-world transaction). Then start outreach: payments are live.
 2. (P1, owner) One sandbox purchase with the test card `4242 4242 4242 4242` on https://orvionis.com/tools/listing-description — webhook delivery is already proven, so this only checks Stripe's card form end to end; then the same in live with a real $9 order.
 3. (P1, operator) Start acquisition: the vacant-listing DM (`re-ig-dm-staging`, strongest visual proof) and the $9 description DM (`re-ig-dm-9`) — 20 personal messages/day, tracked with UTM + experiment keys. Needs the owner to send from his accounts (the operator does not send messages on his behalf without per-message approval).
@@ -123,3 +124,5 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - Stripe: hosted Checkout with inline `price_data` (prices live in the DB, no Price IDs); receipts carry the order link.
 - Fair-housing gate: "risk" phrases block automated delivery (→ REVIEW); "style" phrases only advise.
 - The customer sees exactly what was delivered: `GeneratedOutput.deliveredAt` marks the set, the order page shows the latest set only; the admin keeps every run. `Order.deliveredAt` = first delivery (SLA), redo deliveries are `order_redelivered` events.
+
+- 2026-09-26 21:25: Google Ads measurement built — Google click id + `utm_term` captured first-party (paid click overrides older attribution), admin CSV export for offline conversion import, privacy policy updated; 93 tests green, production build OK, local server check of the cookie rules. Fiverr gig built end to end (publish = owner's click). Google Ads account EUR/Poland with €30 prepaid by the owner.

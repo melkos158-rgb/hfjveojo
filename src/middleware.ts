@@ -1,15 +1,15 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { ATTRIBUTION_COOKIE, attributionFromUrl, nextAttribution, parseAttributionCookie, serializeAttribution } from "@/lib/analytics/attribution";
 
 const SESSION_COOKIE = "orv_session";
-const ATTRIBUTION_COOKIE = "orv_attr";
 const SESSION_ID_COOKIE = "orv_sid";
-const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "ref", "exp", "variant"];
 
 /**
  * 1) Admin gate: /admin/* requires a valid session whose role is ADMIN and whose email is in ADMIN_EMAILS.
  *    (Role/email are read from the signed cookie; the client can't forge them.)
- * 2) First-touch attribution: UTM/ref/experiment params are captured once into a cookie for later orders.
+ * 2) Attribution: UTM/ref/experiment params are captured once into a cookie for later orders (first touch), and a
+ *    Google Ads click (gclid) replaces it so ad spend is credited — see src/lib/analytics/attribution.ts.
  * 3) Anonymous session id for funnel analytics (no PII).
  */
 export async function middleware(req: NextRequest) {
@@ -20,26 +20,10 @@ export async function middleware(req: NextRequest) {
     res.cookies.set(SESSION_ID_COOKIE, crypto.randomUUID(), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 180 * 24 * 3600 });
   }
 
-  if (!req.cookies.get(ATTRIBUTION_COOKIE)) {
-    const attr: Record<string, string> = {};
-    for (const k of UTM_KEYS) {
-      const v = url.searchParams.get(k);
-      if (v) attr[k] = v.slice(0, 80);
-    }
-    const referrer = req.headers.get("referer");
-    if (referrer) {
-      try {
-        const host = new URL(referrer).hostname;
-        if (host && host !== url.hostname) attr.referrer = host.slice(0, 120);
-      } catch {
-        // ignore malformed referer
-      }
-    }
-    if (Object.keys(attr).length > 0) {
-      attr.landing = url.pathname.slice(0, 120);
-      attr.firstSeen = new Date().toISOString();
-      res.cookies.set(ATTRIBUTION_COOKIE, encodeURIComponent(JSON.stringify(attr)), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 90 * 24 * 3600 });
-    }
+  const incoming = attributionFromUrl(url, req.headers.get("referer"));
+  if (incoming) {
+    const next = nextAttribution(parseAttributionCookie(req.cookies.get(ATTRIBUTION_COOKIE)?.value), incoming);
+    if (next) res.cookies.set(ATTRIBUTION_COOKIE, serializeAttribution(next), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 90 * 24 * 3600 });
   }
 
   if (url.pathname.startsWith("/admin")) {

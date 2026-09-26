@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { sourceOf } from "@/lib/analytics/attribution";
 import { microsToCents } from "@/lib/ai/pricing";
 
 export type Kpis = {
@@ -56,10 +57,6 @@ export function estimateStripeFeesCents(orders: Array<{ amountCents: number }>):
   return Math.round(orders.reduce((s, o) => s + o.amountCents * STRIPE_FEE_PCT + STRIPE_FEE_FIXED_CENTS, 0));
 }
 
-function sourceOf(utm: unknown): string {
-  const u = (utm ?? {}) as Record<string, string | undefined>;
-  return u.utm_source || u.ref || u.referrer || "direct";
-}
 
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };

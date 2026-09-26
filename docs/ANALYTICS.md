@@ -52,4 +52,14 @@ Subscriptions do not exist yet (no `subscription_started`).
 | Orders, AOV, customers, repeat rate | paid non-test orders |
 | Conversion | visit → paid (sessions), checkout → paid |
 | Per tool | funnel views → form started → free previews → checkouts, then paid, revenue, AI cost, AI per order |
-| Per acquisition channel | first-touch source (utm_source, ref or referrer) — visits, paid, revenue |
+| Per acquisition channel | attributed source (utm_source; `google` for an auto-tagged ad click; else ref or referrer) — visits, paid, revenue. First touch wins, except a Google Ads click (gclid/gbraid/wbraid) replaces it and keeps the old source as `firstTouch` (`src/lib/analytics/attribution.ts`) |
+
+
+## Google Ads conversions (offline import)
+
+The paid order is the only conversion reported to Google Ads — no Google Ads tag or ad cookies on the site.
+
+1. The ad's final URL suffix adds `utm_source=google&utm_medium=cpc&utm_campaign=…&utm_term={keyword}&utm_content={creative}`; auto-tagging adds `gclid`. The middleware keeps both in the first-party `orv_attr` cookie (a paid click replaces an older first touch) and every order stores it.
+2. `/admin/analytics` → **Google Ads conversions** shows how many paid orders came from an ad click in the last 90 days and links the CSV (`/api/admin/ads/google-conversions`, Google's "conversions from clicks" template, UTC). Paid, non-test, non-refunded orders only; `?name=` sets the conversion action name (default "ORVIONIS paid order").
+3. In Google Ads: Goals → Conversions → + New conversion action → Import → Track conversions from clicks, named exactly like the CSV; upload under Goals → Conversions → Uploads (≥ 6 h after creating the action; clicks up to 90 days old).
+4. Ad spend goes into `/admin/experiments` as a channel cost so the profit estimate is honest. Keyword-level results: group paid orders by `utm_term`.

@@ -1,20 +1,9 @@
 import { prisma } from "@/lib/db";
 import { log } from "@/lib/logger";
 
-export type Attribution = {
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_content?: string;
-  ref?: string;
-  landing?: string;
-  referrer?: string;
-  exp?: string; // experiment key
-  variant?: string; // variant key
-  firstSeen?: string;
-};
+export { ATTRIBUTION_COOKIE, attributionFromUrl, parseAttributionCookie, sourceOf, type Attribution } from "@/lib/analytics/attribution";
+import type { Attribution } from "@/lib/analytics/attribution";
 
-export const ATTRIBUTION_COOKIE = "orv_attr";
 export const SESSION_ID_COOKIE = "orv_sid";
 /**
  * Set on every device where an admin opened /admin (1 year, survives signing out): the owner's and operator's own
@@ -61,43 +50,4 @@ export async function track(name: string, input: TrackInput = {}): Promise<void>
   } catch (err) {
     log.warn("track.failed", { name, error: (err as Error).message });
   }
-}
-
-export function parseAttributionCookie(raw: string | undefined): Attribution | null {
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(decodeURIComponent(raw)) as Attribution;
-    return typeof parsed === "object" && parsed ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-/** Build first-touch attribution from a request URL + referrer (used by middleware). */
-export function attributionFromUrl(url: URL, referrer: string | null): Attribution | null {
-  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "ref", "exp", "variant"] as const;
-  const attr: Attribution = {};
-  let any = false;
-  for (const k of keys) {
-    const v = url.searchParams.get(k);
-    if (v) {
-      attr[k] = v.slice(0, 80);
-      any = true;
-    }
-  }
-  if (referrer) {
-    try {
-      const host = new URL(referrer).hostname;
-      if (host && !host.endsWith(url.hostname)) {
-        attr.referrer = host.slice(0, 120);
-        any = true;
-      }
-    } catch {
-      // ignore
-    }
-  }
-  if (!any) return null;
-  attr.landing = url.pathname.slice(0, 120);
-  attr.firstSeen = new Date().toISOString();
-  return attr;
 }

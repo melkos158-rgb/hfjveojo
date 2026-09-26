@@ -3,6 +3,7 @@ import { computeKpis, daysAgo } from "@/lib/analytics/kpi";
 import { formatUsd } from "@/lib/ai/pricing";
 import { Kpi, fmtDate } from "@/components/admin/Kpi";
 import { runReportNowAction } from "@/app/admin/actions";
+import { DEFAULT_CONVERSION_NAME, googleAdsConversions, MAX_CLICK_AGE_DAYS } from "@/lib/ads/googleConversions";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,8 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
   const days = Math.min(Math.max(Number(d ?? 30) || 30, 1), 365);
   const k = await computeKpis(daysAgo(days), new Date(Date.now() + 60_000));
   const reports = await prisma.ceoReport.findMany({ orderBy: { createdAt: "desc" }, take: 7 });
+  const adConversions = await googleAdsConversions({ from: daysAgo(MAX_CLICK_AGE_DAYS), to: new Date() });
+  const adRevenue = adConversions.reduce((s, r) => s + r.value, 0);
 
   return (
     <div className="space-y-8">
@@ -99,6 +102,19 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="card">
+        <h2 className="font-bold">Google Ads conversions</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          {adConversions.length} paid order{adConversions.length === 1 ? "" : "s"} from a Google Ads click in the last {MAX_CLICK_AGE_DAYS} days
+          {adConversions.length ? ` · ${adRevenue.toFixed(2)} in order currency` : ""}. Upload them in Google Ads → Goals → Conversions → Uploads
+          (conversion action &ldquo;{DEFAULT_CONVERSION_NAME}&rdquo;, type: import conversions from clicks). Log ad spend as a channel cost in
+          Experiments so profit stays honest.
+        </p>
+        <a className="btn-secondary mt-3 inline-block px-3 py-1.5 text-sm" href="/api/admin/ads/google-conversions">
+          Download conversions CSV
+        </a>
       </div>
 
       <div className="card">

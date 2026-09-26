@@ -11,9 +11,10 @@ This is ready to paste once the owner has a Fiverr seller account. Images: `docs
 
 | Field | Value |
 | --- | --- |
-| Title | I will virtually stage your empty room photos in 2 realistic styles |
-| Category | Graphics & Design → Architecture & Interior Design (subcategory: Virtual staging / 3D rendering, whichever Fiverr offers) |
-| Search tags | virtual staging, real estate, home staging, interior design, furniture |
+| Title | I will do realistic virtual staging of your empty real estate photos |
+| Category | Graphics & Design → Architecture & Interior Design → service type **Virtual Staging** |
+| Metadata | project scale "Other: Individual rooms", building type Residential |
+| Search tags | virtual staging, real estate, home staging, interior design, listing photos |
 | Uses AI | Yes — "AI-assisted staging, checked by a person before delivery" |
 
 ## Packages
@@ -22,12 +23,14 @@ This is ready to paste once the owner has a Fiverr seller account. Images: `docs
 | --- | --- | --- | --- |
 | Name | 1 room | 3 rooms | 6 rooms (whole listing) |
 | Description | 1 photo staged, 2 versions to choose from | 3 photos staged, 2 versions each | 6 photos staged, 2 versions each |
-| Price | $12 | $30 | $55 |
-| Delivery | 1 day | 1 day | 2 days |
+| Price | $10 | $25 | $45 |
+| Delivery | 2 days | 2 days | 3 days |
 | Revisions | 1 | 1 | 1 |
 | Extras | labeled "Virtually staged" copies included | same | same |
 
-**Economics:** Fiverr keeps 20 %, so the net is $9.60 / $24 / $44. The AI cost is ≈ $0.10 per photo, so the contribution is ≈ $9.50 / $23.70 / $43.40. On price: gigs in the category start at $5–30 per photo. We are mid-market, and our edge is speed plus two versions.
+**Economics:** Fiverr keeps 20 %, so the net is $8 / $20 / $36. The AI cost is ≈ $0.10 per photo, so the contribution is ≈ $7.90 / $19.70 / $35.40. Extra "Additional image": $10, +1 day. Fiverr only accepts prices in $5 steps.
+
+**Price position:** gigs in the category start at €5–10 from Top Rated sellers with 1k+ reviews; new sellers charge €10–14. Our edge is speed plus two versions per photo. This is pricing hypothesis H1 in `docs/FIVERR_EXPERIMENT.md`; review it after 14 days or 300 impressions.
 
 ## Description (max 1,200 characters)
 
@@ -71,7 +74,7 @@ This is ready to paste once the owner has a Fiverr seller account. Images: `docs
    - fee: pre-filled at 20 %;
    - the Fiverr order number.
 4. Press **Create order and run it**. The staged photos arrive by email in about 2 minutes per photo, and they stay on the admin order page.
-5. On the admin order page, click **Download delivered files (ZIP)**, then upload the ZIP to Fiverr and deliver with a short thank-you.
+5. On the admin order page, click **Download delivered files (ZIP)** and **look at every image** (the gig promises a human check: walls, windows, floors and fixtures must be unchanged; press **Free redo** for any that aren't). Then upload the ZIP to Fiverr and deliver with a short thank-you.
 6. If the buyer asks for a revision, press **Free redo** on the admin order page and deliver the new files the same way.
 
 The revenue shows up in `/admin/analytics` under channel **fiverr**, after the 20 % fee.
