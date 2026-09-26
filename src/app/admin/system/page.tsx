@@ -2,13 +2,13 @@ import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
 import { applyStripeBrandingAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
-import { STRIPE_BRAND, stripeAccountSummary, type StripeAccountSummary } from "@/lib/stripe/branding";
+import { STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
-  const [jobs, errors, kill, stripeEvents, counts, brandingLast, stripeAcct] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, brandingLast, stripeAcct, webhook] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -21,6 +21,7 @@ export default async function AdminSystem() {
     ]),
     prisma.setting.findUnique({ where: { key: "stripe.branding_last" } }),
     stripeAccountSummary().catch((err: Error): StripeAccountSummary | { error: string } => ({ error: err.message.slice(0, 200) })),
+    stripeWebhookCheck().catch((err: Error): StripeWebhookCheck | { error: string } => ({ error: err.message.slice(0, 200) })),
   ]);
   const lastBranding = brandingLast?.value as { ok: boolean; message: string; at: string } | null;
   const killOn = kill?.value === true;
@@ -60,7 +61,26 @@ export default async function AdminSystem() {
           <dl className="mt-3 grid gap-x-6 gap-y-1 text-sm sm:grid-cols-[auto_1fr]">
             <dt className="text-gray-500">Account</dt>
             <dd>
-              {stripeAcct.id} · <span className={stripeAcct.mode === "live" ? "font-semibold text-green-600" : "font-semibold text-amber-700"}>{stripeAcct.mode} key</span> · charges {stripeAcct.chargesEnabled ? "enabled" : "not enabled"}
+              {stripeAcct.id}
+              {stripeAcct.displayName ? <span className="font-semibold"> · {stripeAcct.displayName}</span> : null} ·{" "}
+              <span className={stripeAcct.mode === "live" ? "font-semibold text-green-600" : "font-semibold text-amber-700"}>{stripeAcct.mode} key</span> · charges {stripeAcct.chargesEnabled ? "enabled" : "not enabled"}
+            </dd>
+            <dt className="text-gray-500">Webhook</dt>
+            <dd>
+              {"error" in webhook ? (
+                <span className="text-red-600">cannot list: {webhook.error}</span>
+              ) : webhook.found ? (
+                <>
+                  <span className={webhook.status === "enabled" && webhook.missingEvents.length === 0 ? "text-green-600" : "text-amber-700"}>
+                    {webhook.url} · {webhook.status}
+                    {webhook.missingEvents.length ? ` · missing events: ${webhook.missingEvents.join(", ")}` : " · all 7 events"}
+                  </span>
+                </>
+              ) : (
+                <span className="font-semibold text-red-600">
+                  none on this account for {webhook.url} — paid orders will never be marked PAID. Create the destination on THIS account (or point the key at the account that has it).
+                </span>
+              )}
             </dd>
             <dt className="text-gray-500">Business name</dt>
             <dd className={stripeAcct.businessName === STRIPE_BRAND.name ? "" : "text-amber-700"}>{stripeAcct.businessName ?? "—"}</dd>

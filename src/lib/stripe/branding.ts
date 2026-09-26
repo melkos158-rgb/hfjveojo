@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe/client";
-import { env } from "@/lib/env";
+import { env, appUrl } from "@/lib/env";
 import { site } from "@/config/site";
 import { log } from "@/lib/logger";
 
@@ -16,6 +16,8 @@ export const STRIPE_BRAND = {
 
 export type StripeAccountSummary = {
   id: string;
+  /** Dashboard/sandbox name — makes a wrong key obvious ("Ride Lab" vs "orvionis sandbox"). */
+  displayName: string | null;
   mode: "live" | "test";
   businessName: string | null;
   supportEmail: string | null;
@@ -34,6 +36,7 @@ function summarize(acct: Stripe.Account): StripeAccountSummary {
   const hasIcon = Boolean(b?.icon);
   return {
     id: acct.id,
+    displayName: acct.settings?.dashboard?.display_name ?? null,
     mode: env().STRIPE_SECRET_KEY.startsWith("sk_live_") ? "live" : "test",
     businessName: acct.business_profile?.name ?? null,
     supportEmail: acct.business_profile?.support_email ?? null,
@@ -54,6 +57,40 @@ function summarize(acct: Stripe.Account): StripeAccountSummary {
 export async function stripeAccountSummary(): Promise<StripeAccountSummary> {
   const acct = await stripe().accounts.retrieveCurrent();
   return summarize(acct);
+}
+
+export type StripeWebhookCheck = { url: string; found: boolean; status?: string; enabledEvents?: string[]; missingEvents: string[]; others: number };
+
+/** The events the app handles (src/lib/stripe/webhooks.ts) — the destination must subscribe to all of them. */
+export const REQUIRED_WEBHOOK_EVENTS = [
+  "checkout.session.completed",
+  "checkout.session.async_payment_succeeded",
+  "checkout.session.async_payment_failed",
+  "checkout.session.expired",
+  "payment_intent.payment_failed",
+  "charge.refunded",
+  "charge.dispute.created",
+];
+
+/**
+ * Is there a webhook destination on the key's account that points at this deployment? A key from one
+ * sandbox and a webhook on another means Checkout works but orders are never marked paid — this catches it.
+ */
+export async function stripeWebhookCheck(): Promise<StripeWebhookCheck> {
+  const url = appUrl("/api/stripe/webhook");
+  const list = await stripe().webhookEndpoints.list({ limit: 100 });
+  const mine = list.data.find((w) => w.url === url);
+  if (!mine) return { url, found: false, missingEvents: REQUIRED_WEBHOOK_EVENTS, others: list.data.length };
+  const enabled = mine.enabled_events;
+  const all = enabled.includes("*");
+  return {
+    url,
+    found: true,
+    status: mine.status,
+    enabledEvents: enabled,
+    missingEvents: all ? [] : REQUIRED_WEBHOOK_EVENTS.filter((e) => !enabled.includes(e)),
+    others: list.data.length - 1,
+  };
 }
 
 /**

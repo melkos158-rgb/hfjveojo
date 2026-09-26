@@ -16,6 +16,8 @@ import { refundOrder, deliverOrder } from "@/lib/orders/service";
 import { AppError } from "@/lib/errors";
 import { resetDatabase, samplePricingGuideIntake, sampleListingClipsIntake, sampleListingDescriptionIntake } from "./helpers";
 import type Stripe from "stripe";
+import { readFileSync } from "node:fs";
+import { REQUIRED_WEBHOOK_EVENTS } from "@/lib/stripe/branding";
 
 function checkoutCompletedEvent(orderId: string, amount: number, id = `evt_${orderId}`): Stripe.Event {
   return {
@@ -59,6 +61,12 @@ describe("order → checkout → webhook → fulfilment", () => {
     expect(call.payment_intent_data.receipt_email).toBe("buyer@example.com");
     expect(call.payment_intent_data.description).toContain(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
     expect(call.payment_intent_data.description).toContain(`#${order.number}`);
+  });
+
+  it("the webhook event list shown to the admin matches the events the handler implements", () => {
+    const src = readFileSync("src/lib/stripe/webhooks.ts", "utf8");
+    const handled = [...src.matchAll(/case "([a-z_.]+)":/g)].map((m) => m[1]).sort();
+    expect([...REQUIRED_WEBHOOK_EVENTS].sort()).toEqual(handled);
   });
 
   it("rejects invalid intake with a 400 AppError", async () => {
