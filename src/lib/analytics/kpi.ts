@@ -60,10 +60,10 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.count({ where: { name: "intake_started", createdAt: range } }),
       prisma.event.count({ where: { name: "checkout_started", createdAt: range } }),
       prisma.order.findMany({
-        where: { paidAt: range },
+        where: { paidAt: range, isTest: false },
         select: { id: true, toolId: true, amountCents: true, attribution: true, paidAt: true, deliveredAt: true, status: true, customerEmail: true },
       }),
-      prisma.order.count({ where: { deliveredAt: range } }),
+      prisma.order.count({ where: { deliveredAt: range, isTest: false } }),
       prisma.refund.aggregate({ _sum: { amountCents: true }, _count: true, where: { createdAt: range, status: "SUCCEEDED" } }),
       prisma.order.count({ where: { status: "REVIEW" } }),
       prisma.order.count({ where: { status: "FAILED" } }),

@@ -63,6 +63,24 @@ describe("order → checkout → webhook → fulfilment", () => {
     expect(call.payment_intent_data.description).toContain(`#${order.number}`);
   });
 
+  it("an admin pipeline test order runs the real pipeline but stays out of the metrics", async () => {
+    const { computeKpis } = await import("@/lib/analytics/kpi");
+    const before = await computeKpis(new Date(Date.now() - 3600_000), new Date(Date.now() + 60_000));
+    const { orderId } = await createOrderWithCheckout({ toolSlug: "listing-description", email: "admin@example.com", intakeRaw: sampleListingDescriptionIntake, attribution: { utm_source: "admin_pipeline_test" } });
+    await prisma.order.update({ where: { id: orderId }, data: { isTest: true } });
+    await handleStripeEvent({
+      ...checkoutCompletedEvent(orderId, 900, `evt_admintest_${orderId}`),
+      data: { object: { ...checkoutCompletedEvent(orderId, 900).data.object, payment_intent: null } },
+    } as unknown as Stripe.Event);
+    const order = await prisma.order.findUniqueOrThrow({ where: { id: orderId }, include: { payments: true } });
+    expect(order.status).toBe("COMPLETED");
+    expect(order.isTest).toBe(true);
+    expect(order.payments[0]?.stripePaymentIntentId).toBeNull();
+    const after = await computeKpis(new Date(Date.now() - 3600_000), new Date(Date.now() + 60_000));
+    expect(after.ordersPaid).toBe(before.ordersPaid);
+    expect(after.revenueCents).toBe(before.revenueCents);
+  });
+
   it("the webhook event list shown to the admin matches the events the handler implements", () => {
     const src = readFileSync("src/lib/stripe/webhooks.ts", "utf8");
     const handled = [...src.matchAll(/case "([a-z_.]+)":/g)].map((m) => m[1]).sort();

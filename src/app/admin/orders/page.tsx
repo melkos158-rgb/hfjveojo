@@ -55,6 +55,7 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
                   <td className="px-3 py-2">
                     <Link href={`/admin/orders/${o.id}`} className="font-semibold hover:underline">
                       #{o.number}
+                      {o.isTest ? <span className="badge ml-2 bg-amber-50 text-amber-700">TEST</span> : null}
                     </Link>
                   </td>
                   <td className="px-3 py-2">{o.customerEmail}</td>

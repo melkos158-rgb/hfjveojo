@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
-import { aiSmokeTestAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
+import { aiSmokeTestAction, enqueueMaintenanceAction, requeueJobAction, runPipelineTestAction, toggleKillSwitchAction } from "@/app/admin/actions";
 import { STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 
 export const dynamic = "force-dynamic";
@@ -72,6 +72,16 @@ export default async function AdminSystem() {
             Branding in Stripe →
           </a>
         </div>
+        {e.STRIPE_SECRET_KEY.startsWith("sk_test_") || e.STRIPE_SECRET_KEY.startsWith("rk_test_") ? (
+          <form action={runPipelineTestAction} className="mt-3 flex flex-wrap items-center gap-3 rounded-lg border border-line bg-bg p-3">
+            <button className="btn-primary px-3 py-1.5" type="submit">
+              Run a full pipeline test order
+            </button>
+            <span className="text-xs text-gray-500">
+              Sandbox only: creates a $9 Listing Description order for {e.ADMIN_EMAILS.split(",")[0]}, marks it paid with a synthetic Stripe event (no money), runs the real AI fulfilment and sends the real emails. Flagged as test — excluded from metrics.
+            </span>
+          </form>
+        ) : null}
         <p className="mt-1 text-xs text-gray-500">
           Target: name {STRIPE_BRAND.name}, brand colour {STRIPE_BRAND.primaryColor}, accent {STRIPE_BRAND.secondaryColor}, icon public/brand/icon-512.png. Stripe does not allow an account to edit its own name/branding through the API, so this is set in the Dashboard (business name appears after activation).
         </p>

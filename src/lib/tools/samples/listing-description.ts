@@ -39,3 +39,20 @@ export const SAMPLE_LISTING_DESCRIPTION_RESULT: SampleResult = {
   collapseAfter: 2,
   note: "Every draft is checked for fair-housing wording and placeholder text before it is delivered. Facts you did not give are never invented.",
 };
+
+/** Intake used by the admin "pipeline test" (real AI call, no money): the same fictional Boise listing as the sample. */
+export const PIPELINE_TEST_INTAKE = {
+  address: "312 Maple Court, Boise, ID 83702",
+  price: "$489,000",
+  beds: "3",
+  baths: "2",
+  sqft: "1,820",
+  propertyType: "single-family",
+  features: "Renovated kitchen with quartz counters and a walk-in pantry; covered back deck under mature maples; fenced yard; primary suite with dual closets; oversized 2-car garage with an EV outlet; 10 minutes to downtown Boise",
+  neighborhood: "River trail and a neighborhood park close by",
+  tone: "warm",
+  mlsLimit: "1000",
+  openHouse: "Saturday 11–1",
+  agentName: "Jordan Lee",
+  brokerage: "Summit Realty",
+};

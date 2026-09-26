@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdminApi } from "@/lib/auth/guards";
@@ -207,4 +208,52 @@ export async function aiSmokeTestAction() {
   await prisma.setting.upsert({ where: { key: "ai.smoke_test_last" }, create: { key: "ai.smoke_test_last", value }, update: { value } });
   await audit(admin.id, "ai_smoke_test", "setting", "ai.smoke_test_last", value);
   revalidatePath("/admin/system");
+}
+
+/**
+ * Full pipeline test in the sandbox: real order row → synthetic checkout.session.completed (no money) →
+ * PAID → real AI fulfilment → delivery email. Flagged isTest so metrics ignore it. Refused with a live key.
+ */
+export async function runPipelineTestAction() {
+  const admin = await requireAdminApi();
+  const { env } = await import("@/lib/env");
+  const key = env().STRIPE_SECRET_KEY;
+  if (!(key.startsWith("sk_test_") || key.startsWith("rk_test_"))) throw new Error("Pipeline test is only allowed with a Stripe test key.");
+  const { createOrderWithCheckout } = await import("@/lib/orders/create");
+  const { handleStripeEvent } = await import("@/lib/stripe/webhooks");
+  const { PIPELINE_TEST_INTAKE } = await import("@/lib/tools/samples/listing-description");
+  const { orderId } = await createOrderWithCheckout({
+    toolSlug: "listing-description",
+    email: admin.email,
+    intakeRaw: PIPELINE_TEST_INTAKE,
+    attribution: { utm_source: "admin_pipeline_test" },
+    userId: admin.id,
+  });
+  const order = await prisma.order.update({ where: { id: orderId }, data: { isTest: true, adminNotes: "Admin pipeline test — no payment was made." } });
+  const event = {
+    id: `evt_admintest_${orderId}`,
+    object: "event",
+    type: "checkout.session.completed",
+    created: Math.floor(Date.now() / 1000),
+    livemode: false,
+    data: {
+      object: {
+        id: `cs_admintest_${orderId}`,
+        object: "checkout.session",
+        amount_total: order.amountCents,
+        currency: order.currency,
+        payment_status: "paid",
+        customer_details: { email: admin.email, name: admin.name ?? null },
+        customer_email: admin.email,
+        payment_intent: null,
+        customer: null,
+        metadata: { orderId },
+        client_reference_id: orderId,
+      },
+    },
+  } as unknown as import("stripe").Stripe.Event;
+  await handleStripeEvent(event);
+  await audit(admin.id, "pipeline_test", "order", orderId, { tool: "listing-description" });
+  revalidatePath("/admin/system");
+  redirect(`/admin/orders/${orderId}`);
 }
