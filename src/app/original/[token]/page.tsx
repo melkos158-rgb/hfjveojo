@@ -21,14 +21,20 @@ export default async function OriginalPhotoPage({ params }: Props) {
       <p className="eyebrow">Unaltered original</p>
       <h1 className="mt-2 text-2xl font-bold sm:text-3xl">Original photo</h1>
       <p className="mt-3 max-w-2xl text-gray-700">
-        Listing photos of this room were virtually staged — a digitally altered image with furniture and decor added. This is the photo as it was taken, without any added items.
+        Listing photos of {found.photos.length > 1 ? "these rooms" : "this room"} were virtually staged — digitally altered images with furniture and decor added. {found.photos.length > 1 ? "These are the photos" : "This is the photo"} as taken, without any added items.
       </p>
-      {found.fileId ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={signedFileUrl(found.fileId, 3600)} alt="Original, unaltered photo of the room" className="mt-6 h-auto w-full rounded-xl border border-line" />
-      ) : (
-        <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">This original photo is no longer stored (files are kept for 90 days after delivery).</p>
-      )}
+      {found.photos.length === 0 ? <p className="mt-6 text-sm text-gray-700">No photos on this order.</p> : null}
+      {found.photos.map((p, i) => (
+        <figure key={`${p.label}-${i}`} className="mt-6">
+          {found.photos.length > 1 ? <figcaption className="mb-2 text-sm font-semibold text-gray-600">{p.label}</figcaption> : null}
+          {p.fileId ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={signedFileUrl(p.fileId, 3600)} alt={`Original, unaltered photo — ${p.label}`} className="h-auto w-full rounded-xl border border-line" />
+          ) : (
+            <p className="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">This original photo is no longer stored (files are kept for 90 days after delivery).</p>
+          )}
+        </figure>
+      ))}
     </div>
   );
 }

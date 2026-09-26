@@ -46,8 +46,7 @@ export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
  * materializeTestIntake() — the sample "before" photo is uploaded exactly as a customer's would be.
  */
 export const PIPELINE_TEST_INTAKE = {
-  photoFileId: "@file:img/sample-staging-before.jpg",
-  roomType: "living room",
+  rooms: [{ photoFileId: "@file:img/sample-staging-before.jpg", roomType: "living room" }],
   style: "modern",
   notes: "keep the windows and the floor visible, no TV on the wall",
 };

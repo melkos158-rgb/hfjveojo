@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { log } from "@/lib/logger";
 import { claimNextJob, enqueue, requeueStaleJobs } from "@/lib/jobs/queue";
 import { runJob } from "@/lib/jobs/runner";
+import { releaseOrderOnShutdown } from "@/lib/orders/runs";
 
 /**
  * The job loop shared by the dedicated worker (`npm run worker`) and the embedded worker that runs
@@ -57,6 +58,15 @@ async function scheduleDailyReportIfDue(): Promise<void> {
   }
 }
 
+/** Jobs of a crashed worker go back to the queue within minutes, not at the next hourly maintenance. */
+const STALE_CHECK_EVERY_MS = 5 * 60_000;
+let lastStaleCheckAt = 0;
+async function requeueStaleJobsIfDue(): Promise<void> {
+  if (Date.now() - lastStaleCheckAt < STALE_CHECK_EVERY_MS) return;
+  lastStaleCheckAt = Date.now();
+  await requeueStaleJobs();
+}
+
 async function scheduleMaintenanceIfDue(): Promise<void> {
   const now = new Date();
   if (now.getUTCMinutes() > 4) return; // once per hour, in the first minutes
@@ -78,6 +88,7 @@ export function createJobLoop(opts: LoopOptions): JobLoop {
       if (opts.schedule !== false) {
         await scheduleDailyReportIfDue();
         await scheduleMaintenanceIfDue();
+        await requeueStaleJobsIfDue();
       }
       while (state.running < opts.concurrency) {
         const job = await claimNextJob(opts.workerId);
@@ -120,12 +131,19 @@ export function createJobLoop(opts: LoopOptions): JobLoop {
     if (o.requeue !== false) {
       // Hand back every job this process still holds (loop claims and inline jobs alike, never a replica's).
       // The claim counted an attempt; a shutdown is not the job's fault, so give it back too.
+      const owners = [opts.workerId, ...(opts.ownedLockIds ?? [])];
+      const held = await prisma.job.findMany({ where: { status: "RUNNING", lockedBy: { in: owners } }, select: { type: true, orderId: true } });
       const res = await prisma.job.updateMany({
-        where: { status: "RUNNING", lockedBy: { in: [opts.workerId, ...(opts.ownedLockIds ?? [])] }, attempts: { gt: 0 } },
+        where: { status: "RUNNING", lockedBy: { in: owners }, attempts: { gt: 0 } },
         data: { status: "QUEUED", lockedAt: null, lockedBy: null, attempts: { decrement: 1 }, lastError: "requeued: worker shutdown" },
       });
       requeued = res.count;
       if (requeued > 0) log.warn("worker.requeued_on_shutdown", { workerId: opts.workerId, count: requeued });
+      // An order mid-pipeline would otherwise stay PROCESSING: close its run and hand the order to the re-queued job.
+      for (const j of held) {
+        if (j.type !== "fulfill_order" || !j.orderId) continue;
+        await releaseOrderOnShutdown(j.orderId).catch((err: Error) => log.error("worker.release_order_failed", { orderId: j.orderId, error: err.message }));
+      }
     }
     log.info("worker.stopped", { workerId: opts.workerId, abandoned: state.running, requeued });
     return { requeued };

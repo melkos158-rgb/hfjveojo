@@ -125,11 +125,13 @@ describe("order → checkout → webhook → fulfilment", () => {
     const { materializeTestIntake } = await import("@/lib/tools/samples/materialize");
     const { TEST_INTAKES } = await import("@/lib/tools/samples/test-intakes");
     const intake = await materializeTestIntake(TEST_INTAKES["virtual-staging"]);
-    const photoFileId = intake.photoFileId as string;
+    const photoFileId = (intake.rooms as Array<{ photoFileId: string }>)[0].photoFileId;
     expect(photoFileId).toMatch(/^c[a-z0-9]{20,}$/);
 
     // a made-up or foreign file id is refused before any money moves
-    await expect(createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: { ...intake, photoFileId: "clnotarealfileid00000000" } })).rejects.toMatchObject({ code: "upload_missing" });
+    await expect(
+      createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: { ...intake, rooms: [{ photoFileId: "clnotarealfileid00000000", roomType: "living room" }] } }),
+    ).rejects.toMatchObject({ code: "upload_missing" });
 
     const { orderId } = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: "agent@example.com", intakeRaw: intake });
     const claimed = await prisma.file.findUniqueOrThrow({ where: { id: photoFileId } });

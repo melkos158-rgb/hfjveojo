@@ -5,6 +5,8 @@ import { getToolBySlug } from "@/lib/tools/registry";
 import { randomToken } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
 import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
+import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
+import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
 import { z } from "zod";
@@ -45,11 +47,10 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   }
   const intake = parsed.data as Record<string, unknown>;
 
-  // Uploaded inputs (image fields) must be real, unclaimed INPUT files — never someone else's upload or an output.
-  const fileIds = def.intake.fields
-    .filter((f) => f.type === "image")
-    .map((f) => intake[f.key])
-    .filter((v): v is string => typeof v === "string" && v.length > 0);
+  // Uploaded inputs (photos) must be real, unclaimed INPUT files — never someone else's upload or an output.
+  const fileIds = [...new Set(photoInputsOf(def as ToolDefinition<unknown>, intake).map((p) => p.fileId))];
+  // Units charged (e.g. rooms): the total is always computed here, never taken from the client.
+  const quantity = quantityOf(def as ToolDefinition<unknown>, intake);
   if (fileIds.length > 0) {
     const files = await prisma.file.findMany({
       where: { id: { in: fileIds } },
@@ -85,7 +86,8 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       productId: product.id,
       status: "PENDING",
       intake: intake as object,
-      amountCents: product.priceCents,
+      amountCents: product.priceCents * quantity,
+      quantity,
       currency: product.currency,
       accessToken: randomToken(24),
       attribution: (input.attribution as object) ?? undefined,
@@ -113,7 +115,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       customer_email: email,
       line_items: [
         {
-          quantity: 1,
+          quantity,
           price_data: {
             currency: product.currency || env().STRIPE_CURRENCY,
             unit_amount: product.priceCents,
@@ -149,7 +151,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,
     experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: product.priceCents, mode },
+    props: { tool: def.id, amountCents: product.priceCents * quantity, quantity, mode },
   });
   return { orderId: order.id, checkoutUrl: session.url };
 }

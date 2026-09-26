@@ -19,14 +19,35 @@ export function GaViewItem({ tool, priceCents, currency }: { tool: Tool; priceCe
  * GA4 purchase for a paid order — once per order per browser, with our order id as transaction_id and the amount
  * Stripe charged. Rendered only for real (non-test) paid orders. `completed` also reports tool_completed once.
  */
-export function GaPurchase({ orderId, tool, amountCents, currency, completed }: { orderId: string; tool: Tool; amountCents: number; currency: string; completed?: boolean }) {
+export function GaPurchase({
+  orderId,
+  tool,
+  amountCents,
+  currency,
+  completed,
+  quantity = 1,
+}: {
+  orderId: string;
+  tool: Tool;
+  amountCents: number;
+  currency: string;
+  completed?: boolean;
+  /** Units in the order (multi-photo staging): the item is reported as quantity × unit price. */
+  quantity?: number;
+}) {
   useEffect(() => {
+    const units = Math.max(1, quantity);
     gaOnce(`purchase_${orderId}`, () =>
-      gaEvent("purchase", { transaction_id: orderId, currency: currency.toUpperCase(), value: amountCents / 100, items: [gaItem(tool, amountCents)] }),
+      gaEvent("purchase", {
+        transaction_id: orderId,
+        currency: currency.toUpperCase(),
+        value: amountCents / 100,
+        items: [{ ...gaItem(tool, Math.round(amountCents / units)), quantity: units }],
+      }),
     );
     if (completed) gaOnce(`completed_${orderId}`, () => gaEvent("tool_completed", { tool: tool.slug }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId, tool.slug, tool.name, amountCents, currency, completed]);
+  }, [orderId, tool.slug, tool.name, amountCents, currency, completed, quantity]);
   return null;
 }
 

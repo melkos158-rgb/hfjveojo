@@ -1,29 +1,62 @@
 import { z } from "zod";
-import type { ToolDefinition } from "@/lib/tools/types";
+import type { PipelineContext, PipelineResult, ToolDefinition } from "@/lib/tools/types";
+import type { ImageEditCall } from "@/lib/ai";
 import { getFileBuffer } from "@/lib/storage";
 import { AppError } from "@/lib/errors";
+import { AiProviderError } from "@/lib/ai/types";
 import { SAMPLE_VIRTUAL_STAGING_RESULT } from "@/lib/tools/samples/virtual-staging";
 import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelStagedPhoto, originalPhotoUrl } from "@/lib/tools/disclosure";
 
 /**
- * Virtual Staging — one photo of an empty (or dated) room → two photorealistic staged versions of the
- * same photo, ready for the MLS. The customer pays first; the image model edits the photo without
- * touching walls, floors, windows or fixtures. Output is 2 JPEGs (PNG fallback) + a JSON note with the style used.
+ * Virtual Staging — photos of empty (or dated) rooms → two photorealistic staged versions of each photo, ready for
+ * the MLS. Up to MAX_ROOMS photos per order at the per-photo price (quantity = rooms). The customer pays first; the
+ * image model edits each photo without touching walls, floors, windows or fixtures. Per room: 2 JPEGs (PNG fallback)
+ * + 2 labeled copies (disclosure pack); one JSON note for the order.
  */
 
 const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "patio or outdoor"] as const;
 const STYLES = ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"] as const;
+export const MAX_ROOMS = 6;
 
-const intakeSchema = z.object({
+const roomSchema = z.object({
   photoFileId: z.string().trim().min(1, "Upload the room photo").max(64),
   roomType: z.enum(ROOM_TYPES).default("living room"),
-  style: z.enum(STYLES).default("modern"),
-  notes: z.string().trim().max(300).optional().default(""),
 });
 
+/** Orders before multi-room carried one photo as {photoFileId, roomType}; the form sends rooms as a JSON string. */
+function normalizeIntake(raw: unknown): unknown {
+  if (!raw || typeof raw !== "object") return raw;
+  const r = raw as Record<string, unknown>;
+  let rooms = r.rooms;
+  if (typeof rooms === "string") {
+    try {
+      rooms = JSON.parse(rooms);
+    } catch {
+      // leave it: validation reports it
+    }
+  }
+  if (rooms === undefined && typeof r.photoFileId === "string") rooms = [{ photoFileId: r.photoFileId, roomType: r.roomType }];
+  return { ...r, rooms };
+}
+
+const intakeSchema = z.preprocess(
+  normalizeIntake,
+  z.object({
+    rooms: z.array(roomSchema).min(1, "Upload at least one room photo").max(MAX_ROOMS, `Up to ${MAX_ROOMS} rooms per order`),
+    style: z.enum(STYLES).default("modern"),
+    notes: z.string().trim().max(300).optional().default(""),
+  }),
+);
+
 export type VirtualStagingIntake = z.infer<typeof intakeSchema>;
+type Room = VirtualStagingIntake["rooms"][number];
 
 export const VIRTUAL_STAGING_VARIATIONS = 2;
+/** Wait after an image API rate-limit error (tier-1 accounts: a few images per minute). Tests shorten it. */
+export let RATE_LIMIT_WAIT_MS = 30_000;
+export function setRateLimitWaitForTests(ms: number): void {
+  RATE_LIMIT_WAIT_MS = ms;
+}
 
 /** JPEG quality for delivered photos — MLS uploads want JPG; visually identical to the model's PNG at a fifth of the size. */
 export const STAGED_JPEG_QUALITY = 92;
@@ -42,7 +75,7 @@ export async function encodeForDelivery(png: Buffer): Promise<{ data: Buffer; mi
   }
 }
 
-export function stagingPrompt(i: Pick<VirtualStagingIntake, "roomType" | "style" | "notes">): string {
+export function stagingPrompt(i: { roomType: Room["roomType"]; style: VirtualStagingIntake["style"]; notes: string }): string {
   return [
     `Virtually stage this empty ${i.roomType} in a ${i.style} style for a real-estate listing photo.`,
     "Add ONLY freestanding, movable furniture and decor that suits the room: seating or a bed, tables, a rug, cushions, plants, wall art on the existing walls, and floor or table lamps.",
@@ -75,6 +108,23 @@ export async function prepareInputPhoto(data: Buffer, mime: string): Promise<{ d
   }
 }
 
+/**
+ * One image edit, patient with the image API's per-minute cap (a new account allows only a few images a minute, and
+ * a multi-room order asks for several): on a rate-limit error wait and try again, up to three times.
+ */
+async function editWithRateLimitPatience(ctx: PipelineContext<VirtualStagingIntake>, call: ImageEditCall): Promise<{ images: Buffer[]; costMicros: number }> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await ctx.ai.editImage(call, "stage");
+    } catch (err) {
+      const rateLimited = err instanceof AiProviderError && (err.status === 429 || /rate limit/i.test(err.message));
+      if (!rateLimited || attempt >= 3) throw err;
+      ctx.step("rate_limit", `Image API rate limit — waiting ${RATE_LIMIT_WAIT_MS / 1000}s (attempt ${attempt + 1} of 3)`);
+      await new Promise((r) => setTimeout(r, RATE_LIMIT_WAIT_MS));
+    }
+  }
+}
+
 /** Load the customer's upload, check it is a photo, and normalise it for the image model. */
 async function loadRoomPhoto(fileId: string): Promise<{ data: Buffer; mime: string; width?: number; height?: number }> {
   const file = await getFileBuffer(fileId);
@@ -89,29 +139,30 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   slug: "virtual-staging",
   name: "Virtual Staging",
   category: "real-estate",
-  tagline: "One room photo in, two staged MLS-ready versions of it out, in about two minutes",
+  tagline: "Empty-room photos in, two staged MLS-ready versions of each out — about two minutes per photo",
   description:
-    "Upload one photo of an empty (or nearly empty) room, choose the room type and one of six styles, and receive two photorealistic virtually staged versions of that exact photo — walls, floors, windows and perspective untouched — as MLS-ready JPG files in about two minutes.",
+    "Upload photos of empty (or nearly empty) rooms — up to six per order — choose the room type of each and one of six styles, and receive two photorealistic virtually staged versions of every photo — walls, floors, windows and perspective untouched — as MLS-ready JPG files, in about two minutes per photo.",
   initialStatus: "LIVE",
   version: 1,
   fulfillment: "AUTO",
   featured: true,
   io: {
-    input: "One photo of the empty room (JPG/PNG/WebP, up to 8 MB)",
-    output: "2 photorealistic staged versions of the same photo (JPG, MLS-ready)",
-    processingTime: "About 2 minutes",
-    ctaLabel: "Stage my photo",
+    input: "Photos of the empty rooms, up to 6 (JPG/PNG/WebP, up to 8 MB each)",
+    output: "2 photorealistic staged versions of each photo (JPG, MLS-ready)",
+    processingTime: "About 2 minutes per photo",
+    ctaLabel: "Stage my photos",
   },
   intake: {
     schema: intakeSchema,
     fields: [
-      { key: "photoFileId", label: "Room photo", type: "image", required: true, help: "Straight-on, well lit, empty or nearly empty. Landscape works best." },
       {
-        key: "roomType",
-        label: "Room",
-        type: "select",
+        key: "rooms",
+        label: "Room photos",
+        type: "rooms",
         required: true,
+        max: MAX_ROOMS,
         options: ROOM_TYPES.map((r) => ({ value: r, label: r[0].toUpperCase() + r.slice(1) })),
+        help: "Up to 6 rooms per order, priced per photo. Straight-on, well lit, empty or nearly empty. Landscape works best.",
       },
       {
         key: "style",
@@ -125,37 +176,40 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   },
   pricing: {
     sku: "VIRTUAL_STAGING",
-    name: "Virtual Staging — 1 photo, 2 versions",
+    name: "Virtual Staging — 2 versions per photo",
     priceCents: 1500,
     currency: "usd",
+    unit: { one: "photo", many: "photos" },
     compareAtText: "Staging companies charge $25–75 per photo with a 24–48 h turnaround",
   },
   sla: { deliveryHours: 1 },
   landing: {
     headline: "Empty room in, staged listing photo out.",
-    subheadline: "Upload one photo of the empty room, pick a style, and get two photorealistic staged versions of that exact photo — same walls, same windows, same light — in about two minutes.",
+    subheadline: "Upload photos of the empty rooms, pick a style, and get two photorealistic staged versions of each exact photo — same walls, same windows, same light — in about two minutes per photo.",
     bullets: [
-      "2 staged versions of your photo, 1024 px or larger, JPG ready for the MLS",
+      "2 staged versions of each photo, 1024 px or larger, JPG ready for the MLS",
+      "Up to 6 rooms in one order, $15 per photo — pick the room type of each",
       "The architecture stays untouched: walls, floors, windows, fixtures, perspective",
       "6 styles: modern, scandinavian, farmhouse, mid-century, luxury, coastal",
       "Before/after side by side on your order page, downloads kept 90 days",
       "Disclosure pack for California AB 723 and MLS rules: labeled copies, a public link and QR code to the original photo, and the line to paste next to it",
     ],
     howItWorks: [
-      { title: "1. Upload the photo", text: "One well-lit photo of the empty room, up to 8 MB. Pick the room type and a style." },
-      { title: "2. Pay $15", text: "Secure checkout via Stripe. Staging starts immediately." },
-      { title: "3. Download both versions", text: "About two minutes later: two staged variations on your order page and by email." },
+      { title: "1. Upload the photos", text: "Up to 6 well-lit photos of empty rooms, up to 8 MB each. Pick the room type of each photo and one style." },
+      { title: "2. Pay $15 per photo", text: "Secure checkout via Stripe. Staging starts immediately." },
+      { title: "3. Download both versions of each", text: "About two minutes per photo later: two staged variations of every room on your order page and by email." },
     ],
     faq: [
       { q: "Does it change the room itself?", a: "No. Furniture, rugs, lighting and decor are added; walls, floors, windows, doors and the camera angle are kept as photographed. If something structural did change, reply to the delivery email and we redo it." },
       { q: "Do I have to disclose virtual staging?", a: "Almost everywhere, yes. In California, AB 723 (in force since January 1, 2026) requires digitally altered listing photos to carry a disclosure next to the image and the unaltered original to be available — on your own site, or through a public link or QR code elsewhere. Most MLS boards ask for a “virtually staged” or “digitally altered” label with the original uploaded right after the staged photo. Every order includes a disclosure pack: labeled copies, a public page with the original photo plus a QR code, and the line to paste. It helps you comply; you remain responsible for your listing." },
       { q: "What photos work best?", a: "Straight-on or slight angle, daylight, the whole room in frame, nothing blocking the floor. Cluttered rooms get staged too, but empty rooms give the cleanest result." },
-      { q: "Can I see it on my photo before paying?", a: "Yes. Upload your photo in the order form and press “See a free preview” — you get one staged version of your room, watermarked and at reduced size, in about a minute (a few per day). The paid order gives you two full-resolution versions without watermarks." },
-      { q: "Can I get more styles or more rooms?", a: "Each order is one photo. Order again for another room or another style — same price." },
+      { q: "Can I see it on my photo before paying?", a: "Yes. Upload your photo in the order form and press “See a free preview” — you get one staged version of your (first) photo, watermarked and at reduced size, in about a minute (a few per day). The paid order gives you two full-resolution versions of every photo without watermarks." },
+      { q: "Can I stage several rooms, or get another style?", a: "Up to 6 rooms fit in one order at $15 per photo — each photo gets two versions in the style you pick, and each photo gets its own room type. For a second style of the same rooms, place another order." },
     ],
     ctaLabel: "Stage my photo — $15",
+    ctaLabelMany: "Stage {n} photos — {total}",
     guarantee: "If the room's structure was changed or the result is unusable, one redo is included; otherwise a refund.",
-    deliveryPromise: "Usually ready in about 2 minutes.",
+    deliveryPromise: "Usually ready in about 2 minutes per photo.",
     sample: SAMPLE_VIRTUAL_STAGING_RESULT,
     guides: [
       { href: "/guides/photographing-rooms-for-virtual-staging", label: "10 tips for room photos that stage well" },
@@ -163,19 +217,23 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     ],
   },
   seo: {
-    title: "Virtual staging from one photo — 2 MLS-ready versions in minutes | ORVIONIS",
-    description: "Upload a photo of the empty room, choose a style, and get two photorealistic virtually staged versions of the same photo in about two minutes. $15 per photo, no subscription.",
+    title: "Virtual staging per photo — 2 MLS-ready versions in minutes | ORVIONIS",
+    description: "Upload photos of empty rooms, choose a style, and get two photorealistic virtually staged versions of each photo in about two minutes per photo. $15 per photo, up to 6 rooms per order, no subscription.",
     keywords: ["virtual staging", "virtual staging software", "virtually staged photos", "AI virtual staging", "empty room staging"],
     ogImage: "img/sample-virtual-staging-og.jpg",
   },
   disclosurePack: true,
+  quantity: (i) => i.rooms.length,
+  photoInputs: (i) => i.rooms.map((r, idx) => ({ fileId: r.photoFileId, label: i.rooms.length > 1 ? `Room ${idx + 1} · ${r.roomType}` : "Your photo" })),
   preview: {
     label: "See a free preview first",
-    caption: "Free preview: one version, watermarked and downsized. Your order: two full-resolution versions of this photo, no watermark.",
+    caption: "Free preview: one version, watermarked and downsized. Your order: two full-resolution versions of each photo, no watermark.",
     async run(ctx) {
-      const photo = await loadRoomPhoto(ctx.intake.photoFileId);
+      // The preview shows the first room: enough to judge the result on the visitor's own photo.
+      const room = ctx.intake.rooms[0];
+      const photo = await loadRoomPhoto(room.photoFileId);
       const { images } = await ctx.ai.editImage(
-        { image: photo.data, mime: photo.mime, prompt: stagingPrompt(ctx.intake), n: 1, size: "auto", inputWidth: photo.width, inputHeight: photo.height },
+        { image: photo.data, mime: photo.mime, prompt: stagingPrompt({ ...ctx.intake, roomType: room.roomType }), n: 1, size: "auto", inputWidth: photo.width, inputHeight: photo.height },
         "preview",
       );
       if (!images[0]) throw new AppError("The preview could not be made right now.", 502, "preview_empty");
@@ -184,68 +242,67 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   },
   delivery: {
     emailSubject: "Your staged photos are ready",
-    emailIntro: "Two staged versions of your room are ready to download. Remember to label them as virtually staged in the MLS.",
+    emailIntro: "Your staged photos are ready to download — two versions of each room. Remember to label them as virtually staged in the MLS.",
   },
   async run(ctx) {
     const i = ctx.intake;
-    ctx.step("load_photo", "Loading the uploaded room photo");
-    const photo = await loadRoomPhoto(i.photoFileId);
-    ctx.step("ai_stage", `Staging a ${i.roomType} in ${i.style} style (${VIRTUAL_STAGING_VARIATIONS} versions, input ${photo.width ?? "?"}×${photo.height ?? "?"})`);
-    const prompt = stagingPrompt(i);
-    const { images, costMicros } = await ctx.ai.editImage(
-      { image: photo.data, mime: photo.mime, prompt, n: VIRTUAL_STAGING_VARIATIONS, size: "auto", inputWidth: photo.width, inputHeight: photo.height },
-      "stage",
-    );
-
-    ctx.step("qa", `Checking ${images.length} images; AI cost ${costMicros} µ$`);
-    const notes: string[] = [];
-    if (images.length < VIRTUAL_STAGING_VARIATIONS) notes.push(`Only ${images.length} of ${VIRTUAL_STAGING_VARIATIONS} versions were produced`);
-    for (const [idx, img] of images.entries()) if (img.length < 20_000) notes.push(`Version ${idx + 1} looks broken (${img.length} bytes)`);
-
-    ctx.step("encode", "Encoding delivery JPEGs");
-    const encoded = await Promise.all(images.map((img) => encodeForDelivery(img)));
-
-    // Disclosure pack (California AB 723 / MLS): labeled copies + the public page with the original photo.
-    ctx.step("disclosure", `Labeled copies ("${LABEL_TEXT}") and the public original-photo link`);
-    const labeled = await Promise.all(encoded.map(async (img) => (img.ext === "jpg" ? labelStagedPhoto(img.data).catch(() => null) : null)));
+    const multi = i.rooms.length > 1;
     const publicToken = await ensurePublicToken(ctx.orderId);
+    const notes: string[] = [];
+    const outputs: PipelineResult["outputs"] = [];
+    const details: Array<{ room: number; roomType: string; sourceFileId: string; prompt: string; versions: number }> = [];
 
-    return {
-      needsHuman: notes.length > 0,
-      qc: { passed: notes.length === 0, notes },
-      outputs: [
-        ...encoded.map((img, idx) => ({
-          type: "IMAGE" as const,
-          title: `Staged version ${idx + 1} — ${i.style} ${i.roomType}`,
-          file: { name: `staged-${i.roomType.replace(/\s+/g, "-")}-${i.style}-v${idx + 1}.${img.ext}`, mime: img.mime, data: img.data },
-        })),
-        ...labeled.flatMap((data, idx) =>
-          data
-            ? [
-                {
-                  type: "IMAGE" as const,
-                  title: `Staged version ${idx + 1} — labeled “${LABEL_TEXT}”`,
-                  content: { variant: LABELED_VARIANT, version: idx + 1 },
-                  file: { name: `staged-${i.roomType.replace(/\s+/g, "-")}-${i.style}-v${idx + 1}-labeled.jpg`, mime: "image/jpeg", data },
-                },
-              ]
-            : [],
-        ),
-        {
-          type: "JSON" as const,
-          title: "Staging details",
-          content: {
-            roomType: i.roomType,
-            style: i.style,
-            notes: i.notes,
-            prompt,
-            sourceFileId: i.photoFileId,
-            versions: images.length,
-            format: encoded[0]?.ext ?? "png",
-            disclosure: { originalPhotoUrl: originalPhotoUrl(publicToken), text: disclosureLine(publicToken) },
-          },
-        },
-      ],
-    };
+    for (const [ri, room] of i.rooms.entries()) {
+      const n = ri + 1;
+      const where = multi ? `room ${n} (${room.roomType})` : `the ${room.roomType}`;
+      ctx.step("load_photo", `Loading the photo of ${where}`);
+      const photo = await loadRoomPhoto(room.photoFileId);
+      const prompt = stagingPrompt({ roomType: room.roomType, style: i.style, notes: i.notes });
+      ctx.step("ai_stage", `Staging ${where} in ${i.style} style (${VIRTUAL_STAGING_VARIATIONS} versions, input ${photo.width ?? "?"}×${photo.height ?? "?"})`);
+      const { images, costMicros } = await editWithRateLimitPatience(ctx, { image: photo.data, mime: photo.mime, prompt, n: VIRTUAL_STAGING_VARIATIONS, size: "auto", inputWidth: photo.width, inputHeight: photo.height });
+
+      ctx.step("qa", `Checking ${images.length} images of ${where}; AI cost ${costMicros} µ$`);
+      const label = multi ? `Room ${n}: ` : "";
+      if (images.length < VIRTUAL_STAGING_VARIATIONS) notes.push(`${label}only ${images.length} of ${VIRTUAL_STAGING_VARIATIONS} versions were produced`);
+      for (const [idx, img] of images.entries()) if (img.length < 20_000) notes.push(`${label}version ${idx + 1} looks broken (${img.length} bytes)`);
+
+      ctx.step("encode", `Encoding delivery JPEGs and labeled copies ("${LABEL_TEXT}") of ${where}`);
+      const encoded = await Promise.all(images.map((img) => encodeForDelivery(img)));
+      const labeled = await Promise.all(encoded.map(async (img) => (img.ext === "jpg" ? labelStagedPhoto(img.data).catch(() => null) : null)));
+
+      const base = multi ? `room${n}-${room.roomType.replace(/\s+/g, "-")}-${i.style}` : `staged-${room.roomType.replace(/\s+/g, "-")}-${i.style}`;
+      const title = (v: number) => (multi ? `Room ${n} · ${room.roomType} — version ${v}` : `Staged version ${v} — ${i.style} ${room.roomType}`);
+      encoded.forEach((img, idx) =>
+        outputs.push({ type: "IMAGE", title: title(idx + 1), content: { room: n, version: idx + 1 }, file: { name: `${base}-v${idx + 1}.${img.ext}`, mime: img.mime, data: img.data } }),
+      );
+      labeled.forEach((data, idx) => {
+        if (data) {
+          outputs.push({
+            type: "IMAGE",
+            title: `${title(idx + 1)} — labeled “${LABEL_TEXT}”`,
+            content: { variant: LABELED_VARIANT, room: n, version: idx + 1 },
+            file: { name: `${base}-v${idx + 1}-labeled.jpg`, mime: "image/jpeg", data },
+          });
+        }
+      });
+      details.push({ room: n, roomType: room.roomType, sourceFileId: room.photoFileId, prompt, versions: images.length });
+    }
+
+    outputs.push({
+      type: "JSON",
+      title: "Staging details",
+      content: {
+        style: i.style,
+        notes: i.notes,
+        rooms: details,
+        // single-room fields kept for older readers
+        roomType: i.rooms[0].roomType,
+        sourceFileId: i.rooms[0].photoFileId,
+        prompt: details[0]?.prompt,
+        versions: VIRTUAL_STAGING_VARIATIONS,
+        disclosure: { originalPhotoUrl: originalPhotoUrl(publicToken), text: disclosureLine(publicToken) },
+      },
+    });
+    return { needsHuman: notes.length > 0, qc: { passed: notes.length === 0, notes }, outputs };
   },
 };

@@ -34,6 +34,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           tool={{ slug: order.tool.slug, name: order.tool.name }}
           amountCents={order.payments[0]?.amountCents ?? order.amountCents}
           currency={order.payments[0]?.currency ?? order.currency}
+          quantity={order.quantity}
         />
       ) : null}
       <div className="card">

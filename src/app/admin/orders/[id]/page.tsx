@@ -46,7 +46,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               <span className={`badge ml-2 ${order.livemode ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-700"}`}>{order.livemode ? "Stripe LIVE" : "Stripe sandbox"}</span>
             </h1>
             <p className="text-sm text-gray-600">
-              {order.customerEmail} · {formatUsd(order.amountCents)} · created {fmtDate(order.createdAt)} · paid {fmtDate(order.paidAt)}
+              {order.customerEmail} · {formatUsd(order.amountCents)}
+              {order.quantity > 1 ? ` (${order.quantity} × ${formatUsd(Math.round(order.amountCents / order.quantity))})` : ""} · created {fmtDate(order.createdAt)} · paid {fmtDate(order.paidAt)}
             </p>
             <a className="text-xs text-brand underline" href={orderUrl(order)} target="_blank" rel="noreferrer">
               Customer order page
@@ -66,6 +67,30 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
           <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2">
             {Object.entries(intake).map(([k, v]) => {
               const isImage = def?.intake.fields.some((f) => f.key === k && f.type === "image") && typeof v === "string" && v.length > 0;
+              const isRooms = def?.intake.fields.some((f) => f.key === k && f.type === "rooms") && Array.isArray(v);
+              if (isRooms) {
+                const list = v as Array<{ photoFileId?: string; roomType?: string }>;
+                return (
+                  <div key={k} className="sm:col-span-2">
+                    <dt className="text-xs uppercase text-gray-500">
+                      {k} ({list.length})
+                    </dt>
+                    <dd className="mt-1 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {list.map((room, idx) => (
+                        <figure key={idx}>
+                          {room.photoFileId ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={signedFileUrl(room.photoFileId)} alt={`Room ${idx + 1}`} className="max-h-40 w-full rounded-lg border border-line object-cover" />
+                          ) : null}
+                          <figcaption className="mt-1 text-xs text-gray-600">
+                            Room {idx + 1} · {room.roomType ?? "?"}
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </dd>
+                  </div>
+                );
+              }
               return (
                 <div key={k}>
                   <dt className="text-xs uppercase text-gray-500">{k}</dt>
@@ -143,6 +168,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               <div className="flex justify-between">
                 <span>
                   <StatusBadge status={r.status} /> v{r.toolVersion} · {fmtDate(r.startedAt)} → {fmtDate(r.finishedAt)}
+                  {r.status === "RUNNING" && !r.finishedAt ? ` · last heartbeat ${Math.max(0, Math.round((Date.now() - (r.heartbeatAt ?? r.startedAt).getTime()) / 1000))}s ago` : ""}
                 </span>
                 <span>{formatUsd(Math.round(microsToCents(r.costMicros)))}</span>
               </div>

@@ -7,7 +7,8 @@ import { editImage, todaysSpendMicros } from "@/lib/ai";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { track } from "@/lib/analytics/events";
 import { rateLimit } from "@/lib/security/ratelimit";
-import type { IntakeField } from "@/lib/tools/types";
+import type { ToolDefinition } from "@/lib/tools/types";
+import { photoInputsOf } from "@/lib/tools/photos";
 
 /**
  * Free preview before payment: one version of the visitor's own photo, downsized and watermarked, so they can
@@ -83,11 +84,8 @@ export async function assertPreviewQuota(ip: string): Promise<void> {
 }
 
 /** A preview may only use a fresh upload that no paid order owns (an abandoned checkout's upload is fine). */
-async function assertPreviewUploads(fields: IntakeField[], intake: Record<string, unknown>): Promise<void> {
-  const ids = fields
-    .filter((f) => f.type === "image")
-    .map((f) => intake[f.key])
-    .filter((v): v is string => typeof v === "string" && v.length > 0);
+async function assertPreviewUploads(def: ToolDefinition<unknown>, intake: Record<string, unknown>): Promise<void> {
+  const ids = photoInputsOf(def, intake).map((p) => p.fileId);
   if (ids.length === 0) return;
   const files = await prisma.file.findMany({ where: { id: { in: ids } }, select: { id: true, kind: true, expiresAt: true, order: { select: { status: true } } } });
   for (const id of ids) {
@@ -111,7 +109,7 @@ export async function createPreview(input: { slug: string; intakeRaw: unknown; i
     throw new AppError(`${first?.path.join(".") || "intake"}: ${first?.message ?? "invalid"}`, 400, "invalid_intake");
   }
   const intake = parsed.data as Record<string, unknown>;
-  await assertPreviewUploads(def.intake.fields, intake);
+  await assertPreviewUploads(def as ToolDefinition<unknown>, intake);
   await assertPreviewQuota(input.ip);
 
   const started = Date.now();

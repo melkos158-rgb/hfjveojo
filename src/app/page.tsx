@@ -125,7 +125,7 @@ export default async function HomePage() {
               </div>
               <div className="grid gap-2 text-xs text-gray-500 sm:grid-cols-2">
                 <div>Before · one photo of the empty room, room type, style</div>
-                <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes, $15</div>
+                <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes, $15 per photo</div>
               </div>
               <Link href="/tools/virtual-staging#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
                 See the sample, or preview your own photo free →
@@ -362,7 +362,10 @@ export default async function HomePage() {
                     </td>
                     <td className="hidden px-4 py-3 text-gray-600 sm:table-cell">{c.def.io.input}</td>
                     <td className="px-4 py-3 text-gray-600">{c.def.io.processingTime}</td>
-                    <td className="px-4 py-3 text-right font-bold text-fg">{formatUsd(c.priceCents).replace(/\.00$/, "")}</td>
+                    <td className="px-4 py-3 text-right font-bold text-fg">
+                      {formatUsd(c.priceCents).replace(/\.00$/, "")}
+                      {c.def.quantity && c.def.pricing.unit ? <span className="text-xs font-medium text-gray-500"> / {c.def.pricing.unit.one}</span> : null}
+                    </td>
                   </tr>
                 ))}
               </tbody>

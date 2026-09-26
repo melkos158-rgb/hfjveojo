@@ -13,6 +13,8 @@ import { DeliverableText } from "@/components/DeliverableText";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { deliveredOutputs, lastDeliveredAt } from "@/lib/orders/deliverables";
 import { disclosureLine, ensurePublicToken, isLabeledOutput, originalPhotoUrl } from "@/lib/tools/disclosure";
+import { photoInputsOf } from "@/lib/tools/photos";
+import type { ToolDefinition } from "@/lib/tools/types";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -46,11 +48,16 @@ export default async function OrderPage({ params, searchParams }: Props) {
   const labeled = shown.filter((o) => o.type === "IMAGE" && o.fileId && isLabeledOutput(o));
   // For photo tools the customer's own upload is shown next to the results (before → after).
   const toolDef = getToolBySlug(order.tool.slug);
-  const imageField = toolDef?.intake.fields.find((f) => f.type === "image");
   // Disclosure pack (AB 723 / MLS) for digitally altered photos; orders from before it get their public link now.
   const publicToken = toolDef?.disclosurePack && showFiles ? (order.publicToken ?? (await ensurePublicToken(order.id))) : null;
-  const beforeFileId = imageField ? (order.intake as Record<string, unknown>)[imageField.key] : undefined;
-  const beforeUrl = typeof beforeFileId === "string" && beforeFileId ? signedFileUrl(beforeFileId) : undefined;
+  // Photo tools: each uploaded photo next to its results (multi-room orders: one row per room).
+  const befores = photoInputsOf(toolDef as ToolDefinition<unknown> | undefined, order.intake);
+  const meta = (o: { content: unknown }) => (o.content ?? {}) as { room?: number; version?: number };
+  const rooms =
+    befores.length > 1
+      ? befores.map((b, idx) => ({ n: idx + 1, before: b, images: images.filter((o) => (meta(o).room ?? 1) === idx + 1), labeled: labeled.filter((o) => (meta(o).room ?? 1) === idx + 1) }))
+      : [{ n: 1, before: befores[0], images, labeled }];
+  const multiRoom = rooms.length > 1;
 
   return (
     <div className="container-x max-w-3xl py-12">
@@ -61,6 +68,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
           tool={{ slug: order.tool.slug, name: order.tool.name }}
           amountCents={order.payments[0]?.amountCents ?? order.amountCents}
           currency={order.payments[0]?.currency ?? order.currency}
+          quantity={order.quantity}
           completed={delivered}
         />
       ) : null}
@@ -97,6 +105,13 @@ export default async function OrderPage({ params, searchParams }: Props) {
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>
       ) : null}
 
+      {!redoInProgress && ["PAID", "PROCESSING"].includes(order.status) ? (
+        <p className="mt-6 rounded-lg bg-blue-50 px-4 py-3 text-sm text-blue-800">
+          {order.quantity > 1 && toolDef?.pricing.unit ? `Working on your ${order.quantity} ${toolDef.pricing.unit.many}` : "Working on your order"}
+          {toolDef ? ` — ${toolDef.io.processingTime.charAt(0).toLowerCase()}${toolDef.io.processingTime.slice(1)}` : ""}. This page updates by itself, and we email you when it&rsquo;s ready.
+        </p>
+      ) : null}
+
       {redoInProgress ? (
         <p className="mt-6 rounded-lg bg-accent-soft px-4 py-3 text-sm text-gray-700">
           We&rsquo;re redoing this order. Below are the files from your last delivery; the new version replaces them here and arrives by email by the &ldquo;expected by&rdquo; time above.
@@ -112,32 +127,37 @@ export default async function OrderPage({ params, searchParams }: Props) {
       {showFiles ? (
         <section className="mt-8">
           <h2 className="text-lg font-bold">{redoInProgress ? "Your files (last delivery)" : "Your files"}</h2>
-          {images.length > 0 ? (
-            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {beforeUrl ? (
-                <figure className="card p-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={beforeUrl} alt="Your original photo" className="h-auto w-full rounded-lg border border-line" />
-                  <figcaption className="mt-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">Before · your photo</figcaption>
-                </figure>
-              ) : null}
-              {images.map((o, i) => {
-                const url = signedFileUrl(o.fileId as string);
-                return (
-                  <figure key={o.id} className="card p-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={url} alt={o.title} className="h-auto w-full rounded-lg border border-line" />
-                    <figcaption className="mt-2 flex flex-col gap-2">
-                      <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">After · version {i + 1}</span>
-                      <TrackedDownload href={url} tool={order.tool.slug} kind="image" className="btn-secondary justify-center px-3 py-1.5 text-xs" download>
-                        Download photo
-                      </TrackedDownload>
-                    </figcaption>
-                  </figure>
-                );
-              })}
-            </div>
-          ) : null}
+          {images.length > 0
+            ? rooms.map((room) => (
+                <div key={room.n} className="mt-3">
+                  {multiRoom ? <h3 className="mb-2 text-sm font-semibold text-gray-600">{room.before?.label ?? `Room ${room.n}`}</h3> : null}
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {room.before ? (
+                      <figure className="card p-3">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={signedFileUrl(room.before.fileId)} alt="Your original photo" className="h-auto w-full rounded-lg border border-line" />
+                        <figcaption className="mt-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">Before · your photo</figcaption>
+                      </figure>
+                    ) : null}
+                    {room.images.map((o, i) => {
+                      const url = signedFileUrl(o.fileId as string);
+                      return (
+                        <figure key={o.id} className="card p-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={url} alt={o.title} className="h-auto w-full rounded-lg border border-line" />
+                          <figcaption className="mt-2 flex flex-col gap-2">
+                            <span className="text-xs font-semibold tracking-wider text-gray-500 uppercase">After · version {meta(o).version ?? i + 1}</span>
+                            <TrackedDownload href={url} tool={order.tool.slug} kind="image" className="btn-secondary justify-center px-3 py-1.5 text-xs" download>
+                              Download photo
+                            </TrackedDownload>
+                          </figcaption>
+                        </figure>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))
+            : null}
           <ul className="mt-3 space-y-2">
             {shown
               .filter((o) => (o.fileId && o.type !== "IMAGE") || o.type === "LINK")
@@ -167,11 +187,13 @@ export default async function OrderPage({ params, searchParams }: Props) {
                   <CopyLink url={disclosureLine(publicToken)} label="Line to put next to the staged photo" hint={null} wrap />
                   {labeled.length ? (
                     <div className="flex flex-wrap gap-2">
-                      {labeled.map((o, i) => (
-                        <TrackedDownload key={o.id} href={signedFileUrl(o.fileId as string)} tool={order.tool.slug} kind="image_labeled" className="btn-secondary px-3 py-1.5 text-xs" download>
-                          Download version {((o.content ?? {}) as { version?: number }).version ?? i + 1} labeled
-                        </TrackedDownload>
-                      ))}
+                      {rooms.flatMap((room) =>
+                        room.labeled.map((o, i) => (
+                          <TrackedDownload key={o.id} href={signedFileUrl(o.fileId as string)} tool={order.tool.slug} kind="image_labeled" className="btn-secondary px-3 py-1.5 text-xs" download>
+                            {multiRoom ? `Room ${room.n} · v${meta(o).version ?? i + 1} labeled` : `Download version ${meta(o).version ?? i + 1} labeled`}
+                          </TrackedDownload>
+                        )),
+                      )}
                     </div>
                   ) : null}
                 </div>

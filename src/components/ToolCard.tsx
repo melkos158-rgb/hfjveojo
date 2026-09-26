@@ -9,11 +9,21 @@ export type ToolCardProps = {
   category: string;
   io: CatalogItem["def"]["io"];
   featured?: boolean;
+  /** Per-unit pricing (e.g. "photo"): the price is shown as "$15 / photo". */
+  unit?: string;
 };
 
 /** Map a catalog row to card props (one place to change when the card grows). */
 export function toolCardProps(c: CatalogItem): ToolCardProps {
-  return { slug: c.def.slug, name: c.def.name, priceCents: c.priceCents, category: c.def.category, io: c.def.io, featured: c.def.featured };
+  return {
+    slug: c.def.slug,
+    name: c.def.name,
+    priceCents: c.priceCents,
+    category: c.def.category,
+    io: c.def.io,
+    featured: c.def.featured,
+    unit: c.def.quantity ? c.def.pricing.unit?.one : undefined,
+  };
 }
 
 function categoryLabel(c: string): string {
@@ -46,7 +56,10 @@ export function ToolCard(props: ToolCardProps) {
       <div className="mt-auto flex items-center justify-between gap-3 pt-2">
         <div>
           <div className="text-xs text-gray-500">From</div>
-          <div className="text-xl font-bold text-fg">{price}</div>
+          <div className="text-xl font-bold text-fg">
+            {price}
+            {props.unit ? <span className="text-sm font-medium text-gray-500"> / {props.unit}</span> : null}
+          </div>
         </div>
         <Link href={`/tools/${props.slug}`} className={props.featured ? "btn-primary" : "btn-secondary"}>
           {props.io.ctaLabel}

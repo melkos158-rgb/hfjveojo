@@ -8,6 +8,13 @@ import { parsePackages } from "@/lib/tools/definitions/photo-pricing-guide";
 import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description";
 import { sampleListingClipsIntake, sampleListingDescriptionIntake, samplePricingGuideIntake } from "./helpers";
 
+/** The object shape behind a schema, also when it is wrapped in z.preprocess (a pipe: transform → object). */
+function shapeOf(schema: unknown): Record<string, unknown> {
+  let s = schema as { shape?: Record<string, unknown>; out?: unknown; def?: { out?: unknown } } | undefined;
+  for (let i = 0; i < 5 && s && !s.shape; i++) s = (s.out ?? s.def?.out) as typeof s;
+  return s?.shape ?? {};
+}
+
 describe("tool registry", () => {
   it("has unique ids, slugs and SKUs and complete landing copy", () => {
     const tools = allTools();
@@ -21,7 +28,7 @@ describe("tool registry", () => {
       expect(t.landing.faq.length).toBeGreaterThan(2);
       expect(t.seo.title.length).toBeLessThanOrEqual(80);
       // every UI field must exist in the zod schema
-      const keys = Object.keys((t.intake.schema as unknown as { shape: Record<string, unknown> }).shape);
+      const keys = Object.keys(shapeOf(t.intake.schema));
       for (const f of t.intake.fields) expect(keys).toContain(f.key);
       // the result-first card copy every tool must carry
       expect(t.io.input.length).toBeGreaterThan(5);
@@ -89,10 +96,47 @@ describe("tool registry", () => {
     expect(desc.intake.schema.safeParse({ ...sampleListingDescriptionIntake, mlsLimit: "999" }).success).toBe(false);
 
     const staging = getToolBySlug("virtual-staging")!;
-    expect(staging.intake.schema.safeParse({ photoFileId: "clx123", roomType: "bedroom", style: "coastal" }).success).toBe(true);
+    // orders from before multi-room (one photo) still validate, as one room
+    const legacy = staging.intake.schema.safeParse({ photoFileId: "clx123", roomType: "bedroom", style: "coastal" });
+    expect(legacy.success).toBe(true);
+    expect((legacy.data as { rooms: unknown }).rooms).toEqual([{ photoFileId: "clx123", roomType: "bedroom" }]);
     expect(staging.intake.schema.safeParse({ photoFileId: "", roomType: "bedroom", style: "coastal" }).success).toBe(false);
     expect(staging.intake.schema.safeParse({ photoFileId: "clx123", roomType: "garage", style: "coastal" }).success).toBe(false);
     expect(staging.intake.schema.safeParse({ photoFileId: "clx123", style: "art deco" }).success).toBe(false);
+  });
+
+  it("virtual staging takes up to 6 rooms (JSON from the form or an array), each with its own room type, priced per photo", async () => {
+    const { photoInputsOf, quantityOf } = await import("@/lib/tools/photos");
+    const staging = getToolBySlug("virtual-staging")!;
+    const rooms = [
+      { photoFileId: "clxa", roomType: "living room" },
+      { photoFileId: "clxb", roomType: "bedroom" },
+      { photoFileId: "clxc", roomType: "kitchen" },
+    ];
+    const fromForm = staging.intake.schema.safeParse({ rooms: JSON.stringify(rooms), style: "farmhouse", notes: "" });
+    expect(fromForm.success).toBe(true);
+    expect((fromForm.data as { rooms: unknown }).rooms).toEqual(rooms);
+    const intake = { rooms, style: "farmhouse" };
+    expect(quantityOf(staging, intake)).toBe(3);
+    expect(photoInputsOf(staging, intake)).toEqual([
+      { fileId: "clxa", label: "Room 1 · living room" },
+      { fileId: "clxb", label: "Room 2 · bedroom" },
+      { fileId: "clxc", label: "Room 3 · kitchen" },
+    ]);
+    // one room: the familiar single-photo wording
+    expect(photoInputsOf(staging, { rooms: rooms.slice(0, 1), style: "modern" })).toEqual([{ fileId: "clxa", label: "Your photo" }]);
+    expect(quantityOf(staging, { rooms: rooms.slice(0, 1), style: "modern" })).toBe(1);
+
+    const seven = Array.from({ length: 7 }, (_, i) => ({ photoFileId: `clx${i}`, roomType: "bedroom" }));
+    expect(staging.intake.schema.safeParse({ rooms: seven, style: "modern" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ rooms: [], style: "modern" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ rooms: "[]", style: "modern" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ rooms: "not json", style: "modern" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ rooms: [{ photoFileId: "clxa", roomType: "garage" }], style: "modern" }).success).toBe(false);
+    expect(staging.intake.schema.safeParse({ rooms: [{ photoFileId: "", roomType: "bedroom" }], style: "modern" }).success).toBe(false);
+    // a tool without units is always quantity 1; invalid intake never multiplies the price
+    expect(quantityOf(getToolBySlug("listing-description")!, sampleListingDescriptionIntake)).toBe(1);
+    expect(quantityOf(staging, { rooms: seven, style: "modern" })).toBe(1);
   });
 
   it("virtual staging prompt keeps the architecture fixed and carries the customer's notes", async () => {

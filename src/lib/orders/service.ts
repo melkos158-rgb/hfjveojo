@@ -8,6 +8,7 @@ import { AppError } from "@/lib/errors";
 import { stripe } from "@/lib/stripe/client";
 import { log } from "@/lib/logger";
 import { outputsToDeliver } from "@/lib/orders/deliverables";
+import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
   return appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
@@ -130,6 +131,15 @@ export async function retryOrder(orderId: string, adminId: string): Promise<void
   if (!order) throw new AppError("Order not found", 404);
   if (!["REVIEW", "FAILED", "RETRYING", "PROCESSING"].includes(order.status)) {
     throw new AppError(`Cannot retry an order in status ${order.status}`, 400, "bad_state");
+  }
+  if (order.status === "PROCESSING") {
+    // Only an abandoned run may be replaced: a second run next to a live one would pay the AI twice.
+    const live = await liveRunOf(orderId);
+    if (live) {
+      const secs = Math.max(0, Math.round((Date.now() - live.lastBeatAt.getTime()) / 1000));
+      throw new AppError(`The pipeline is still working on this order (last heartbeat ${secs}s ago) — wait for it to finish.`, 409, "busy");
+    }
+    await abandonRuns(orderId, "abandoned: admin retry after the run stopped reporting");
   }
   await prisma.order.update({ where: { id: orderId }, data: { status: "RETRYING", errorMessage: null, attempts: 0 } });
   await prisma.adminAction.create({ data: { adminId, action: "retry_order", targetType: "order", targetId: orderId } });

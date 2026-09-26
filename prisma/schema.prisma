@@ -161,6 +161,8 @@ model Order {
   status                  OrderStatus @default(PENDING)
   intake                  Json // validated intake payload (never trust raw client data)
   amountCents             Int
+  /// Units charged (e.g. photos in a multi-room staging order); amountCents = unit price × quantity.
+  quantity                Int         @default(1)
   currency                String      @default("usd")
   stripeCheckoutSessionId String?     @unique
   stripePaymentIntentId   String?     @unique
@@ -352,6 +354,8 @@ model ToolRun {
   costMicros  Int       @default(0) // AI cost in micro-dollars
   error       String?
   startedAt   DateTime  @default(now())
+  /// Refreshed every ~30 s while the pipeline runs; a RUNNING run without a recent heartbeat was abandoned (worker restarted or crashed).
+  heartbeatAt DateTime?
   finishedAt  DateTime?
 
   order      Order       @relation(fields: [orderId], references: [id])

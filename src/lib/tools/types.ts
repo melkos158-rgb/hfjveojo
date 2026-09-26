@@ -15,7 +15,9 @@ export type IntakeFieldType =
   | "number"
   | "select"
   | "color"
-  | "image";
+  | "image"
+  /** Several photos, each with a room type from `options` (JSON array of {photoFileId, roomType}); `max` caps the count. */
+  | "rooms";
 
 export type IntakeField = {
   key: string;
@@ -26,6 +28,8 @@ export type IntakeField = {
   required?: boolean;
   options?: Array<{ value: string; label: string }>;
   rows?: number;
+  /** "rooms": most photos per order. */
+  max?: number;
 };
 
 export type ToolPricing = {
@@ -35,6 +39,8 @@ export type ToolPricing = {
   currency: string;
   /** Marketing anchor shown next to the price, e.g. "vs. $195/mo at editing agencies". Must be sourced. */
   compareAtText?: string;
+  /** Tools priced per unit (see ToolDefinition.quantity): what one unit is called, e.g. { one: "photo", many: "photos" }. */
+  unit?: { one: string; many: string };
 };
 
 /** One block of a sample deliverable as shown on the tool page. */
@@ -67,6 +73,8 @@ export type LandingCopy = {
   howItWorks: Array<{ title: string; text: string }>;
   faq: Array<{ q: string; a: string }>;
   ctaLabel: string;
+  /** Order button for several units, with {n} and {total}, e.g. "Stage {n} photos — {total}". */
+  ctaLabelMany?: string;
   guarantee?: string;
   /** Guides shown under the FAQ on the tool page. */
   guides?: Array<{ href: string; label: string }>;
@@ -168,6 +176,10 @@ export type ToolDefinition<TIntake = Record<string, unknown>> = {
   preview?: ToolPreview<TIntake>;
   /** Digitally altered photos: the order gets the disclosure pack (labeled copies, public original + QR, text) — src/lib/tools/disclosure.ts. */
   disclosurePack?: boolean;
+  /** Units charged (e.g. photos): the order total is price × quantity, computed server-side. Default 1. */
+  quantity?: (intake: TIntake) => number;
+  /** Uploaded photos the order carries, in order (claimed at checkout, shown as "before", linked from the disclosure page). */
+  photoInputs?: (intake: TIntake) => Array<{ fileId: string; label: string }>;
   run: (ctx: PipelineContext<TIntake>) => Promise<PipelineResult>;
 };
 

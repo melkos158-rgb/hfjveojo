@@ -18,8 +18,8 @@
 | order form first touched ("tool_started") | `tool_started` | `tool` |
 | free preview asked / shown | `preview_requested`, `preview_shown` | `tool`, `again` |
 | free tool used | `free_tool_used` | `tool` |
-| checkout started ("checkout_started") | `begin_checkout` | `currency`, `value`, `items` — sent before the redirect to Stripe |
-| paid | `purchase` | `transaction_id` = our order id, `value` = amount Stripe charged, `currency`, `items` — once per order per browser, only for real (non-test) paid orders, fired on the checkout success page or the order page |
+| checkout started ("checkout_started") | `begin_checkout` | `currency`, `value`, `items` — sent before the redirect to Stripe; per-photo tools send `quantity` = photos and `value` = unit price × photos |
+| paid | `purchase` | `transaction_id` = our order id, `value` = amount Stripe charged, `currency`, `items` (with `quantity` for multi-photo orders) — once per order per browser, only for real (non-test) paid orders, fired on the checkout success page or the order page |
 | delivered order viewed ("tool_completed") | `tool_completed` | `tool` — once per order |
 | file downloaded | `file_download` | `tool`, `kind` (image, pdf, markdown, link) — never the URL |
 | tool request / contact form sent | `generate_lead` | `form` |

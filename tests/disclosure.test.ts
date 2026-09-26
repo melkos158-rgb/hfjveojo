@@ -33,7 +33,8 @@ describe("disclosure pack for virtually staged photos (AB 723 / MLS)", () => {
     expect(await ensurePublicToken(order.id)).toBe(token); // stable
     expect(await originalPhotoFor(token)).toBeNull(); // not paid yet
     await prisma.order.update({ where: { id: order.id }, data: { status: "COMPLETED" } });
-    expect(await originalPhotoFor(token)).toEqual({ fileId: intake.photoFileId });
+    const photoFileId = (intake.rooms as Array<{ photoFileId: string }>)[0].photoFileId;
+    expect(await originalPhotoFor(token)).toEqual({ photos: [{ fileId: photoFileId, label: "Your photo" }] });
     expect(await originalPhotoFor("../../etc/passwd")).toBeNull();
     expect(await originalPhotoFor("nosuchtoken123")).toBeNull();
     expect(originalPhotoUrl(token)).toBe(`http://localhost:3000/original/${token}`);

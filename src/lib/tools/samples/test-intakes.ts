@@ -35,6 +35,9 @@ export const TEST_INTAKES: Record<string, Record<string, unknown>> = {
 export const FILE_REF_PREFIX = "@file:";
 
 /** True when the intake references a static file that must be uploaded first (see materializeTestIntake). */
-export function hasFileRefs(intake: Record<string, unknown>): boolean {
-  return Object.values(intake).some((v) => typeof v === "string" && v.startsWith(FILE_REF_PREFIX));
+export function hasFileRefs(intake: unknown): boolean {
+  if (typeof intake === "string") return intake.startsWith(FILE_REF_PREFIX);
+  if (Array.isArray(intake)) return intake.some(hasFileRefs);
+  if (intake && typeof intake === "object") return Object.values(intake).some(hasFileRefs);
+  return false;
 }

@@ -40,6 +40,8 @@ export default async function ToolPage({ params }: Params) {
   const item = (await liveCatalog()).find((c) => c.def.id === def.id);
   const session = await getSession();
   const price = item?.priceCents ?? def.pricing.priceCents;
+  // Tools priced per unit (virtual staging: per photo) say so everywhere the price is shown.
+  const priceText = def.quantity && def.pricing.unit ? `${formatUsd(price)} per ${def.pricing.unit.one}` : `${formatUsd(price)} one-time`;
   const l = def.landing;
   const visual = categoryVisual(def.category);
 
@@ -87,7 +89,7 @@ export default async function ToolPage({ params }: Params) {
                 </a>
               ) : null}
               <span className="text-sm text-gray-600">
-                {formatUsd(price)} one-time · {l.deliveryPromise}
+                {priceText} · {l.deliveryPromise}
               </span>
             </div>
             {def.pricing.compareAtText ? <p className="mt-3 text-xs text-gray-500">{def.pricing.compareAtText}</p> : null}
@@ -165,12 +167,13 @@ export default async function ToolPage({ params }: Params) {
                 toolSlug={def.slug}
                 fields={def.intake.fields}
                 ctaLabel={l.ctaLabel}
-                priceLabel={`${formatUsd(price)} one-time`}
+                priceLabel={priceText}
                 deliveryPromise={l.deliveryPromise}
                 initialEmail={session?.email}
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
                 gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}
+                perUnit={def.quantity && def.pricing.unit ? { unitCents: price, one: def.pricing.unit.one, many: def.pricing.unit.many, ctaMany: l.ctaLabelMany } : undefined}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

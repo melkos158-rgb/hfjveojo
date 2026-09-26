@@ -68,8 +68,10 @@ async function assertBudget(ctx: AiCallContext): Promise<void> {
     throw new AiBudgetExceededError(`Daily AI budget of ${e.AI_DAILY_BUDGET_CENTS} cents reached`);
   }
   if (ctx.orderId && e.AI_MAX_COST_PER_ORDER_CENTS > 0) {
-    const spent = await orderSpendMicros(ctx.orderId);
-    if (spent >= e.AI_MAX_COST_PER_ORDER_CENTS * 10_000) {
+    // The cap is per unit: a six-photo staging order may spend six times what a one-photo order may.
+    const [spent, order] = await Promise.all([orderSpendMicros(ctx.orderId), prisma.order.findUnique({ where: { id: ctx.orderId }, select: { quantity: true } })]);
+    const units = Math.max(1, order?.quantity ?? 1);
+    if (spent >= e.AI_MAX_COST_PER_ORDER_CENTS * units * 10_000) {
       throw new AiBudgetExceededError(`Per-order AI budget reached for order ${ctx.orderId}`);
     }
   }

@@ -9,6 +9,7 @@ import { track } from "@/lib/analytics/events";
 import { computeKpis } from "@/lib/analytics/kpi";
 
 const freshIntake = () => materializeTestIntake(TEST_INTAKES["virtual-staging"]);
+const photoOf = (intake: Record<string, unknown>) => (intake.rooms as Array<{ photoFileId: string }>)[0].photoFileId;
 const aiRow = (purpose: string, costMicros = 0) => ({ provider: "mock", model: "mock", tier: "standard", purpose, costMicros, latencyMs: 1, ok: true });
 
 describe("free watermarked preview", () => {
@@ -43,7 +44,7 @@ describe("free watermarked preview", () => {
     expect(calls).toHaveLength(1);
     expect(calls[0].orderId).toBeNull();
     expect(await prisma.event.count({ where: { name: "preview_ready" } })).toBe(1);
-    expect((await prisma.file.findUniqueOrThrow({ where: { id: intake.photoFileId as string } })).orderId).toBeNull();
+    expect((await prisma.file.findUniqueOrThrow({ where: { id: photoOf(intake) } })).orderId).toBeNull();
   });
 
   it("allows FREE_PREVIEWS_PER_IP per day for one visitor", async () => {
@@ -82,7 +83,7 @@ describe("free watermarked preview", () => {
     const order = await prisma.order.create({
       data: { customerEmail: "paid@example.com", toolId: "virtual-staging", productId: product.id, status: "COMPLETED", intake, amountCents: 1500, accessToken: `pv-${Date.now()}` },
     });
-    await prisma.file.update({ where: { id: intake.photoFileId as string }, data: { orderId: order.id } });
+    await prisma.file.update({ where: { id: photoOf(intake) }, data: { orderId: order.id } });
     await expect(createPreview({ slug: "virtual-staging", intakeRaw: intake, ip: "192.0.2.1" })).rejects.toMatchObject({ code: "upload_missing" });
 
     await expect(createPreview({ slug: "listing-description", intakeRaw: {}, ip: "192.0.2.2" })).rejects.toMatchObject({ code: "no_preview", status: 404 });

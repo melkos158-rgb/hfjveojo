@@ -55,6 +55,7 @@ Free staging previews (order form, watermarked): at most `FREE_PREVIEWS_PER_DAY`
 | Symptom | Check | Fix |
 | --- | --- | --- |
 | Orders stuck in PAID | job loop down (`/api/health`: `worker.lastTickAt` stale or `jobs.queued` growing) | redeploy `web` (embedded loop restarts) or restart the worker service; or call `/api/internal/run-jobs` with `CRON_SECRET` |
+| Order in PROCESSING for long | admin order page → Runs: "last heartbeat Ns ago" | Running pipelines send a heartbeat every 30 s. A deploy hands the order back at once (run marked "abandoned: worker shutdown", order → RETRYING, attempt not counted); a crashed worker's job is re-queued within ~20 min and the order taken over. **Retry** works on a PROCESSING order only when its run has been silent for 2 minutes (otherwise it would pay the AI twice). A 6-photo staging order legitimately takes up to ~12 minutes. |
 | Payment made, order still PENDING | Stripe → Webhooks → deliveries failing | fix `STRIPE_WEBHOOK_SECRET`/URL, then *Resend* the event in Stripe; handler is idempotent |
 | Emails not arriving | Resend domain not verified / `EMAIL_PROVIDER=console` | verify DNS; check Resend logs |
 | AI failures | `/admin/ai-costs` failed calls; provider status page | fallback provider via `ANTHROPIC_API_KEY`; retry orders |
