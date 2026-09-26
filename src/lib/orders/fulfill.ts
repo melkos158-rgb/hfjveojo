@@ -78,7 +78,12 @@ export async function fulfillOrder(orderId: string): Promise<void> {
     // for a human right away instead of burning retries, and tell the admin exactly what to fix.
     const configProblem = err instanceof AiProviderError && !err.retryable;
     if (configProblem) {
-      await prisma.order.update({ where: { id: orderId }, data: { status: "REVIEW", errorMessage: message } });
+      // A human will finish this one; promise a day, not the usual minutes, so the order page stays honest.
+      const humanDueAt = new Date(Date.now() + 24 * 3600 * 1000);
+      await prisma.order.update({
+        where: { id: orderId },
+        data: { status: "REVIEW", errorMessage: message, ...(order.dueAt && order.dueAt < humanDueAt ? { dueAt: humanDueAt } : {}) },
+      });
       await reportError(err, { orderId, runId: run.id, attempts, configProblem: true });
       await notifyAdmins(
         `Order #${order.number} needs you — AI provider not usable`,

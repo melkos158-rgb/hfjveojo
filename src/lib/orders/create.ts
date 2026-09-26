@@ -85,7 +85,13 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
         },
       ],
       metadata: { orderId: order.id, toolId: def.id, sku: product.sku },
-      payment_intent_data: { metadata: { orderId: order.id, toolId: def.id } },
+      payment_intent_data: {
+        metadata: { orderId: order.id, toolId: def.id },
+        // Stripe's own receipt (sent in live mode whenever receipt_email is set, no email provider of ours needed)
+        // carries this description — so the customer always has a mail with their private order link.
+        description: `ORVIONIS order #${order.number} — ${product.name}. Your files: ${appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`)}`,
+        receipt_email: email,
+      },
       success_url: successUrl,
       cancel_url: cancelUrl,
       allow_promotion_codes: true,

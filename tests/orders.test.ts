@@ -51,6 +51,14 @@ describe("order → checkout → webhook → fulfilment", () => {
     expect(order.amountCents).toBe(2900);
     expect(order.customerEmail).toBe("buyer@example.com");
     expect(order.stripeCheckoutSessionId).toBe(`cs_test_${order.id}`);
+    // Stripe's receipt carries the private order link and goes to the buyer even without our own email provider
+    const { stripe } = await import("@/lib/stripe/client");
+    const call = (stripe().checkout.sessions.create as unknown as { mock: { calls: unknown[][] } }).mock.calls.at(-1)?.[0] as {
+      payment_intent_data: { description: string; receipt_email: string };
+    };
+    expect(call.payment_intent_data.receipt_email).toBe("buyer@example.com");
+    expect(call.payment_intent_data.description).toContain(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
+    expect(call.payment_intent_data.description).toContain(`#${order.number}`);
   });
 
   it("rejects invalid intake with a 400 AppError", async () => {

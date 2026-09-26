@@ -60,6 +60,8 @@ describe("fulfilment when the AI provider is not configured", () => {
     expect(order.errorMessage).toContain("OPENAI_API_KEY");
     expect(order.runs).toHaveLength(1);
     expect(order.runs[0].status).toBe("FAILED");
+    // the order page now promises a human's day, not the usual hour
+    expect(order.dueAt!.getTime()).toBeGreaterThan(Date.now() + 23 * 3600 * 1000);
 
     // nothing scheduled to retry blindly
     const queued = await prisma.job.count({ where: { type: "fulfill_order", status: "QUEUED" } });
