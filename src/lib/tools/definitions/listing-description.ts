@@ -219,7 +219,7 @@ export const listingDescriptionTool: ToolDefinition<ListingDescriptionIntake> = 
       i.openHouse ? `Open house: ${i.openHouse}` : "",
       i.agentName ? `Agent: ${i.agentName}${i.brokerage ? `, ${i.brokerage}` : ""}` : "",
       `Tone: ${TONE[i.tone]}`,
-      `MLS description limit: ${limit} characters (hard limit)`,
+      `MLS description limit: ${limit} characters (hard limit) — use the space: aim for ${Math.round(limit * 0.8)}–${Math.round(limit * 0.95)} characters, every sentence carrying a fact from the intake`,
     ]
       .filter(Boolean)
       .join("\n");

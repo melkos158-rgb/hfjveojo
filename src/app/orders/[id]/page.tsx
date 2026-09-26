@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { loadOrderForViewer, publicOrderStatus } from "@/lib/orders/access";
@@ -10,6 +11,7 @@ import { CopyLink } from "@/components/CopyLink";
 import { DeliverableText } from "@/components/DeliverableText";
 
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ t?: string }> };
 

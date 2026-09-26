@@ -6,6 +6,7 @@ import { site } from "@/config/site";
 import { CopyLink } from "@/components/CopyLink";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Thanks — order received", robots: { index: false, follow: false } };
 
 type Props = { searchParams: Promise<{ order?: string; t?: string }> };
 
