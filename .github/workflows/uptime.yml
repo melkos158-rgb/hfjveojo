@@ -2,10 +2,16 @@ name: Uptime
 
 # Free uptime monitor: GitHub pings production every 15 minutes. A failed run emails the repo owner
 # (GitHub's default notification for failed workflows). No credentials involved.
+# Minutes are off the hour on purpose: GitHub's scheduler is congested at :00 and silently drops runs there.
+# A push that changes this file runs it once, so a broken check is caught immediately (run #1 failed on a
+# Python f-string quirk while production was healthy — see docs/AUTONOMOUS_PROGRESS.md).
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [".github/workflows/uptime.yml"]
 
 jobs:
   health:
@@ -15,7 +21,7 @@ jobs:
       - name: GET /api/health
         run: |
           set -euo pipefail
-          body=$(curl -sS --max-time 20 --retry 2 --retry-delay 5 https://orvionis.com/api/health)
+          body=$(curl -sS --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/api/health)
           echo "$body"
           echo "$body" | python3 -c '
           import sys, json, datetime
@@ -26,13 +32,15 @@ jobs:
           tick = w.get("lastTickAt")
           assert tick, "no worker heartbeat"
           age = (datetime.datetime.now(datetime.timezone.utc) - datetime.datetime.fromisoformat(tick.replace("Z", "+00:00"))).total_seconds()
-          assert age < 300, f"worker heartbeat is {int(age)}s old"
-          assert (d.get("jobs") or {}).get("failed", 0) < 5, "too many failed jobs"
-          print(f"ok · worker tick {int(age)}s ago · queue {d[\"jobs\"]}")
+          assert age < 300, "worker heartbeat is %ds old" % int(age)
+          jobs = d.get("jobs") or {}
+          assert jobs.get("failed", 0) < 5, "too many failed jobs"
+          print("ok - worker tick %ds ago - queue %s" % (int(age), json.dumps(jobs)))
           '
       - name: Home page renders
         run: |
           set -euo pipefail
-          code=$(curl -sS -o /tmp/home.html -w "%{http_code}" --max-time 20 https://orvionis.com/)
+          code=$(curl -sS -o /tmp/home.html -w "%{http_code}" --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/)
           test "$code" = "200"
           grep -q "Get the" /tmp/home.html
+          echo "home page ok"

@@ -6,18 +6,19 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 ## CURRENT STATUS
 
 - Production **live and healthy** at https://orvionis.com (Railway `courageous-flow` → service `hfjveojo`, EU West). Health: `/api/health` ok, embedded job loop ticking, hourly maintenance running.
-- 4 tools: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, image model)** — the fourth is built and tested, production verification pending (see IN PROGRESS). Every tool page shows a real sample deliverable.
-- Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook now on the same account (verified in `/admin/system` 2026-09-26 03:55: webhook enabled, all 7 events). No real money possible until Stripe live activation (owner).
+- 4 tools live: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, gpt-image-2)** — proven in production 2026-09-26 15:17 (order #6: two clean staged versions in < 1 min, AI cost ≈ $0.11). Every tool page shows a real sample deliverable.
+- Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook on the same account (webhook enabled, all 7 events). **Stripe → our webhook delivery is proven**: the real `checkout.session.expired` events of the pipeline-test sessions (04:54, 05:07) arrived signed and were processed. No real money possible until Stripe live activation (owner).
 - AI: OpenAI key live; smoke test in production answered "OK" (gpt-4.1-mini, 1.6 s, $0.0001). Budget guards: $5/day, $1/order.
 - Auth: magic link (email) + **Google sign-in** (verified end-to-end in production 2026-09-26 03:50). Admin = `ADMIN_EMAILS`.
 - Email: Resend domain `orvionis.com` **verified** (03:40). Sign-in link, order confirmation and delivery emails delivered in production (Resend log).
-- **End-to-end pipeline proven in production** (04:24): admin pipeline test → Order #2 PAID (synthetic event, no money) → real OpenAI fulfilment (2 calls, $0.01) → QC PASSED → COMPLETED with the full deliverable → both emails delivered. Only the card charge itself is untested (Stripe's side).
+- **End-to-end pipeline proven in production** for all four tools (orders #2–#6, all `isTest`): synthetic paid event → real AI fulfilment → QC → delivery + emails. The only untested link is Stripe's own card form (needs a human with the test card).
 - Free lead magnet: `/free/fair-housing-checker`. Search Console: domain verified, sitemap submitted.
 
 ## CURRENT PRIORITY
 
 1. (P0, owner) Stripe live activation → live `STRIPE_SECRET_KEY` + live webhook destination + `STRIPE_WEBHOOK_SECRET`. Without it there is no revenue.
-2. (P1, owner) One sandbox purchase with the test card `4242…` on https://orvionis.com/tools/listing-description — the only untested link is Stripe's own card step → webhook delivery to our endpoint (the app side is proven); then the same in live with a real $9 order.
+2. (P1, owner) One sandbox purchase with the test card `4242 4242 4242 4242` on https://orvionis.com/tools/listing-description — webhook delivery is already proven, so this only checks Stripe's card form end to end; then the same in live with a real $9 order.
+3. (P1, operator) Start acquisition: the vacant-listing DM (`re-ig-dm-staging`, strongest visual proof) and the $9 description DM (`re-ig-dm-9`) — 20 personal messages/day, tracked with UTM + experiment keys. Needs the owner to send from his accounts (the operator does not send messages on his behalf without per-message approval).
 4. (P2, operator) Conversion + acquisition assets: outreach kit with links to samples/free tool; second free tool for photographers (pricing calculator); admin metrics for the 90-day experiment (Stripe fees, revenue/hour, repeat purchases).
 5. (P2) AI cost control audit (§14): **verified 2026-09-26** — every intake field has a zod max length, orders are rate-limited per IP (10 / 10 min), uploads 20 / 10 min and 8 MB, OpenAI client timeout 120 s with 2 retries, 3 fulfilment attempts, daily budget $5 and $1 per order as hard stops; non-retryable provider errors park the order in REVIEW instead of burning retries. Nothing to tighten until real traffic shows a pattern.
 
@@ -41,47 +42,49 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 07:20–07:35: body-size guards on every JSON/upload route (413 before parsing); outreach kit refreshed ($9 entry DM, free-checker opener, sample links, UTM per experiment) in docs + /admin/content.
 - 07:35–08:10: free **photography pricing calculator** + `/free` index; experiment KPIs (est. Stripe fees, net contribution, revenue/founder hour, repeat rate, AI cost per paid order, free-tool uses).
 - 08:10–08:30: `Order.isTest` + admin **full pipeline test** (sandbox only) — run in production: Order #2 COMPLETED with real AI output and real emails, excluded from metrics.
+- 14:52–15:20: **Virtual Staging** shipped: transfer verified by full-tree checksum, commit `e0420f7` deployed (migration `20260926030000_output_type_image` applied, seed synced, graceful restart in logs); production test #5 on gpt-image-1 worked technically but visual review caught a chandelier swap and an added built-in; fixed in `2f1d6f2` (freestanding-only prompt, gpt-image-2 default, exact photo proportions, EXIF auto-rotate) → test #6 clean on both versions (recessed light, windows, walls, doors untouched, 1536×1040). Stripe webhook delivery confirmed from the expired-session events. Uptime monitor run #1 had failed on a Python f-string quirk while production was healthy (log: ok, db up, 1,845 worker ticks) — check rewritten, runs off the hour now and once on every change of the workflow file.
 - 08:30–09:00: delivered text rendered as sections with Copy buttons; GitHub Actions **uptime monitor** (every 15 min, emails on failure); pipeline test selectable per tool → production runs: #3 Pricing Guide COMPLETED (3 AI calls, PDF rendered, $0.02), #4 Listing Clips → REVIEW with the clip plan and concierge checklist (as designed); fixes found on the way (double-numbered steps, REVIEW note scope, close-test-order); OG cards for /free pages; CEO report text carries the new KPIs.
 
 ## IN PROGRESS
 
-- **Virtual Staging tool** (`/tools/virtual-staging`, $15) — deployed 2026-09-26 15:00 (commit `e0420f7`, migration applied, seed synced, graceful restart seen in logs). Production pipeline test **order #5** (gpt-image-1): COMPLETED in ~60 s, QC passed, AI cost $0.13, before/after renders on the order page. **Visual review found two broken promises** in the real output: both versions replaced the recessed ceiling light with a chandelier, version 1 added a built-in bookcase. Fix in the next commit: prompt allows only freestanding furniture/decor and forbids ceiling fixtures and built-ins explicitly, default model → `gpt-image-2` (gpt-image-1 is deprecated; ≈ $0.041/image; any size → output keeps the photo's exact proportions), input photos EXIF-rotated and capped at 2048 px before the model sees them, `input_fidelity: high` for GPT Image 1/1.5. Next: deploy, re-run the pipeline test, judge the images, then decide on an automated vision QC check.
+- Nothing mid-flight. Candidate next build: an automated vision QC for Virtual Staging (a cheap model compares before/after and parks the order for a human if walls, windows, doors, built-ins or ceiling fixtures changed) — build it once real orders show any failure; test #6 needed none.
 
 ## BLOCKED (needs the owner)
 
 - Stripe live activation (business details, bank) — operator never enters financial/government data or API keys.
-- A paid test order (card `4242…`) on the sandbox — operator does not enter card numbers on checkout.stripe.com.
-- Resend domain verification — automatic once DNS propagates; check Resend → Domains if still Pending after 24 h.
+- A paid test order (card `4242…`) on the sandbox — operator does not enter card numbers on checkout.stripe.com (webhook side already proven).
+- Outreach messages — sent from the owner's accounts; the operator drafts them (EN + UA control copy in /admin/content and docs/OUTREACH.md).
 - Google OAuth consent screen: publish if still in "Testing" (sign-in for the owner worked, so either it is published or the owner is a test user).
 - Scheduled task `trig_01KoEtNKBvEzGvaoWeHTPPGS` (every 2 h) runs **cloud-only** and cannot push code (git auth is on the owner's PC) until "Require this computer" is enabled for it in the desktop app. Nothing runs between sessions otherwise — no 24/7 claim.
 
 ## NEXT TASKS (ordered by expected business impact)
 
-1. Stripe Dashboard → webhook `orvionis-production` → "Send test event" (checkout.session.completed) to prove signature + reachability of the endpoint from Stripe's side (needs the owner's Chrome; the app side is proven).
-2. Close test orders #2–#4 in /admin (button exists) once the owner has looked at them.
-3. Virtual Staging in production: run the pipeline test, read the Railway log for the image call, check cost per order in /admin/analytics (expected ≈ $0.13–0.15), then start the vacant-listing DM (`re-ig-dm-staging`).
-4. Stripe live: when the owner activates — swap keys, create the live webhook, run one real $9 order, enable "Successful payments" emails in Stripe.
-5. Deliverable quality loop: read the outputs of orders #2–#4 critically (tone, facts, fair-housing) and tighten prompts where needed; add a "regenerate section" option later if customers ask.
+1. Owner: Stripe live activation, then one real $9 order (operator swaps keys, creates the live webhook, verifies, enables Stripe receipts).
+2. Owner + operator: first outreach batch — vacant listings (`re-ig-dm-staging`) and new listings (`re-ig-dm-9`); operator prepares 20 target profiles/day with personalised lines if the owner wants.
+3. Replace the Virtual Staging sample "after" with a real gpt-image-2 output from order #6 (honest "this is exactly what you get" proof) — needs the image moved from production storage into `public/img`.
+4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
+5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
 6. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 08:45 UTC+2 — deploy of `39f2252` ACTIVE; all three tool pipelines proven in production (orders #2–#4, all `isTest`); emails delivered; uptime workflow committed (first scheduled run pending).
-- Known warnings in logs: none open (Resend 403 stopped after verification).
-- Railway: auto-deploy from `main`; graceful shutdown proven; `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
+- Last verified: 2026-09-26 15:20 UTC+2 — deploy of `2f1d6f2` ACTIVE (GitHub status `courageous-flow - hfjveojo` = success, CI green); `/api/health` ok, worker ticking every 10 s, hourly maintenance DONE every hour; Virtual Staging test #6 COMPLETED on gpt-image-2.
+- Known warnings in logs: none open.
+- Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
+- Uptime monitor: run #1 (07:59 UTC) failed on a bug in the check itself, not the site; fixed check runs on every workflow change and at :07/:22/:37/:52.
 
 ## LAST VERIFIED COMMIT
 
-- `39f2252` (pipeline test per tool) — deployed and verified in production. Later commits (`3a223c3`, `73e769f`, this one) pushed after typecheck + 40 tests + `next build`; production check pending when the owner's Chrome is back online.
+- `2f1d6f2` (staging prompt + gpt-image-2) — deployed and verified in production with a real image edit. Later commits: monitoring/docs only.
 
 ## KNOWN BUGS
 
-- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores ≈ 8 MB input + 2 PNG outputs; at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
+- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores the original upload (≤ 8 MB) + 2 JPEG outputs (≈ 0.2–0.5 MB each); at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
 
 ## BUSINESS METRICS (real data only)
 
 - Revenue: $0 (no live payments possible yet). Orders: 0 paid. Visitors: no meaningful traffic yet (no outreach started).
-- AI budget note: `AI_DAILY_BUDGET_CENTS=500` allows ~35 staging orders/day at ≈13¢ each — raise it in Railway Variables once staging orders arrive (the guard parks orders in REVIEW, it never loses them).
+- AI budget note: `AI_DAILY_BUDGET_CENTS=500` allows ~45 staging orders/day at ≈11¢ each — raise it in Railway Variables once staging orders arrive (the guard parks orders in REVIEW, it never loses them). Test spend today: $0.13 (#5) + $0.11 (#6).
 - Costs so far: Railway Hobby plan, OpenAI ≈ $0.01 (smoke test + one pipeline test order: 2 calls, 1,325 in / 492 out tokens → margin after AI on a $9 order ≈ $8.99 before Stripe fees ≈ $0.56). Instrumentation in place: `Event` table (visits, CTA, checkout, paid, delivered, free-tool use), `AiRequest` (cost per call), `ChannelCost` (hours/spend per channel), KPIs on `/admin/analytics`, daily CEO report.
 - First-profit forecast given to the owner 2026-09-26: first sale 2–5 days after Stripe live + daily outreach starts; infra breaks even after ~3–5 orders.
 
