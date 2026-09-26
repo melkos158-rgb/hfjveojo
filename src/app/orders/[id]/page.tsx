@@ -7,6 +7,7 @@ import { signedFileUrl } from "@/lib/storage";
 import { formatUsd } from "@/lib/ai/pricing";
 import { site } from "@/config/site";
 import { CopyLink } from "@/components/CopyLink";
+import { DeliverableText } from "@/components/DeliverableText";
 
 export const dynamic = "force-dynamic";
 
@@ -93,10 +94,18 @@ export default async function OrderPage({ params, searchParams }: Props) {
               })}
           </ul>
           {md ? (
-            <details className="card mt-4" open={!order.outputs.some((o) => o.type === "PDF" || o.type === "LINK")}>
-              <summary className="cursor-pointer font-semibold">{markdownOut?.title ?? "Text version"}</summary>
-              <pre className="mt-3 font-sans text-sm whitespace-pre-wrap text-gray-700 select-all">{md}</pre>
-            </details>
+            order.outputs.some((o) => o.type === "PDF" || o.type === "LINK") ? (
+              <details className="card mt-4">
+                <summary className="cursor-pointer font-semibold">{markdownOut?.title ?? "Text version"}</summary>
+                <div className="mt-3">
+                  <DeliverableText markdown={md} title={markdownOut?.title ?? "Text version"} />
+                </div>
+              </details>
+            ) : (
+              <div className="mt-4">
+                <DeliverableText markdown={md} title={markdownOut?.title ?? "Your text"} />
+              </div>
+            )
           ) : null}
           <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
             <div>
