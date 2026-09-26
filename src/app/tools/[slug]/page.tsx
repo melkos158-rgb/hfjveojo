@@ -147,6 +147,15 @@ export default async function ToolPage({ params }: Params) {
                 </div>
               ))}
             </dl>
+            {l.guides?.length ? (
+              <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                {l.guides.map((g) => (
+                  <a key={g.href} href={g.href} className="font-semibold text-accent hover:underline">
+                    {g.label} →
+                  </a>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
         <div className="lg:col-span-2">

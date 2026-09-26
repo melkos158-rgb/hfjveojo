@@ -57,6 +57,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 17:25: Railway build of `1a665ae` **failed** (production stayed on `a528e02`, site up): `@types/qrcode` was a devDependency and Railway installs production dependencies only, so `next build` could not type-check `qrcode`. Moved it to dependencies (like every other build-time type package here) and verified with a production-only install + `next build` before pushing the fix. New rule in OPERATOR.md.
 - 17:30: `41355e7` deployed; production checks: order #6 page shows the Disclosure pack card (token created on first view), `/original/<token>` renders the original (noindex), `/original/<token>/qr` returns a 600×600 PNG.
 - 17:30–17:40: **SEO/outreach asset** `/guides/ab-723-virtual-staging` — plain-English AB 723 guide with a 7-step checklist, MLS examples (SDMLS, Bay East), FAQ + Article JSON-LD, sources and a not-legal-advice note; linked from the footer, the disclosure card and the sitemap. Customer-facing copy switched to US spelling (labeled, color).
+- 17:40–17:50: second guide `/guides/photographing-rooms-for-virtual-staging` (10 practical tips, HowTo JSON-LD — better inputs mean fewer redos); tool pages can list guides under the FAQ (`landing.guides`), Virtual Staging links both guides; sitemap.
 
 ## IN PROGRESS
 

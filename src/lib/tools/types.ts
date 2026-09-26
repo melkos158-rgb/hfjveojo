@@ -68,6 +68,8 @@ export type LandingCopy = {
   faq: Array<{ q: string; a: string }>;
   ctaLabel: string;
   guarantee?: string;
+  /** Guides shown under the FAQ on the tool page. */
+  guides?: Array<{ href: string; label: string }>;
   deliveryPromise: string;
   sample?: SampleResult;
 };

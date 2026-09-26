@@ -157,6 +157,10 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     guarantee: "If the room's structure was changed or the result is unusable, one redo is included; otherwise a refund.",
     deliveryPromise: "Usually ready in about 2 minutes.",
     sample: SAMPLE_VIRTUAL_STAGING_RESULT,
+    guides: [
+      { href: "/guides/photographing-rooms-for-virtual-staging", label: "10 tips for room photos that stage well" },
+      { href: "/guides/ab-723-virtual-staging", label: "AB 723 checklist (California)" },
+    ],
   },
   seo: {
     title: "Virtual staging from one photo — 2 MLS-ready versions in minutes | ORVIONIS",
