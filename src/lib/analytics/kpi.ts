@@ -38,6 +38,9 @@ export type Kpis = {
   repeatRate: number;
   aiCostPerPaidOrderCents: number;
   freeToolUses: number;
+  /** Free watermarked previews shown, and how many of those sessions went on to checkout. */
+  previewsShown: number;
+  previewSessionsToCheckout: number;
 };
 
 export const STRIPE_FEE_PCT = 0.029;
@@ -54,7 +57,7 @@ function sourceOf(utm: unknown): string {
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeStarted, checkoutStarted, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses] =
+  const [pageViews, intakeStarted, checkoutStarted, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions] =
     await Promise.all([
       prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true } }),
       prisma.event.count({ where: { name: "intake_started", createdAt: range } }),
@@ -72,7 +75,11 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.feedback.aggregate({ _avg: { rating: true }, _count: true, where: { createdAt: range } }),
       prisma.tool.findMany({ select: { id: true, name: true } }),
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
+      prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true } }),
+      prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
     ]);
+  const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
+  const previewSessionIds = new Set(previewEvents.map((e) => e.sessionId).filter(Boolean) as string[]);
 
   const sessions = new Set(pageViews.map((p) => p.sessionId).filter(Boolean) as string[]);
   const revenueCents = paidOrders.reduce((s, o) => s + o.amountCents, 0);
@@ -146,6 +153,8 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     repeatRate: customers ? repeatCustomers / customers : 0,
     aiCostPerPaidOrderCents: paidOrders.length ? Math.round(aiCostCents / paidOrders.length) : 0,
     freeToolUses,
+    previewsShown: previewEvents.length,
+    previewSessionsToCheckout: [...previewSessionIds].filter((id) => checkoutSessionIds.has(id)).length,
   };
 }
 

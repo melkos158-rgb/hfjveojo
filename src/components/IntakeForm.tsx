@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { IntakeField } from "@/lib/tools/types";
 import { trackClient } from "@/components/Analytics";
 
@@ -11,13 +11,17 @@ type Props = {
   priceLabel: string;
   deliveryPromise: string;
   initialEmail?: string;
+  /** Tools with a free preview (virtual staging) show a "see it first" button once the photo is uploaded. */
+  preview?: { label: string };
 };
+
+type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
 
 /**
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map((f) => [f.key, f.type === "color" ? "#3b5bfd" : f.options?.[0]?.value ?? ""])),
   );
@@ -27,6 +31,47 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const started = useRef(false);
+  const imageKey = fields.find((f) => f.type === "image")?.key;
+  // The last good preview stays on screen while a new one is made or if a re-preview is refused.
+  const [pvReady, setPvReady] = useState<ReadyPreview | null>(null);
+  const [pvSince, setPvSince] = useState<number | null>(null);
+  const [pvError, setPvError] = useState<string | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    if (pvSince === null) return;
+    const t = setInterval(() => setElapsed(Math.round((Date.now() - pvSince) / 1000)), 1000);
+    return () => clearInterval(t);
+  }, [pvSince]);
+
+  const resetPreview = () => {
+    setPvReady(null);
+    setPvError(null);
+    setPvSince(null);
+  };
+
+  const requestPreview = async () => {
+    setError(null);
+    setPvError(null);
+    setElapsed(0);
+    setPvSince(Date.now());
+    trackClient("preview_requested", { tool: toolSlug, again: pvReady ? 1 : 0 });
+    try {
+      const res = await fetch(`/api/tools/${toolSlug}/preview`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ intake: values }),
+      });
+      const data = (await res.json()) as { image?: string; width?: number; height?: number; caption?: string; message?: string };
+      if (!res.ok || !data.image) throw new Error(data.message ?? "The preview could not be made right now.");
+      setPvReady({ image: data.image, width: data.width, height: data.height, caption: data.caption });
+      trackClient("preview_shown", { tool: toolSlug });
+    } catch (err) {
+      setPvError((err as Error).message);
+    } finally {
+      setPvSince(null);
+    }
+  };
 
   const onFocus = () => {
     if (!started.current) {
@@ -53,6 +98,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const data = (await res.json()) as { fileId?: string; message?: string };
       if (!res.ok || !data.fileId) throw new Error(data.message ?? "Upload failed");
       set(key, data.fileId);
+      if (key === imageKey) resetPreview(); // a new photo gets its own preview
       setPreviews((prev) => {
         if (prev[key]) URL.revokeObjectURL(prev[key].url);
         return { ...prev, [key]: { url: URL.createObjectURL(file), name: file.name, sizeKb: Math.round(file.size / 1024) } };
@@ -159,6 +205,35 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
           {f.help ? <p className="field-help">{f.help}</p> : null}
         </div>
       ))}
+
+      {preview && imageKey ? (
+        <div className="rounded-xl border border-line bg-bg p-3">
+          {pvReady ? (
+            <div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={pvReady.image} alt="Free preview: your room, virtually staged" width={pvReady.width} height={pvReady.height} className={`h-auto w-full rounded-lg border border-line ${pvSince ? "opacity-60" : ""}`} />
+              <p className="mt-2 text-xs text-gray-500">{pvReady.caption}</p>
+              <button type="button" className="mt-2 text-xs font-semibold text-accent hover:underline disabled:opacity-60" onClick={requestPreview} disabled={pvSince !== null || uploading !== null}>
+                {pvSince ? `Staging again… ${elapsed}s` : "Changed the room or style? Preview again"}
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-gray-600">
+                {pvSince
+                  ? `Staging your photo… ${elapsed}s (usually under a minute)`
+                  : values[imageKey]
+                    ? "Not sure yet? See one version of your own room first — free, watermarked."
+                    : "Upload the photo above to see a free preview of your room first."}
+              </p>
+              <button type="button" className="btn-secondary" onClick={requestPreview} disabled={!values[imageKey] || uploading !== null || pvSince !== null}>
+                {pvSince ? "Working…" : preview.label}
+              </button>
+            </div>
+          )}
+          {pvError ? <p className="mt-2 text-sm text-red-700">{pvError}</p> : null}
+        </div>
+      ) : null}
 
       <div>
         <label className="field-label" htmlFor="f-email">

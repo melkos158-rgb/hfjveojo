@@ -7,7 +7,7 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 - Sample results on every tool page: https://orvionis.com/tools/listing-description#example ($9, MLS copy + captions), https://orvionis.com/tools/photographer-pricing-guide#example (real 5-page PDF), https://orvionis.com/tools/listing-clips#example (clip plan).
 - Free tool for agents: https://orvionis.com/free/fair-housing-checker — paste listing copy, see risky phrases + character count. Best value-first opener; it is useful even if they never buy.
 - Cheapest first purchase: Listing Description, $9, about 5 minutes. Use it as the entry offer for cold contacts; $49 clips are the upsell once they have paid once.
-- Most visual proof: Virtual Staging, $15 per photo, about 2 minutes — https://orvionis.com/tools/virtual-staging#example shows a real before/after. Use it for vacant listings (empty rooms in the photos); the picture sells itself.
+- Most visual proof: Virtual Staging, $15 per photo, about 2 minutes — https://orvionis.com/tools/virtual-staging#example shows a real before/after, and the order form makes a **free watermarked preview on the prospect's own photo** (a few per day). Use it for vacant listings (empty rooms in the photos); the picture sells itself.
 - Tracking: add `?utm_source=<channel>&exp=<experiment>` to every link (`e3-listing-description`, `e1-listing-clips`, `e2-photo-pricing-guide`, `e4-virtual-staging`); the channel shows up in /admin/analytics.
 
 ## Daily routine (45–60 minutes)
@@ -48,10 +48,10 @@ Hey [name], the [street] listing looks sharp. I write MLS descriptions + the Ins
 ### re-ig-dm-staging — Instagram DM to an agent or photographer with a vacant listing (empty rooms in the photos)
 
 📤 EN — send as is:
-Hey [name], the [street] listing photographs well but those empty rooms are working against you. I virtually stage a room photo — you upload the shot, pick a style, and two staged versions of that exact photo come back in about two minutes (same walls, floors and windows, furniture added). $15 a photo, no subscription, one redo included. Before/after sample here: orvionis.com/tools/virtual-staging#example. Want to try it on the living room?
+Hey [name], the [street] listing shoots well but the empty rooms are working against you. I stage room photos in about two minutes: same walls, floors and windows, just furniture added. There's a free watermarked preview on your own photo, and the full set (two versions) is $15, no subscription. Before/after: orvionis.com/tools/virtual-staging#example. Want to try it on the living room?
 
 🇺🇦 UA — контроль:
-Привіт, [name], лістинг на [street] добре знятий, але ці порожні кімнати працюють проти тебе. Я віртуально стейджу фото кімнати — ти завантажуєш кадр, обираєш стиль, і за близько дві хвилини отримуєш дві застейджені версії саме цього фото (ті самі стіни, підлога й вікна, додані меблі). $15 за фото, без підписки, одна переробка включена. Зразок до/після тут: orvionis.com/tools/virtual-staging#example. Хочеш спробувати на вітальні?
+Привіт, [name], лістинг на [street] добре знятий, але порожні кімнати працюють проти тебе. Я стейджу фото кімнат приблизно за дві хвилини: ті самі стіни, підлога й вікна, лише додані меблі. На своєму фото можна безкоштовно подивитися превʼю з водяним знаком, а повний комплект (дві версії) коштує $15, без підписки. До/після: orvionis.com/tools/virtual-staging#example. Хочеш спробувати на вітальні?
 
 ✍️ Personalise: [name], [street], the room you name. Add `?utm_source=instagram_dm&exp=e4-virtual-staging`. Only send to listings that are actually empty — the message is wrong for furnished ones.
 

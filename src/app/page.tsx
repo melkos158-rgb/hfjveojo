@@ -128,7 +128,7 @@ export default async function HomePage() {
                 <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes, $15</div>
               </div>
               <Link href="/tools/virtual-staging#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
-                See the sample and the six styles →
+                See the sample, or preview your own photo free →
               </Link>
             </div>
 

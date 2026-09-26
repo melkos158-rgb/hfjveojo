@@ -36,6 +36,10 @@ const schema = z.object({
   AI_IMAGE_MODEL: z.string().default("gpt-image-2"), // gpt-image-1 is deprecated; 2 keeps the photo's proportions and details
   AI_IMAGE_QUALITY: z.enum(["low", "medium", "high"]).default("medium"),
   AI_IMAGE_COST_CENTS: z.coerce.number().nonnegative().default(5), // gpt-image-2 medium ≈ $0.041 per 1536×1024 image + input tokens
+  /** Free watermarked previews on the order form (virtual staging): hard caps per UTC day and per IP, and the quality used. 0 = off. */
+  FREE_PREVIEWS_PER_DAY: z.coerce.number().int().nonnegative().default(15),
+  FREE_PREVIEWS_PER_IP: z.coerce.number().int().positive().default(2),
+  AI_PREVIEW_QUALITY: z.enum(["low", "medium", "high"]).default("medium"),
 
   /** Google sign-in is offered on /login only when both are set (OAuth client → Authorized redirect URI: <APP_URL>/api/auth/google/callback). */
   GOOGLE_CLIENT_ID: z.string().optional().default(""),

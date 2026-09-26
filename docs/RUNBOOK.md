@@ -40,6 +40,8 @@ Until the new files are delivered the customer keeps the last delivery on the or
 
 ## Budgets and the kill switch
 
+Free staging previews (order form, watermarked): at most `FREE_PREVIEWS_PER_DAY` (15) a day for everyone, `FREE_PREVIEWS_PER_IP` (2) per visitor, and none once today's AI spend reaches 40 % of `AI_DAILY_BUDGET_CENTS`. Set `FREE_PREVIEWS_PER_DAY=0` to switch them off; they show as purpose `preview` in AI costs and as "Free staging previews" in analytics.
+
 - `AI_DAILY_BUDGET_CENTS` / `AI_MAX_COST_PER_ORDER_CENTS` stop calls when exceeded (orders wait in RETRYING/REVIEW, nothing is lost).
 - `/admin/system` → **Stop all AI calls** flips `Setting ai.kill_switch` instantly; turn it off the same way.
 - `/admin/ai-costs` shows spend by model/purpose/tool; unit cost per order must stay far below price.

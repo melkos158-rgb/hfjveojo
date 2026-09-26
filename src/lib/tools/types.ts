@@ -114,6 +114,18 @@ export type PipelineContext<TIntake> = {
   step: (name: string, note?: string) => void;
 };
 
+/**
+ * Optional free preview before payment — e.g. one staged version of the visitor's own photo. The preview route
+ * validates the intake, applies the per-IP / per-day caps, and watermarks + downsizes the image; `run` only makes it.
+ */
+export type ToolPreview<TIntake> = {
+  /** Button on the order form, e.g. "See a free preview first". */
+  label: string;
+  /** One line under the preview image. */
+  caption: string;
+  run: (ctx: { intake: TIntake; ai: Pick<PipelineContext<TIntake>["ai"], "editImage"> }) => Promise<{ image: Buffer }>;
+};
+
 /** What the customer hands over and what comes back — shown on every card so the result is obvious in seconds. */
 export type ToolIo = {
   /** e.g. "Walkthrough video link + listing facts" */
@@ -150,6 +162,8 @@ export type ToolDefinition<TIntake = Record<string, unknown>> = {
   delivery: { emailSubject: string; emailIntro: string };
   /** Concierge checklist shown to the admin on manual orders. */
   conciergeChecklist?: string[];
+  /** Free watermarked preview on the order form (see ToolPreview). */
+  preview?: ToolPreview<TIntake>;
   run: (ctx: PipelineContext<TIntake>) => Promise<PipelineResult>;
 };
 

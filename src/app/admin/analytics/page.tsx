@@ -33,6 +33,7 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
         <Kpi label="Revenue / founder hour" value={k.revenuePerFounderHourCents === null ? "—" : formatUsd(k.revenuePerFounderHourCents)} sub="log hours in Experiments → channel cost" />
         <Kpi label="Customers / repeat" value={`${k.customers} / ${k.repeatCustomers}`} sub={`${(k.repeatRate * 100).toFixed(0)}% bought twice · AI ${formatUsd(k.aiCostPerPaidOrderCents)} per paid order`} />
         <Kpi label="Free tool uses" value={`${k.freeToolUses}`} sub="checker + calculator sessions" />
+        <Kpi label="Free staging previews" value={`${k.previewsShown}`} sub={`${k.previewSessionsToCheckout} of those sessions went to checkout`} />
         <Kpi label="Visit → paid" value={`${(k.conversionVisitToPaid * 100).toFixed(2)}%`} />
         <Kpi label="Checkout → paid" value={`${(k.conversionCheckoutToPaid * 100).toFixed(1)}%`} />
         <Kpi label="Delivered / review / failed" value={`${k.ordersDelivered} / ${k.ordersInReview} / ${k.ordersFailed}`} />

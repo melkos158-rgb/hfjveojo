@@ -87,6 +87,11 @@ export default async function ToolPage({ params }: Params) {
               </span>
             </div>
             {def.pricing.compareAtText ? <p className="mt-3 text-xs text-gray-500">{def.pricing.compareAtText}</p> : null}
+            {def.preview ? (
+              <p className="mt-2 text-sm text-gray-600">
+                Not sure? <a href="#order" className="font-semibold text-accent hover:underline">See a free preview on your own photo</a> before you pay.
+              </p>
+            ) : null}
           </div>
           {visual ? (
             <div className="glow relative overflow-hidden rounded-3xl border border-line bg-card">
@@ -150,6 +155,7 @@ export default async function ToolPage({ params }: Params) {
                 priceLabel={`${formatUsd(price)} one-time`}
                 deliveryPromise={l.deliveryPromise}
                 initialEmail={session?.email}
+                preview={def.preview ? { label: def.preview.label } : undefined}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

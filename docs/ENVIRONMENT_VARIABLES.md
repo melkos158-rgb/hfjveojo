@@ -44,6 +44,9 @@ AI_MAX_COST_PER_ORDER_CENTS=100                     ⚙️ ✅  hard stop per or
 AI_IMAGE_MODEL=gpt-image-2                          ⚙️ ✅  image edits (virtual staging); default in code
 AI_IMAGE_QUALITY=medium                             ⚙️ ✅  low | medium | high — quality/cost of staged photos
 AI_IMAGE_COST_CENTS=5                               ⚙️ ✅  assumed cost per output image (cost accounting)
+FREE_PREVIEWS_PER_DAY=15                            ⚙️ ✅  free watermarked staging previews per UTC day (0 = off); default in code
+FREE_PREVIEWS_PER_IP=2                              ⚙️ ✅  per visitor IP per day; previews also stop at 40 % of the daily AI budget
+AI_PREVIEW_QUALITY=medium                           ⚙️ ✅  low | medium | high — preview quality (medium ≈ 5–6 ¢ each)
 
 # Email (Resend) — key set; domain orvionis.com must be verified in Resend (DNS), see REQUIRED_SERVICES_AND_KEYS.md §3
 EMAIL_PROVIDER=resend                               ⚙️ ✅

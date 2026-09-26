@@ -46,10 +46,11 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 14:52–15:20: **Virtual Staging** shipped: transfer verified by full-tree checksum, commit `e0420f7` deployed (migration `20260926030000_output_type_image` applied, seed synced, graceful restart in logs); production test #5 on gpt-image-1 worked technically but visual review caught a chandelier swap and an added built-in; fixed in `2f1d6f2` (freestanding-only prompt, gpt-image-2 default, exact photo proportions, EXIF auto-rotate) → test #6 clean on both versions (recessed light, windows, walls, doors untouched, 1536×1040). Stripe webhook delivery confirmed from the expired-session events. Uptime monitor run #1 had failed on a Python f-string quirk while production was healthy (log: ok, db up, 1,845 worker ticks) — check rewritten, runs off the hour now and once on every change of the workflow file.
 - 15:25–15:45: Virtual Staging sample replaced with the **real, unedited output of production order #6** (one of its two versions, gpt-image-2): before/after composite on the tool page, home card and OG card; copy says "real pipeline output, unedited" and tells agents to label the photo "virtually staged" in the MLS.
 - 15:45–16:10: **free redo + clean deliverables** (found while checking order #6 on the customer page: "After · version 1" showed the file named `-v2`, because outputs were listed newest first). Outputs now carry `deliveredAt`; the customer page and the delivery email show only the latest delivered set in generation order (a QC re-run or a redo used to pile old and new files together and email both). New **Free redo** on delivered orders (admin, with reason + count, audit `redo_order`): AUTO tools re-deliver with "Your redo is ready — order #N", concierge goes back to REVIEW, the customer keeps the last delivery meanwhile; `Order.deliveredAt` keeps the first delivery for SLA metrics. The admin's delivery note now reaches the customer on AUTO orders too (was dropped), email HTML escaped + links clickable, outputs numbered by run. Staging sample caption no longer says "built from fictional facts". Migration `20260926150000_output_delivered_at` (backfills delivered orders). 49 tests.
+- 16:10–16:35: **free staging preview** on the order form: upload the room photo → "See a free preview first" → one version of the visitor's own room in about a minute, downsized to 1024 px with a tiled "ORVIONIS · PREVIEW" mark + banner (pre-rendered PNGs, no server fonts needed), nothing stored; "Preview again" for another style. Caps: `FREE_PREVIEWS_PER_DAY` 15 (all visitors), `FREE_PREVIEWS_PER_IP` 2, and previews stop at 40 % of the daily AI budget so paid orders keep the rest (worst case ≈ $0.90/day at medium quality). Tool page: hero line + FAQ "Can I see it on my photo before paying?"; home card link; staging DM now offers the free preview (EN + UA). Admin analytics: "Free staging previews" + how many of those sessions went to checkout. Verified locally (54 tests, UI flow at 1280/390 px with the mock model, IP limit message); a real-model preview in production is still to be seen.
 
 ## IN PROGRESS
 
-- Nothing mid-flight. Candidate next build: an automated vision QC for Virtual Staging (a cheap model compares before/after and parks the order for a human if walls, windows, doors, built-ins or ceiling fixtures changed) — build it once real orders show any failure; test #6 needed none.
+- Nothing mid-flight. First real-model free preview in production not yet seen (the operator's production clicks that spend AI money need the owner's OK). Candidate next build: an automated vision QC for Virtual Staging (a cheap model compares before/after and parks the order for a human if walls, windows, doors, built-ins or ceiling fixtures changed) — build it once real orders show any failure; test #6 needed none.
 
 ## BLOCKED (needs the owner)
 
@@ -63,9 +64,11 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 1. Owner: Stripe live activation, then one real $9 order (operator swaps keys, creates the live webhook, verifies, enables Stripe receipts).
 2. Owner + operator: first outreach batch — vacant listings (`re-ig-dm-staging`) and new listings (`re-ig-dm-9`); operator prepares 20 target profiles/day with personalised lines if the owner wants.
-3. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
-4. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-5. Browser extension — only on demand.
+3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
+4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
+5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
+6. SEO: a few genuinely useful guides for agents (photographing a room for virtual staging, MLS disclosure of virtual staging, staging cost comparison) linking to the tool and the free preview.
+7. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 
@@ -80,12 +83,12 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## KNOWN BUGS
 
-- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores the original upload (≤ 8 MB) + 2 JPEG outputs (≈ 0.2–0.5 MB each); at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session "stalls" on orvionis.com pages — cause found 2026-09-26: the owner's Chrome window is hidden (`document.visibilityState = hidden`), so timers are throttled and the tab gets frozen a few seconds after load (async JS and screenshots time out, network from the page is refused). Not the site: navigate, then read the DOM / `performance` entries synchronously in the same batch.
+- None open. Watch list: IP-based limits (uploads, orders, previews) trust the first `X-Forwarded-For` entry — if Railway's proxy appends rather than replaces that header, a visitor can rotate it; the global daily preview cap and the AI budget still bound the cost. files live in Postgres (`File.data`) — a staging order stores the original upload (≤ 8 MB) + 2 JPEG outputs (≈ 0.2–0.5 MB each); at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session "stalls" on orvionis.com pages — cause found 2026-09-26: the owner's Chrome window is hidden (`document.visibilityState = hidden`), so timers are throttled and the tab gets frozen a few seconds after load (async JS and screenshots time out, network from the page is refused). Not the site: navigate, then read the DOM / `performance` entries synchronously in the same batch.
 
 ## BUSINESS METRICS (real data only)
 
 - Revenue: $0 (no live payments possible yet). Orders: 0 paid. Visitors: no meaningful traffic yet (no outreach started).
-- AI budget note: `AI_DAILY_BUDGET_CENTS=500` allows ~45 staging orders/day at ≈11¢ each — raise it in Railway Variables once staging orders arrive (the guard parks orders in REVIEW, it never loses them). Test spend today: $0.13 (#5) + $0.11 (#6).
+- AI budget note: free previews are capped at 15/day (≈ 6¢ each at medium, logged as purpose `preview`) and stop at 40 % of the daily budget. `AI_DAILY_BUDGET_CENTS=500` allows ~45 staging orders/day at ≈11¢ each — raise it in Railway Variables once staging orders arrive (the guard parks orders in REVIEW, it never loses them). Test spend today: $0.13 (#5) + $0.11 (#6).
 - Costs so far: Railway Hobby plan, OpenAI ≈ $0.01 (smoke test + one pipeline test order: 2 calls, 1,325 in / 492 out tokens → margin after AI on a $9 order ≈ $8.99 before Stripe fees ≈ $0.56). Instrumentation in place: `Event` table (visits, CTA, checkout, paid, delivered, free-tool use), `AiRequest` (cost per call), `ChannelCost` (hours/spend per channel), KPIs on `/admin/analytics`, daily CEO report.
 - First-profit forecast given to the owner 2026-09-26: first sale 2–5 days after Stripe live + daily outreach starts; infra breaks even after ~3–5 orders.
 

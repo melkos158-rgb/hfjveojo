@@ -74,6 +74,15 @@ export async function prepareInputPhoto(data: Buffer, mime: string): Promise<{ d
   }
 }
 
+/** Load the customer's upload, check it is a photo, and normalise it for the image model. */
+async function loadRoomPhoto(fileId: string): Promise<{ data: Buffer; mime: string; width?: number; height?: number }> {
+  const file = await getFileBuffer(fileId);
+  if (!file) throw new AppError("The uploaded photo could not be found (it may have expired). Please upload it again.", 400, "photo_missing");
+  const mime = file.file.mime;
+  if (!/^image\/(png|jpeg|webp)$/.test(mime)) throw new AppError("The uploaded file is not a PNG, JPEG or WebP image.", 400, "photo_type");
+  return prepareInputPhoto(file.data, mime);
+}
+
 export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   id: "virtual-staging",
   slug: "virtual-staging",
@@ -139,6 +148,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
       { q: "Does it change the room itself?", a: "No. Furniture, rugs, lighting and decor are added; walls, floors, windows, doors and the camera angle are kept as photographed. If something structural did change, reply to the delivery email and we redo it." },
       { q: "Do I have to disclose virtual staging?", a: "Most MLS boards and many state rules require photos to be labelled as virtually staged. Add “virtually staged” to the photo caption or listing remarks — it is your responsibility as the listing agent." },
       { q: "What photos work best?", a: "Straight-on or slight angle, daylight, the whole room in frame, nothing blocking the floor. Cluttered rooms get staged too, but empty rooms give the cleanest result." },
+      { q: "Can I see it on my photo before paying?", a: "Yes. Upload your photo in the order form and press “See a free preview” — you get one staged version of your room, watermarked and at reduced size, in about a minute (a few per day). The paid order gives you two full-resolution versions without watermarks." },
       { q: "Can I get more styles or more rooms?", a: "Each order is one photo. Order again for another room or another style — same price." },
     ],
     ctaLabel: "Stage my photo — $15",
@@ -152,6 +162,19 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     keywords: ["virtual staging", "virtual staging software", "virtually staged photos", "AI virtual staging", "empty room staging"],
     ogImage: "img/sample-virtual-staging-og.jpg",
   },
+  preview: {
+    label: "See a free preview first",
+    caption: "Free preview: one version, watermarked and downsized. Your order: two full-resolution versions of this photo, no watermark.",
+    async run(ctx) {
+      const photo = await loadRoomPhoto(ctx.intake.photoFileId);
+      const { images } = await ctx.ai.editImage(
+        { image: photo.data, mime: photo.mime, prompt: stagingPrompt(ctx.intake), n: 1, size: "auto", inputWidth: photo.width, inputHeight: photo.height },
+        "preview",
+      );
+      if (!images[0]) throw new AppError("The preview could not be made right now.", 502, "preview_empty");
+      return { image: images[0] };
+    },
+  },
   delivery: {
     emailSubject: "Your staged photos are ready",
     emailIntro: "Two staged versions of your room are ready to download. Remember to label them as virtually staged in the MLS.",
@@ -159,12 +182,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   async run(ctx) {
     const i = ctx.intake;
     ctx.step("load_photo", "Loading the uploaded room photo");
-    const file = await getFileBuffer(i.photoFileId);
-    if (!file) throw new AppError("The uploaded photo could not be found (it may have expired). Please order again with a fresh upload.", 400, "photo_missing");
-    const mime = file.file.mime;
-    if (!/^image\/(png|jpeg|webp)$/.test(mime)) throw new AppError("The uploaded file is not a PNG, JPEG or WebP image.", 400, "photo_type");
-
-    const photo = await prepareInputPhoto(file.data, mime);
+    const photo = await loadRoomPhoto(i.photoFileId);
     ctx.step("ai_stage", `Staging a ${i.roomType} in ${i.style} style (${VIRTUAL_STAGING_VARIATIONS} versions, input ${photo.width ?? "?"}×${photo.height ?? "?"})`);
     const prompt = stagingPrompt(i);
     const { images, costMicros } = await ctx.ai.editImage(
