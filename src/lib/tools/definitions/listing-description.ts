@@ -189,6 +189,10 @@ export const listingDescriptionTool: ToolDefinition<ListingDescriptionIntake> = 
     guarantee: "If the copy is unusable, tell us within 7 days and we refund you.",
     deliveryPromise: "Usually ready in about 5 minutes.",
     sample: SAMPLE_LISTING_DESCRIPTION_RESULT,
+    guides: [
+      { href: "/guides/fair-housing-words-to-avoid", label: "Fair housing words to avoid (and what to say instead)" },
+      { href: "/free/fair-housing-checker", label: "Free fair housing checker" },
+    ],
   },
   seo: {
     title: "Listing Description Writer — MLS-ready copy + social captions in minutes",

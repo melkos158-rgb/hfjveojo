@@ -1,0 +1,41 @@
+# Growth experiments — running log
+
+Each experiment has a hypothesis, a test, one metric, a status, a result and a decision. Experiments are judged by paid orders and contribution, never by likes or replies.
+
+- Framework and the original research: `docs/EXPERIMENTS.md`.
+- Live experiment records (tracked with `?exp=<key>` links): `/admin/experiments`.
+- Numbers: `docs/BUSINESS_METRICS.md`.
+
+**Phase: days 1–30 = EXPLORE.** Payments went live on 2026-09-26. No acquisition channel has run yet, so every experiment below is waiting for traffic. That is the first thing to fix.
+
+## Active (built, waiting for traffic)
+
+| ID | Hypothesis | Test | Metric → success / failure | Status |
+| --- | --- | --- | --- | --- |
+| E1 | Agents with walkthrough footage pay $49 for 5 edited listing clips (48 h, concierge) | Instagram DMs `re-ig-dm-1` | message→paid ≥ 5 % in 60 DMs / 0 paid after 60 DMs + one offer change | waiting for outreach |
+| E2 | Photographers pay $29 for a branded pricing-guide PDF made from their packages | DMs, Facebook groups, SEO, free pricing calculator | ≥ 5 paid in 30 days | waiting for traffic |
+| E3 | $9 MLS description + captions is an easy first purchase for agents | DMs `re-ig-dm-9`, free fair-housing checker, SEO | ≥ 10 paid in 30 days | waiting for traffic |
+| E4 | Agents with vacant listings pay $15/photo for two staged versions in minutes. Incumbent: BoxBrownie US$30 per image, 48 h | DMs `re-ig-dm-staging`, CA variant with the AB 723 angle | ≥ 10 paid photos in 30 days, AI ≤ $0.40/order, ≤ 20 % redos | waiting for outreach |
+| E5 | Multi-room orders (up to 6 photos) raise staging AOV above $15 | order form: several photos, live total | AOV of staging orders > $22 once 5 orders exist | built 2026-09-26 |
+| E6 | A free watermarked preview on the visitor's own photo lifts checkout rate | preview button on the staging form | preview sessions → checkout ≥ 2× non-preview sessions | built, no real preview yet |
+| E7 | AB 723 compliance (labeled copies, original-photo page, QR) is a buying reason in California | CA DM variant + `/guides/ab-723-virtual-staging` | CA share of staging orders; guide → tool clicks | built |
+
+## Proposed next (ranked by speed to first data)
+
+| ID | Hypothesis | Test | Cost | Owner action? |
+| --- | --- | --- | --- | --- |
+| E8 | High-intent search traffic for "virtual staging" converts at ≥ 2 % at $15/photo | Google Ads search, US, exact/phrase "virtual staging", "virtual staging service", "virtual staging price"; landing `/tools/virtual-staging?utm_source=google&utm_medium=cpc&exp=e4-virtual-staging`; €50 budget, 5 days | €50 | yes — Google Ads account + billing |
+| E9 | 20 personal DMs per day to agents with vacant or new listings produce the first paid orders within 7 days | `docs/OUTREACH.md` templates (EN, with UA control copy), UTM per template, log the hours | ~30 min/day of founder time | yes — sent from the owner's accounts |
+| E10 | Long-tail guides bring organic visitors who use the free tools and buy | guides (AB 723, photo tips, fair-housing wording), free tools linked to paid tools | operator time | no |
+| E11 | "Remove furniture / declutter" sells next to staging. Incumbent: BoxBrownie item removal US$10 standard, US$5 minor | concierge-first: offer it by hand to the first staging customers, automate once 3 are sold | ~0 | no |
+| E12 | Day-to-dusk for exterior photos is an impulse add-on (incumbent BoxBrownie US$5) | only after E4 shows buyers; price would have to be ~$5 | ~0 | no |
+
+**Rule:** no new automated tool gets built before an existing one has real buyers. The exception is a concierge test that costs nothing to offer (E11).
+
+## Closed
+
+None yet.
+
+## Log
+
+- 2026-09-26 — Payments live. Snapshot: 0 real visitors, 0 paid. Decision: acquisition is the bottleneck. Operator: E10 (SEO) and the outreach kit. Owner: E9 (outreach) and optionally E8 (€50 ads test).

@@ -97,6 +97,12 @@ export default function FairHousingCheckerPage() {
               </div>
             ))}
           </dl>
+          <p className="mt-6 text-sm">
+            Why these phrases, what HUD allows, and a safer alternative for each:{" "}
+            <Link href="/guides/fair-housing-words-to-avoid" className="font-semibold text-accent hover:underline">
+              Fair housing words to avoid →
+            </Link>
+          </p>
           <div className="mt-8 card">
             <p className="eyebrow">Done for you</p>
             <h3 className="mt-2 text-lg font-bold">Listing Description — $9</h3>

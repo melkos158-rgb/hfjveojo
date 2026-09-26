@@ -26,8 +26,8 @@ export function Footer() {
           <Link href="/pricing" className="hover:text-ink">
             Pricing
           </Link>
-          <Link href="/guides/ab-723-virtual-staging" className="hover:text-ink">
-            AB 723 guide
+          <Link href="/guides" className="hover:text-ink">
+            Guides
           </Link>
           <Link href="/free" className="hover:text-ink">
             Free tools
