@@ -19,6 +19,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## CURRENT PRIORITY
 
+**Owner away 27 Sep – ~1 Oct.** Scheduled check-ins every ~6 h. Rules are in `OPERATOR.md` → "Owner away".
+
 0. (P0, now) **Acquisition channels are live (2026-09-26).**
    - Google Ads E8 published 22:15 and in review; €30 campaign total until 1 Oct (`docs/GOOGLE_ADS_EXPERIMENT.md`). The owner adds negatives and turns off auto-apply: the operator may not edit the live campaign.
    - Fiverr gig E13 Active (`docs/FIVERR_EXPERIMENT.md`). Only Manage Orders proves an order.

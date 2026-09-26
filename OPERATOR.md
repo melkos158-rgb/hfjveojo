@@ -32,6 +32,25 @@ Rule: no secrets in this file — only names, ids, paths and states.
 - 2026-09-26 15:20 UTC+2 — Deploy `2f1d6f2` ACTIVE: 4 tools live incl. Virtual Staging on gpt-image-2 (test order #6 clean); migration `20260926030000_output_type_image` applied; `/api/health` ok.
 - 2026-09-26 — Brand visuals live: Higgsfield-generated heroes (`public/img/hero-*.webp`, JPEG twins for OG) on /real-estate, /photographers and the home "Who is this for?" cards; static Open Graph cards for /, /real-estate, /photographers (`src/lib/og.tsx`, rendered at build time). Vertical pages now have a primary CTA to the tool page and a `#tools` anchor.
 
+## Owner away 2026-09-27 → ~2026-10-01 (autonomous mode)
+
+- **Schedule:** check-ins run into this Cowork session every ~6 h: 05:03, 11:03, 17:03 and 23:03 UTC, from 26 Sep 23:03 to 1 Oct 17:03. The final E8 evaluation runs 2 Oct 05:03 UTC. Find them with `list_triggers`.
+- **The owner's PC must stay on** with the Claude desktop app and Chrome running. Without it there is no Chrome (Ads / Fiverr / Railway / admin) and no git push; the cloud can't reach orvionis.com or GitHub.
+- **Fiverr (owner's choice): the gig stays active.** A real order goes like this:
+  1. verify it in Manage Orders;
+  2. produce the files via `/admin/orders/new`;
+  3. look at every image;
+  4. get the owner's yes by message + push;
+  5. only then deliver or reply on Fiverr.
+
+  Fiverr is checked only at the 11:03 UTC run (bot checks).
+- **Reporting (owner's choice):** one short Ukrainian daily summary at the 17:03 UTC run. Otherwise message only when his decision is needed; a push only for real orders or incidents.
+- **Blocked for the operator** (safety check or human-only):
+  - edits to the live Google Ads campaign;
+  - Railway variables;
+  - Fiverr bot checks;
+  - messages or deliveries to buyers without approval.
+
 ## Owner actions needed (cannot be done by the operator)
 
 **Current, 2026-09-26 22:00 UTC+2. Do these first; the older numbered items below are history.**
