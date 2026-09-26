@@ -55,6 +55,18 @@ Hey [name], the [street] listing shoots well but the empty rooms are working aga
 
 ✍️ Personalise: [name], [street], the room you name. Add `?utm_source=instagram_dm&exp=e4-virtual-staging`. Only send to listings that are actually empty — the message is wrong for furnished ones.
 
+
+### re-ig-dm-staging-ca — Instagram DM to a California agent with a vacant listing
+
+When: California only — AB 723 has required a disclosure next to digitally altered listing photos (and access to the original) since January 1, 2026.
+
+📤 EN — готове до відправки:
+Hey [name], quick one on the [street] listing. If you stage those empty rooms virtually, AB 723 now wants a label next to each staged photo and a link to the original. My staging covers that: labelled copies, a public page and QR code with the original, and the line to paste. $15 a photo, free watermarked preview first. Before/after: orvionis.com/tools/virtual-staging#example
+
+🇺🇦 UA — переклад для контролю:
+Привіт, [name], коротко про лістинг на [street]. Якщо стейджитимеш ці порожні кімнати віртуально, AB 723 тепер вимагає позначку біля кожного застейдженого фото і посилання на оригінал. Мій стейджинг це покриває: копії з позначкою, публічна сторінка й QR-код з оригіналом і рядок, який треба вставити. $15 за фото, спершу безкоштовне превʼю з водяним знаком. До/після: orvionis.com/tools/virtual-staging#example
+
+✍️ Personalise: [name], [street]. California listings only; add `?utm_source=instagram_dm&exp=e4-virtual-staging`. Never promise legal certainty — the pack helps them comply, they stay responsible.
 ### re-free-checker — Reddit / Facebook group comment or post, value first (no link to paid)
 
 📤 EN:

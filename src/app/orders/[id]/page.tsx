@@ -12,6 +12,7 @@ import { CopyLink } from "@/components/CopyLink";
 import { DeliverableText } from "@/components/DeliverableText";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { deliveredOutputs, lastDeliveredAt } from "@/lib/orders/deliverables";
+import { disclosureLine, ensurePublicToken, isLabeledOutput, originalPhotoUrl } from "@/lib/tools/disclosure";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -41,9 +42,13 @@ export default async function OrderPage({ params, searchParams }: Props) {
   const deliveredAt = lastDeliveredAt(order.outputs) ?? order.deliveredAt;
   const markdownOut = shown.find((o) => o.type === "MARKDOWN");
   const md = (markdownOut?.content as { markdown?: string } | null)?.markdown;
-  const images = shown.filter((o) => o.type === "IMAGE" && o.fileId);
+  const images = shown.filter((o) => o.type === "IMAGE" && o.fileId && !isLabeledOutput(o));
+  const labeled = shown.filter((o) => o.type === "IMAGE" && o.fileId && isLabeledOutput(o));
   // For photo tools the customer's own upload is shown next to the results (before → after).
-  const imageField = getToolBySlug(order.tool.slug)?.intake.fields.find((f) => f.type === "image");
+  const toolDef = getToolBySlug(order.tool.slug);
+  const imageField = toolDef?.intake.fields.find((f) => f.type === "image");
+  // Disclosure pack (AB 723 / MLS) for digitally altered photos; orders from before it get their public link now.
+  const publicToken = toolDef?.disclosurePack && showFiles ? (order.publicToken ?? (await ensurePublicToken(order.id))) : null;
   const beforeFileId = imageField ? (order.intake as Record<string, unknown>)[imageField.key] : undefined;
   const beforeUrl = typeof beforeFileId === "string" && beforeFileId ? signedFileUrl(beforeFileId) : undefined;
 
@@ -150,6 +155,39 @@ export default async function OrderPage({ params, searchParams }: Props) {
                 );
               })}
           </ul>
+          {publicToken ? (
+            <div className="card mt-6">
+              <h3 className="font-semibold">Disclosure pack — California AB 723 and MLS rules</h3>
+              <p className="mt-1 text-sm text-gray-600">
+                Virtually staged photos must be labelled, and buyers must be able to see the original. Use the labelled copies in ads and on social, put the line below next to the photo, and link or print the original.
+              </p>
+              <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto]">
+                <div className="space-y-3">
+                  <CopyLink url={originalPhotoUrl(publicToken)} label="Public page with the original photo" hint="Anyone with this link can see the unaltered photo — that is the point. It stays live while your files are kept (90 days)." />
+                  <CopyLink url={disclosureLine(publicToken)} label="Line to put next to the staged photo" hint={null} wrap />
+                  {labeled.length ? (
+                    <div className="flex flex-wrap gap-2">
+                      {labeled.map((o, i) => (
+                        <TrackedDownload key={o.id} href={signedFileUrl(o.fileId as string)} tool={order.tool.slug} kind="image_labeled" className="btn-secondary px-3 py-1.5 text-xs" download>
+                          Download version {((o.content ?? {}) as { version?: number }).version ?? i + 1} labelled
+                        </TrackedDownload>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+                <div className="text-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`/original/${publicToken}/qr`} alt="QR code that opens the original photo" width={132} height={132} className="mx-auto rounded-lg border border-line bg-white p-1" />
+                  <a href={`/original/${publicToken}/qr`} download="original-photo-qr.png" className="mt-2 inline-block text-xs text-accent hover:underline">
+                    QR for flyers (PNG)
+                  </a>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-gray-500">
+                On the MLS, follow your board&apos;s labelling (usually &ldquo;virtually staged&rdquo; or &ldquo;digitally altered&rdquo;, with the original uploaded right after the staged photo). This helps you comply; it is not legal advice.
+              </p>
+            </div>
+          ) : null}
           {md ? (
             shown.some((o) => o.type === "PDF" || o.type === "LINK") ? (
               <details className="card mt-4">

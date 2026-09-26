@@ -146,8 +146,14 @@ describe("order → checkout → webhook → fulfilment", () => {
     const order = await prisma.order.findUniqueOrThrow({ where: { id: retry.orderId }, include: { outputs: { include: { file: true } }, runs: true } });
     expect(order.amountCents).toBe(1500);
     expect(order.status).toBe("COMPLETED");
-    const images = order.outputs.filter((o) => o.type === "IMAGE");
+    const { isLabeledOutput } = await import("@/lib/tools/disclosure");
+    const images = order.outputs.filter((o) => o.type === "IMAGE" && !isLabeledOutput(o));
     expect(images).toHaveLength(2);
+    // disclosure pack: a labelled copy per version, the public original-photo link in the details
+    const labeledCopies = order.outputs.filter((o) => o.type === "IMAGE" && isLabeledOutput(o));
+    expect(labeledCopies.map((o) => o.file?.name).sort()).toEqual(["staged-living-room-modern-v1-labeled.jpg", "staged-living-room-modern-v2-labeled.jpg"]);
+    const fresh = await prisma.order.findUniqueOrThrow({ where: { id: retry.orderId } });
+    expect(fresh.publicToken).toMatch(/^[A-Za-z0-9_-]{12,}$/);
     expect(images.map((o) => o.file?.name).sort()).toEqual(["staged-living-room-modern-v1.jpg", "staged-living-room-modern-v2.jpg"]);
     for (const img of images) {
       expect(img.file?.kind).toBe("OUTPUT");
@@ -156,6 +162,8 @@ describe("order → checkout → webhook → fulfilment", () => {
       expect(img.file?.data?.slice(0, 3)).toEqual(new Uint8Array([0xff, 0xd8, 0xff])); // real JPEG bytes
     }
     const details = order.outputs.find((o) => o.type === "JSON");
+    expect((details?.content as { disclosure: { originalPhotoUrl: string; text: string } }).disclosure.originalPhotoUrl).toBe(`http://localhost:3000/original/${fresh.publicToken}`);
+    expect((details?.content as { disclosure: { text: string } }).disclosure.text).toContain("Virtually staged");
     expect((details?.content as { style: string; versions: number }).style).toBe("modern");
     expect((details?.content as { versions: number }).versions).toBe(2);
     const ai = await prisma.aiRequest.findMany({ where: { orderId: retry.orderId } });

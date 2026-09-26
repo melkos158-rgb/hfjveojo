@@ -70,3 +70,9 @@ Return `needsHuman: true` from `run()`; the order stops in REVIEW with the AI-dr
 ## Renderers
 
 PDF: `src/lib/render/pricingGuidePdf.ts` is a template — copy it for a new document type (createElement style so it runs in the worker too). Files go through `putFile()`; outputs with `file` get a signed download link automatically.
+
+## Optional extras (see Virtual Staging)
+
+- `preview` — a free, watermarked preview on the order form: implement `run({ intake, ai })` returning one image; `src/lib/tools/preview.ts` validates the intake, applies the daily / per-IP / budget caps, watermarks and downsizes. Nothing is stored.
+- `disclosurePack: true` — for tools that digitally alter listing photos: the order gets a public token at checkout, the order page shows the disclosure pack (public page with the original photo at `/original/<token>`, a QR code, the line to paste, and any `IMAGE` outputs marked `content.variant = "labeled"`), see `src/lib/tools/disclosure.ts`.
+- Image outputs are listed in generation order on the order page (`version 1` = the file named `-v1`); labelled copies stay out of the before/after grid.

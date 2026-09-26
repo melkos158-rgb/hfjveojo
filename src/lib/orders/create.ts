@@ -76,6 +76,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   const order = await prisma.order.create({
     data: {
       isTest: isTestOrder(mode, input.isTest),
+      publicToken: def.disclosurePack ? randomToken(12) : undefined,
       userId: input.userId ?? undefined,
       customerEmail: email,
       customerName: typeof intake.agentName === "string" ? intake.agentName : typeof intake.photographerName === "string" ? intake.photographerName : null,

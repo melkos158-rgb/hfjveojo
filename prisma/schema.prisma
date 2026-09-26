@@ -183,6 +183,8 @@ model Order {
   livemode                Boolean     @default(false)
   /** Set when Stripe reports the checkout completed (paid, or an async method still settling) — such orders are never auto-closed as abandoned. */
   checkoutCompletedAt     DateTime?
+  /** Public, unguessable id for the disclosure page that shows the unaltered original photo (virtual staging, California AB 723). */
+  publicToken             String?     @unique
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt
 

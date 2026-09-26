@@ -164,6 +164,8 @@ export type ToolDefinition<TIntake = Record<string, unknown>> = {
   conciergeChecklist?: string[];
   /** Free watermarked preview on the order form (see ToolPreview). */
   preview?: ToolPreview<TIntake>;
+  /** Digitally altered photos: the order gets the disclosure pack (labelled copies, public original + QR, text) — src/lib/tools/disclosure.ts. */
+  disclosurePack?: boolean;
   run: (ctx: PipelineContext<TIntake>) => Promise<PipelineResult>;
 };
 

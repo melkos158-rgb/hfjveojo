@@ -3,6 +3,7 @@ import type { ToolDefinition } from "@/lib/tools/types";
 import { getFileBuffer } from "@/lib/storage";
 import { AppError } from "@/lib/errors";
 import { SAMPLE_VIRTUAL_STAGING_RESULT } from "@/lib/tools/samples/virtual-staging";
+import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelStagedPhoto, originalPhotoUrl } from "@/lib/tools/disclosure";
 
 /**
  * Virtual Staging — one photo of an empty (or dated) room → two photorealistic staged versions of the
@@ -138,6 +139,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
       "The architecture stays untouched: walls, floors, windows, fixtures, perspective",
       "6 styles: modern, scandinavian, farmhouse, mid-century, luxury, coastal",
       "Before/after side by side on your order page, downloads kept 90 days",
+      "Disclosure pack for California AB 723 and MLS rules: labelled copies, a public link and QR code to the original photo, and the line to paste next to it",
     ],
     howItWorks: [
       { title: "1. Upload the photo", text: "One well-lit photo of the empty room, up to 8 MB. Pick the room type and a style." },
@@ -146,7 +148,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     ],
     faq: [
       { q: "Does it change the room itself?", a: "No. Furniture, rugs, lighting and decor are added; walls, floors, windows, doors and the camera angle are kept as photographed. If something structural did change, reply to the delivery email and we redo it." },
-      { q: "Do I have to disclose virtual staging?", a: "Most MLS boards and many state rules require photos to be labelled as virtually staged. Add “virtually staged” to the photo caption or listing remarks — it is your responsibility as the listing agent." },
+      { q: "Do I have to disclose virtual staging?", a: "Almost everywhere, yes. In California, AB 723 (in force since January 1, 2026) requires digitally altered listing photos to carry a disclosure next to the image and the unaltered original to be available — on your own site, or through a public link or QR code elsewhere. Most MLS boards ask for a “virtually staged” or “digitally altered” label with the original uploaded right after the staged photo. Every order includes a disclosure pack: labelled copies, a public page with the original photo plus a QR code, and the line to paste. It helps you comply; you remain responsible for your listing." },
       { q: "What photos work best?", a: "Straight-on or slight angle, daylight, the whole room in frame, nothing blocking the floor. Cluttered rooms get staged too, but empty rooms give the cleanest result." },
       { q: "Can I see it on my photo before paying?", a: "Yes. Upload your photo in the order form and press “See a free preview” — you get one staged version of your room, watermarked and at reduced size, in about a minute (a few per day). The paid order gives you two full-resolution versions without watermarks." },
       { q: "Can I get more styles or more rooms?", a: "Each order is one photo. Order again for another room or another style — same price." },
@@ -162,6 +164,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     keywords: ["virtual staging", "virtual staging software", "virtually staged photos", "AI virtual staging", "empty room staging"],
     ogImage: "img/sample-virtual-staging-og.jpg",
   },
+  disclosurePack: true,
   preview: {
     label: "See a free preview first",
     caption: "Free preview: one version, watermarked and downsized. Your order: two full-resolution versions of this photo, no watermark.",
@@ -198,6 +201,11 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     ctx.step("encode", "Encoding delivery JPEGs");
     const encoded = await Promise.all(images.map((img) => encodeForDelivery(img)));
 
+    // Disclosure pack (California AB 723 / MLS): labelled copies + the public page with the original photo.
+    ctx.step("disclosure", `Labelled copies ("${LABEL_TEXT}") and the public original-photo link`);
+    const labeled = await Promise.all(encoded.map(async (img) => (img.ext === "jpg" ? labelStagedPhoto(img.data).catch(() => null) : null)));
+    const publicToken = await ensurePublicToken(ctx.orderId);
+
     return {
       needsHuman: notes.length > 0,
       qc: { passed: notes.length === 0, notes },
@@ -207,7 +215,32 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
           title: `Staged version ${idx + 1} — ${i.style} ${i.roomType}`,
           file: { name: `staged-${i.roomType.replace(/\s+/g, "-")}-${i.style}-v${idx + 1}.${img.ext}`, mime: img.mime, data: img.data },
         })),
-        { type: "JSON" as const, title: "Staging details", content: { roomType: i.roomType, style: i.style, notes: i.notes, prompt, sourceFileId: i.photoFileId, versions: images.length, format: encoded[0]?.ext ?? "png" } },
+        ...labeled.flatMap((data, idx) =>
+          data
+            ? [
+                {
+                  type: "IMAGE" as const,
+                  title: `Staged version ${idx + 1} — labelled “${LABEL_TEXT}”`,
+                  content: { variant: LABELED_VARIANT, version: idx + 1 },
+                  file: { name: `staged-${i.roomType.replace(/\s+/g, "-")}-${i.style}-v${idx + 1}-labeled.jpg`, mime: "image/jpeg", data },
+                },
+              ]
+            : [],
+        ),
+        {
+          type: "JSON" as const,
+          title: "Staging details",
+          content: {
+            roomType: i.roomType,
+            style: i.style,
+            notes: i.notes,
+            prompt,
+            sourceFileId: i.photoFileId,
+            versions: images.length,
+            format: encoded[0]?.ext ?? "png",
+            disclosure: { originalPhotoUrl: originalPhotoUrl(publicToken), text: disclosureLine(publicToken) },
+          },
+        },
       ],
     };
   },

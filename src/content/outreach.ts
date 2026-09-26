@@ -29,6 +29,14 @@ export const outreachTemplates: OutreachTemplate[] = [
     personalize: "[name], [street], the room you name (living room / primary bedroom). Link with ?utm_source=instagram_dm&exp=e4-virtual-staging. Only send to listings that are actually empty.",
   },
   {
+    key: "re-ig-dm-staging-ca",
+    channel: "Instagram DM → California agent with a vacant listing (empty rooms in the photos)",
+    when: "California only. AB 723 has required disclosure on digitally altered listing photos since January 1, 2026 — lead with the compliance angle, the before/after does the rest.",
+    en: `Hey [name], quick one on the [street] listing. If you stage those empty rooms virtually, AB 723 now wants a label next to each staged photo and a link to the original. My staging covers that: labelled copies, a public page and QR code with the original, and the line to paste. $15 a photo, free watermarked preview first. Before/after: orvionis.com/tools/virtual-staging#example`,
+    ua: `Привіт, [name], коротко про лістинг на [street]. Якщо стейджитимеш ці порожні кімнати віртуально, AB 723 тепер вимагає позначку біля кожного застейдженого фото і посилання на оригінал. Мій стейджинг це покриває: копії з позначкою, публічна сторінка й QR-код з оригіналом і рядок, який треба вставити. $15 за фото, спершу безкоштовне превʼю з водяним знаком. До/після: orvionis.com/tools/virtual-staging#example`,
+    personalize: "[name], [street]. California listings only; add ?utm_source=instagram_dm&exp=e4-virtual-staging. Never claim legal certainty — it helps them comply, they stay responsible.",
+  },
+  {
     key: "re-free-checker",
     channel: "Reddit / Facebook group post or comment — value first, no paid pitch",
     when: "Where tools are allowed. Answer replies; the checker itself links to the $9 tool.",

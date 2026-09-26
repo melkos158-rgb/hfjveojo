@@ -25,6 +25,7 @@ import { handleStripeEvent } from "@/lib/stripe/webhooks";
 import { deliverOrder, redoOrder } from "@/lib/orders/service";
 import { deliveredOutputs, lastDeliveredAt } from "@/lib/orders/deliverables";
 import { resetDatabase, sampleListingClipsIntake } from "./helpers";
+import { isLabeledOutput } from "@/lib/tools/disclosure";
 
 function paid(orderId: string, amount: number): Stripe.Event {
   return {
@@ -69,7 +70,8 @@ describe("free redo of a delivered order", () => {
     const first = await loadOrder(orderId);
     expect(first.status).toBe("COMPLETED");
     const firstSet = deliveredOutputs(first.outputs);
-    expect(firstSet.filter((o) => o.type === "IMAGE").map((o) => o.title)).toEqual(["Staged version 1 — modern living room", "Staged version 2 — modern living room"]);
+    const clean = (list: typeof firstSet) => list.filter((o) => o.type === "IMAGE" && !isLabeledOutput(o)).map((o) => o.title);
+    expect(clean(firstSet)).toEqual(["Staged version 1 — modern living room", "Staged version 2 — modern living room"]);
     expect(firstSet.every((o) => o.version === 1)).toBe(true);
     const firstMail = toCustomer().at(-1);
     expect(firstMail?.subject).toBe("Your staged photos are ready");
@@ -88,7 +90,7 @@ describe("free redo of a delivered order", () => {
     expect(after.outputs).toHaveLength(first.outputs.length * 2); // the admin still has both runs
     const shown = deliveredOutputs(after.outputs);
     expect(shown.map((o) => o.id).some((id) => firstSet.some((f) => f.id === id))).toBe(false);
-    expect(shown.filter((o) => o.type === "IMAGE").map((o) => o.title)).toEqual(["Staged version 1 — modern living room", "Staged version 2 — modern living room"]);
+    expect(clean(shown)).toEqual(["Staged version 1 — modern living room", "Staged version 2 — modern living room"]);
     expect(shown.every((o) => o.version === 2)).toBe(true);
     expect(lastDeliveredAt(after.outputs)!.getTime()).toBeGreaterThan(first.deliveredAt!.getTime());
 

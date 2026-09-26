@@ -24,6 +24,10 @@ export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
       text: "The same room with a second furniture layout — different coffee table, lamps and plant placement — so you can pick the version that reads best as the listing's hero photo.",
     },
     {
+      heading: "Disclosure pack (California AB 723 / MLS)",
+      text: "Each version again with a small “Virtually staged” label in the corner, a public page with the unaltered original photo plus a QR code for flyers, and the line to paste next to the photo: “Virtually staged (digitally altered image). Original photo: orvionis.com/original/…”.",
+    },
+    {
       heading: "Staging details (JSON)",
       text: "Room type, style, your notes and the exact instructions sent to the image model — kept with the order so a redo starts from the same brief.",
     },
