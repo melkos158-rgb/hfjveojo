@@ -6,6 +6,8 @@ import { IntakeForm } from "@/components/IntakeForm";
 import { formatUsd } from "@/lib/ai/pricing";
 import { site } from "@/config/site";
 import { getSession } from "@/lib/auth/session";
+import Image from "next/image";
+import { categoryVisual } from "@/lib/tools/visuals";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +37,7 @@ export default async function ToolPage({ params }: Params) {
   const session = await getSession();
   const price = item?.priceCents ?? def.pricing.priceCents;
   const l = def.landing;
+  const visual = categoryVisual(def.category);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -56,19 +59,34 @@ export default async function ToolPage({ params }: Params) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
       <section className="bg-mist">
-        <div className="container-x py-14">
-          <p className="eyebrow">{def.category.replace("-", " ")} · {def.fulfillment === "AUTO" ? "instant" : `${def.sla.deliveryHours}h delivery`}</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{l.headline}</h1>
-          <p className="mt-4 max-w-2xl text-lg text-gray-700">{l.subheadline}</p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <a href="#order" className="btn-primary">
-              {l.ctaLabel}
-            </a>
-            <span className="text-sm text-gray-600">
-              {formatUsd(price)} one-time · {l.deliveryPromise}
-            </span>
+        <div className={`container-x grid items-center gap-10 py-14 ${visual ? "lg:grid-cols-[1.1fr_0.9fr]" : ""}`}>
+          <div>
+            <p className="eyebrow">{def.category.replace("-", " ")} · {def.fulfillment === "AUTO" ? "instant" : `${def.sla.deliveryHours}h delivery`}</p>
+            <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{l.headline}</h1>
+            <p className="mt-4 max-w-2xl text-lg text-gray-700">{l.subheadline}</p>
+            <dl className="mt-5 grid max-w-xl gap-2 text-sm sm:grid-cols-[auto_1fr]">
+              <dt className="text-gray-500">You send</dt>
+              <dd className="text-fg">{def.io.input}</dd>
+              <dt className="text-gray-500">You get</dt>
+              <dd className="font-medium text-fg">{def.io.output}</dd>
+              <dt className="text-gray-500">Time</dt>
+              <dd className="text-fg">{def.io.processingTime}</dd>
+            </dl>
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <a href="#order" className="btn-primary">
+                {l.ctaLabel}
+              </a>
+              <span className="text-sm text-gray-600">
+                {formatUsd(price)} one-time · {l.deliveryPromise}
+              </span>
+            </div>
+            {def.pricing.compareAtText ? <p className="mt-3 text-xs text-gray-500">{def.pricing.compareAtText}</p> : null}
           </div>
-          {def.pricing.compareAtText ? <p className="mt-3 text-xs text-gray-500">{def.pricing.compareAtText}</p> : null}
+          {visual ? (
+            <div className="glow relative overflow-hidden rounded-3xl border border-line bg-card">
+              <Image src={visual.webp} alt={visual.alt} width={1200} height={671} priority unoptimized className="h-auto w-full" />
+            </div>
+          ) : null}
         </div>
       </section>
 

@@ -9,6 +9,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = ["", "/tools", "/pricing", "/real-estate", "/photographers", "/contact", "/terms", "/privacy", "/refund-policy"];
   return [
     ...staticPages.map((p) => ({ url: `${site.url}${p}`, lastModified: now, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 })),
-    ...allTools().map((t) => ({ url: `${site.url}/tools/${t.slug}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.9 })),
+    ...allTools()
+      .filter((t) => t.active !== false)
+      .map((t) => ({ url: `${site.url}/tools/${t.slug}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.9 })),
   ];
 }
