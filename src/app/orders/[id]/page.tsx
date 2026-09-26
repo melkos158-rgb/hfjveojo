@@ -5,6 +5,8 @@ import { OrderStatusLive } from "@/components/OrderStatusLive";
 import { FeedbackForm } from "@/components/FeedbackForm";
 import { signedFileUrl } from "@/lib/storage";
 import { formatUsd } from "@/lib/ai/pricing";
+import { site } from "@/config/site";
+import { CopyLink } from "@/components/CopyLink";
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +55,12 @@ export default async function OrderPage({ params, searchParams }: Props) {
           <div className="font-medium">{(delivered ? order.deliveredAt : order.dueAt)?.toISOString().slice(0, 16).replace("T", " ") ?? "—"} UTC</div>
         </div>
       </div>
+
+      {t ? (
+        <div className="mt-6">
+          <CopyLink url={`${site.url}/orders/${order.id}?t=${encodeURIComponent(t)}`} label={delivered ? "Your files stay here for 90 days — keep this link" : "Your private order link"} />
+        </div>
+      ) : null}
 
       {order.status === "PENDING" ? (
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>

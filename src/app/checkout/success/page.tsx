@@ -2,6 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { safeEqual } from "@/lib/security/tokens";
+import { site } from "@/config/site";
+import { CopyLink } from "@/components/CopyLink";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +18,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
   if (!orderId || !t) redirect("/");
   const order = await prisma.order.findUnique({ where: { id: orderId }, include: { tool: true } });
   if (!order || !safeEqual(order.accessToken, t)) redirect("/");
+  const orderPath = `/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`;
 
   return (
     <div className="container-x max-w-2xl py-16">
@@ -29,12 +32,15 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           You&apos;ll get an email at <span className="font-semibold">{order.customerEmail}</span> with your private order page.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <Link href={`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`} className="btn-primary">
+          <Link href={orderPath} className="btn-primary">
             Open my order page
           </Link>
           <Link href="/tools" className="btn-secondary">
             Back to tools
           </Link>
+        </div>
+        <div className="mt-6">
+          <CopyLink url={`${site.url}${orderPath}`} />
         </div>
       </div>
     </div>
