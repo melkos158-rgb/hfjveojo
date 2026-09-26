@@ -75,8 +75,9 @@ export default function VirtualStagingCostGuide() {
         <strong>Short answer:</strong> human-edited virtual staging costs about <strong>$24–$30 per photo</strong> and takes
         from several hours to a few days. AI tools are sold either as a <strong>monthly subscription</strong> ($16–$79 a month,
         under $3 per photo if you use every credit) or <strong>per photo</strong> without a subscription. A typical vacant
-        listing needs 4–6 staged rooms, so the total is usually between about $60 and $180 — against a median of $1,500 when
-        a staging service furnishes the home for real (NAR). Prices below were checked on {CHECKED}.
+        listing needs 4–6 staged rooms, so a whole listing costs from under $20 (one month of an AI subscription) to about
+        $180 (six photos from a human editor) — against a median of $1,500 when a staging service furnishes the home for real
+        (NAR). Prices below were checked on {CHECKED}.
       </p>
 
       <h2>The four ways virtual staging is priced</h2>
