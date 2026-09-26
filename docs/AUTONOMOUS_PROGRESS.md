@@ -6,7 +6,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 ## CURRENT STATUS
 
 - Production **live and healthy** at https://orvionis.com (Railway `courageous-flow` → service `hfjveojo`, EU West). Health: `/api/health` ok, embedded job loop ticking, hourly maintenance running.
-- 4 tools live: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, gpt-image-2)** — proven in production 2026-09-26 15:17 (order #6: two clean staged versions in < 1 min, AI cost ≈ $0.11). Every tool page shows a real sample deliverable.
+- 4 tools live: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, gpt-image-2)** — proven in production 2026-09-26 15:17 (order #6: two clean staged versions in < 1 min, AI cost ≈ $0.11). Every tool page shows a real sample deliverable (Virtual Staging: the unedited output of order #6, not a mock-up).
 - Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook on the same account (webhook enabled, all 7 events). **Stripe → our webhook delivery is proven**: the real `checkout.session.expired` events of the pipeline-test sessions (04:54, 05:07) arrived signed and were processed. No real money possible until Stripe live activation (owner).
 - AI: OpenAI key live; smoke test in production answered "OK" (gpt-4.1-mini, 1.6 s, $0.0001). Budget guards: $5/day, $1/order.
 - Auth: magic link (email) + **Google sign-in** (verified end-to-end in production 2026-09-26 03:50). Admin = `ADMIN_EMAILS`.
@@ -42,8 +42,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 07:20–07:35: body-size guards on every JSON/upload route (413 before parsing); outreach kit refreshed ($9 entry DM, free-checker opener, sample links, UTM per experiment) in docs + /admin/content.
 - 07:35–08:10: free **photography pricing calculator** + `/free` index; experiment KPIs (est. Stripe fees, net contribution, revenue/founder hour, repeat rate, AI cost per paid order, free-tool uses).
 - 08:10–08:30: `Order.isTest` + admin **full pipeline test** (sandbox only) — run in production: Order #2 COMPLETED with real AI output and real emails, excluded from metrics.
-- 14:52–15:20: **Virtual Staging** shipped: transfer verified by full-tree checksum, commit `e0420f7` deployed (migration `20260926030000_output_type_image` applied, seed synced, graceful restart in logs); production test #5 on gpt-image-1 worked technically but visual review caught a chandelier swap and an added built-in; fixed in `2f1d6f2` (freestanding-only prompt, gpt-image-2 default, exact photo proportions, EXIF auto-rotate) → test #6 clean on both versions (recessed light, windows, walls, doors untouched, 1536×1040). Stripe webhook delivery confirmed from the expired-session events. Uptime monitor run #1 had failed on a Python f-string quirk while production was healthy (log: ok, db up, 1,845 worker ticks) — check rewritten, runs off the hour now and once on every change of the workflow file.
 - 08:30–09:00: delivered text rendered as sections with Copy buttons; GitHub Actions **uptime monitor** (every 15 min, emails on failure); pipeline test selectable per tool → production runs: #3 Pricing Guide COMPLETED (3 AI calls, PDF rendered, $0.02), #4 Listing Clips → REVIEW with the clip plan and concierge checklist (as designed); fixes found on the way (double-numbered steps, REVIEW note scope, close-test-order); OG cards for /free pages; CEO report text carries the new KPIs.
+- 14:52–15:20: **Virtual Staging** shipped: transfer verified by full-tree checksum, commit `e0420f7` deployed (migration `20260926030000_output_type_image` applied, seed synced, graceful restart in logs); production test #5 on gpt-image-1 worked technically but visual review caught a chandelier swap and an added built-in; fixed in `2f1d6f2` (freestanding-only prompt, gpt-image-2 default, exact photo proportions, EXIF auto-rotate) → test #6 clean on both versions (recessed light, windows, walls, doors untouched, 1536×1040). Stripe webhook delivery confirmed from the expired-session events. Uptime monitor run #1 had failed on a Python f-string quirk while production was healthy (log: ok, db up, 1,845 worker ticks) — check rewritten, runs off the hour now and once on every change of the workflow file.
+- 15:25–15:45: Virtual Staging sample replaced with the **real, unedited output of production order #6** (version 1, gpt-image-2): before/after composite on the tool page, home card and OG card; copy says "real pipeline output, unedited" and tells agents to label the photo "virtually staged" in the MLS.
 
 ## IN PROGRESS
 
@@ -61,10 +62,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 1. Owner: Stripe live activation, then one real $9 order (operator swaps keys, creates the live webhook, verifies, enables Stripe receipts).
 2. Owner + operator: first outreach batch — vacant listings (`re-ig-dm-staging`) and new listings (`re-ig-dm-9`); operator prepares 20 target profiles/day with personalised lines if the owner wants.
-3. Replace the Virtual Staging sample "after" with a real gpt-image-2 output from order #6 (honest "this is exactly what you get" proof) — needs the image moved from production storage into `public/img`.
-4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
-5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-6. Browser extension — only on demand.
+3. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
+4. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
+5. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 

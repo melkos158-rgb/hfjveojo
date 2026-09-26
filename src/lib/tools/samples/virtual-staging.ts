@@ -1,25 +1,25 @@
 import type { SampleResult } from "@/lib/tools/types";
 
 /**
- * Sample shown on /tools/virtual-staging. The before photo is a fictional empty living room; the "after" is the
- * kind of result the image model returns for it (same walls, floor, windows and camera angle — only furniture,
- * rug, lighting and decor added). Static files under public/img — nothing is generated at request time.
+ * Sample shown on /tools/virtual-staging and the home page. The "before" is a sample photo of an empty room;
+ * the "after" is the unedited output of the production pipeline for it (test order #6, gpt-image-2,
+ * 2026-09-26) — so the sample is exactly what a customer receives. Static files under public/img.
  */
 export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
-  label: "Sample for a fictional empty living room",
+  label: "Real result for a sample photo of an empty living room",
   input: [
-    "1 photo of the empty living room — three windows, oak floor (JPG, 1.8 MB)",
+    "1 photo of the empty living room — three windows, oak floor, recessed ceiling light",
     "Room: living room · Style: modern",
     "Notes: keep the windows and the floor visible, no TV on the wall",
   ],
   output: [
     {
-      heading: "Staged version 1 — modern living room (JPG)",
-      text: "A grey sectional, a walnut coffee table, a jute rug, a floor lamp, an olive tree and one large print were added. Walls, floor, windows, door, trim and the camera perspective are exactly as photographed.",
+      heading: "Staged version 1 — modern living room (JPG, 1536×1040)",
+      text: "A cream sofa with a side table, a round coffee table on a jute rug, two wood-frame armchairs, a floor lamp, an olive tree and three framed prints were added. The recessed ceiling light, walls, floor, windows, doors and the camera position are exactly as photographed, and the photo keeps its proportions.",
     },
     {
-      heading: "Staged version 2 — modern living room (JPG)",
-      text: "The same room with a second furniture layout, so you can pick the version that reads best as the listing's hero photo.",
+      heading: "Staged version 2 — modern living room (JPG, 1536×1040)",
+      text: "The same room with a second furniture layout — different coffee table, lamps and plant placement — so you can pick the version that reads best as the listing's hero photo.",
     },
     {
       heading: "Staging details (JSON)",
@@ -28,11 +28,11 @@ export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
   ],
   preview: {
     image: "/img/sample-virtual-staging.webp",
-    alt: "Before and after: the same empty living room, then virtually staged with a sectional sofa, rug, coffee table and plants",
+    alt: "Before and after: an empty living room, then the same photo virtually staged with a sofa, rug, coffee table, armchairs, a floor lamp and framed prints",
     width: 1420,
     height: 480,
   },
-  note: "Label the photo “virtually staged” in the MLS — most boards require it. If anything structural changed in your result, one redo is included.",
+  note: "The staged photo above is the unedited output of our pipeline. Label it “virtually staged” in the MLS — most boards require it. If anything structural changes in your result, one redo is included.",
 };
 
 /**

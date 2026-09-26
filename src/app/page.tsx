@@ -121,11 +121,11 @@ export default async function HomePage() {
                 <span className="badge bg-gray-100 text-gray-700">Example</span>
               </div>
               <div className="overflow-hidden rounded-xl border border-line bg-card-2">
-                <Image src="/img/sample-virtual-staging.webp" alt="Before and after: an empty living room, then the same photo virtually staged with a sofa, rug and coffee table" width={1420} height={480} unoptimized className="h-auto w-full" />
+                <Image src="/img/sample-virtual-staging.webp" alt="Before and after: an empty living room, then the same photo virtually staged with a sofa, rug, coffee table and armchairs" width={1420} height={480} unoptimized className="h-auto w-full" />
               </div>
               <div className="grid gap-2 text-xs text-gray-500 sm:grid-cols-2">
                 <div>Before · one photo of the empty room, room type, style</div>
-                <div className="sm:text-right">After · 2 staged versions of that exact photo, JPG, about 2 minutes, $15</div>
+                <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes, $15</div>
               </div>
               <Link href="/tools/virtual-staging#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
                 See the sample and the six styles →
