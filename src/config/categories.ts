@@ -36,6 +36,7 @@ export const CATEGORIES: CategoryInfo[] = [
     title: "Photographers",
     live: ["Packages + prices → branded pricing guide (PDF)"],
     planned: ["Your process → client welcome guide", "Business facts → branded documents", "Raw content → social posts"],
+    free: [{ label: "Pricing calculator — what to charge per job and per hour from your income goal, costs and real hours", href: "/free/photography-pricing-calculator" }],
     cta: "See photographer tools",
   },
   {
