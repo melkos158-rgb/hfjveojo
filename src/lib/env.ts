@@ -33,6 +33,9 @@ const schema = z.object({
   AI_MAX_COST_PER_ORDER_CENTS: z.coerce.number().int().nonnegative().default(100),
   AI_PRICE_TABLE_JSON: z.string().optional().default(""),
 
+  /** Google sign-in is offered on /login only when both are set (OAuth client → Authorized redirect URI: <APP_URL>/api/auth/google/callback). */
+  GOOGLE_CLIENT_ID: z.string().optional().default(""),
+  GOOGLE_CLIENT_SECRET: z.string().optional().default(""),
   EMAIL_PROVIDER: z.enum(["resend", "console"]).default("console"),
   RESEND_API_KEY: z.string().optional().default(""),
   EMAIL_FROM: z.string().default("ORVIONIS <hello@orvionis.com>"),

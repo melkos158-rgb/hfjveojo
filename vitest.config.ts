@@ -17,6 +17,8 @@ export default defineConfig({
       STRIPE_WEBHOOK_SECRET: "whsec_local",
       AI_PROVIDER: "mock",
       EMAIL_PROVIDER: "console",
+      GOOGLE_CLIENT_ID: "test-client-id.apps.googleusercontent.com",
+      GOOGLE_CLIENT_SECRET: "test-google-client-secret-not-real",
       JOBS_INLINE: "true",
       CRON_SECRET: "test-cron",
       ADMIN_EMAILS: "admin@example.com",
