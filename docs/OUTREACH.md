@@ -2,8 +2,16 @@
 
 Rules: personal, short, honest about being new, one ask, no fake numbers, no testimonials we don't have. Every message below is also available in `/admin/content`. UA lines are word-for-word control translations for review before sending.
 
+## What exists now (link to these, they do the convincing)
+
+- Sample results on every tool page: https://orvionis.com/tools/listing-description#example ($9, MLS copy + captions), https://orvionis.com/tools/photographer-pricing-guide#example (real 5-page PDF), https://orvionis.com/tools/listing-clips#example (clip plan).
+- Free tool for agents: https://orvionis.com/free/fair-housing-checker — paste listing copy, see risky phrases + character count. Best value-first opener; it is useful even if they never buy.
+- Cheapest first purchase: Listing Description, $9, about 5 minutes. Use it as the entry offer for cold contacts; $49 clips are the upsell once they have paid once.
+- Tracking: add `?utm_source=<channel>&exp=<experiment>` to every link (`e3-listing-description`, `e1-listing-clips`, `e2-photo-pricing-guide`); the channel shows up in /admin/analytics.
+
 ## Daily routine (45–60 minutes)
 
+0. Cold contacts get the $9 offer (`re-ig-dm-9`) first; walkthrough posters get `re-ig-dm-1` (clips). One paid $9 order is worth more than ten "interested" replies — it proves the funnel end to end.
 1. Find 15 agents who posted a walkthrough in the last 7 days (Instagram: search `#listingvideo`, `#justlisted`, `#[city]realestate`, watch Reels; TikTok: `#realestatetok`). Save handle + listing + one specific detail.
 2. Like/comment something specific on the post, then send `re-ig-dm-1`.
 3. Log the batch in `/admin/experiments` → *Log channel cost* (channel `instagram_dm`, hours, note "15 DMs, Austin/Denver").
@@ -25,6 +33,26 @@ Hey [name], saw the walkthrough of [street or neighborhood] — the [specific sh
 Привіт, [name], бачив прохідку по [street or neighborhood] — кадр з [specific shot, наприклад, кухонний острів] вдалий. Я нарізаю відео лістингів на 5 вертикальних кліпів (ціна, спальні/ванни на екрані, підписи написані, твій брендинг) за $49, повертаю за 48 годин. Це нове, тому шукаю кількох агентів, які будуть першими. Хочеш, зроблю один кліп із цього відео безкоштовно, щоб ти побачив(ла) стиль?
 
 ✍️ Personalise: [name], [street or neighborhood], [specific shot]. The free-clip sentence is optional — drop it to test paid-only.
+
+### re-ig-dm-9 — Instagram DM to an agent, $9 entry offer (use this first for cold contacts)
+
+📤 EN — send as is:
+Hey [name], the [street] listing looks sharp. I write MLS descriptions + the Instagram/Facebook captions from the listing facts — you send price, beds, the five things worth mentioning, it comes back in about five minutes, within your board's character limit and checked for fair-housing wording. $9 a listing, no subscription. Here's a full sample so you can judge the writing: orvionis.com/tools/listing-description#example. Want to try it on your next one?
+
+🇺🇦 UA — контроль:
+Привіт, [name], лістинг на [street] виглядає класно. Я пишу описи для MLS + підписи для Instagram/Facebook з фактів лістингу — ти надсилаєш ціну, спальні, п'ять речей, які варто згадати, і за близько п'ять хвилин отримуєш текст у межах ліміту символів твоєї MLS, перевірений на fair-housing формулювання. $9 за лістинг, без підписки. Ось повний зразок, щоб оцінити текст: orvionis.com/tools/listing-description#example. Хочеш спробувати на наступному?
+
+✍️ Personalise: [name], [street]. Add `?utm_source=instagram_dm&exp=e3-listing-description` to the link.
+
+### re-free-checker — Reddit / Facebook group comment or post, value first (no link to paid)
+
+📤 EN:
+Made a small free thing for anyone writing listing copy: paste the description, it highlights the phrases that get flagged under fair housing ("perfect for families", "safe neighborhood", "walking distance to church"…) with a plain-English fix for each, and counts characters against your MLS limit. Runs in the browser, nothing is stored. orvionis.com/free/fair-housing-checker — tell me which phrases I'm missing.
+
+🇺🇦 UA:
+Зробив невелику безкоштовну штуку для всіх, хто пише тексти лістингів: вставляєш опис, воно підсвічує фрази, які підпадають під fair housing («perfect for families», «safe neighborhood», «walking distance to church»…) з простою правкою для кожної, і рахує символи проти ліміту твоєї MLS. Працює в браузері, нічого не зберігається. orvionis.com/free/fair-housing-checker — скажіть, яких фраз бракує.
+
+✍️ Nothing. Post it where tools are allowed; answer replies; never follow up with a paid pitch in the same thread — the checker links to the $9 tool itself.
 
 ### re-ig-dm-followup — 3–4 days later, no reply
 
@@ -60,6 +88,6 @@ Hey [name], saw the walkthrough of [street or neighborhood] — the [specific sh
 
 ## What to say when they ask
 
-- "Can I see examples?" → until the first paid deliveries exist: "It's brand new — that's why the first clip is free. Send the link and you'll have it tomorrow." After: link to a delivered set (with the customer's permission).
+- "Can I see examples?" → send the sample link for that tool (`/tools/<slug>#example`): the listing-description sample is the full deliverable, the pricing-guide sample is the real PDF. For clips, until a paid set exists: "the first clip is free — send the link and you'll have it tomorrow"; after: a delivered set with the customer's permission.
 - "Do you use my footage anywhere?" → "No. Your footage is only used for your clips and deleted after 30 days" (matches the Privacy Policy retention setting).
 - "Why not Fiverr?" → "Same price range, but the brief is structured, captions and fair-housing check are included, and you deal with one person who answers."

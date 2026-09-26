@@ -13,6 +13,22 @@ export type OutreachTemplate = {
 
 export const outreachTemplates: OutreachTemplate[] = [
   {
+    key: "re-ig-dm-9",
+    channel: "Instagram DM → any real-estate agent (cold), $9 entry offer",
+    when: "First contact for cold agents. Lowest-friction paid step; clips are the upsell after one paid order.",
+    en: `Hey [name], the [street] listing looks sharp. I write MLS descriptions + the Instagram/Facebook captions from the listing facts — you send price, beds, the five things worth mentioning, it comes back in about five minutes, within your board's character limit and checked for fair-housing wording. $9 a listing, no subscription. Here's a full sample so you can judge the writing: orvionis.com/tools/listing-description#example. Want to try it on your next one?`,
+    ua: `Привіт, [name], лістинг на [street] виглядає класно. Я пишу описи для MLS + підписи для Instagram/Facebook з фактів лістингу — ти надсилаєш ціну, спальні, п'ять речей, які варто згадати, і за близько п'ять хвилин отримуєш текст у межах ліміту символів твоєї MLS, перевірений на fair-housing формулювання. $9 за лістинг, без підписки. Ось повний зразок, щоб оцінити текст: orvionis.com/tools/listing-description#example. Хочеш спробувати на наступному?`,
+    personalize: "[name], [street]. Link with ?utm_source=instagram_dm&exp=e3-listing-description.",
+  },
+  {
+    key: "re-free-checker",
+    channel: "Reddit / Facebook group post or comment — value first, no paid pitch",
+    when: "Where tools are allowed. Answer replies; the checker itself links to the $9 tool.",
+    en: `Made a small free thing for anyone writing listing copy: paste the description, it highlights the phrases that get flagged under fair housing ("perfect for families", "safe neighborhood", "walking distance to church"…) with a plain-English fix for each, and counts characters against your MLS limit. Runs in the browser, nothing is stored. orvionis.com/free/fair-housing-checker — tell me which phrases I'm missing.`,
+    ua: `Зробив невелику безкоштовну штуку для всіх, хто пише тексти лістингів: вставляєш опис, воно підсвічує фрази, які підпадають під fair housing («perfect for families», «safe neighborhood», «walking distance to church»…) з простою правкою для кожної, і рахує символи проти ліміту твоєї MLS. Працює в браузері, нічого не зберігається. orvionis.com/free/fair-housing-checker — скажіть, яких фраз бракує.`,
+    personalize: "Nothing. Never follow up with a paid pitch in the same thread.",
+  },
+  {
     key: "re-ig-dm-1",
     channel: "Instagram DM → real-estate agent who posted a listing walkthrough in the last 7 days",
     when: "First contact. Send after liking/commenting on the actual walkthrough post.",
