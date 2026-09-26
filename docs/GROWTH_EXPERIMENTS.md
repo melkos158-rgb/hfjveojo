@@ -40,6 +40,7 @@ None yet.
 
 ## Log
 
+- 2026-09-26 23:20 — **E10:** new buyer-intent guide `/guides/virtual-staging-cost`: sourced prices checked today (BoxBrownie US$30 / 48 h, VirtualStaging.com $24, Virtual Staging AI $16–79/month) plus NAR 2025 staging data (median $1,500 for a staging service). Not linked from the tool page while the ad test runs, so the E8 landing page stays unchanged.
 - 2026-09-26 22:25 — **E8 published** (campaign 24292280138, in review, €30 campaign total until 1 Oct). **E13 live** (gig Active). Three fake-order phishing messages came in within an hour; Manage Orders = 0; 2 senders reported and blocked. Owner policies recorded: 90-day reinvestment (BUSINESS_METRICS.md) and Fiverr order verification.
 - 2026-09-26 — **E13 Fiverr gig built** (overview, pricing $10/$25/$45, description, 4 FAQs, 4 buyer requirements, 2 gallery images); the final publish is the owner's click. **E8 Google Ads**: account EUR/Poland, €30 prepaid by the owner, Search campaign being configured (not PMax). Site: Google click id + keyword now kept with every order, paid ad clicks override older attribution, admin CSV export for Google's offline conversion import.
 - 2026-09-26 — Fulfilment for marketplace orders built: `/admin/orders/new` (external order: tool intake + channel, buyer price, channel fee, channel order no.) → PAID order through the normal pipeline, counted as channel revenue with the fee; refunds recorded without Stripe; "Download all (ZIP)" on customer and admin order pages. Gig copy + images ready in `docs/FIVERR_GIG.md` / `docs/fiverr/`.

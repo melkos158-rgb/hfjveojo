@@ -6,6 +6,14 @@ export type Guide = { slug: string; title: string; description: string; audience
 
 export const GUIDES: Guide[] = [
   {
+    slug: "virtual-staging-cost",
+    title: "How much does virtual staging cost in 2026?",
+    description: "Per-photo prices, AI subscriptions and what a whole listing costs — real prices checked in September 2026, plus NAR data on staging.",
+    audience: "Real estate agents",
+    updated: "2026-09-26",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — $15 per photo" },
+  },
+  {
     slug: "fair-housing-words-to-avoid",
     title: "Fair housing words to avoid in listing descriptions",
     description: "What the Fair Housing Act says about ads, what HUD's guidance allows, and the phrases to rewrite — each with a safer alternative.",

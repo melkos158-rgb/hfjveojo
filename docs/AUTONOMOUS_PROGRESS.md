@@ -95,6 +95,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
   - accurate cookie notice.
 
   Checklist in `docs/LEGAL_FLAGS.md`.
+- 23:20: E10 guide **"How much does virtual staging cost in 2026?"** (`/guides/virtual-staging-cost`): every price is sourced and dated, our offer is described like the others. It is on the /guides hub and in the sitemap.
 
 ## IN PROGRESS
 
