@@ -5,7 +5,7 @@ import { StatusBadge, fmtDate } from "@/components/admin/Kpi";
 import { formatUsd, microsToCents } from "@/lib/ai/pricing";
 import { signedFileUrl } from "@/lib/storage";
 import { orderUrl } from "@/lib/orders/service";
-import { deliverOrderAction, markQcApprovedAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
+import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
 
 export const dynamic = "force-dynamic";
 
@@ -39,6 +39,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
           <div>
             <h1 className="text-2xl font-bold">
               Order #{order.number} · {order.tool.name}
+              {order.isTest ? <span className="badge ml-2 bg-amber-50 text-amber-700">TEST</span> : null}
             </h1>
             <p className="text-sm text-gray-600">
               {order.customerEmail} · {formatUsd(order.amountCents)} · created {fmtDate(order.createdAt)} · paid {fmtDate(order.paidAt)}
@@ -157,6 +158,17 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             <input type="hidden" name="orderId" value={order.id} />
             <button className="btn-secondary w-full" type="submit">
               Approve QC flags (no delivery yet)
+            </button>
+          </form>
+        ) : null}
+
+        {order.isTest && !["CANCELED", "REFUNDED"].includes(order.status) ? (
+          <form action={closeTestOrderAction} className="card">
+            <input type="hidden" name="orderId" value={order.id} />
+            <h3 className="font-bold">Test order</h3>
+            <p className="mb-2 text-xs text-gray-600">Created by the admin pipeline test — no payment was made. Close it to clear the queue (no email is sent).</p>
+            <button className="btn-secondary w-full" type="submit">
+              Close test order
             </button>
           </form>
         ) : null}

@@ -111,6 +111,11 @@ const guideJsonSchema = {
   },
 };
 
+/** "1. Get in touch" / "Step 2 — Booking" → "Get in touch" / "Booking" (the guide layout numbers the steps itself). */
+export function normalizeProcessTitle(title: string): string {
+  return title.replace(/^\s*(?:step\s*)?\d+\s*[.):—–-]?\s*/i, "").trim();
+}
+
 const guideSchema = z.object({
   coverTitle: z.string(),
   tagline: z.string(),
@@ -298,6 +303,8 @@ export const photoPricingGuideTool: ToolDefinition<PricingGuideIntake> = {
       "generate",
     );
     const guide = gen.data;
+    // Models like to number the steps themselves ("1. Get in touch"); the layout numbers them, so strip that.
+    guide.process = guide.process.map((p) => ({ ...p, title: normalizeProcessTitle(p.title) }));
 
     ctx.step("qa_rules", "Deterministic QA: prices present, no placeholders, length");
     const text = JSON.stringify(guide);

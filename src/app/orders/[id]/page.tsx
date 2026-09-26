@@ -67,7 +67,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>
       ) : null}
 
-      {["REVIEW", "RETRYING", "FAILED"].includes(order.status) ? (
+      {["REVIEW", "RETRYING", "FAILED"].includes(order.status) && order.tool.fulfillment === "AUTO" ? (
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">
           A person is finishing this order by hand, so it can take longer than the usual few minutes — the &ldquo;expected by&rdquo; time above still stands. If it is not here by then, <Link className="underline" href="/contact">tell us</Link>: we deliver it or <Link className="underline" href="/refund-policy">refund you</Link>.
         </p>

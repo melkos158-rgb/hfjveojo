@@ -51,6 +51,14 @@ describe("tool registry", () => {
     expect(SAMPLE_MLS_DESCRIPTION.length).toBeGreaterThanOrEqual(400);
   });
 
+  it("pricing guide strips model-added step numbers from process titles", async () => {
+    const { normalizeProcessTitle } = await import("@/lib/tools/definitions/photo-pricing-guide");
+    expect(normalizeProcessTitle("1. Get in Touch")).toBe("Get in Touch");
+    expect(normalizeProcessTitle("Step 2 — Booking")).toBe("Booking");
+    expect(normalizeProcessTitle("3) Planning")).toBe("Planning");
+    expect(normalizeProcessTitle("Wedding day")).toBe("Wedding day");
+  });
+
   it("hand-written tool links in pages and config point at real slugs", () => {
     const slugs = new Set(allTools().map((t) => t.slug));
     for (const file of ["src/app/page.tsx", "src/config/categories.ts", "src/components/VerticalLanding.tsx"]) {

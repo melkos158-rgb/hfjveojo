@@ -260,3 +260,15 @@ export async function runPipelineTestAction(formData: FormData) {
   revalidatePath("/admin/system");
   redirect(`/admin/orders/${orderId}`);
 }
+
+/** Closes an admin test order (isTest only) so it leaves the "needs a human" queue without a delivery email. */
+export async function closeTestOrderAction(formData: FormData) {
+  const admin = await requireAdminApi();
+  const orderId = z.string().parse(formData.get("orderId"));
+  const order = await prisma.order.findUniqueOrThrow({ where: { id: orderId } });
+  if (!order.isTest) throw new Error("Only test orders can be closed this way.");
+  await prisma.order.update({ where: { id: orderId }, data: { status: "CANCELED", adminNotes: `${order.adminNotes ?? ""}\nClosed as test by ${admin.email}.`.trim() } });
+  await audit(admin.id, "close_test_order", "order", orderId);
+  revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath("/admin");
+}
