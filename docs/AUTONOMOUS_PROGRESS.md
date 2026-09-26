@@ -41,6 +41,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 07:20–07:35: body-size guards on every JSON/upload route (413 before parsing); outreach kit refreshed ($9 entry DM, free-checker opener, sample links, UTM per experiment) in docs + /admin/content.
 - 07:35–08:10: free **photography pricing calculator** + `/free` index; experiment KPIs (est. Stripe fees, net contribution, revenue/founder hour, repeat rate, AI cost per paid order, free-tool uses).
 - 08:10–08:30: `Order.isTest` + admin **full pipeline test** (sandbox only) — run in production: Order #2 COMPLETED with real AI output and real emails, excluded from metrics.
+- 08:30–09:00: delivered text rendered as sections with Copy buttons; GitHub Actions **uptime monitor** (every 15 min, emails on failure); pipeline test selectable per tool → production runs: #3 Pricing Guide COMPLETED (3 AI calls, PDF rendered, $0.02), #4 Listing Clips → REVIEW with the clip plan and concierge checklist (as designed); fixes found on the way (double-numbered steps, REVIEW note scope, close-test-order); OG cards for /free pages; CEO report text carries the new KPIs.
 
 ## IN PROGRESS
 
@@ -56,22 +57,22 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## NEXT TASKS (ordered by expected business impact)
 
-1. Customer-facing polish of the delivered result: render the Markdown deliverable as formatted text on the order page (today it is a raw `<pre>`), with copy buttons per section (MLS text, captions) — the $9 product's moment of truth.
-2. Uptime: UptimeRobot on `/api/health` (owner, free, 5 min) — or an internal alert when the worker heartbeat is older than 5 min.
-3. Listing Clips concierge flow check: admin delivery of MANUAL orders (links + files) end to end in sandbox with a pipeline test for `listing-clips`.
-4. Next tool by demand (`/admin/feedback` tool requests). Strongest owner signal: Virtual Staging (room photo → staged image, OpenAI Images) — build after the first paid orders or 3+ requests.
-5. Stripe live: when the owner activates — swap keys, create the live webhook, run one real $9 order, enable "Successful payments" emails in Stripe.
+1. Stripe Dashboard → webhook `orvionis-production` → "Send test event" (checkout.session.completed) to prove signature + reachability of the endpoint from Stripe's side (needs the owner's Chrome; the app side is proven).
+2. Close test orders #2–#4 in /admin (button exists) once the owner has looked at them.
+3. Next tool by demand (`/admin/feedback` tool requests). Strongest owner signal: Virtual Staging (room photo → staged image, OpenAI Images) — build after the first paid orders or 3+ requests.
+4. Stripe live: when the owner activates — swap keys, create the live webhook, run one real $9 order, enable "Successful payments" emails in Stripe.
+5. Deliverable quality loop: read the outputs of orders #2–#4 critically (tone, facts, fair-housing) and tighten prompts where needed; add a "regenerate section" option later if customers ask.
 6. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 08:30 UTC+2 — deploy of `48d5779` ACTIVE (migration `order_is_test` applied), pipeline test order COMPLETED in production, emails delivered, `/free/photography-pricing-calculator` live.
+- Last verified: 2026-09-26 08:45 UTC+2 — deploy of `39f2252` ACTIVE; all three tool pipelines proven in production (orders #2–#4, all `isTest`); emails delivered; uptime workflow committed (first scheduled run pending).
 - Known warnings in logs: none open (Resend 403 stopped after verification).
 - Railway: auto-deploy from `main`; graceful shutdown proven; `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 
 ## LAST VERIFIED COMMIT
 
-- `48d5779` (admin pipeline test) — deployed and verified end to end. Each commit is pushed only after typecheck + 37 tests + `next build` pass locally.
+- `39f2252` (pipeline test per tool) — deployed and verified in production. Later commits (`3a223c3`, `73e769f`, this one) pushed after typecheck + 40 tests + `next build`; production check pending when the owner's Chrome is back online.
 
 ## KNOWN BUGS
 
