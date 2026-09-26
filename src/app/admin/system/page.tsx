@@ -1,14 +1,14 @@
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
-import { applyStripeBrandingAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
+import { aiSmokeTestAction, applyStripeBrandingAction, enqueueMaintenanceAction, requeueJobAction, toggleKillSwitchAction } from "@/app/admin/actions";
 import { STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
-  const [jobs, errors, kill, stripeEvents, counts, brandingLast, stripeAcct, webhook] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, brandingLast, smokeLast, stripeAcct, webhook] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -20,10 +20,12 @@ export default async function AdminSystem() {
       prisma.file.aggregate({ _sum: { sizeBytes: true }, _count: true }),
     ]),
     prisma.setting.findUnique({ where: { key: "stripe.branding_last" } }),
+    prisma.setting.findUnique({ where: { key: "ai.smoke_test_last" } }),
     stripeAccountSummary().catch((err: Error): StripeAccountSummary | { error: string } => ({ error: err.message.slice(0, 200) })),
     stripeWebhookCheck().catch((err: Error): StripeWebhookCheck | { error: string } => ({ error: err.message.slice(0, 200) })),
   ]);
   const lastBranding = brandingLast?.value as { ok: boolean; message: string; at: string } | null;
+  const lastSmoke = smokeLast?.value as { ok: boolean; message: string; at: string } | null;
   const killOn = kill?.value === true;
   const [queued, running, failed, files] = counts;
 
@@ -33,7 +35,21 @@ export default async function AdminSystem() {
       <div className="grid gap-4 sm:grid-cols-4">
         <Kpi label="Jobs queued / running / failed" value={`${queued} / ${running} / ${failed}`} />
         <Kpi label="Stored files" value={`${files._count}`} sub={`${((files._sum.sizeBytes ?? 0) / 1_048_576).toFixed(1)} MB · backend ${e.STORAGE_BACKEND}`} />
-        <Kpi label="Environment" value={e.APP_ENV} sub={`AI ${e.AI_PROVIDER} · email ${e.EMAIL_PROVIDER} · jobs ${e.JOBS_INLINE ? "inline" : "worker"}`} />
+        <div className="card">
+          <div className="text-xs font-medium uppercase text-gray-500">Environment</div>
+          <div className="mt-1 text-2xl font-bold">{e.APP_ENV}</div>
+          <div className="text-xs text-gray-500">{`AI ${e.AI_PROVIDER} · email ${e.EMAIL_PROVIDER} · jobs ${e.JOBS_INLINE ? "inline" : "worker"}`}</div>
+          <form action={aiSmokeTestAction} className="mt-2">
+            <button className="btn-secondary px-3 py-1.5" type="submit">
+              Test AI provider
+            </button>
+          </form>
+          {lastSmoke ? (
+            <p className={`mt-2 text-xs ${lastSmoke.ok ? "text-green-600" : "text-red-600"}`}>
+              {fmtDate(new Date(lastSmoke.at))}: {lastSmoke.message}
+            </p>
+          ) : null}
+        </div>
         <div className="card">
           <div className="text-xs font-medium uppercase text-gray-500">AI kill switch</div>
           <div className={`mt-1 text-2xl font-bold ${killOn ? "text-red-600" : "text-green-600"}`}>{killOn ? "ON — AI blocked" : "off"}</div>

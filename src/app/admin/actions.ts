@@ -192,3 +192,29 @@ export async function applyStripeBrandingAction() {
   await audit(admin.id, "stripe_branding_apply", "stripe", "account", value);
   revalidatePath("/admin/system");
 }
+
+/** Proves the AI provider works in this environment without a purchase: one cheap call, result stored for the System page. */
+export async function aiSmokeTestAction() {
+  const admin = await requireAdminApi();
+  const { complete } = await import("@/lib/ai");
+  const { env } = await import("@/lib/env");
+  const started = Date.now();
+  let value: { ok: boolean; message: string; at: string };
+  try {
+    const res = await complete(
+      { tier: "cheap", system: "You are a health check. Reply with exactly the word OK.", user: "Ping", maxOutputTokens: 5, temperature: 0 },
+      { purpose: "smoke_test", userId: admin.id },
+    );
+    const ok = /\bOK\b/i.test(res.text);
+    value = {
+      ok,
+      message: `${env().AI_PROVIDER} · ${env().AI_MODEL_CHEAP} answered "${res.text.trim().slice(0, 40)}" in ${Date.now() - started} ms · cost ${(res.costMicros / 1_000_000).toFixed(4)} USD`,
+      at: new Date().toISOString(),
+    };
+  } catch (err) {
+    value = { ok: false, message: `AI call failed: ${((err as Error).message ?? String(err)).slice(0, 300)}`, at: new Date().toISOString() };
+  }
+  await prisma.setting.upsert({ where: { key: "ai.smoke_test_last" }, create: { key: "ai.smoke_test_last", value }, update: { value } });
+  await audit(admin.id, "ai_smoke_test", "setting", "ai.smoke_test_last", value);
+  revalidatePath("/admin/system");
+}
