@@ -4,6 +4,7 @@ import { AppError } from "@/lib/errors";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { randomToken } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
+import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
 import { z } from "zod";
@@ -15,6 +16,10 @@ export type CreateOrderInput = {
   attribution?: Attribution | null;
   userId?: string | null;
   sessionId?: string | null;
+  /** Stripe mode for this checkout. Default: STRIPE_MODE. Admin sandbox checkouts and pipeline tests pass "test". */
+  mode?: StripeMode;
+  /** Mark as a test order (excluded from revenue). Sandbox orders in production are always test orders. */
+  isTest?: boolean;
 };
 
 /**
@@ -65,8 +70,12 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     : null;
   const variant = experiment && input.attribution?.variant ? experiment.variants.find((v) => v.key === input.attribution?.variant) : null;
 
+  const mode = input.mode ?? checkoutMode();
+  const client = stripe(mode); // fails before an order exists when this mode has no key
+
   const order = await prisma.order.create({
     data: {
+      isTest: isTestOrder(mode, input.isTest),
       userId: input.userId ?? undefined,
       customerEmail: email,
       customerName: typeof intake.agentName === "string" ? intake.agentName : typeof intake.photographerName === "string" ? intake.photographerName : null,
@@ -96,7 +105,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   const successUrl = appUrl(`/checkout/success?order=${order.id}&t=${encodeURIComponent(order.accessToken)}`);
   const cancelUrl = appUrl(`/checkout/cancel?order=${order.id}&tool=${def.slug}`);
 
-  const session = await stripe().checkout.sessions.create(
+  const session = await client.checkout.sessions.create(
     {
       mode: "payment",
       client_reference_id: order.id,
@@ -128,13 +137,18 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   );
   if (!session.url) throw new AppError("Stripe did not return a checkout URL", 502, "stripe_no_url");
 
-  await prisma.order.update({ where: { id: order.id }, data: { stripeCheckoutSessionId: session.id } });
+  // The session's own livemode is recorded: only events of the same mode may ever change this order's payment state.
+  const livemode = session.livemode === true;
+  if (livemode !== (mode === "live")) {
+    throw new AppError(`Stripe returned a ${livemode ? "live" : "test"} session for a ${mode} checkout — check the ${mode} key`, 500, "stripe_mode_mismatch");
+  }
+  await prisma.order.update({ where: { id: order.id }, data: { stripeCheckoutSessionId: session.id, livemode } });
   await track("checkout_started", {
     orderId: order.id,
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,
     experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: product.priceCents },
+    props: { tool: def.id, amountCents: product.priceCents, mode },
   });
   return { orderId: order.id, checkoutUrl: session.url };
 }

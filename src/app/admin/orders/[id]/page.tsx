@@ -43,6 +43,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             <h1 className="text-2xl font-bold">
               Order #{order.number} · {order.tool.name}
               {order.isTest ? <span className="badge ml-2 bg-amber-50 text-amber-700">TEST</span> : null}
+              <span className={`badge ml-2 ${order.livemode ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-700"}`}>{order.livemode ? "Stripe LIVE" : "Stripe sandbox"}</span>
             </h1>
             <p className="text-sm text-gray-600">
               {order.customerEmail} · {formatUsd(order.amountCents)} · created {fmtDate(order.createdAt)} · paid {fmtDate(order.paidAt)}

@@ -18,7 +18,7 @@ Production values live only in Railway → service `hfjveojo` → Variables. Loc
 | ✅ configured | Google sign-in | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` |
 | ⚠️ configured, **domain not verified** | Resend | `RESEND_API_KEY` (+ DNS records, see §3) |
 | ⏳ CREATE NOW (no key, DNS only) | Google Search Console | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` or a DNS TXT record |
-| ⏳ CREATE LATER (V1, when going live) | Stripe **live** keys + live webhook | same variable names, live values |
+| ⏳ NOW (owner finished live onboarding 2026-09-26) | Stripe **live** key + live webhook | `STRIPE_LIVE_SECRET_KEY`, `STRIPE_LIVE_WEBHOOK_SECRET`, then `STRIPE_MODE=live` — see `docs/STRIPE_LIVE.md` |
 | FUTURE (V1/V2) | S3-compatible storage (Cloudflare R2) | `S3_*` |
 | FUTURE (V1) | Error monitoring (Sentry) | `SENTRY_DSN` |
 | FUTURE (V2, only if spam appears) | Cloudflare Turnstile | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` |
@@ -131,7 +131,7 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 
 ## 5. PAYMENTS — Stripe — ✅ test mode configured, live mode = V1
 
-- **Variables:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY=usd`
+- **Variables:** sandbox pair `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET`; live pair `STRIPE_LIVE_SECRET_KEY` + `STRIPE_LIVE_WEBHOOK_SECRET`; `STRIPE_MODE` (test | live) picks the pair customer checkouts use; `STRIPE_CURRENCY=usd`. The switch procedure is `docs/STRIPE_LIVE.md`.
 - **Not needed:** `STRIPE_PUBLISHABLE_KEY` (hosted Checkout, no Stripe.js in the browser), Price IDs / Product IDs (prices are created inline with `price_data` from the `Product` table, so changing a price in `/admin/products` needs no Stripe change), Stripe Customer Portal, Stripe Tax (revisit when VAT/OSS is decided — see `docs/LEGAL_FLAGS.md`).
 - **Purpose:** Checkout Sessions (`src/lib/orders/create.ts`), refunds (`refunds.create`), receipts with the private order link (`payment_intent_data.receipt_email` + description), webhook → order state machine, account branding (`/admin/system`).
 - **Needed now:** yes (test). **Stage:** MVP = sandbox; **V1 = live keys** once the account is activated (business details, bank account — owner only).
@@ -141,7 +141,7 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 - **Webhook endpoint (exact, from code `src/app/api/stripe/webhook/route.ts`):** `https://orvionis.com/api/stripe/webhook`
 - **Events to subscribe (exact, from `src/lib/stripe/webhooks.ts`):** `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `checkout.session.expired`, `payment_intent.payment_failed`, `charge.refunded`, `charge.dispute.created`
 - **Credential type:** secret key (`sk_test_…` / `sk_live_…` or `rk_…` restricted) + webhook signing secret (`whsec_…`). Each mode (test/live) has its **own** pair — the live webhook is a separate destination with its own secret.
-- **Prod/dev:** production uses one mode at a time (today: the sandbox `acct_1UIuDh2cM37Fu7zW`, renamed "orvionis sandbox"). Development uses sandbox keys and `stripe listen --forward-to localhost:3000/api/stripe/webhook` (Stripe CLI gives a local `whsec_`).
+- **Prod/dev:** production holds both pairs: customer checkouts use `STRIPE_MODE`; admin sandbox checkouts and pipeline tests always use the sandbox (`acct_1UIuDh2cM37Fu7zW`, "orvionis sandbox"); each order stores its `livemode` and only events of that mode can change it; refunds go to the order's own mode. Development uses sandbox keys and `stripe listen --forward-to localhost:3000/api/stripe/webhook` (Stripe CLI gives a local `whsec_`).
 - **Free:** no monthly fee; per-transaction pricing.
 - **One key for all:** yes — one Stripe account for all ORVIONIS products.
 - **Separate account:** no. Do not create new sandboxes; the existing one is wired.
@@ -262,6 +262,6 @@ Higgsfield is used by the operator for marketing visuals through the Cowork sess
 2. **Google Search Console** — Domain property `orvionis.com`, DNS TXT verification, submit `https://orvionis.com/sitemap.xml`. No key.
 3. **Google OAuth consent screen → Publish** (if still in "Testing" status), and confirm the client has exactly `https://orvionis.com/api/auth/google/callback` as redirect URI. Keys are already in Railway.
 4. **OpenAI project budget limit** (not a credential): platform.openai.com → Limits → monthly budget, e.g. $50, with email alert at 75 %.
-5. **Stripe live (V1, when you are ready to take real money):** activate the account (business details, bank account), then in **live** mode: secret key → `STRIPE_SECRET_KEY`, new webhook destination `https://orvionis.com/api/stripe/webhook` with the 7 events → `STRIPE_WEBHOOK_SECRET`. Same two variable names, live values; the sandbox pair goes to `.env.local` for development.
+5. **Stripe live:** follow `docs/STRIPE_LIVE.md` — live secret key → `STRIPE_LIVE_SECRET_KEY`; live destination (created from `/admin/system` or the Dashboard) → its signing secret → `STRIPE_LIVE_WEBHOOK_SECRET`; probe event verified on `/admin/system`; then `STRIPE_MODE=live`. The sandbox pair stays as it is.
 
 Everything else in this document is FUTURE — do not create it yet.

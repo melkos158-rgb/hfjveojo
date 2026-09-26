@@ -40,9 +40,10 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
         const files = await purgeExpiredFiles();
         const rl = await pruneRateLimits();
         const stale = await requeueStaleJobs();
-        // Abandoned checkouts: PENDING orders older than 24h are closed so they stop polluting the funnel.
+        // Abandoned checkouts: PENDING orders older than 24h are closed so they stop polluting the funnel — except
+        // checkouts Stripe reported completed with a payment still settling (bank debits take days).
         const abandoned = await prisma.order.updateMany({
-          where: { status: "PENDING", createdAt: { lt: new Date(Date.now() - 24 * 3600 * 1000) } },
+          where: { status: "PENDING", checkoutCompletedAt: null, createdAt: { lt: new Date(Date.now() - 24 * 3600 * 1000) } },
           data: { status: "CANCELED", errorMessage: "abandoned checkout (auto-closed after 24h)" },
         });
         log.info("jobs.maintenance", { files, rateLimitRows: rl, stale, abandoned: abandoned.count });

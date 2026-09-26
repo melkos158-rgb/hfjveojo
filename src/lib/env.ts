@@ -19,8 +19,14 @@ const schema = z.object({
   SESSION_TTL_DAYS: z.coerce.number().int().positive().default(30),
   SIGNING_SECRET: z.string().min(16),
 
+  /** Sandbox pair (sk_test_/rk_test_ + its destination's whsec_). Stays configured after going live: admin sandbox checkouts and pipeline tests use it. */
   STRIPE_SECRET_KEY: z.string().min(1),
   STRIPE_WEBHOOK_SECRET: z.string().min(1),
+  /** Live pair (sk_live_/rk_live_ + the live destination's own whsec_). Added next to the sandbox pair, never instead of it. */
+  STRIPE_LIVE_SECRET_KEY: z.string().optional().default(""),
+  STRIPE_LIVE_WEBHOOK_SECRET: z.string().optional().default(""),
+  /** Which pair customer checkouts use. Switch to "live" only after /admin/system shows the live key, webhook and a verified live event. */
+  STRIPE_MODE: z.enum(["test", "live"]).default("test"),
   STRIPE_CURRENCY: z.string().default("usd"),
 
   AI_PROVIDER: z.enum(["openai", "anthropic", "mock"]).default("openai"),

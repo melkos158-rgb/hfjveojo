@@ -100,7 +100,8 @@ export async function refundOrder(orderId: string, opts: { adminId: string; amou
     data: { orderId, paymentId: payment.id, amountCents: amount, reason: opts.reason, createdById: opts.adminId },
   });
   try {
-    const sr = await stripe().refunds.create(
+    // The refund goes to the account that took the money: the order's own mode, whatever checkouts use today.
+    const sr = await stripe(order.livemode ? "live" : "test").refunds.create(
       { payment_intent: payment.stripePaymentIntentId, amount, reason: "requested_by_customer", metadata: { orderId, refundId: refund.id } },
       { idempotencyKey: `refund_${refund.id}` },
     );

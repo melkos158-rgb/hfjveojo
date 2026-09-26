@@ -13,6 +13,8 @@ type Props = {
   initialEmail?: string;
   /** Tools with a free preview (virtual staging) show a "see it first" button once the photo is uploaded. */
   preview?: { label: string };
+  /** Admins on a live site may pay in the Stripe sandbox (test card) to test the whole flow without real money. */
+  adminSandbox?: boolean;
 };
 
 type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
@@ -21,7 +23,7 @@ type ReadyPreview = { image: string; width?: number; height?: number; caption?: 
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map((f) => [f.key, f.type === "color" ? "#3b5bfd" : f.options?.[0]?.value ?? ""])),
   );
@@ -29,6 +31,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   const [uploading, setUploading] = useState<string | null>(null);
   const [previews, setPreviews] = useState<Record<string, { url: string; name: string; sizeKb: number }>>({});
   const [submitting, setSubmitting] = useState(false);
+  const [sandbox, setSandbox] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const started = useRef(false);
   const imageKey = fields.find((f) => f.type === "image")?.key;
@@ -118,7 +121,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const res = await fetch(`/api/tools/${toolSlug}/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, intake: values }),
+        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}) }),
       });
       const data = (await res.json()) as { checkoutUrl?: string; message?: string };
       if (!res.ok || !data.checkoutUrl) throw new Error(data.message ?? "Could not start checkout");
@@ -243,6 +246,13 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       </div>
 
       {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+
+      {adminSandbox ? (
+        <label className="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+          <input type="checkbox" className="mt-0.5" checked={sandbox} onChange={(e) => setSandbox(e.target.checked)} />
+          <span>Admin: pay in the Stripe sandbox (test card 4242…, no real money). The order is flagged as a test.</span>
+        </label>
+      ) : null}
 
       <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null}>
         {submitting ? "Redirecting to secure checkout…" : ctaLabel}

@@ -9,10 +9,13 @@ import { notifyAdmins, orderUrl } from "@/lib/orders/service";
 import { sendEmail } from "@/lib/email";
 import { env } from "@/lib/env";
 import { getToolById } from "@/lib/tools/registry";
+import { checkoutMode, type StripeMode } from "@/lib/stripe/mode";
 
 /**
  * Stripe is the source of truth for payment state. The frontend never marks anything paid.
- * Every event is recorded in StripeEvent first (idempotency) and processed at most once.
+ * Every event is recorded in StripeEvent first (idempotency) and processed at most once; the order's status change
+ * itself is a conditional update, so even two different events for one session cannot fulfil an order twice.
+ * Test and live never mix: an event may only touch an order of the same mode (`livemode`).
  */
 export async function handleStripeEvent(event: Stripe.Event): Promise<{ handled: boolean; duplicate: boolean }> {
   const existing = await prisma.stripeEvent.findUnique({ where: { id: event.id } });
@@ -26,14 +29,14 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<{ handled:
       case "checkout.session.completed":
       case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
-        if (session.payment_status === "paid") await onCheckoutPaid(session);
-        else log.info("stripe.checkout_not_paid_yet", { sessionId: session.id, status: session.payment_status });
+        if (session.payment_status === "paid" || session.payment_status === "no_payment_required") await onCheckoutPaid(session, livemodeOf(event));
+        else await onCheckoutAwaitingPayment(session, livemodeOf(event));
         break;
       }
       case "checkout.session.expired":
       case "checkout.session.async_payment_failed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        await onCheckoutFailed(session, event.type);
+        await onCheckoutFailed(session, event.type, livemodeOf(event));
         break;
       }
       case "payment_intent.payment_failed": {
@@ -63,18 +66,51 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<{ handled:
   }
 }
 
-async function onCheckoutPaid(session: Stripe.Checkout.Session): Promise<void> {
+const livemodeOf = (event: Stripe.Event): boolean => event.livemode === true;
+const modeOf = (livemode: boolean): StripeMode => (livemode ? "live" : "test");
+
+/** An order a session's event may touch: same mode, and never a customer order paid with a sandbox card once live. */
+async function orderForSession(session: Stripe.Checkout.Session, livemode: boolean, what: string, opts: { payment?: boolean } = {}) {
   const orderId = session.metadata?.orderId ?? session.client_reference_id ?? null;
   if (!orderId) {
-    log.warn("stripe.paid_without_order", { sessionId: session.id });
-    return;
+    log.warn("stripe.session_without_order", { sessionId: session.id, what });
+    return null;
   }
   const order = await prisma.order.findUnique({ where: { id: orderId } });
   if (!order) {
-    log.warn("stripe.paid_unknown_order", { orderId, sessionId: session.id });
-    return;
+    log.warn("stripe.session_unknown_order", { orderId, sessionId: session.id, what });
+    return null;
   }
-  if (order.status !== "PENDING") {
+  if (order.livemode !== livemode) {
+    log.warn("stripe.mode_mismatch", { orderId, orderLivemode: order.livemode, eventLivemode: livemode, what });
+    await notifyAdmins(`Stripe mode mismatch on order #${order.number}`, `A ${modeOf(livemode)} ${what} event arrived for a ${modeOf(order.livemode)} order. Ignored. Session ${session.id}.`);
+    return null;
+  }
+  if (opts.payment && !livemode && checkoutMode() === "live" && !order.isTest) {
+    // Checkout is live: a sandbox payment (test card) must not unlock a customer order for free.
+    log.warn("stripe.sandbox_payment_ignored", { orderId, what });
+    await notifyAdmins(`Sandbox payment ignored on order #${order.number}`, `Checkout is live, but order #${order.number} was paid in the sandbox. Nothing was delivered. Session ${session.id}.`);
+    return null;
+  }
+  return order;
+}
+
+/** Async methods (bank debits) complete the checkout before the money arrives: keep the order open, never auto-close it. */
+async function onCheckoutAwaitingPayment(session: Stripe.Checkout.Session, livemode: boolean): Promise<void> {
+  const order = await orderForSession(session, livemode, "checkout completed (payment pending)");
+  if (!order) return;
+  await prisma.order.updateMany({ where: { id: order.id, status: "PENDING", checkoutCompletedAt: null }, data: { checkoutCompletedAt: new Date() } });
+  log.info("stripe.checkout_not_paid_yet", { sessionId: session.id, status: session.payment_status });
+  await track("checkout_payment_pending", { orderId: order.id, props: { status: session.payment_status } });
+}
+
+async function onCheckoutPaid(session: Stripe.Checkout.Session, livemode: boolean): Promise<void> {
+  const order = await orderForSession(session, livemode, "payment", { payment: true });
+  if (!order) return;
+  const orderId = order.id;
+  // Paid after we closed it as abandoned (a slow async method): take it back rather than keep money for nothing.
+  const reopenable = order.status === "CANCELED" && (order.errorMessage ?? "").startsWith("abandoned checkout");
+  if (order.status !== "PENDING" && !reopenable) {
     log.info("stripe.paid_already_processed", { orderId, status: order.status });
     return;
   }
@@ -90,7 +126,7 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session): Promise<void> {
   let receiptUrl: string | null = null;
   if (piId) {
     try {
-      const pi = await stripe().paymentIntents.retrieve(piId, { expand: ["latest_charge"] });
+      const pi = await stripe(modeOf(livemode)).paymentIntents.retrieve(piId, { expand: ["latest_charge"] });
       const charge = pi.latest_charge as Stripe.Charge | null;
       chargeId = charge?.id ?? null;
       receiptUrl = charge?.receipt_url ?? null;
@@ -106,8 +142,16 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session): Promise<void> {
     await prisma.user.update({ where: { id: user.id }, data: { stripeCustomerId } }).catch(() => undefined);
   }
 
-  await prisma.$transaction([
-    prisma.payment.create({
+  // Conditional status change + payment row in one transaction: a second event for the same session (retry,
+  // completed + async_payment_succeeded, concurrent deliveries) finds nothing to change and stops here.
+  const now = new Date();
+  const claimed = await prisma.$transaction(async (tx) => {
+    const res = await tx.order.updateMany({
+      where: { id: orderId, OR: [{ status: "PENDING" }, { status: "CANCELED", errorMessage: { startsWith: "abandoned checkout" } }] },
+      data: { status: "PAID", paidAt: now, checkoutCompletedAt: order.checkoutCompletedAt ?? now, errorMessage: null, userId: user.id, customerEmail: email, stripePaymentIntentId: piId ?? undefined },
+    });
+    if (res.count === 0) return false;
+    await tx.payment.create({
       data: {
         orderId,
         stripePaymentIntentId: piId,
@@ -116,14 +160,16 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session): Promise<void> {
         currency: session.currency ?? order.currency,
         status: "SUCCEEDED",
         receiptUrl,
-        raw: { sessionId: session.id } as object,
+        raw: { sessionId: session.id, livemode } as object,
       },
-    }),
-    prisma.order.update({
-      where: { id: orderId },
-      data: { status: "PAID", paidAt: new Date(), userId: user.id, customerEmail: email, stripePaymentIntentId: piId ?? undefined },
-    }),
-  ]);
+    });
+    return true;
+  });
+  if (!claimed) {
+    log.info("stripe.paid_already_processed", { orderId, race: true });
+    return;
+  }
+  if (reopenable) await notifyAdmins(`Order #${order.number} paid after it was closed as abandoned`, `A delayed payment arrived; the order is reopened and being fulfilled. Session ${session.id}.`);
 
   await track("order_paid", { orderId, userId: user.id, experimentId: order.experimentId, props: { amountCents: paid, tool: order.toolId } });
 
@@ -148,13 +194,11 @@ async function onCheckoutPaid(session: Stripe.Checkout.Session): Promise<void> {
   await enqueue("fulfill_order", { orderId }, { orderId, defer: true });
 }
 
-async function onCheckoutFailed(session: Stripe.Checkout.Session, type: string): Promise<void> {
-  const orderId = session.metadata?.orderId ?? session.client_reference_id ?? null;
-  if (!orderId) return;
-  const order = await prisma.order.findUnique({ where: { id: orderId } });
-  if (!order || order.status !== "PENDING") return;
-  await prisma.order.update({ where: { id: orderId }, data: { status: "CANCELED", errorMessage: type } });
-  await track("checkout_abandoned", { orderId, props: { type } });
+async function onCheckoutFailed(session: Stripe.Checkout.Session, type: string, livemode: boolean): Promise<void> {
+  const order = await orderForSession(session, livemode, type);
+  if (!order) return;
+  const res = await prisma.order.updateMany({ where: { id: order.id, status: "PENDING" }, data: { status: "CANCELED", errorMessage: type } });
+  if (res.count > 0) await track("checkout_abandoned", { orderId: order.id, props: { type } });
 }
 
 async function onChargeRefunded(charge: Stripe.Charge): Promise<void> {

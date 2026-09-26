@@ -1,8 +1,9 @@
 import { join } from "node:path";
-import type Stripe from "stripe";
+import Stripe from "stripe";
 import { stripe } from "@/lib/stripe/client";
-import { env, appUrl } from "@/lib/env";
+import { appUrl } from "@/lib/env";
 import { site } from "@/config/site";
+import { keyMode, secretKeyFor, type StripeMode } from "@/lib/stripe/mode";
 
 /** What the checkout page and Stripe receipts should look like — the same tokens as globals.css. */
 export const STRIPE_BRAND = {
@@ -24,10 +25,15 @@ export type StripeAccountSummary = {
   secondaryColor: string | null;
   hasIcon: boolean;
   chargesEnabled: boolean;
+  payoutsEnabled: boolean;
+  detailsSubmitted: boolean;
+  /** Stripe's open requirements (e.g. "individual.verification.document") — why charges/payouts may still be off. */
+  requirementsDue: string[];
+  disabledReason: string | null;
   matches: boolean;
 };
 
-function summarize(acct: Stripe.Account): StripeAccountSummary {
+function summarize(acct: Stripe.Account, mode: StripeMode): StripeAccountSummary {
   const b = acct.settings?.branding;
   const primary = b?.primary_color ?? null;
   const secondary = b?.secondary_color ?? null;
@@ -35,7 +41,7 @@ function summarize(acct: Stripe.Account): StripeAccountSummary {
   return {
     id: acct.id,
     displayName: acct.settings?.dashboard?.display_name ?? null,
-    mode: env().STRIPE_SECRET_KEY.startsWith("sk_live_") ? "live" : "test",
+    mode,
     businessName: acct.business_profile?.name ?? null,
     supportEmail: acct.business_profile?.support_email ?? null,
     url: acct.business_profile?.url ?? null,
@@ -43,6 +49,10 @@ function summarize(acct: Stripe.Account): StripeAccountSummary {
     secondaryColor: secondary,
     hasIcon,
     chargesEnabled: Boolean(acct.charges_enabled),
+    payoutsEnabled: Boolean(acct.payouts_enabled),
+    detailsSubmitted: Boolean(acct.details_submitted),
+    requirementsDue: [...(acct.requirements?.currently_due ?? []), ...(acct.requirements?.past_due ?? [])].filter((v, i, a) => a.indexOf(v) === i).slice(0, 12),
+    disabledReason: acct.requirements?.disabled_reason ?? null,
     matches:
       (acct.business_profile?.name ?? "") === STRIPE_BRAND.name &&
       (primary ?? "").toLowerCase() === STRIPE_BRAND.primaryColor.toLowerCase() &&
@@ -51,10 +61,11 @@ function summarize(acct: Stripe.Account): StripeAccountSummary {
   };
 }
 
-/** The account behind STRIPE_SECRET_KEY, as the customer will see it on Checkout and receipts. */
-export async function stripeAccountSummary(): Promise<StripeAccountSummary> {
-  const acct = await stripe().accounts.retrieveCurrent();
-  return summarize(acct);
+/** The account behind a mode's key, as the customer will see it on Checkout and receipts. */
+export async function stripeAccountSummary(mode: StripeMode): Promise<StripeAccountSummary> {
+  const key = secretKeyFor(mode);
+  const acct = await stripe(mode).accounts.retrieveCurrent();
+  return summarize(acct, keyMode(key) ?? mode);
 }
 
 export type StripeWebhookCheck = { url: string; found: boolean; status?: string; enabledEvents?: string[]; missingEvents: string[]; others: number };
@@ -71,12 +82,12 @@ export const REQUIRED_WEBHOOK_EVENTS = [
 ];
 
 /**
- * Is there a webhook destination on the key's account that points at this deployment? A key from one
+ * Is there a webhook destination on the mode's account that points at this deployment? A key from one
  * sandbox and a webhook on another means Checkout works but orders are never marked paid — this catches it.
  */
-export async function stripeWebhookCheck(): Promise<StripeWebhookCheck> {
+export async function stripeWebhookCheck(mode: StripeMode): Promise<StripeWebhookCheck> {
   const url = appUrl("/api/stripe/webhook");
-  const list = await stripe().webhookEndpoints.list({ limit: 100 });
+  const list = await stripe(mode).webhookEndpoints.list({ limit: 100 });
   const mine = list.data.find((w) => w.url === url);
   if (!mine) return { url, found: false, missingEvents: REQUIRED_WEBHOOK_EVENTS, others: list.data.length };
   const enabled = mine.enabled_events;
@@ -89,4 +100,51 @@ export async function stripeWebhookCheck(): Promise<StripeWebhookCheck> {
     missingEvents: all ? [] : REQUIRED_WEBHOOK_EVENTS.filter((e) => !enabled.includes(e)),
     others: list.data.length - 1,
   };
+}
+
+/**
+ * Create the webhook destination for this deployment on a mode's account, or bring an existing one up to date
+ * (exactly the events the app handles, enabled). Stripe returns the signing secret only on creation: it is
+ * deliberately dropped here — the owner reveals it in the Stripe Dashboard and stores it as a Railway variable.
+ */
+export async function ensureWebhookEndpoint(mode: StripeMode): Promise<{ action: "created" | "updated" | "unchanged"; id: string }> {
+  const url = appUrl("/api/stripe/webhook");
+  const client = stripe(mode);
+  const list = await client.webhookEndpoints.list({ limit: 100 });
+  const mine = list.data.find((w) => w.url === url);
+  if (!mine) {
+    const created = await client.webhookEndpoints.create({
+      url,
+      enabled_events: REQUIRED_WEBHOOK_EVENTS as Stripe.WebhookEndpointCreateParams.EnabledEvent[],
+      description: `${site.name} production (${mode})`,
+      api_version: Stripe.API_VERSION as Stripe.WebhookEndpointCreateParams.ApiVersion,
+    });
+    return { action: "created", id: created.id };
+  }
+  const missing = mine.enabled_events.includes("*") ? [] : REQUIRED_WEBHOOK_EVENTS.filter((e) => !mine.enabled_events.includes(e));
+  if (missing.length === 0 && mine.status === "enabled") return { action: "unchanged", id: mine.id };
+  await client.webhookEndpoints.update(mine.id, {
+    enabled_events: [...new Set([...mine.enabled_events.filter((e) => e !== "*"), ...REQUIRED_WEBHOOK_EVENTS])] as Stripe.WebhookEndpointUpdateParams.EnabledEvent[],
+    disabled: false,
+  });
+  return { action: "updated", id: mine.id };
+}
+
+/**
+ * Prove a mode's webhook path end to end without charging anyone: open a Checkout Session and expire it at once.
+ * Stripe then sends a signed `checkout.session.expired` for that mode; when it shows up under "last event" on the
+ * admin page, the destination, its signing secret on this server and the handler all work.
+ */
+export async function sendWebhookProbe(mode: StripeMode): Promise<{ sessionId: string }> {
+  const client = stripe(mode);
+  const session = await client.checkout.sessions.create({
+    mode: "payment",
+    line_items: [{ quantity: 1, price_data: { currency: "usd", unit_amount: 100, product_data: { name: `${site.name} webhook check (not for sale)` } } }],
+    metadata: { purpose: "webhook_probe" },
+    success_url: appUrl("/"),
+    cancel_url: appUrl("/"),
+    expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+  });
+  await client.checkout.sessions.expire(session.id);
+  return { sessionId: session.id };
 }

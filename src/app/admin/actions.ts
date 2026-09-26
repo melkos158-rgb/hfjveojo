@@ -173,6 +173,30 @@ export async function toggleKillSwitchAction(formData: FormData) {
   revalidatePath("/admin/system");
 }
 
+/** Create the webhook destination for this deployment on a mode's account, or repair its events. The signing secret is never stored. */
+export async function ensureStripeWebhookAction(formData: FormData) {
+  const admin = await requireAdminApi();
+  const mode = z.enum(["test", "live"]).parse(formData.get("mode"));
+  const { ensureWebhookEndpoint } = await import("@/lib/stripe/branding");
+  const res = await ensureWebhookEndpoint(mode);
+  const value = { ...res, at: new Date().toISOString() };
+  await prisma.setting.upsert({ where: { key: `stripe.webhook_ensure.${mode}` }, create: { key: `stripe.webhook_ensure.${mode}`, value }, update: { value } });
+  await audit(admin.id, "stripe_webhook_ensure", "stripe_webhook", res.id, { mode, action: res.action });
+  revalidatePath("/admin/system");
+}
+
+/** Open + expire a Checkout Session in a mode (no charge) so Stripe sends a signed checkout.session.expired to this server. */
+export async function stripeWebhookProbeAction(formData: FormData) {
+  const admin = await requireAdminApi();
+  const mode = z.enum(["test", "live"]).parse(formData.get("mode"));
+  const { sendWebhookProbe } = await import("@/lib/stripe/branding");
+  const res = await sendWebhookProbe(mode);
+  const value = { ...res, at: new Date().toISOString() };
+  await prisma.setting.upsert({ where: { key: `stripe.webhook_probe.${mode}` }, create: { key: `stripe.webhook_probe.${mode}`, value }, update: { value } });
+  await audit(admin.id, "stripe_webhook_probe", "stripe_session", res.sessionId, { mode });
+  revalidatePath("/admin/system");
+}
+
 export async function runReportNowAction() {
   await requireAdminApi();
   await generateCeoReport("DAILY");
@@ -224,9 +248,8 @@ export async function aiSmokeTestAction() {
  */
 export async function runPipelineTestAction(formData: FormData) {
   const admin = await requireAdminApi();
-  const { env } = await import("@/lib/env");
-  const key = env().STRIPE_SECRET_KEY;
-  if (!(key.startsWith("sk_test_") || key.startsWith("rk_test_"))) throw new Error("Pipeline test is only allowed with a Stripe test key.");
+  const { secretKeyFor } = await import("@/lib/stripe/mode");
+  if (!secretKeyFor("test")) throw new Error("Pipeline test needs the Stripe sandbox key (STRIPE_SECRET_KEY = sk_test_…).");
   const { createOrderWithCheckout } = await import("@/lib/orders/create");
   const { handleStripeEvent } = await import("@/lib/stripe/webhooks");
   const { TEST_INTAKES, hasFileRefs } = await import("@/lib/tools/samples/test-intakes");
@@ -244,6 +267,8 @@ export async function runPipelineTestAction(formData: FormData) {
     intakeRaw: intake,
     attribution: { utm_source: "admin_pipeline_test" },
     userId: admin.id,
+    mode: "test", // always the sandbox, also once customer checkouts are live
+    isTest: true,
   });
   const order = await prisma.order.update({ where: { id: orderId }, data: { isTest: true, adminNotes: "Admin pipeline test — no payment was made." } });
   const event = {

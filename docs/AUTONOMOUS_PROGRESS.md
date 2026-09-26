@@ -16,7 +16,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## CURRENT PRIORITY
 
-1. (P0, owner) Stripe live activation → live `STRIPE_SECRET_KEY` + live webhook destination + `STRIPE_WEBHOOK_SECRET`. Without it there is no revenue.
+1. (P0, owner + operator) Stripe live — onboarding submitted by the owner 2026-09-26; code ready (dual mode). Remaining: owner adds `STRIPE_LIVE_SECRET_KEY` → destination created from `/admin/system` → owner adds `STRIPE_LIVE_WEBHOOK_SECRET` → probe verified → `STRIPE_MODE=live` (`docs/STRIPE_LIVE.md`).
 2. (P1, owner) One sandbox purchase with the test card `4242 4242 4242 4242` on https://orvionis.com/tools/listing-description — webhook delivery is already proven, so this only checks Stripe's card form end to end; then the same in live with a real $9 order.
 3. (P1, operator) Start acquisition: the vacant-listing DM (`re-ig-dm-staging`, strongest visual proof) and the $9 description DM (`re-ig-dm-9`) — 20 personal messages/day, tracked with UTM + experiment keys. Needs the owner to send from his accounts (the operator does not send messages on his behalf without per-message approval).
 4. (P2, operator) Conversion + acquisition assets: outreach kit with links to samples/free tool; second free tool for photographers (pricing calculator); admin metrics for the 90-day experiment (Stripe fees, revenue/hour, repeat purchases).
@@ -47,6 +47,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 15:25–15:45: Virtual Staging sample replaced with the **real, unedited output of production order #6** (one of its two versions, gpt-image-2): before/after composite on the tool page, home card and OG card; copy says "real pipeline output, unedited" and tells agents to label the photo "virtually staged" in the MLS.
 - 15:45–16:10: **free redo + clean deliverables** (found while checking order #6 on the customer page: "After · version 1" showed the file named `-v2`, because outputs were listed newest first). Outputs now carry `deliveredAt`; the customer page and the delivery email show only the latest delivered set in generation order (a QC re-run or a redo used to pile old and new files together and email both). New **Free redo** on delivered orders (admin, with reason + count, audit `redo_order`): AUTO tools re-deliver with "Your redo is ready — order #N", concierge goes back to REVIEW, the customer keeps the last delivery meanwhile; `Order.deliveredAt` keeps the first delivery for SLA metrics. The admin's delivery note now reaches the customer on AUTO orders too (was dropped), email HTML escaped + links clickable, outputs numbered by run. Staging sample caption no longer says "built from fictional facts". Migration `20260926150000_output_delivered_at` (backfills delivered orders). 49 tests.
 - 16:10–16:35: **free staging preview** on the order form: upload the room photo → "See a free preview first" → one version of the visitor's own room in about a minute, downsized to 1024 px with a tiled "ORVIONIS · PREVIEW" mark + banner (pre-rendered PNGs, no server fonts needed), nothing stored; "Preview again" for another style. Caps: `FREE_PREVIEWS_PER_DAY` 15 (all visitors), `FREE_PREVIEWS_PER_IP` 2, and previews stop at 40 % of the daily AI budget so paid orders keep the rest (worst case ≈ $0.90/day at medium quality). Tool page: hero line + FAQ "Can I see it on my photo before paying?"; home card link; staging DM now offers the free preview (EN + UA). Admin analytics: "Free staging previews" + how many of those sessions went to checkout. Verified locally (54 tests, UI flow at 1280/390 px with the mock model, IP limit message); a real-model preview in production is still to be seen.
+- 16:35–16:50: **Stripe live, code side** (owner finished live onboarding). Audit: hosted Checkout with inline prices (no Price IDs, no publishable key), fulfilment only from the verified webhook. Built: live pair `STRIPE_LIVE_SECRET_KEY` / `STRIPE_LIVE_WEBHOOK_SECRET` **next to** the untouched sandbox pair, `STRIPE_MODE` picks the customer checkout pair; `Order.livemode` from the session, events only touch orders of their own mode, sandbox payments cannot unlock customer orders once live; webhook verifies against every configured secret; `PENDING → PAID` is now a conditional update in one transaction with the payment row (no double fulfilment under concurrent events); async bank payments are never auto-closed as abandoned and a late payment reopens an abandoned order; refunds go to the order's own mode; production sandbox orders are always `isTest` (never revenue). `/admin/system`: live and sandbox columns (key var, account, charges/payouts/requirements, destination + events, signing secret, last event), **Create webhook destination** and **Send probe event (no charge)** per mode; admins get a "pay in the sandbox" checkbox on live order forms; admin order page shows Stripe LIVE/sandbox. Migration `20260926170000_order_livemode`. `docs/STRIPE_LIVE.md` = switch checklist. 66 tests.
 
 ## IN PROGRESS
 
@@ -54,7 +55,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## BLOCKED (needs the owner)
 
-- Stripe live activation (business details, bank) — operator never enters financial/government data or API keys.
+- Stripe live secrets into Railway (`STRIPE_LIVE_SECRET_KEY`, `STRIPE_LIVE_WEBHOOK_SECRET`) — the operator never enters API keys or secrets anywhere, even with permission.
 - A paid test order (card `4242…`) on the sandbox — operator does not enter card numbers on checkout.stripe.com (webhook side already proven).
 - Outreach messages — sent from the owner's accounts; the operator drafts them (EN + UA control copy in /admin/content and docs/OUTREACH.md).
 - Google OAuth consent screen: publish if still in "Testing" (sign-in for the owner worked, so either it is published or the owner is a test user).
@@ -62,7 +63,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## NEXT TASKS (ordered by expected business impact)
 
-1. Owner: Stripe live activation, then one real $9 order (operator swaps keys, creates the live webhook, verifies, enables Stripe receipts).
+1. Stripe live switch per `docs/STRIPE_LIVE.md` (owner pastes the two live secrets; operator creates the destination, runs the probe, flips `STRIPE_MODE`), then one real $9 order.
 2. Owner + operator: first outreach batch — vacant listings (`re-ig-dm-staging`) and new listings (`re-ig-dm-9`); operator prepares 20 target profiles/day with personalised lines if the owner wants.
 3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).

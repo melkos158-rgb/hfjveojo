@@ -9,6 +9,8 @@ import { getSession } from "@/lib/auth/session";
 import Image from "next/image";
 import { categoryVisual } from "@/lib/tools/visuals";
 import { SampleResult } from "@/components/SampleResult";
+import { isAdmin } from "@/lib/auth/guards";
+import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
 
 export const dynamic = "force-dynamic";
 
@@ -156,6 +158,7 @@ export default async function ToolPage({ params }: Params) {
                 deliveryPromise={l.deliveryPromise}
                 initialEmail={session?.email}
                 preview={def.preview ? { label: def.preview.label } : undefined}
+                adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

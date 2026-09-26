@@ -29,8 +29,11 @@ SIGNING_SECRET=                                     🔒 ✅  order links, signe
 CRON_SECRET=                                        🔒 ✅  bearer for /api/internal/* (only used by an external scheduler)
 
 # Stripe (sandbox today; live values in V1)
-STRIPE_SECRET_KEY=                                  🔒 ✅
-STRIPE_WEBHOOK_SECRET=                              🔒 ✅  signing secret of the destination https://orvionis.com/api/stripe/webhook
+STRIPE_SECRET_KEY=                                  🔒 ✅  SANDBOX secret key (acct_1UIuDh2cM37Fu7zW) — stays after going live
+STRIPE_WEBHOOK_SECRET=                              🔒 ✅  signing secret of the SANDBOX destination https://orvionis.com/api/stripe/webhook
+STRIPE_LIVE_SECRET_KEY=                             🔒 ⏳  LIVE secret key (sk_live_… / rk_live_…) — owner pastes it (docs/STRIPE_LIVE.md)
+STRIPE_LIVE_WEBHOOK_SECRET=                         🔒 ⏳  signing secret of the LIVE destination (its own whsec_)
+STRIPE_MODE=test                                    ⚙️ ⏳  test | live — customer checkouts; set to live only after /admin/system verifies live
 STRIPE_CURRENCY=usd                                 ⚙️ ✅
 
 # AI
@@ -100,8 +103,9 @@ JOBS_INLINE=true
 ## V1 — first real money (Stripe live, verified email, monitoring)
 
 ```
-STRIPE_SECRET_KEY=                # live key replaces the sandbox key (same name)
-STRIPE_WEBHOOK_SECRET=            # signing secret of the LIVE destination (same name, new value)
+STRIPE_LIVE_SECRET_KEY=           # live key NEXT TO the sandbox key (STRIPE_SECRET_KEY stays the sandbox one)
+STRIPE_LIVE_WEBHOOK_SECRET=       # signing secret of the LIVE destination
+STRIPE_MODE=live                  # only after /admin/system shows live key + destination + secret + probe event
 SENTRY_DSN=                       # error monitoring (install @sentry/nextjs first) — optional
 RAILWAY_DEPLOYMENT_DRAINING_SECONDS=30   # Railway setting: let in-flight jobs finish on deploy — optional
 ```
@@ -153,6 +157,7 @@ AUTH_SECRET
 SIGNING_SECRET
 CRON_SECRET
 STRIPE_SECRET_KEY
+STRIPE_LIVE_SECRET_KEY
 OPENAI_API_KEY
 ANTHROPIC_API_KEY                 (FUTURE)
 RESEND_API_KEY
@@ -165,9 +170,11 @@ SENTRY_DSN                        (low sensitivity, still server-side)
 # Webhook secrets
 
 ```
-STRIPE_WEBHOOK_SECRET             endpoint https://orvionis.com/api/stripe/webhook — events: checkout.session.completed,
+STRIPE_WEBHOOK_SECRET             SANDBOX destination https://orvionis.com/api/stripe/webhook — events: checkout.session.completed,
                                   checkout.session.async_payment_succeeded, checkout.session.async_payment_failed,
                                   checkout.session.expired, payment_intent.payment_failed, charge.refunded, charge.dispute.created
+STRIPE_LIVE_WEBHOOK_SECRET        LIVE destination, same URL and the same 7 events, its own signing secret. Both secrets are tried
+                                  on every request; the verified event's livemode decides which orders it may touch.
 RESEND_WEBHOOK_SECRET             (FUTURE) endpoint https://orvionis.com/api/email/webhook — not implemented
 ```
 
