@@ -2,11 +2,17 @@
 
 **Money and operations come from our own database** (`/admin/analytics`, daily CEO email): revenue, refunds, Stripe fees, AI cost, orders, conversion, repeat customers, revenue per tool and per acquisition channel. **Google Analytics 4 is the traffic and marketing view** (where visitors come from, which pages lead to checkout). When the two disagree, the database wins.
 
+## First-party analytics privacy
+
+- IP addresses are stored as keyed hashes only (`hashIp`, HMAC-SHA256 with `SIGNING_SECRET`, 128 bits), in rate-limit keys and in `Event.ipHash`. Never store `clientIp(req)` itself.
+- `Event.referrer` keeps the referring site (origin) only, never the full referring URL (`referrerOrigin`).
+- `/privacy` describes exactly this; change both together (audit: `docs/LEGAL_FLAGS.md`).
+
 ## Google Analytics 4
 
 - **Switch on:** Railway variable `NEXT_PUBLIC_GA_MEASUREMENT_ID=G-…` (a public id, not a secret) → deploy. GA loads only when `APP_ENV=production` and the id has the `G-XXXX` format; without it nothing Google-related is loaded.
 - **Snippet:** rendered by the root layout (`src/app/layout.tsx`, `gaInitScript` in `src/lib/ga.ts`) before hydration, so events from components are never lost.
-- **Consent Mode v2:** ad storage, ad user data and ad personalisation always denied; analytics storage denied by default in the EEA, UK and Switzerland until the visitor presses "Accept analytics", granted by default elsewhere with an "Essential only" opt-out. The choice is stored in `localStorage` (`orv_analytics`). Google signals and ad personalisation are off.
+- **Consent Mode v2:** ad storage, ad user data and ad personalisation always denied; analytics storage denied by default in the EEA, UK and Switzerland until the visitor presses "Accept Google Analytics", granted by default elsewhere with a "Decline" opt-out (the choice covers GA only; the first-party cookies `orv_sid` / `orv_attr` are set for every visitor, see `docs/LEGAL_FLAGS.md`). Advanced mode: before consent Google may receive cookieless pings. The choice is stored in `localStorage` (`orv_analytics`). Google signals and ad personalisation are off.
 - **Privacy:** page URLs are sanitised before GA sees them — query strings are dropped except campaign parameters (`utm_*`, `gclid`, `ref`, `exp`, `variant`) and order ids become `/orders/:id` (order links carry access tokens). `/admin` is never reported. No emails, names, tokens or file URLs are sent.
 
 ### Events

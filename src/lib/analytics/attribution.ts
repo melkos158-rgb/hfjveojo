@@ -102,6 +102,20 @@ export function nextAttribution(existing: Attribution | null, incoming: Attribut
   return { ...incoming, firstTouch: existing.firstTouch ?? sourceOf(existing) };
 }
 
+/**
+ * The referring site only (scheme + host), never the full referring URL: a referrer's path or query can carry
+ * someone's personal data (search terms, email links). Non-http(s) or malformed values are dropped.
+ */
+export function referrerOrigin(ref: string | null | undefined): string | null {
+  if (!ref) return null;
+  try {
+    const u = new URL(ref);
+    return u.protocol === "http:" || u.protocol === "https:" ? u.origin.slice(0, 120) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function parseAttributionCookie(raw: string | undefined): Attribution | null {
   if (!raw) return null;
   try {

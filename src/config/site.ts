@@ -15,7 +15,9 @@ export const site = {
     country: "Poland — VERIFY",
     governingLaw: "VERIFY governing law and venue",
     vatNote: "VERIFY VAT / OSS obligations for digital services sold to EU consumers",
-    lastUpdated: "2026-09-25",
+    /** Safeguards for providers outside the EEA (DPAs / Standard Contractual Clauses / Data Privacy Framework): the owner confirms per provider. */
+    transfersNote: "VERIFY the safeguard used for each provider outside the EEA (data processing agreement with Standard Contractual Clauses or EU–US Data Privacy Framework)",
+    lastUpdated: "2026-09-26",
   },
   social: {
     instagram: "",

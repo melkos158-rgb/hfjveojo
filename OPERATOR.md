@@ -67,6 +67,10 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Session log
 
+- 2026-09-26 22:30–22:55 UTC+2 (privacy audit):
+  - `/privacy` now describes production exactly. Audit table and checklist are in `docs/LEGAL_FLAGS.md`.
+  - Code: keyed IP hashes everywhere (`hashIp`) with a one-week legacy cleanup (`dropLegacyIpData`), referrer origin only, Secure cookies, cookie notice copy, `gaOnce` guard.
+  - Owner must supply: legal identity, VAT/NIP, governing law, transfer safeguards, and the consent decision for `orv_sid` / `orv_attr`.
 - 2026-09-26 21:25–22:25 UTC+2 (Google Ads launch, Fiverr live, security):
   - **Google Ads E8 published** (campaign id 24292280138, in Google review). Search only, US presence, English, 15 exact/phrase keywords, 1 RSA (15 headlines / 4 descriptions, ad strength "Good"), Maximize clicks capped at €1.50, AI Max and text/URL automation off, **campaign total budget €30 for 26 Sep – 1 Oct**. Every setting was verified on the review page after a full reload.
     - Google asked the owner to verify identity at the Budget step; the owner did it.

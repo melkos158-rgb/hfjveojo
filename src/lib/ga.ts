@@ -71,8 +71,12 @@ export function gaEventThen(name: string, params: Record<string, unknown>, then:
   setTimeout(finish, timeoutMs + 150);
 }
 
-/** Run once per browser for a key (e.g. one purchase event per order), even across reloads. */
+/**
+ * Run once per browser for a key (e.g. one purchase event per order), even across reloads. Does nothing while GA is
+ * off, so no marker is written to the visitor's storage for an event that is never sent.
+ */
 export function gaOnce(key: string, fn: () => void): void {
+  if (!gaReady()) return;
   try {
     const k = `orv_ga_${key}`;
     if (window.localStorage.getItem(k)) return;

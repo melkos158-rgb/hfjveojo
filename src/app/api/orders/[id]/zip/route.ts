@@ -2,7 +2,7 @@ import { loadOrderForViewer } from "@/lib/orders/access";
 import { deliveredOutputs } from "@/lib/orders/deliverables";
 import { getFileBuffer } from "@/lib/storage";
 import { zipFiles } from "@/lib/zip";
-import { rateLimit, clientIp } from "@/lib/security/ratelimit";
+import { rateLimit, ipHash } from "@/lib/security/ratelimit";
 import { errorResponse } from "@/lib/errors";
 
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 /** Every file of the order's latest delivery in one ZIP. Same access rule as the order page (owner, admin or order token). */
 export async function GET(req: Request, ctx: { params: Promise<{ id: string }> }) {
   try {
-    await rateLimit({ key: `zip:${clientIp(req)}`, limit: 20, windowSeconds: 600 });
+    await rateLimit({ key: `zip:${ipHash(req)}`, limit: 20, windowSeconds: 600 });
     const { id } = await ctx.params;
     const token = new URL(req.url).searchParams.get("t");
     const order = await loadOrderForViewer(id, token);

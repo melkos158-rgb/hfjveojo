@@ -27,6 +27,8 @@ export async function GET(req: Request) {
       realIpEqualsLastXff: realIp ? realIp === parts[parts.length - 1] : null,
       proxyHeaders: ["x-envoy-external-address", "cf-connecting-ip", "true-client-ip", "fly-client-ip", "x-railway-edge", "x-railway-request-id"].filter((h) => req.headers.get(h)),
       rateLimitIpIsProbe: probe ? used === probe : null,
+      // The middleware marks cookies Secure when this is "https" (Railway terminates TLS in front of the app).
+      forwardedProto: req.headers.get("x-forwarded-proto"),
     },
     { headers: { "Cache-Control": "no-store" } },
   );

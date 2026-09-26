@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createPreview } from "@/lib/tools/preview";
 import { errorResponse } from "@/lib/errors";
 import { readJsonBody } from "@/lib/security/http";
-import { rateLimit, clientIp } from "@/lib/security/ratelimit";
+import { rateLimit, clientIp, hashIp } from "@/lib/security/ratelimit";
 import { INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisitor } from "@/lib/analytics/events";
 import { getSession } from "@/lib/auth/session";
 
@@ -13,8 +13,8 @@ const bodySchema = z.object({ intake: z.record(z.string(), z.unknown()) });
 export async function POST(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await ctx.params;
-    const ip = clientIp(req);
-    await rateLimit({ key: `preview-req:${ip}`, limit: 10, windowSeconds: 600 });
+    const ip = clientIp(req); // only ever stored as a keyed hash (hashIp), here and in the preview quota
+    await rateLimit({ key: `preview-req:${hashIp(ip)}`, limit: 10, windowSeconds: 600 });
     const body = bodySchema.parse(await readJsonBody(req));
     const store = await cookies();
     const internal = isInternalVisitor(store.get(INTERNAL_COOKIE)?.value, (await getSession())?.role);

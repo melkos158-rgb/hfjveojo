@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { track, ATTRIBUTION_COOKIE, INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisitor, parseAttributionCookie } from "@/lib/analytics/events";
+import { referrerOrigin } from "@/lib/analytics/attribution";
 import { getSession } from "@/lib/auth/session";
 import { ipHash } from "@/lib/security/ratelimit";
 import { readJsonBody } from "@/lib/security/http";
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
       sessionId: store.get(SESSION_ID_COOKIE)?.value,
       userId: session?.id,
       path: body.path ?? undefined,
-      referrer: body.referrer ?? undefined,
+      referrer: referrerOrigin(body.referrer) ?? undefined, // the referring site only, never its full URL
       utm: parseAttributionCookie(store.get(ATTRIBUTION_COOKIE)?.value),
       props: body.props,
       ipHash: ipHash(req),

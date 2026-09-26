@@ -6,7 +6,7 @@ import { AppError, RateLimitedError } from "@/lib/errors";
 import { editImage, todaysSpendMicros } from "@/lib/ai";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { track } from "@/lib/analytics/events";
-import { rateLimit } from "@/lib/security/ratelimit";
+import { hashIp, rateLimit } from "@/lib/security/ratelimit";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { photoInputsOf } from "@/lib/tools/photos";
 
@@ -76,7 +76,7 @@ export async function assertPreviewQuota(ip: string): Promise<void> {
     throw new AppError(QUOTA_MESSAGE, 429, "preview_quota");
   }
   try {
-    await rateLimit({ key: `preview:${ip}`, limit: e.FREE_PREVIEWS_PER_IP, windowSeconds: 24 * 3600 });
+    await rateLimit({ key: `preview:${hashIp(ip)}`, limit: e.FREE_PREVIEWS_PER_IP, windowSeconds: 24 * 3600 });
   } catch (err) {
     if (err instanceof RateLimitedError) throw new AppError("You've had today's free previews — order now, or come back tomorrow for another.", 429, "preview_ip_limit");
     throw err;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { issueMagicLink } from "@/lib/auth/magic";
 import { errorResponse, reportError, AppError } from "@/lib/errors";
-import { rateLimit, clientIp } from "@/lib/security/ratelimit";
+import { rateLimit, ipHash } from "@/lib/security/ratelimit";
 import { env } from "@/lib/env";
 import { googleEnabled } from "@/lib/auth/google";
 import { readJsonBody } from "@/lib/security/http";
@@ -10,7 +10,7 @@ const schema = z.object({ email: z.email(), next: z.string().max(200).optional()
 
 export async function POST(req: Request) {
   try {
-    await rateLimit({ key: `auth:${clientIp(req)}`, limit: 5, windowSeconds: 600 });
+    await rateLimit({ key: `auth:${ipHash(req)}`, limit: 5, windowSeconds: 600 });
     const body = schema.parse(await readJsonBody(req));
     await rateLimit({ key: `auth:email:${body.email.toLowerCase()}`, limit: 3, windowSeconds: 600 });
     let url: string;

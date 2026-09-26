@@ -6,7 +6,7 @@ import { upsertUserByEmail } from "@/lib/auth/magic";
 import { setSessionCookie } from "@/lib/auth/session";
 import { track } from "@/lib/analytics/events";
 import { AUTH_EVENT_COOKIE } from "@/lib/auth/events";
-import { appUrl } from "@/lib/env";
+import { appUrl, env } from "@/lib/env";
 import { log } from "@/lib/logger";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +32,7 @@ export async function GET(req: Request) {
     await setSessionCookie({ id: user.id, email: user.email, role: user.role, name: user.name });
     await track(firstLogin ? "sign_up" : "login", { userId: user.id, props: { method: "google" } });
     const res = NextResponse.redirect(appUrl(next));
-    res.cookies.set(AUTH_EVENT_COOKIE, `${firstLogin ? "sign_up" : "login"}:google`, { maxAge: 60, path: "/", sameSite: "lax" });
+    res.cookies.set(AUTH_EVENT_COOKIE, `${firstLogin ? "sign_up" : "login"}:google`, { maxAge: 60, path: "/", sameSite: "lax", secure: env().APP_ENV === "production" || env().APP_ENV === "staging" });
     return res;
   } catch (err) {
     log.warn("auth.google_failed", { error: (err as Error).message });

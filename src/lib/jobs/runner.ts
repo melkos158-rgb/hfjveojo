@@ -5,7 +5,7 @@ import { sendEmail } from "@/lib/email";
 import { fulfillOrder } from "@/lib/orders/fulfill";
 import { generateCeoReport } from "@/lib/ceo/report";
 import { purgeExpiredFiles } from "@/lib/storage";
-import { pruneRateLimits } from "@/lib/security/ratelimit";
+import { dropLegacyIpData, pruneRateLimits } from "@/lib/security/ratelimit";
 import { requeueStaleJobs, type JobPayloads } from "@/lib/jobs/queue";
 
 /** Execute one job by id. Used by the worker loop and by inline mode. */
@@ -39,6 +39,7 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
       case "maintenance": {
         const files = await purgeExpiredFiles();
         const rl = await pruneRateLimits();
+        const legacyIp = await dropLegacyIpData();
         const stale = await requeueStaleJobs();
         // Abandoned checkouts: PENDING orders older than 24h are closed so they stop polluting the funnel — except
         // checkouts Stripe reported completed with a payment still settling (bank debits take days).
@@ -52,7 +53,7 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           log.warn("jobs.fee_sync_failed", { error: err.message });
           return 0;
         });
-        log.info("jobs.maintenance", { files, rateLimitRows: rl, stale, abandoned: abandoned.count, fees });
+        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, fees });
         break;
       }
       default:

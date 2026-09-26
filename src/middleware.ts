@@ -15,15 +15,18 @@ const SESSION_ID_COOKIE = "orv_sid";
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const res = NextResponse.next();
+  // Behind Railway's proxy the app sees plain http; the visitor's scheme is in x-forwarded-proto. Cookies set over
+  // HTTPS are marked Secure so they are never sent over an unencrypted connection.
+  const secure = req.headers.get("x-forwarded-proto") === "https" || url.protocol === "https:";
 
   if (!req.cookies.get(SESSION_ID_COOKIE)) {
-    res.cookies.set(SESSION_ID_COOKIE, crypto.randomUUID(), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 180 * 24 * 3600 });
+    res.cookies.set(SESSION_ID_COOKIE, crypto.randomUUID(), { httpOnly: true, sameSite: "lax", secure, path: "/", maxAge: 180 * 24 * 3600 });
   }
 
   const incoming = attributionFromUrl(url, req.headers.get("referer"));
   if (incoming) {
     const next = nextAttribution(parseAttributionCookie(req.cookies.get(ATTRIBUTION_COOKIE)?.value), incoming);
-    if (next) res.cookies.set(ATTRIBUTION_COOKIE, serializeAttribution(next), { httpOnly: true, sameSite: "lax", path: "/", maxAge: 90 * 24 * 3600 });
+    if (next) res.cookies.set(ATTRIBUTION_COOKIE, serializeAttribution(next), { httpOnly: true, sameSite: "lax", secure, path: "/", maxAge: 90 * 24 * 3600 });
   }
 
   if (url.pathname.startsWith("/admin")) {
@@ -45,7 +48,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(login);
     }
     // This device belongs to the team: keep its browsing out of the visitor funnel (see INTERNAL_COOKIE).
-    if (req.cookies.get("orv_internal")?.value !== "1") res.cookies.set("orv_internal", "1", { httpOnly: true, sameSite: "lax", path: "/", maxAge: 365 * 24 * 3600 });
+    if (req.cookies.get("orv_internal")?.value !== "1") res.cookies.set("orv_internal", "1", { httpOnly: true, sameSite: "lax", secure, path: "/", maxAge: 365 * 24 * 3600 });
   }
 
   return res;

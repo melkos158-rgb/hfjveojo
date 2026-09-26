@@ -77,6 +77,24 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
   - Deploy `96c843f` (ads attribution + offline conversions CSV) verified in production.
   - Fiverr gig Active; 2 phishing senders reported and blocked.
   - 90-day reinvestment policy and ledger added to BUSINESS_METRICS.md.
+- 22:50: **Privacy audit** (owner brief). `/privacy` rewritten so every statement matches production:
+  - OpenAI only (no Anthropic key);
+  - the full Stripe event records we keep;
+  - Google sign-in;
+  - the public disclosure page;
+  - implemented retention only;
+  - every cookie and storage key;
+  - GA currently off;
+  - US transfers as a VERIFY placeholder.
+
+  Code fixes, 6 new tests (99 total):
+  - IP addresses stored only as keyed HMAC hashes (raw IPs were in rate-limit keys), with legacy rows dropped by maintenance;
+  - referrer kept as origin only;
+  - Secure cookies;
+  - `gaOnce` no-op without GA;
+  - accurate cookie notice.
+
+  Checklist in `docs/LEGAL_FLAGS.md`.
 
 ## IN PROGRESS
 
