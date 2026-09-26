@@ -7,7 +7,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 - Production **live and healthy** at https://orvionis.com (Railway `courageous-flow` → service `hfjveojo`, EU West). Health: `/api/health` ok, embedded job loop ticking, hourly maintenance running.
 - 4 tools live: Listing Clips ($49, concierge 48 h), Photographer Pricing Guide ($29, auto), Listing Description ($9, auto), **Virtual Staging ($15, auto, gpt-image-2)** — proven in production 2026-09-26 15:17 (order #6: two clean staged versions in < 1 min, AI cost ≈ $0.11). Every tool page shows a real sample deliverable (Virtual Staging: the unedited output of order #6, not a mock-up).
-- Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook on the same account (webhook enabled, all 7 events). **Stripe → our webhook delivery is proven**: the real `checkout.session.expired` events of the pipeline-test sessions (04:54, 05:07) arrived signed and were processed. No real money possible until Stripe live activation (owner).
+- Payments: **dual mode** since `7a835e6` — sandbox pair active (`acct_1UIuDh2cM37Fu7zW`, destination with all 7 events, webhook probe verified 17:06), live pair ready in code (`STRIPE_LIVE_SECRET_KEY` / `STRIPE_LIVE_WEBHOOK_SECRET`, `STRIPE_MODE`); the owner submitted live onboarding (live account `acct_1UIuDZGsFrMfnr38`, dashboard name "jarvis") but the live key is not in Railway yet → checkouts are still sandbox. Real Stripe fees are recorded per payment for the KPIs.
+- Virtual Staging extras: free watermarked preview on the order form (capped 15/day, 2/IP, 40 % budget share) and the **AB 723 / MLS disclosure pack** (labeled copies, public original page + QR, disclosure line). Guides: `/guides/ab-723-virtual-staging`, `/guides/photographing-rooms-for-virtual-staging`.
+- Analytics: first-party KPIs are authoritative (gross/net revenue, actual fees, revenue after AI, profit estimate, per-tool funnel); GA4 is integrated (Consent Mode v2, sanitised URLs, business events) and waits for `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
 - AI: OpenAI key live; smoke test in production answered "OK" (gpt-4.1-mini, 1.6 s, $0.0001). Budget guards: $5/day, $1/order.
 - Auth: magic link (email) + **Google sign-in** (verified end-to-end in production 2026-09-26 03:50). Admin = `ADMIN_EMAILS`.
 - Email: Resend domain `orvionis.com` **verified** (03:40). Sign-in link, order confirmation and delivery emails delivered in production (Resend log).
@@ -19,7 +21,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 1. (P0, owner + operator) Stripe live — onboarding submitted by the owner 2026-09-26; code ready (dual mode). Remaining: owner adds `STRIPE_LIVE_SECRET_KEY` → destination created from `/admin/system` → owner adds `STRIPE_LIVE_WEBHOOK_SECRET` → probe verified → `STRIPE_MODE=live` (`docs/STRIPE_LIVE.md`).
 2. (P1, owner) One sandbox purchase with the test card `4242 4242 4242 4242` on https://orvionis.com/tools/listing-description — webhook delivery is already proven, so this only checks Stripe's card form end to end; then the same in live with a real $9 order.
 3. (P1, operator) Start acquisition: the vacant-listing DM (`re-ig-dm-staging`, strongest visual proof) and the $9 description DM (`re-ig-dm-9`) — 20 personal messages/day, tracked with UTM + experiment keys. Needs the owner to send from his accounts (the operator does not send messages on his behalf without per-message approval).
-4. (P2, operator) Conversion + acquisition assets: outreach kit with links to samples/free tool; second free tool for photographers (pricing calculator); admin metrics for the 90-day experiment (Stripe fees, revenue/hour, repeat purchases).
+4. (P2, owner, minutes each) GA4 measurement id; Stripe live public business name "ORVIONIS" + statement descriptor; a free UptimeRobot check on `/api/health` (GitHub's scheduler skips most uptime runs).
 5. (P2) AI cost control audit (§14): **verified 2026-09-26** — every intake field has a zod max length, orders are rate-limited per IP (10 / 10 min), uploads 20 / 10 min and 8 MB, OpenAI client timeout 120 s with 2 retries, 3 fulfilment attempts, daily budget $5 and $1 per order as hard stops; non-retryable provider errors park the order in REVIEW instead of burning retries. Nothing to tighten until real traffic shows a pattern.
 
 ## DONE (verified in production unless noted)
@@ -78,7 +80,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
 5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-6. SEO: a few genuinely useful guides for agents (photographing a room for virtual staging, MLS disclosure of virtual staging, staging cost comparison) linking to the tool and the free preview.
+6. SEO: two guides live (AB 723 checklist, photo tips); next: a sourced virtual-staging cost comparison. Request indexing of the guides in Search Console.
 7. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
