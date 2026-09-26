@@ -47,6 +47,8 @@ export type SampleBlock = { heading?: string; text?: string; bullets?: string[] 
 export type SampleResult = {
   /** Names the fictional case, e.g. "Sample for a fictional 3-bed in Boise". */
   label: string;
+  /** Sentence after the label. Default: the fictional-facts disclaimer of the text samples. */
+  caption?: string;
   /** What the customer sent, one short line each. */
   input: string[];
   /** The deliverable, in the order it is delivered. */

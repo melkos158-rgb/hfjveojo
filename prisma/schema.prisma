@@ -426,8 +426,11 @@ model GeneratedOutput {
   fileId      String?
   content     Json? // structured result (e.g. captions), or {url} for LINK
   previewText String?
-  version     Int        @default(1)
+  version     Int        @default(1) // number of the pipeline run that produced it (1 = first run)
   createdAt   DateTime   @default(now())
+  /// When this output went to the customer. The order page shows the latest delivered set only, so a re-run or a
+  /// free redo replaces the earlier files instead of piling up next to them (the admin still sees every run).
+  deliveredAt DateTime?
 
   order Order    @relation(fields: [orderId], references: [id])
   run   ToolRun? @relation(fields: [toolRunId], references: [id])

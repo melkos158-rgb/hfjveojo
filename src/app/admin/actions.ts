@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { requireAdminApi } from "@/lib/auth/guards";
-import { deliverOrder, refundOrder, retryOrder } from "@/lib/orders/service";
+import { deliverOrder, redoOrder, refundOrder, retryOrder } from "@/lib/orders/service";
 import { generateCeoReport } from "@/lib/ceo/report";
 import { enqueue } from "@/lib/jobs/queue";
 
@@ -32,6 +32,14 @@ export async function retryOrderAction(formData: FormData) {
   const admin = await requireAdminApi();
   const orderId = z.string().parse(formData.get("orderId"));
   await retryOrder(orderId, admin.id);
+  revalidatePath(`/admin/orders/${orderId}`);
+}
+
+export async function redoOrderAction(formData: FormData) {
+  const admin = await requireAdminApi();
+  const orderId = z.string().parse(formData.get("orderId"));
+  const reason = String(formData.get("reason") ?? "").trim().slice(0, 500);
+  await redoOrder(orderId, admin.id, reason || undefined);
   revalidatePath(`/admin/orders/${orderId}`);
 }
 

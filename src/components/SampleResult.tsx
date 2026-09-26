@@ -43,7 +43,7 @@ export function SampleResult({ sample, toolName }: { sample: SampleResultData; t
             <h2 className="mt-2 text-2xl font-bold sm:text-3xl">What you get — before you pay</h2>
           </div>
           <p className="max-w-md text-sm text-gray-500">
-            {sample.label}. Built from fictional facts so you can judge the format and the writing; your order uses your details.
+            {sample.label}. {sample.caption ?? "Built from fictional facts so you can judge the format and the writing; your order uses your details."}
           </p>
         </div>
 

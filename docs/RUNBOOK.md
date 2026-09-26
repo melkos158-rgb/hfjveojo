@@ -23,7 +23,16 @@ Target: ≤ 90 minutes per order. If it takes longer twice in a row, the next au
 
 ## Automated tool flagged by QC
 
-QC notes list what failed (missing price, placeholder text, model QA issue). Options on the order page: **Retry** (new version, same intake), **Approve QC flags** then **Deliver**, or refund. Never deliver output you haven't opened.
+QC notes list what failed (missing price, placeholder text, model QA issue). Options on the order page: **Retry** (runs the pipeline again on the same intake; earlier runs stay listed, the customer only ever gets the set you deliver), **Approve QC flags** then **Deliver**, or refund. Never deliver output you haven't opened.
+
+## Customer asks for a redo (delivered order)
+
+Every tool page promises one redo when the result is unusable (Virtual Staging: the room's structure changed — a ceiling fixture, a built-in, a window). Open the order, look at the delivered files, then **Free redo** with a short internal reason. The pipeline runs again on the same brief:
+
+- AUTO tools (staging, description, pricing guide) re-deliver on their own; the customer gets "Your redo is ready — order #N" with only the new files, and the order page swaps to the new set.
+- Concierge tools (Listing Clips) go back to REVIEW; deliver the new link as usual.
+
+Until the new files are delivered the customer keeps the last delivery on the order page. The card shows how many redos an order already had; a second one is your call (or refund). If the redo is still wrong, refund rather than looping.
 
 ## Refunds
 

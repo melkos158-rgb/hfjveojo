@@ -10,6 +10,7 @@ import { site } from "@/config/site";
 import { CopyLink } from "@/components/CopyLink";
 import { DeliverableText } from "@/components/DeliverableText";
 import { getToolBySlug } from "@/lib/tools/registry";
+import { deliveredOutputs, lastDeliveredAt } from "@/lib/orders/deliverables";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -31,9 +32,15 @@ export default async function OrderPage({ params, searchParams }: Props) {
   if (!order) notFound();
   const st = publicOrderStatus(order.status);
   const delivered = order.status === "COMPLETED";
-  const markdownOut = order.outputs.find((o) => o.type === "MARKDOWN");
+  // Only the latest delivered set is shown (a re-run or a redo replaces files instead of adding to them). While a
+  // redo is being made, the customer keeps the files of the last delivery.
+  const shown = deliveredOutputs(order.outputs);
+  const redoInProgress = !delivered && shown.length > 0 && ["PAID", "PROCESSING", "RETRYING", "REVIEW", "FAILED"].includes(order.status);
+  const showFiles = delivered || redoInProgress;
+  const deliveredAt = lastDeliveredAt(order.outputs) ?? order.deliveredAt;
+  const markdownOut = shown.find((o) => o.type === "MARKDOWN");
   const md = (markdownOut?.content as { markdown?: string } | null)?.markdown;
-  const images = order.outputs.filter((o) => o.type === "IMAGE" && o.fileId);
+  const images = shown.filter((o) => o.type === "IMAGE" && o.fileId);
   // For photo tools the customer's own upload is shown next to the results (before → after).
   const imageField = getToolBySlug(order.tool.slug)?.intake.fields.find((f) => f.type === "image");
   const beforeFileId = imageField ? (order.intake as Record<string, unknown>)[imageField.key] : undefined;
@@ -61,13 +68,13 @@ export default async function OrderPage({ params, searchParams }: Props) {
         </div>
         <div>
           <div className="text-gray-500">{delivered ? "Delivered" : "Expected by"}</div>
-          <div className="font-medium">{(delivered ? order.deliveredAt : order.dueAt)?.toISOString().slice(0, 16).replace("T", " ") ?? "—"} UTC</div>
+          <div className="font-medium">{(delivered ? deliveredAt : order.dueAt)?.toISOString().slice(0, 16).replace("T", " ") ?? "—"} UTC</div>
         </div>
       </div>
 
       {t ? (
         <div className="mt-6">
-          <CopyLink url={`${site.url}/orders/${order.id}?t=${encodeURIComponent(t)}`} label={delivered ? "Your files stay here for 90 days — keep this link" : "Your private order link"} />
+          <CopyLink url={`${site.url}/orders/${order.id}?t=${encodeURIComponent(t)}`} label={showFiles ? "Your files stay here for 90 days — keep this link" : "Your private order link"} />
         </div>
       ) : null}
 
@@ -75,15 +82,21 @@ export default async function OrderPage({ params, searchParams }: Props) {
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>
       ) : null}
 
-      {["REVIEW", "RETRYING", "FAILED"].includes(order.status) && order.tool.fulfillment === "AUTO" ? (
+      {redoInProgress ? (
+        <p className="mt-6 rounded-lg bg-accent-soft px-4 py-3 text-sm text-gray-700">
+          We&rsquo;re redoing this order. Below are the files from your last delivery; the new version replaces them here and arrives by email by the &ldquo;expected by&rdquo; time above.
+        </p>
+      ) : null}
+
+      {!redoInProgress && ["REVIEW", "RETRYING", "FAILED"].includes(order.status) && order.tool.fulfillment === "AUTO" ? (
         <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">
           A person is finishing this order by hand, so it can take longer than the usual few minutes — the &ldquo;expected by&rdquo; time above still stands. If it is not here by then, <Link className="underline" href="/contact">tell us</Link>: we deliver it or <Link className="underline" href="/refund-policy">refund you</Link>.
         </p>
       ) : null}
 
-      {delivered ? (
+      {showFiles ? (
         <section className="mt-8">
-          <h2 className="text-lg font-bold">Your files</h2>
+          <h2 className="text-lg font-bold">{redoInProgress ? "Your files (last delivery)" : "Your files"}</h2>
           {images.length > 0 ? (
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {beforeUrl ? (
@@ -111,7 +124,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
             </div>
           ) : null}
           <ul className="mt-3 space-y-2">
-            {order.outputs
+            {shown
               .filter((o) => (o.fileId && o.type !== "IMAGE") || o.type === "LINK")
               .map((o) => {
                 const link = o.type === "LINK" ? (o.content as { url?: string })?.url : o.fileId ? signedFileUrl(o.fileId) : undefined;
@@ -128,7 +141,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
               })}
           </ul>
           {md ? (
-            order.outputs.some((o) => o.type === "PDF" || o.type === "LINK") ? (
+            shown.some((o) => o.type === "PDF" || o.type === "LINK") ? (
               <details className="card mt-4">
                 <summary className="cursor-pointer font-semibold">{markdownOut?.title ?? "Text version"}</summary>
                 <div className="mt-3">
@@ -141,20 +154,24 @@ export default async function OrderPage({ params, searchParams }: Props) {
               </div>
             )
           ) : null}
-          <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="font-semibold">Got another one?</h3>
-              <p className="text-sm text-gray-600">Same price, same turnaround — {order.tool.name} for the next listing or enquiry.</p>
-            </div>
-            <Link href={`/tools/${order.tool.slug}`} className="btn-primary">
-              Order again
-            </Link>
-          </div>
-          <div className="card mt-6">
-            <h3 className="font-semibold">How did we do?</h3>
-            <p className="mb-3 text-sm text-gray-600">One revision round is included — tell us what to change, or what you loved.</p>
-            {order.feedback.length > 0 ? <p className="text-sm text-green-700">Thanks, we have your feedback.</p> : <FeedbackForm orderId={order.id} token={t} />}
-          </div>
+          {delivered ? (
+            <>
+              <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                  <h3 className="font-semibold">Got another one?</h3>
+                  <p className="text-sm text-gray-600">Same price, same turnaround — {order.tool.name} for the next listing or enquiry.</p>
+                </div>
+                <Link href={`/tools/${order.tool.slug}`} className="btn-primary">
+                  Order again
+                </Link>
+              </div>
+              <div className="card mt-6">
+                <h3 className="font-semibold">How did we do?</h3>
+                <p className="mb-3 text-sm text-gray-600">One revision round is included — tell us what to change, or what you loved.</p>
+                {order.feedback.length > 0 ? <p className="text-sm text-green-700">Thanks, we have your feedback.</p> : <FeedbackForm orderId={order.id} token={t} />}
+              </div>
+            </>
+          ) : null}
         </section>
       ) : order.status !== "PENDING" ? (
         <section className="mt-8 card">

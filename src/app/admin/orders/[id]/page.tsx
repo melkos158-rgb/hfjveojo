@@ -5,7 +5,8 @@ import { StatusBadge, fmtDate } from "@/components/admin/Kpi";
 import { formatUsd, microsToCents } from "@/lib/ai/pricing";
 import { signedFileUrl } from "@/lib/storage";
 import { orderUrl } from "@/lib/orders/service";
-import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
+import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, redoOrderAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
+import { deliveredOutputs } from "@/lib/orders/deliverables";
 
 export const dynamic = "force-dynamic";
 
@@ -31,6 +32,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const canDeliver = ["REVIEW", "PROCESSING", "FAILED", "PAID", "RETRYING"].includes(order.status);
   const canRefund = order.payments.some((p) => p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED");
   const intake = order.intake as Record<string, unknown>;
+  const withCustomer = new Set(deliveredOutputs(order.outputs).map((o) => o.id));
+  const redos = await prisma.adminAction.count({ where: { action: "redo_order", targetType: "order", targetId: order.id } });
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
@@ -102,7 +105,12 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               return (
                 <details key={o.id} className="rounded-lg border border-line p-3" open={o.type === "MARKDOWN"}>
                   <summary className="cursor-pointer text-sm font-semibold">
-                    {o.type} · {o.title} · v{o.version} · {fmtDate(o.createdAt)}
+                    {o.type} · {o.title} · {o.toolRunId ? `run ${o.version}` : "manual"} · {fmtDate(o.createdAt)}
+                    {withCustomer.has(o.id) ? (
+                      <span className="badge ml-2 bg-green-50 text-green-700">with customer</span>
+                    ) : o.deliveredAt ? (
+                      <span className="badge ml-2 bg-gray-100 text-gray-700">replaced</span>
+                    ) : null}
                   </summary>
                   {o.fileId && o.type === "IMAGE" ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -195,9 +203,25 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
           <form action={retryOrderAction} className="card">
             <input type="hidden" name="orderId" value={order.id} />
             <h3 className="font-bold">Re-run pipeline</h3>
-            <p className="mb-2 text-xs text-gray-600">Generates a new version of the outputs (previous versions are kept).</p>
+            <p className="mb-2 text-xs text-gray-600">Runs the pipeline again. Earlier runs stay listed here; the customer only gets the newest set when it is delivered.</p>
             <button className="btn-secondary w-full" type="submit">
               Retry
+            </button>
+          </form>
+        ) : null}
+
+        {order.status === "COMPLETED" ? (
+          <form action={redoOrderAction} className="card space-y-2">
+            <input type="hidden" name="orderId" value={order.id} />
+            <h3 className="font-bold">Free redo</h3>
+            <p className="text-xs text-gray-600">
+              One redo is included when the result is unusable (e.g. the room&rsquo;s structure changed). Runs the pipeline again on the same brief;{" "}
+              {def?.fulfillment === "AUTO" ? "the new files are delivered automatically with a “Your redo is ready” email." : "the order goes back to REVIEW for you to deliver."} The customer keeps the current files until then.
+            </p>
+            <input name="reason" className="field-input" placeholder="What was wrong (internal)" maxLength={500} />
+            {redos > 0 ? <p className="text-xs font-semibold text-amber-700">Already redone {redos}× — the included redo is used.</p> : null}
+            <button className="btn-secondary w-full" type="submit">
+              Redo order
             </button>
           </form>
         ) : null}

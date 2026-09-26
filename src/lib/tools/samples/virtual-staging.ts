@@ -3,10 +3,12 @@ import type { SampleResult } from "@/lib/tools/types";
 /**
  * Sample shown on /tools/virtual-staging and the home page. The "before" is a sample photo of an empty room;
  * the "after" is the unedited output of the production pipeline for it (test order #6, gpt-image-2,
- * 2026-09-26) — so the sample is exactly what a customer receives. Static files under public/img.
+ * 2026-09-26, file staged-living-room-modern-v2.jpg) — so the sample is exactly what a customer receives.
+ * Static files under public/img.
  */
 export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
   label: "Real result for a sample photo of an empty living room",
+  caption: "The staged photo is exactly what our pipeline returned — not retouched. Your order runs the same pipeline on your photo.",
   input: [
     "1 photo of the empty living room — three windows, oak floor, recessed ceiling light",
     "Room: living room · Style: modern",
@@ -32,7 +34,7 @@ export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
     width: 1420,
     height: 480,
   },
-  note: "The staged photo above is the unedited output of our pipeline. Label it “virtually staged” in the MLS — most boards require it. If anything structural changes in your result, one redo is included.",
+  note: "Label it “virtually staged” in the MLS — most boards require it. If anything structural changes in your result, one redo is included.",
 };
 
 /**

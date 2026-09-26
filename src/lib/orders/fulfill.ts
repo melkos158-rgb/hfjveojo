@@ -34,6 +34,8 @@ export async function fulfillOrder(orderId: string): Promise<void> {
   const run = await prisma.toolRun.create({
     data: { orderId, toolId: order.toolId, toolVersion: order.toolVersion, steps: [] },
   });
+  // Outputs are numbered by run (1 = first run) so the admin can tell a re-run or a redo from the original set.
+  const runNumber = await prisma.toolRun.count({ where: { orderId } });
 
   const steps: Array<{ step: string; note?: string; at: string }> = [];
   const aiCtx: AiCallContext = { purpose: "generate", orderId, toolRunId: run.id, toolId: order.toolId, userId: order.userId };
@@ -128,7 +130,7 @@ export async function fulfillOrder(orderId: string): Promise<void> {
         fileId,
         content: out.content === undefined ? undefined : (out.content as object),
         previewText: out.previewText,
-        version: attempts,
+        version: runNumber,
       },
     });
   }

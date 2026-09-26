@@ -44,7 +44,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 08:10–08:30: `Order.isTest` + admin **full pipeline test** (sandbox only) — run in production: Order #2 COMPLETED with real AI output and real emails, excluded from metrics.
 - 08:30–09:00: delivered text rendered as sections with Copy buttons; GitHub Actions **uptime monitor** (every 15 min, emails on failure); pipeline test selectable per tool → production runs: #3 Pricing Guide COMPLETED (3 AI calls, PDF rendered, $0.02), #4 Listing Clips → REVIEW with the clip plan and concierge checklist (as designed); fixes found on the way (double-numbered steps, REVIEW note scope, close-test-order); OG cards for /free pages; CEO report text carries the new KPIs.
 - 14:52–15:20: **Virtual Staging** shipped: transfer verified by full-tree checksum, commit `e0420f7` deployed (migration `20260926030000_output_type_image` applied, seed synced, graceful restart in logs); production test #5 on gpt-image-1 worked technically but visual review caught a chandelier swap and an added built-in; fixed in `2f1d6f2` (freestanding-only prompt, gpt-image-2 default, exact photo proportions, EXIF auto-rotate) → test #6 clean on both versions (recessed light, windows, walls, doors untouched, 1536×1040). Stripe webhook delivery confirmed from the expired-session events. Uptime monitor run #1 had failed on a Python f-string quirk while production was healthy (log: ok, db up, 1,845 worker ticks) — check rewritten, runs off the hour now and once on every change of the workflow file.
-- 15:25–15:45: Virtual Staging sample replaced with the **real, unedited output of production order #6** (version 1, gpt-image-2): before/after composite on the tool page, home card and OG card; copy says "real pipeline output, unedited" and tells agents to label the photo "virtually staged" in the MLS.
+- 15:25–15:45: Virtual Staging sample replaced with the **real, unedited output of production order #6** (one of its two versions, gpt-image-2): before/after composite on the tool page, home card and OG card; copy says "real pipeline output, unedited" and tells agents to label the photo "virtually staged" in the MLS.
+- 15:45–16:10: **free redo + clean deliverables** (found while checking order #6 on the customer page: "After · version 1" showed the file named `-v2`, because outputs were listed newest first). Outputs now carry `deliveredAt`; the customer page and the delivery email show only the latest delivered set in generation order (a QC re-run or a redo used to pile old and new files together and email both). New **Free redo** on delivered orders (admin, with reason + count, audit `redo_order`): AUTO tools re-deliver with "Your redo is ready — order #N", concierge goes back to REVIEW, the customer keeps the last delivery meanwhile; `Order.deliveredAt` keeps the first delivery for SLA metrics. The admin's delivery note now reaches the customer on AUTO orders too (was dropped), email HTML escaped + links clickable, outputs numbered by run. Staging sample caption no longer says "built from fictional facts". Migration `20260926150000_output_delivered_at` (backfills delivered orders). 49 tests.
 
 ## IN PROGRESS
 
@@ -68,18 +69,18 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 15:20 UTC+2 — deploy of `2f1d6f2` ACTIVE (GitHub status `courageous-flow - hfjveojo` = success, CI green); `/api/health` ok, worker ticking every 10 s, hourly maintenance DONE every hour; Virtual Staging test #6 COMPLETED on gpt-image-2.
+- Last verified: 2026-09-26 15:40 UTC+2 — deploy of `0afebf2` ACTIVE (GitHub status `courageous-flow - hfjveojo` = success); production serves the new staging sample (`sample-virtual-staging.webp` 33,426 B, OG JPEG 47,622 B, home caption updated). Earlier today: `2f1d6f2` verified with a real image edit (order #6), `/api/health` ok, worker ticking every 10 s.
 - Known warnings in logs: none open.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 - Uptime monitor: run #1 (07:59 UTC) failed on a bug in the check itself, not the site; fixed check runs on every workflow change and at :07/:22/:37/:52.
 
 ## LAST VERIFIED COMMIT
 
-- `2f1d6f2` (staging prompt + gpt-image-2) — deployed and verified in production with a real image edit. Later commits: monitoring/docs only.
+- `0afebf2` (real staging sample) — deployed, files and copy checked in production. `2f1d6f2` (staging prompt + gpt-image-2) remains the last pipeline change verified with a real image edit.
 
 ## KNOWN BUGS
 
-- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores the original upload (≤ 8 MB) + 2 JPEG outputs (≈ 0.2–0.5 MB each); at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
+- None open. Watch list: files live in Postgres (`File.data`) — a staging order stores the original upload (≤ 8 MB) + 2 JPEG outputs (≈ 0.2–0.5 MB each); at >100 staging orders/month switch `STORAGE_BACKEND=s3` (Cloudflare R2, abstraction ready) before the Railway volume fills; Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session "stalls" on orvionis.com pages — cause found 2026-09-26: the owner's Chrome window is hidden (`document.visibilityState = hidden`), so timers are throttled and the tab gets frozen a few seconds after load (async JS and screenshots time out, network from the page is refused). Not the site: navigate, then read the DOM / `performance` entries synchronously in the same batch.
 
 ## BUSINESS METRICS (real data only)
 
@@ -97,3 +98,4 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - No CAPTCHA until abuse appears (honeypot + rate limits + Stripe); no Google Analytics (first-party events).
 - Stripe: hosted Checkout with inline `price_data` (prices live in the DB, no Price IDs); receipts carry the order link.
 - Fair-housing gate: "risk" phrases block automated delivery (→ REVIEW); "style" phrases only advise.
+- The customer sees exactly what was delivered: `GeneratedOutput.deliveredAt` marks the set, the order page shows the latest set only; the admin keeps every run. `Order.deliveredAt` = first delivery (SLA), redo deliveries are `order_redelivered` events.
