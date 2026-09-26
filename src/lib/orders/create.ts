@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { appUrl, env } from "@/lib/env";
-import { AppError } from "@/lib/errors";
+import { AppError, RateLimitedError, reportError } from "@/lib/errors";
+import { rateLimit } from "@/lib/security/ratelimit";
+import { log } from "@/lib/logger";
 import { getToolBySlug } from "@/lib/tools/registry";
 import { randomToken } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
@@ -10,6 +12,35 @@ import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
 import { z } from "zod";
+
+/**
+ * The Stripe client for a checkout. A mode without a key (e.g. a key swapped in Railway mid-switch) must not show the
+ * customer server internals: they get a plain "try again in a few minutes" (nothing was charged, no order exists yet),
+ * and the admins get one email per hour saying exactly which variable is missing.
+ */
+function checkoutClient(mode: StripeMode) {
+  try {
+    return stripe(mode);
+  } catch (err) {
+    if (!(err instanceof AppError) || err.code !== "stripe_not_configured") throw err;
+    void alertCheckoutDown(mode);
+    throw new AppError("Checkout is being updated right now — please try again in a few minutes. Nothing was charged.", 503, "checkout_unavailable");
+  }
+}
+
+async function alertCheckoutDown(mode: StripeMode): Promise<void> {
+  try {
+    await reportError(new Error(`Customer checkout refused: no Stripe ${mode} key`), { mode });
+    await rateLimit({ key: "alert:checkout_down", limit: 1, windowSeconds: 3600 });
+    const { notifyAdmins } = await import("@/lib/orders/service");
+    await notifyAdmins(
+      `Checkout is DOWN — no Stripe ${mode} key`,
+      `A customer checkout was refused: STRIPE_MODE/mode is "${mode}" but no ${mode} secret key is set (${mode === "live" ? "STRIPE_LIVE_SECRET_KEY, or a sk_live_ key in STRIPE_SECRET_KEY" : "a sk_test_ key in STRIPE_SECRET_KEY"}).\nFix it in Railway → hfjveojo → Variables, or switch STRIPE_MODE. /admin/system shows the state of both modes.\nThis alert is sent at most once an hour.`,
+    );
+  } catch (err) {
+    if (!(err instanceof RateLimitedError)) log.warn("checkout.alert_failed", { error: (err as Error).message });
+  }
+}
 
 export type CreateOrderInput = {
   toolSlug: string;
@@ -72,7 +103,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   const variant = experiment && input.attribution?.variant ? experiment.variants.find((v) => v.key === input.attribution?.variant) : null;
 
   const mode = input.mode ?? checkoutMode();
-  const client = stripe(mode); // fails before an order exists when this mode has no key
+  const client = checkoutClient(mode); // fails before an order exists when this mode has no key
 
   const order = await prisma.order.create({
     data: {

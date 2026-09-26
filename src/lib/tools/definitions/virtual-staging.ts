@@ -180,7 +180,9 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     priceCents: 1500,
     currency: "usd",
     unit: { one: "photo", many: "photos" },
-    compareAtText: "Staging companies charge $25–75 per photo with a 24–48 h turnaround",
+    // Sources (checked 2026-09-26): boxbrownie.com/virtual-staging — US$30 per image, 48 hours; Bella Virtual Staging's
+    // price comparison of 2026-07-20 — Styldod $23 ($16 on 8+ photos), BoxBrownie $30, Stuccco $35, Bella $37, 24–48 h.
+    compareAtText: "Staging services with human editors charge about $23–37 per photo and take 24–48 hours",
   },
   sla: { deliveryHours: 1 },
   landing: {
