@@ -10,14 +10,14 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - Payments: Stripe **sandbox** (`acct_1UIuDh2cM37Fu7zW` "orvionis sandbox"); key + webhook now on the same account (verified in `/admin/system` 2026-09-26 03:55: webhook enabled, all 7 events). No real money possible until Stripe live activation (owner).
 - AI: OpenAI key live; smoke test in production answered "OK" (gpt-4.1-mini, 1.6 s, $0.0001). Budget guards: $5/day, $1/order.
 - Auth: magic link (email) + **Google sign-in** (verified end-to-end in production 2026-09-26 03:50). Admin = `ADMIN_EMAILS`.
-- Email: Resend key set; domain `orvionis.com` added (eu-west-1) with DNS at Namecheap — **verification Pending** at last check. Until verified every email fails (graceful: login shows a 503 message, orders still work, Stripe receipts carry the order link).
+- Email: Resend domain `orvionis.com` **verified** (03:40). Sign-in link, order confirmation and delivery emails delivered in production (Resend log).
+- **End-to-end pipeline proven in production** (04:24): admin pipeline test → Order #2 PAID (synthetic event, no money) → real OpenAI fulfilment (2 calls, $0.01) → QC PASSED → COMPLETED with the full deliverable → both emails delivered. Only the card charge itself is untested (Stripe's side).
 - Free lead magnet: `/free/fair-housing-checker`. Search Console: domain verified, sitemap submitted.
 
 ## CURRENT PRIORITY
 
 1. (P0, owner) Stripe live activation → live `STRIPE_SECRET_KEY` + live webhook destination + `STRIPE_WEBHOOK_SECRET`. Without it there is no revenue.
-2. (P1, waiting) Resend domain verified → confirm sign-in and order emails in production logs.
-3. (P1, operator) First end-to-end **paid** order in sandbox by the owner (test card) → confirm PAID → fulfilment → delivery page → receipt; then the same in live with a real $9 order.
+2. (P1, owner) One sandbox purchase with the test card `4242…` on https://orvionis.com/tools/listing-description — the only untested link is Stripe's own card step → webhook delivery to our endpoint (the app side is proven); then the same in live with a real $9 order.
 4. (P2, operator) Conversion + acquisition assets: outreach kit with links to samples/free tool; second free tool for photographers (pricing calculator); admin metrics for the 90-day experiment (Stripe fees, revenue/hour, repeat purchases).
 5. (P2) AI cost control audit (§14 of the brief): input size caps per field, timeouts, retry limits, per-user/IP order rate limits — verify and tighten.
 
@@ -38,6 +38,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - 06:05–06:45: services/keys audit docs; `.env.example` complete; Resend domain + DNS (DKIM, `rsend`, `send`, `_dmarc`); Namecheap forwarders `hello@`, `dmarc@` → owner; Search Console sitemap submitted; verification meta support; stable sitemap `lastmod`.
 - 06:45–07:05: found and surfaced the Stripe key/webhook account mismatch (key was the old Ride Lab sandbox); owner replaced the key; admin webhook-on-this-account check; **Test AI provider** button (prod: OK).
 - 07:05–07:20: Stripe "apply branding" via API removed (Stripe forbids it on own account); admin links to the Dashboard branding page instead; `docs/AUTONOMOUS_PROGRESS.md` created.
+- 07:20–07:35: body-size guards on every JSON/upload route (413 before parsing); outreach kit refreshed ($9 entry DM, free-checker opener, sample links, UTM per experiment) in docs + /admin/content.
+- 07:35–08:10: free **photography pricing calculator** + `/free` index; experiment KPIs (est. Stripe fees, net contribution, revenue/founder hour, repeat rate, AI cost per paid order, free-tool uses).
+- 08:10–08:30: `Order.isTest` + admin **full pipeline test** (sandbox only) — run in production: Order #2 COMPLETED with real AI output and real emails, excluded from metrics.
 
 ## IN PROGRESS
 
@@ -53,32 +56,31 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## NEXT TASKS (ordered by expected business impact)
 
-1. Outreach kit: `docs/OUTREACH.md` refresh with the live URLs (samples, free checker), 3 DM variants per niche, a follow-up, and a "send me your listing facts, I'll do the first one for $9" offer.
-2. Photographers free tool: pricing calculator (cost of doing business → what to charge) → CTA to the $29 guide. Same pattern as the checker.
-3. Admin metrics for the experiment: Stripe fee estimate (2.9 % + $0.30), revenue/hour from ChannelCost hours, repeat-purchase rate, per-channel conversion — extend `src/lib/analytics/kpi.ts` + `/admin/analytics`.
-4. AI cost control audit: intake field max lengths (zod `.max`), request timeouts on provider calls, `MAX_ORDER_ATTEMPTS`, per-IP order creation limit, upload caps — verify and add tests.
-5. Uptime: UptimeRobot on `/api/health` (owner, free, 5 min) — or an internal check that alerts when the worker heartbeat is older than 5 min.
-6. Next tool by demand (`/admin/feedback` tool requests). Candidate with the strongest owner signal: Virtual Staging (room photo → staged image, OpenAI Images) — build only after the first paid orders or 3+ requests.
-7. Browser extension — only on demand.
+1. Customer-facing polish of the delivered result: render the Markdown deliverable as formatted text on the order page (today it is a raw `<pre>`), with copy buttons per section (MLS text, captions) — the $9 product's moment of truth.
+2. Uptime: UptimeRobot on `/api/health` (owner, free, 5 min) — or an internal alert when the worker heartbeat is older than 5 min.
+3. Listing Clips concierge flow check: admin delivery of MANUAL orders (links + files) end to end in sandbox with a pipeline test for `listing-clips`.
+4. Next tool by demand (`/admin/feedback` tool requests). Strongest owner signal: Virtual Staging (room photo → staged image, OpenAI Images) — build after the first paid orders or 3+ requests.
+5. Stripe live: when the owner activates — swap keys, create the live webhook, run one real $9 order, enable "Successful payments" emails in Stripe.
+6. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 07:15 UTC+2 — deploy of `ff94d67` ACTIVE, `/api/health` ok, `/admin/system` reachable via Google sign-in, AI smoke test OK, Stripe account/webhook aligned.
-- Known warnings in logs: Resend 403 "domain not verified" (until DNS verification completes).
+- Last verified: 2026-09-26 08:30 UTC+2 — deploy of `48d5779` ACTIVE (migration `order_is_test` applied), pipeline test order COMPLETED in production, emails delivered, `/free/photography-pricing-calculator` live.
+- Known warnings in logs: none open (Resend 403 stopped after verification).
 - Railway: auto-deploy from `main`; graceful shutdown proven; `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 
 ## LAST VERIFIED COMMIT
 
-- `ff94d67` (admin: Test AI provider) — deployed and verified. Commits after it are listed in git log; each is pushed only after typecheck + 31 tests + `next build` pass locally.
+- `48d5779` (admin pipeline test) — deployed and verified end to end. Each commit is pushed only after typecheck + 37 tests + `next build` pass locally.
 
 ## KNOWN BUGS
 
-- None open. Watch list: Resend sending after verification (first real email); Stripe Checkout showing the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account).
+- None open. Watch list: Stripe Checkout shows the sandbox's creation name "jarvis sandbox" (cosmetic, sandbox only, goes away with the live account); Chrome extension in the operator's session sometimes stalls on orvionis.com pages (tooling, not the site).
 
 ## BUSINESS METRICS (real data only)
 
 - Revenue: $0 (no live payments possible yet). Orders: 0 paid. Visitors: no meaningful traffic yet (no outreach started).
-- Costs so far: Railway Hobby plan, OpenAI ≈ $0.0001 (smoke test). Instrumentation in place: `Event` table (visits, CTA, checkout, paid, delivered, free-tool use), `AiRequest` (cost per call), `ChannelCost` (hours/spend per channel), KPIs on `/admin/analytics`, daily CEO report.
+- Costs so far: Railway Hobby plan, OpenAI ≈ $0.01 (smoke test + one pipeline test order: 2 calls, 1,325 in / 492 out tokens → margin after AI on a $9 order ≈ $8.99 before Stripe fees ≈ $0.56). Instrumentation in place: `Event` table (visits, CTA, checkout, paid, delivered, free-tool use), `AiRequest` (cost per call), `ChannelCost` (hours/spend per channel), KPIs on `/admin/analytics`, daily CEO report.
 - First-profit forecast given to the owner 2026-09-26: first sale 2–5 days after Stripe live + daily outreach starts; infra breaks even after ~3–5 orders.
 
 ## IMPORTANT DECISIONS
