@@ -11,6 +11,8 @@ export type CategoryInfo = {
   alt: string;
   live: string[];
   planned: string[];
+  /** Free tools for this audience (lead magnets), shown on the vertical page. */
+  free?: Array<{ label: string; href: string }>;
   cta: string;
 };
 
@@ -23,6 +25,7 @@ export const CATEGORIES: CategoryInfo[] = [
     title: "Real estate",
     live: ["Raw walkthrough → 5 listing clips", "Listing facts → MLS description + social captions"],
     planned: ["Room photos → virtual staging", "Listing files → marketing package"],
+    free: [{ label: "Fair housing checker — paste your remarks, see risky phrases and your character count", href: "/free/fair-housing-checker" }],
     cta: "See real-estate tools",
   },
   {

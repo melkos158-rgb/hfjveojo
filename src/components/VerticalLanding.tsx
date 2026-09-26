@@ -79,6 +79,18 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
             </ul>
           </div>
         ) : null}
+        {info?.free?.length ? (
+          <ul className="mt-6 space-y-2">
+            {info.free.map((f) => (
+              <li key={f.href} className="text-sm text-gray-600">
+                <span className="badge mr-2 bg-green-50 text-green-700">Free</span>
+                <Link href={f.href} className="font-semibold text-accent hover:underline">
+                  {f.label} →
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : null}
         <p className="mt-6 text-sm text-gray-600">
           Need something that is not listed? <Link className="underline" href={`/contact?topic=${encodeURIComponent(category)}`}>Tell us</Link> — the next tool gets built for the job people actually pay for.
         </p>

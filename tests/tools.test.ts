@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { allTools, getToolBySlug } from "@/lib/tools/registry";
 import { validateVideoLink } from "@/lib/security/files";
-import { checkFairHousing, checkNoPlaceholders } from "@/lib/tools/qa";
+import { checkFairHousing, checkNoPlaceholders, findFairHousingMatches } from "@/lib/tools/qa";
 import { parsePackages } from "@/lib/tools/definitions/photo-pricing-guide";
 import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description";
 import { sampleListingClipsIntake, sampleListingDescriptionIntake, samplePricingGuideIntake } from "./helpers";
@@ -100,8 +100,19 @@ describe("quality rules", () => {
     expect(checkNoPlaceholders("Welcome [insert name] to Lorem ipsum").length).toBeGreaterThanOrEqual(2);
     expect(checkNoPlaceholders("A clean, specific caption.")).toEqual([]);
     expect(checkFairHousing("Perfect for families near the church").length).toBeGreaterThan(0);
-    expect(checkFairHousing("A quiet street for mature adults only").length).toBe(2);
+    expect(checkFairHousing("A quiet street for mature adults only").length).toBe(1); // overlapping rules collapse to one span
     expect(checkFairHousing("Quartz island and a covered patio.")).toEqual([]);
     expect(checkFairHousing("Mature maples shade the deck; corner of Christiansen Ave.")).toEqual([]);
+    // style-only phrases advise but never block a delivery
+    expect(checkFairHousing("Master bedroom with a walk-in closet")).toEqual([]);
+    const matches = findFairHousingMatches("Perfect for families. Master suite upstairs. No kids.");
+    expect(matches.map((m) => [m.text, m.rule.severity])).toEqual([
+      ["Perfect for families", "risk"],
+      ["Master suite", "style"],
+      ["No kids", "risk"],
+    ]);
+    expect(matches[0].start).toBe(0);
+    expect(matches[0].end).toBe("Perfect for families".length);
+    for (const m of matches) expect(m.rule.hint.length).toBeGreaterThan(10);
   });
 });

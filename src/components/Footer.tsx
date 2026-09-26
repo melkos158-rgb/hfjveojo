@@ -22,6 +22,9 @@ export function Footer() {
           <Link href="/pricing" className="hover:text-ink">
             Pricing
           </Link>
+          <Link href="/free/fair-housing-checker" className="hover:text-ink">
+            Free fair housing checker
+          </Link>
           <Link href="/contact" className="hover:text-ink">
             Contact
           </Link>

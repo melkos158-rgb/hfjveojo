@@ -15,7 +15,7 @@ const schema = z.object({
 export async function POST(req: Request) {
   try {
     const body = schema.parse(await req.json());
-    if (!["page_view", "cta_click", "intake_started", "faq_open"].includes(body.name)) return Response.json({ ok: true });
+    if (!["page_view", "cta_click", "intake_started", "faq_open", "free_tool_used"].includes(body.name)) return Response.json({ ok: true });
     const store = await cookies();
     const session = await getSession();
     await track(body.name, {
