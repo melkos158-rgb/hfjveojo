@@ -139,6 +139,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-09-26 (to 23:04 UTC) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-27 (to 05:10 UTC) — campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-27 (to 11:05 UTC) — still paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -163,6 +164,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-27 11:05 UTC (check-in, read-only): still paused. The ad reads "not eligible · campaign paused", ad quality "Good", 0 impressions, €0. No reply from the owner yet. As planned, the reminder goes into the 17:03 daily summary, with no second push.
 
 ## DISCOVERIES
 
@@ -177,7 +179,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LAST COMPLETED ACTION
 
-Read-only check at 2026-09-27 05:10 UTC: **campaign paused since it was created**, 0 impressions, €0, balance €30. Owner asked at 05:12 UTC (chat + push) to enable it and to add the negatives and turn off auto-apply.
+Read-only check at 2026-09-27 11:05 UTC: **still paused** (paused since it was created), 0 impressions, €0, balance €30. Owner asked at 05:12 UTC (chat + push) to enable it and to add the negatives and turn off auto-apply; no reply yet.
 
 ## NEXT EXACT ACTION
 
@@ -188,4 +190,4 @@ Read-only check at 2026-09-27 05:10 UTC: **campaign paused since it was created*
 
 ## TIMESTAMP
 
-2026-09-27 05:15 UTC
+2026-09-27 11:20 UTC

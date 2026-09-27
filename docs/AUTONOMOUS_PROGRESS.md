@@ -98,6 +98,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
   Checklist in `docs/LEGAL_FLAGS.md`.
 - 2026-09-27 00:20 UTC: **SEO audit + fixes** (SEO-AEO-GEO Ultimate plugin; `docs/SEO_AUDIT.md`): metadata always in `<head>` (was in `<body>` for Googlebot/AI crawlers on 12 pages), www → apex 308, WebSite + Organization graph, current titles/descriptions, flagship in nav/footer, cost-guide cross-links, AI answer on the flagship, `/llms.txt` from the live catalog. `a929437`: own site no longer counted as a channel (verified in production).
+- 2026-09-27 11:20 UTC: **IndexNow** (E10, `docs/SEO_AUDIT.md` A8). The hourly maintenance submits the 21 sitemap URLs plus 16 retired Ride Lab paths (404) once per content version to the shared endpoint, which passes them to Bing, Yandex, Seznam, Naver, Yep and Amazon. Guards: production only, public https host, key file `/1b9b3b9e4ab3caa360e818027ff1d157.txt` checked first (public by design), failed versions retried every 6 h at most, `INDEXNOW_DISABLED=1`. `/admin/system` shows the last submission. The sitemap list moved to `src/lib/seo/sitemap-entries.ts` (shared). 122 tests. Check-in the same hour: E8 still paused, Fiverr Manage Orders 0 (inbox behind Fiverr's human check), production healthy.
 - 23:20: E10 guide **"How much does virtual staging cost in 2026?"** (`/guides/virtual-staging-cost`): every price is sourced and dated, our offer is described like the others. It is on the /guides hub and in the sitemap.
 
 ## IN PROGRESS
@@ -119,7 +120,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
 5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-6. SEO (`docs/SEO_AUDIT.md`): done 2026-09-27 — sitemap resubmitted, indexing requested for 8 URLs, Ride Lab `/pl/` and `/en/` in Removals. Owner: Bing Webmaster Tools sign-in + import. Next: check Search Console Pages/Removals and `site:orvionis.com` around 29 Sep – 3 Oct; weekly queries and AI referrers after that.
+6. SEO (`docs/SEO_AUDIT.md`): done 2026-09-27 — sitemap resubmitted, indexing requested for 8 URLs, Ride Lab `/pl/` and `/en/` in Removals; IndexNow (Bing & co.) built the same day (A8). Owner: Bing Webmaster Tools sign-in + import. Next: confirm the IndexNow submission on `/admin/system`; check Search Console Pages/Removals and `site:orvionis.com` on Google and Bing (Bing baseline 27 Sep: about 24 URLs incl. Ride Lab, no flagship or guides on page 1) around 29 Sep – 3 Oct; weekly queries and AI referrers after that.
 7. Video (owner, Seedance 2.5): reference images in `ORVIONIS_VIDEO_REFERENCES/` on the owner's PC (not in git); the script is a Claude Doc, "ORVIONIS — сценарій відео (42 с, 9:16)" (https://claude.ai/code/artifact/06643d3e-a8f7-47b5-a0f1-6d73e54dd913). It covers the concept, 9 scenes, the voice-over, two Seedance prompts, CapCut editing and what not to show. A second real before/after set needs a second real empty-room photo.
 7. Browser extension — only on demand.
 

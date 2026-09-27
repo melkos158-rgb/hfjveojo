@@ -5,8 +5,9 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
 ## CURRENT STATUS
 
 **The gig is LIVE** (Active, published by the owner on 2026-09-26 ≈ 21:30 UTC+2).
-- Seller dashboard, last 30 days: 0 impressions, 0 clicks, 0 orders.
-- **Manage Orders: 0 in every status** (verified 2026-09-26 22:00 UTC+2, the only source of truth).
+- Seller dashboard, last 30 days: 0 impressions, 0 clicks, 0 orders (26 Sep).
+- **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-09-27 11:05 UTC. Manage Orders is the only source of truth.
+- Inbox: not read on 27 Sep. Fiverr's "It needs a human touch" check appeared on `/inbox` even after a 35-second pause following Manage Orders. The operator never solves it, so the owner reads the inbox. With Manage Orders at 0, no message can be a real order.
 - Within an hour of going live, three phishing messages arrived. Two were reported and blocked; see SECURITY INCIDENTS.
 
 ## ORDER VERIFICATION RULES (owner, permanent)
@@ -143,10 +144,10 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
-2026-09-26 22:20 UTC+2 — Gig verified Active. Manage Orders verified at 0. Two phishing senders reported and blocked. Owner's order-verification rules recorded.
+2026-09-27 11:05 UTC: Manage Orders shows 0 in every status. The inbox was behind Fiverr's human check, which was left for the owner. (26 Sep 22:20 UTC+2: gig verified Active, two phishing senders reported and blocked, owner's order-verification rules recorded.)
 ## NEXT EXACT ACTION
-1. Once a day: seller dashboard (impressions, clicks, orders) and **Manage Orders**, the only order truth.
+1. Once a day at the 11:03 UTC check-in: **Manage Orders** first (the only order truth), then at most one more Fiverr page. If the human check shows, stop and leave it for the owner.
 2. For any new inbox message, apply ORDER VERIFICATION RULES first. Replies to real buyers are drafted and sent only with the owner's approval.
 3. After 14 days live or 300 impressions: review pricing hypothesis H1.
 ## TIMESTAMP
-2026-09-26 22:20 UTC+2
+2026-09-27 11:20 UTC

@@ -35,6 +35,11 @@ Nothing here promises crawling, indexing, rankings, AI citations, traffic or sal
   - the home page result still shows an old title ("ORVIONIS — AI-made deliverables for busy professionals").
 - **Brand query "orvionis"** on Google (from Poland): Ride Lab pages rank first and second, the ORVIONIS home page third.
 - **Other search index (WebSearch tool)**: `site:orvionis.com` and "orvionis" return nothing from the site.
+- **Bing, `site:orvionis.com`** (Chrome, 2026-09-27 11:20 UTC, added after the audit): about 24 results.
+  - The home page already shows the new title from the SEO release.
+  - Also listed: `/tools`, `/pricing`, `/real-estate`, `/contact`, `/photographers`.
+  - Ride Lab pages are listed too: `/en`, plus `www.` `/en/shop`, `/en/about`, `/en/faq`.
+  - Not on the first page: the flagship and the guides.
 - **Hosts:** `https://www.orvionis.com/…` serves the site with 200 (no redirect); canonicals point to the apex.
 - **First-party baseline (last 30 days, `/admin/analytics`, first touch):** direct 473 visits, `www.google.com` 18,
   Gmail app 6; 0 paid orders.
@@ -81,6 +86,18 @@ Operator (code), in this release:
 - A5 (F7) "Virtual staging" in the header and footer; the cost guide linked from the flagship and from the other staging guides.
 - A6 (F8, F10) `datePublished` and `image` in guide markup, OG image on the fair-housing guide, no canonical on `/login`.
 - A7 Optional publisher guide `/llms.txt`, generated from the tool registry and guide list (stays in sync by construction).
+- A8 (2026-09-27, F2/F3 for Bing; O4 without an account) **IndexNow**: the hourly maintenance job submits the sitemap
+  URLs plus the 16 retired Ride Lab paths (404 now; the protocol covers deleted URLs) to
+  `https://api.indexnow.org/indexnow` once per content version (`CONTENT_UPDATED`). The shared endpoint passes them to
+  Bing, Yandex, Seznam, Naver, Yep and Amazon; Google does not use IndexNow. The `www.` Ride Lab copies can't be
+  submitted (www redirects to the apex, so no key file answers there).
+  - The key is a public ownership token served at `/1b9b3b9e4ab3caa360e818027ff1d157.txt` (not a secret, by protocol
+    design).
+  - Guards: production only, public https host only, the key file must answer with the key before a submission, a
+    failed version is retried at most every 6 h, `INDEXNOW_DISABLED=1` stops it.
+  - `/admin/system` shows the last submission.
+  - Accept: the Setting `seo.indexnow` records HTTP 200 or 202 for the current version. Rollback: remove the maintenance
+    step (or set the variable).
 
 Provider operations (in the owner's Google/Bing accounts; each needs the owner's yes — asked 2026-09-27):
 
@@ -123,6 +140,10 @@ Separate metric families, observational only:
     It hides them for about 6 months; the pages already answer 404, so Google drops them for good on recrawl.
   - O4 Bing Webmaster Tools: not signed in on the owner's browser; signing in or creating that account is the owner's
     step (1 minute: bing.com/webmasters → sign in with Google → Import from Google Search Console).
+- **A8 IndexNow, implemented-locally (2026-09-27 11:20 UTC):** 122 tests (15 new in `tests/indexnow.test.ts`),
+  typecheck, production build. The local production server serves the key file (200, `text/plain`, exact key) and the
+  unchanged 21-URL sitemap; all 16 retired paths answer 404 (the two trailing-slash forms 308 → 404). Production
+  submission: recorded on `/admin/system` after the first hourly maintenance on the new deploy.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

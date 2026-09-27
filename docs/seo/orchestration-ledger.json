@@ -285,12 +285,16 @@
   {
    "skill": "seo-sitemap",
    "state": "completed",
-   "reason": "21 canonical URLs, stable lastmod bumped to 2026-09-27; Search Console shows the sitemap last read on 26 Sep with 13 URLs.",
+   "reason": "21 canonical URLs, stable lastmod bumped to 2026-09-27; Search Console shows the sitemap last read on 26 Sep with 13 URLs. 2026-09-27: the same URL list, plus the 16 retired Ride Lab paths (404), feeds IndexNow (Bing, Yandex, Seznam, Naver, Yep, Amazon), submitted once per content version by the hourly maintenance in production (A8). Bing baseline: about 24 URLs incl. Ride Lab pages; flagship and guides not on page 1.",
    "evidence_refs": [
-    "docs/SEO_AUDIT.md"
+    "docs/SEO_AUDIT.md",
+    "tests/indexnow.test.ts"
    ],
    "output_refs": [
-    "src/app/sitemap.ts"
+    "src/app/sitemap.ts",
+    "src/lib/seo/sitemap-entries.ts",
+    "src/lib/seo/indexnow.ts",
+    "public/1b9b3b9e4ab3caa360e818027ff1d157.txt"
    ],
    "blocker": null,
    "owner_decision_ref": null

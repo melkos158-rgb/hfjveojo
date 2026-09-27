@@ -5,13 +5,15 @@ import { aiSmokeTestAction, enqueueMaintenanceAction, ensureStripeWebhookAction,
 import { REQUIRED_WEBHOOK_EVENTS, STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 import { stripeConfigSummary, type StripeMode } from "@/lib/stripe/mode";
 import { TEST_INTAKES } from "@/lib/tools/samples/test-intakes";
+import { CONTENT_UPDATED } from "@/lib/seo/sitemap-entries";
+import { INDEXNOW_KEY, INDEXNOW_SETTING, type IndexNowRecord } from "@/lib/seo/indexnow";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
   const cfg = stripeConfigSummary();
-  const [jobs, errors, kill, stripeEvents, counts, smokeLast, stripeModes] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, smokeLast, stripeModes, indexNowRow] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -24,8 +26,11 @@ export default async function AdminSystem() {
     ]),
     prisma.setting.findUnique({ where: { key: "ai.smoke_test_last" } }),
     Promise.all((["live", "test"] as const).map((mode) => loadStripeMode(mode, cfg))),
+    prisma.setting.findUnique({ where: { key: INDEXNOW_SETTING } }),
   ]);
   const lastSmoke = smokeLast?.value as { ok: boolean; message: string; at: string } | null;
+  const indexNow = indexNowRow?.value as IndexNowRecord | null;
+  const indexNowKeyUrl = `${e.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "")}/${INDEXNOW_KEY}.txt`;
   const killOn = kill?.value === true;
   const [queued, running, failed, files] = counts;
 
@@ -60,6 +65,25 @@ export default async function AdminSystem() {
             </button>
           </form>
         </div>
+      </div>
+
+      <div className="card">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-bold">Search engines: IndexNow (Bing, Yandex, Seznam, Naver, Yep)</h2>
+          <span className={`badge ${indexNow?.ok ? "bg-green-50 text-green-700" : "bg-amber-50 text-amber-700"}`}>
+            {indexNow ? (indexNow.ok ? `HTTP ${indexNow.status} · accepted` : `HTTP ${indexNow.status || "no answer"} · retry within 6 h`) : "not submitted yet"}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-gray-500">
+          {indexNow
+            ? `${indexNow.count} URLs (the sitemap plus the retired Ride Lab pages) submitted ${fmtDate(new Date(indexNow.at))} for content version ${indexNow.version.slice(0, 10)}. `
+            : "The hourly maintenance submits the sitemap URLs and the retired Ride Lab pages once the key file is live (production only). "}
+          Current content version: {CONTENT_UPDATED.toISOString().slice(0, 10)} (bump CONTENT_UPDATED in src/lib/seo/sitemap-entries.ts after material page changes to notify again). Key file:{" "}
+          <a className="underline" href={indexNowKeyUrl}>
+            {indexNowKeyUrl}
+          </a>
+          . Google does not use IndexNow: Search Console covers it.
+        </p>
       </div>
 
       <div className="card">

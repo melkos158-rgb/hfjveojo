@@ -71,6 +71,9 @@ EMBEDDED_WORKER_POLL_MS=10000                       ⚙️ (default)
 
 # Search Console (only if you verify with the HTML tag instead of a DNS TXT record)
 NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=               🌐 ⏳ optional
+
+# IndexNow (Bing & co.): the hourly maintenance submits the sitemap URLs once per content version. Not set = on.
+INDEXNOW_DISABLED=                                  ⚙️ optional, "1" stops the submissions
 ```
 
 Legacy, unused by ORVIONIS, safe to delete from Railway: `ADMIN_PATH`, `SITE_URL`, `ADMIN_RESET`.

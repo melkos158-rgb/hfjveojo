@@ -53,7 +53,13 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           log.warn("jobs.fee_sync_failed", { error: err.message });
           return 0;
         });
-        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, fees });
+        // Search engines (Bing & co.): the sitemap URLs once per content version, production only.
+        const { maybeSubmitIndexNow } = await import("@/lib/seo/indexnow");
+        const indexnow = await maybeSubmitIndexNow().catch((err: Error) => {
+          log.warn("jobs.indexnow_failed", { error: err.message });
+          return { skipped: "error" };
+        });
+        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, fees, indexnow });
         break;
       }
       default:

@@ -84,6 +84,12 @@ const schema = z.object({
   /** Optional HTML-tag verification for Search Console / Bing (public values; DNS TXT verification needs none). */
   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional().default(""),
   NEXT_PUBLIC_BING_SITE_VERIFICATION: z.string().optional().default(""),
+  /** IndexNow notifications (Bing & co.) from the hourly maintenance job, production only — src/lib/seo/indexnow.ts. "1" stops them. */
+  INDEXNOW_DISABLED: z
+    .string()
+    .optional()
+    .default("")
+    .transform((v) => v === "1" || v === "true"),
   SENTRY_DSN: z.string().optional().default(""),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });
