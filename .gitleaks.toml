@@ -8,6 +8,9 @@ regexes = [
   '''sk_test_(local|xxx)''',
   '''whsec_(local|xxx)''',
   '''sk-xxx''',
+  # IndexNow key: a public ownership token served at https://orvionis.com/<key>.txt by protocol design, not a
+  # credential (src/lib/seo/indexnow.ts). Only this exact value is allowed.
+  '''1b9b3b9e4ab3caa360e818027ff1d157''',
 ]
 paths = [
   '''\.env\.example$''',

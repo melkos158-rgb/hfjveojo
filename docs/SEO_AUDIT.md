@@ -144,6 +144,9 @@ Separate metric families, observational only:
   typecheck, production build. The local production server serves the key file (200, `text/plain`, exact key) and the
   unchanged 21-URL sitemap; all 16 retired paths answer 404 (the two trailing-slash forms 308 → 404). Production
   submission: recorded on `/admin/system` after the first hourly maintenance on the new deploy.
+- **A8 released:** commit `d02d8aa`, Railway success 11:22 UTC. CI tests and build passed, but the gitleaks job flagged the
+  key constant (generic high-entropy "key" rule, a false positive for a public token). That exact value is now allowlisted
+  in `.gitleaks.toml`, with the reason.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.
