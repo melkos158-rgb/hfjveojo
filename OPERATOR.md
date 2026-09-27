@@ -56,15 +56,12 @@ Rule: no secrets in this file — only names, ids, paths and states.
 **New, 2026-09-27 — Search Console (biggest SEO lever; details in `docs/SEO_AUDIT.md`).** The Domain property
 `sc-domain:orvionis.com` exists and the operator can read it. Google has not indexed `/tools/virtual-staging` or any guide,
 still lists 16 old Ride Lab pages for this domain, and shows an old home-page title. The sitemap was last read on 26 Sep
-with 13 URLs (it now has 21). Clicking "Request indexing", resubmitting the sitemap or filing removals are actions in your
-Google account, so the operator needs your yes for each:
-1. **Yes/no:** the operator requests indexing for `/`, `/tools/virtual-staging`, `/guides/virtual-staging-cost` and
-   `/guides/ab-723-virtual-staging`, and resubmits `https://orvionis.com/sitemap.xml`.
-2. **Ride Lab** (`/pl/…`, `/en/…`, also on `www.`): does it live on another domain now (then its old pages get 301 redirects
-   there) or is it gone (then Removals → "Remove all URLs with this prefix" for `https://orvionis.com/pl/` and
-   `https://orvionis.com/en/`)? The pages already answer 404.
-3. **Bing Webmaster Tools** (https://www.bing.com/webmasters) → sign in → Import from Google Search Console → it takes the
-   site and sitemap (Bing also feeds ChatGPT search, Copilot and DuckDuckGo). The operator can do it with your yes.
+with 13 URLs (it now has 21). **Done by the operator on 2026-09-27 with the owner's yes** ("do everything needed, don't ask; Ride Lab is old junk"):
+sitemap resubmitted, indexing requested for 8 URLs (home, flagship, 4 guides, /guides, /photographers), Ride Lab
+prefixes `/pl/` and `/en/` sent to Removals. Receipts in `docs/SEO_AUDIT.md` → Status.
+Still the owner's (account sign-in is not something the operator does):
+- **Bing Webmaster Tools:** https://www.bing.com/webmasters → Sign in (Google account) → "Import from Google Search
+  Console" → pick orvionis.com. It takes the site and sitemap; Bing also feeds ChatGPT search, Copilot and DuckDuckGo.
 
 **Current, 2026-09-26 22:00 UTC+2. Do these first; the older numbered items below are history.**
 - **Google Ads, live campaign `E8 Virtual Staging - Search - US` (id 24292280138).** The auto-mode safety check blocks the operator from editing a live campaign ("real-world transactions"). The owner does these:

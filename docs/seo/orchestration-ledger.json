@@ -258,14 +258,14 @@
   {
    "skill": "seo-performance",
    "state": "blocked",
-   "reason": "Baselines captured read-only (Search Console 3 months, first-party analytics 30 days); provider operations are waiting for the owner's yes.",
+   "reason": "Baselines captured read-only (Search Console 3 months, first-party analytics 30 days). Provider operations done 2026-09-27 with the owner's yes: sitemap resubmitted, 8 URLs requested for indexing, Ride Lab /pl/ and /en/ prefixes sent to Removals (receipts in docs/SEO_AUDIT.md). Outcomes pending.",
    "evidence_refs": [
     "docs/SEO_AUDIT.md"
    ],
    "output_refs": [
     "docs/SEO_AUDIT.md"
    ],
-   "blocker": "Owner authorization for Search Console operations (request indexing, sitemap resubmission, removals) and the Bing Webmaster Tools import; asked 2026-09-27.",
+   "blocker": "Bing Webmaster Tools needs the owner to sign in (the operator does not sign in to or create accounts).",
    "owner_decision_ref": null
   },
   {

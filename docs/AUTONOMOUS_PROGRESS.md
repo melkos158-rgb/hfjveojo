@@ -119,7 +119,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 3. Owner: legal identity for Terms/Privacy (JDG name as in CEIDG, NIP, registered address) — the pages still show VERIFY placeholders, and Stripe's activation review reads the site.
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
 5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
-6. SEO (`docs/SEO_AUDIT.md`): with the owner's yes, request indexing of the flagship and the guides, resubmit the sitemap, remove the 16 Ride Lab URLs from Google, import the site into Bing Webmaster Tools. Then weekly: `site:` coverage, Search Console queries, AI referrers.
+6. SEO (`docs/SEO_AUDIT.md`): done 2026-09-27 — sitemap resubmitted, indexing requested for 8 URLs, Ride Lab `/pl/` and `/en/` in Removals. Owner: Bing Webmaster Tools sign-in + import. Next: check Search Console Pages/Removals and `site:orvionis.com` around 29 Sep – 3 Oct; weekly queries and AI referrers after that.
+7. Video (owner, Seedance 2.5): reference images in `ORVIONIS_VIDEO_REFERENCES/` on the owner's PC (not in git), prompt sent in chat. A second real before/after set needs a second real empty-room photo.
 7. Browser extension — only on demand.
 
 ## PRODUCTION STATUS

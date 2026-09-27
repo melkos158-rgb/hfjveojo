@@ -110,8 +110,22 @@ Separate metric families, observational only:
   nav link; the home page has the new title/description, canonical and the Organization + WebSite graph; `/llms.txt` serves
   `text/plain`; `/icon` is a 64×64 PNG. Limitation: the raw-HTML layer can't be fetched from the operator's shells or the
   extension, so "metadata in `<head>`" was proven on the local build of the same commit.
-- **provider-outcome-pending:** indexing of the flagship and guides, removal of the Ride Lab URLs, new title in Google's
-  results, Bing coverage — all wait for the owner-approved operations O1–O4 and then for Google/Bing to recrawl.
+- **Provider operations (owner's yes on 2026-09-27: "do everything needed, don't ask; Ride Lab is old junk"):**
+  - O1 ~00:27 UTC: sitemap `https://orvionis.com/sitemap.xml` resubmitted → "Sitemap submitted successfully".
+  - O2 00:30–00:45 UTC: URL Inspection → Request indexing, each confirmed "Indexing requested — URL was added to a
+    priority crawl queue":
+    - `/`, which was already indexed (with the old title);
+    - `/tools/virtual-staging`, `/guides/virtual-staging-cost`, `/guides/ab-723-virtual-staging`,
+      `/guides/photographing-rooms-for-virtual-staging`, `/guides/fair-housing-words-to-avoid`, `/guides` and
+      `/photographers` — none of them were on Google ("discovered – currently not indexed" or "unknown to Google").
+  - O3 ~00:50 UTC: Removals → Temporarily remove URL → "Remove all URLs with this prefix" for `https://orvionis.com/pl/`
+    and `https://orvionis.com/en/` (Google applies it to www/non-www and http/https) → status "Processing request".
+    It hides them for about 6 months; the pages already answer 404, so Google drops them for good on recrawl.
+  - O4 Bing Webmaster Tools: not signed in on the owner's browser; signing in or creating that account is the owner's
+    step (1 minute: bing.com/webmasters → sign in with Google → Import from Google Search Console).
+- **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
+  removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
+  2–7 days.
 - Coverage ledger (27 lanes, validated): `docs/seo/orchestration-ledger.json`.
 - Next check: weekly `site:orvionis.com` and Search Console Pages/Performance; first-party channels `www.google.com`,
   `bing.com` and AI referrers.
