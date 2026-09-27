@@ -21,8 +21,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 **Owner away 27 Sep – ~1 Oct.** Scheduled check-ins every ~6 h. Rules are in `OPERATOR.md` → "Owner away".
 
-0. (P0, now) **Acquisition channels are live (2026-09-26).**
-   - Google Ads E8 published 22:15 and in review; €30 campaign total until 1 Oct (`docs/GOOGLE_ADS_EXPERIMENT.md`). The owner adds negatives and turns off auto-apply: the operator may not edit the live campaign.
+0. (P0, now) **Acquisition channels (2026-09-26).**
+   - Google Ads E8: **paused since it was published, never served** (found 2026-09-27 05:10 UTC); €30 campaign total until 1 Oct, balance untouched (`docs/GOOGLE_ADS_EXPERIMENT.md`). The owner enables it, adds negatives and turns off auto-apply (asked 05:12 UTC by chat + push): the operator may not edit the live campaign.
    - Fiverr gig E13 Active (`docs/FIVERR_EXPERIMENT.md`). Only Manage Orders proves an order.
    - Every day: channel metrics, the ledger and the spend register in `docs/BUSINESS_METRICS.md` (90-day reinvestment policy: no withdrawals until day 91, 2026-12-25).
 1. (P0, owner) First real order — e.g. the $9 Listing Description — to see Stripe's live card form, the receipt and the delivery end to end (the operator may not open live Checkout pages: the safety classifier treats it as a real-world transaction). Then start outreach: payments are live.
@@ -120,18 +120,21 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 4. Close test orders #2–#6 in /admin once the owner has looked at them (#4 sits in REVIEW).
 5. Deliverable quality loop: read the outputs of orders #2–#6 critically and tighten prompts where needed.
 6. SEO (`docs/SEO_AUDIT.md`): done 2026-09-27 — sitemap resubmitted, indexing requested for 8 URLs, Ride Lab `/pl/` and `/en/` in Removals. Owner: Bing Webmaster Tools sign-in + import. Next: check Search Console Pages/Removals and `site:orvionis.com` around 29 Sep – 3 Oct; weekly queries and AI referrers after that.
-7. Video (owner, Seedance 2.5): reference images in `ORVIONIS_VIDEO_REFERENCES/` on the owner's PC (not in git), prompt sent in chat. A second real before/after set needs a second real empty-room photo.
+7. Video (owner, Seedance 2.5): reference images in `ORVIONIS_VIDEO_REFERENCES/` on the owner's PC (not in git); the script is a Claude Doc, "ORVIONIS — сценарій відео (42 с, 9:16)" (https://claude.ai/code/artifact/06643d3e-a8f7-47b5-a0f1-6d73e54dd913). It covers the concept, 9 scenes, the voice-over, two Seedance prompts, CapCut editing and what not to show. A second real before/after set needs a second real empty-room photo.
 7. Browser extension — only on demand.
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-26 18:20 UTC+2 — deploy of `faa9882` ACTIVE (Railway commit status success 18:12, migration applied on start): `/api/health` ok, multi-room form + per-photo prices live, admin order pages render. Earlier on this code line: disclosure pack, sandbox webhook probe verified end to end, sandbox checkout reaches Stripe, analytics KPIs, free-preview UI; GA4 inactive until the measurement id is set. Stripe checkouts: **TEST** (live key not in Railway yet).
+- Last verified: 2026-09-27 05:05 UTC — `5c2b514` live (Railway success 00:35 UTC). `/api/health`: ok, db up, 0 queued / 0 running / 0 failed jobs, worker ticking. `/admin/analytics` (30 days): 0 paid orders; delivered / review / failed 0 / 0 / 0. Stripe checkouts: **LIVE** since 2026-09-26 18:50 UTC+2. GA4 inactive until the measurement id is set.
+- Check-in note: order rows on `/admin/orders` are not read by the operator (the safety check flags it as personal-data handling). The check-in uses the aggregate counts on `/admin/analytics` and the job counts from `/api/health`; order details are the owner's view.
+- Earlier (2026-09-26 18:20 UTC+2): `faa9882` checked (multi-room form, per-photo prices, admin order pages); disclosure pack, sandbox webhook probe end to end, sandbox checkout reaches Stripe, analytics KPIs, free-preview UI.
 - Known warnings in logs: none open.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 - Uptime monitor: the GitHub workflow is correct (push run green) but GitHub's scheduler dropped almost all 15-minute runs today — treat it as best effort; a free UptimeRobot/Better Stack check on `/api/health` (keyword `"ok":true`) is the owner's 2-minute fix.
 
 ## LAST VERIFIED COMMIT
 
+- `5c2b514` (docs) — CI success 00:33 UTC, Railway "Success - orvionis.com" 00:35 UTC; `/api/health` ok at 05:05 UTC (db up, 0 queued / 0 running / 0 failed jobs, worker ticking).
 - `15bb01a` (2026-09-27 ~00:00 UTC) — SEO release: CI + Railway success, live checks in Chrome (www → apex, new titles, WebSite graph, `/llms.txt`, `/icon`). Before it `a929437` (own site not a channel) — verified in `/admin/analytics`.
 - `faa9882` — deployed and checked (multi-room staging, run leases). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's, the labeled copies' and a multi-room order's real-model runs are not yet seen in production.
 

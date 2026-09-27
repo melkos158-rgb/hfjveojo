@@ -106,9 +106,17 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 
 ## STATUS
 
-**Published 2026-09-26 22:15 UTC+2 (20:15 UTC).** Check at 2026-09-26 23:04 UTC (read-only): campaign **Enabled, "Придатна (навчання)"** (eligible, learning); 0 impressions, 0 clicks, €0 spent. Change history shows no negative keywords added yet.
+**The campaign is PAUSED and has never served** (found 2026-09-27 05:10 UTC, read-only):
+- the campaign's status icon reads "Призупинено" (paused);
+- the ad reads "Не відповідає вимогам · Кампанію призупинено" (not eligible, campaign paused);
+- the account banner says "none of your ads are showing: campaigns and ad groups are paused or removed";
+- 0 impressions, 0 clicks, €0 spent; billing is fine (€30.00 balance, no cost).
 
-Settings were verified on the review page after a full reload:
+Change history has one event only: the publish batch on 26 Sep at 23:19:05 account time (20:19 UTC), made from the web client. No pause event exists, so the campaign was most likely created paused. The "Enabled, eligible (learning)" reading at 23:04 UTC on 26 Sep was wrong; the campaign status icon is the reliable signal.
+
+Enabling it edits the live campaign, which is the owner's click (safety check). The owner was asked at 05:12 UTC by chat and push, with the negatives and auto-apply off in the same message.
+
+Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the review page after a full reload:
 - Search only, US presence, English;
 - 15 keywords, exact and phrase match;
 - 1 RSA;
@@ -119,6 +127,7 @@ Settings were verified on the review page after a full reload:
 ## OWNER ACTIONS (pending)
 
 The auto-mode safety check blocks the operator from editing the live campaign ("real-world transactions"). Exact steps were sent to the owner on 2026-09-26 22:20:
+0. **Enable the campaign** (asked 2026-09-27 05:12 UTC): Campaigns → "E8 Virtual Staging - Search - US" → Status → Enable. Best done after step 1, but enabling first is fine.
 1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
 2. **Auto-apply recommendations off:** Recommendations → Auto-apply → untick all → Save.
 3. Optional: Final URL suffix (campaign Settings → Campaign URL options).
@@ -129,6 +138,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | Date | Spend | Impressions | Clicks | CTR | CPC | Checkouts | Orders | Revenue | Profit | ROAS | CAC |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-09-26 (to 23:04 UTC) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-27 (to 05:10 UTC) — campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -152,6 +162,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 22:20: edits to the live campaign blocked by the safety check. Negatives and auto-apply off sent to the owner.
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
+- 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
 
 ## DISCOVERIES
 
@@ -160,18 +171,21 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - The wizard's draft keeps keywords, ads, location, AI Max and budget, but not the Final URL suffix.
 - The "total campaign budget" option exists for Search. It needs start and end dates, and the budget type is fixed after launch.
 - Estimated with US-only targeting: about €0.76–0.87 average CPC. €30 buys roughly 35–40 clicks.
+- **Read the campaign status from the status icon** on the Campaigns table (its label, e.g. "Призупинено") or from the ad's status column, never from the status filter chip ("Статус кампанії: Увімкнено, призупинено" lists both states) or the review page. The 26 Sep 23:04 check reported "eligible (learning)" for a campaign that was paused; how that happened is not known.
+- The account reports in **GMT+03:00 (Eastern European time)** per the footer, not GMT+2 as noted at setup. Day boundaries in Google's reports are an hour off Poland's.
+- In the owner's hidden Chrome window, Google Ads pages render only for a few seconds after a navigation: navigate → screenshot → read in one batch, and open a fresh tab when a tab freezes.
 
 ## LAST COMPLETED ACTION
 
-Read-only status check at 23:04 UTC: eligible (learning), 0 impressions, €0. Owner asked to add negatives and turn off auto-apply (22:20); not done yet.
+Read-only check at 2026-09-27 05:10 UTC: **campaign paused since it was created**, 0 impressions, €0, balance €30. Owner asked at 05:12 UTC (chat + push) to enable it and to add the negatives and turn off auto-apply.
 
 ## NEXT EXACT ACTION
 
-1. After the owner confirms: check that the negatives and auto-apply changes are visible.
-2. When the ads are approved: record the approval time. Check the first impressions and clicks, and the search terms report (add negatives through the owner).
+1. Next check-in: is the campaign enabled? If not, remind the owner once in the 17:03 daily summary; don't send a second push.
+2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
 3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
 4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
 
 ## TIMESTAMP
 
-2026-09-26 23:20 UTC
+2026-09-27 05:15 UTC

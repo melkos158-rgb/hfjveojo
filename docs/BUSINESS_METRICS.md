@@ -35,7 +35,7 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | **Net revenue** | **$0** | gross − refunds − Stripe − marketplace fees |
 | AI / API costs | $0.35 | `/admin/analytics` (pipeline tests + 1 production staging preview) |
 | **Gross profit** | **−$0.35** | net revenue − variable costs (AI) |
-| Advertising spend | €0.00 spent | Google Ads E8: €30 prepaid by the owner, campaign live from 26 Sep (in review) |
+| Advertising spend | €0.00 spent | Google Ads E8: €30 prepaid by the owner (balance €30.00 on 27 Sep); the campaign has been **paused since it was created** and never served (found 27 Sep 05:10 UTC; the owner is asked to enable it) |
 | Infrastructure | Railway Hobby plan | owner-paid; monthly amount → from the Railway invoice (not yet recorded) |
 | AI subscriptions (Claude, etc.) | owner-paid | amount to record from the owner's billing (not yet recorded) |
 | **Net profit** | **−$0.35 − fixed costs** | gross profit − ads − infrastructure − subscriptions |
@@ -45,7 +45,7 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Channel | Spend | Paid orders | Revenue | Profit | ROAS | Revenue per € / $ spent |
 | --- | --- | --- | --- | --- | --- | --- |
-| google (E8, Search) | €0 (of €30 cap) | 0 | $0 | $0 | — | — |
+| google (E8, Search) | €0 (of €30 cap); campaign paused, 0 impressions | 0 | $0 | $0 | — | — |
 | fiverr (E13, gig live 26 Sep) | $0 (20 % fee only on sales) | 0 (Manage Orders) | $0 | $0 | — | — |
 | outreach (E1–E3) | founder time only | 0 | $0 | $0 | — | — |
 | direct / organic | $0 | 0 | $0 | $0 | — | — |
@@ -54,16 +54,16 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Date | Item | Reason | Hypothesis | Expected outcome | Metric | Limit | Status / result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | live 26 Sep, in Google review; decide on 1 Oct by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
+| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep but paused since creation (found 27 Sep 05:10 UTC), €0 spent; owner asked to enable it; decide on 1 Oct by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
 
-## Snapshot — 2026-09-26 22:00 UTC+2 (last 30 days, `/admin/analytics`)
+## Snapshot — 2026-09-27 05:10 UTC (last 30 days, `/admin/analytics`)
 
 | Metric | Value | Note |
 | --- | --- | --- |
-| Gross revenue | **$0** | Stripe live since 18:50; no real payment yet |
-| Paid orders / customers | 0 / 0 | Fiverr Manage Orders: 0 |
-| Visits / sessions | 492 / 32 | almost all operator + owner testing; Google Ads published 22:15 (in review), Fiverr gig live |
+| Gross revenue | **$0** | Stripe live since 26 Sep 16:50 UTC; no real payment yet |
+| Paid orders / customers | 0 / 0 | delivered / review / failed: 0 / 0 / 0 (real orders); Fiverr Manage Orders: 0 at the last look (26 Sep) |
+| Visits / sessions | 498 / 37 | +6 / +5 since 26 Sep 20:00 UTC; by first touch: direct 474, `www.google.com` 18, Gmail app 6 — no ad traffic (campaign paused) |
 | Funnel (intake started → checkout → paid) | 3 → 7 → 0 | the checkouts were test and sandbox verifications |
 | Free-tool uses | 3 | fair-housing checker + pricing calculator |
 | Free staging previews | 1 | 1 session went on to checkout (operator test) |

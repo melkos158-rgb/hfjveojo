@@ -30,6 +30,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 - 2026-09-25 — Ride Lab replaced by ORVIONIS on the same repo/service/domain. Production ACTIVE at https://orvionis.com (home, /tools, tool pages, legal pages, /api/health). Migrations applied in schema `orvionis`; seed runs on every start. Stripe test webhook created. Variables set (secrets generated per environment, not stored here).
 - 2026-09-26 03:40 UTC+2 — Deploy `cc0d956` (Listing Description) ACTIVE on Railway; deploy log: `tools synced: 3, products: 3`, experiments e1/e2/e3, worker started; `/api/health` ok with a fresh worker id. Every container swap so far ended with `npm error signal SIGTERM` in the logs because the signal never reached Next (sh in between) — fixed in the next commit (graceful shutdown, jobs handed back to the queue).
 - 2026-09-26 15:20 UTC+2 — Deploy `2f1d6f2` ACTIVE: 4 tools live incl. Virtual Staging on gpt-image-2 (test order #6 clean); migration `20260926030000_output_type_image` applied; `/api/health` ok.
+- 2026-09-27 05:05 UTC — `5c2b514` ACTIVE, `/api/health` ok. Google Ads E8 found paused (never served); owner asked to enable it.
 - 2026-09-26 — Brand visuals live: Higgsfield-generated heroes (`public/img/hero-*.webp`, JPEG twins for OG) on /real-estate, /photographers and the home "Who is this for?" cards; static Open Graph cards for /, /real-estate, /photographers (`src/lib/og.tsx`, rendered at build time). Vertical pages now have a primary CTA to the tool page and a `#tools` anchor.
 
 ## Owner away 2026-09-27 → ~2026-10-01 (autonomous mode)
@@ -95,6 +96,17 @@ Still the owner's (account sign-in is not something the operator does):
 7. [ ] Share-preview check after deploy: paste https://orvionis.com/real-estate into a preview debugger (opengraph.xyz or the Facebook Sharing Debugger) once; the card is cached by platforms for ~24h after first share.
 
 ## Session log
+
+- 2026-09-27 05:03–05:20 UTC (scheduled check-in, owner away):
+  - Production healthy: `/api/health` ok, 0 failed jobs; `5c2b514` CI + Railway green. `/admin/analytics`: 0 paid,
+    0 in review or failed, 30-day visits 498 (+6), no ad traffic.
+  - **Google Ads E8 is paused and has never served** (status icon "Призупинено", ad "campaign paused", 0 impressions,
+    €0, balance €30). Change history holds only the publish batch, so it was most likely created paused. The owner is asked
+    to enable it and add the negatives (chat + push, 05:12). Details: `docs/GOOGLE_ADS_EXPERIMENT.md`.
+  - The operator no longer opens order rows on `/admin/orders`: the safety check flagged it as personal-data handling. The
+    aggregate counts on `/admin/analytics` cover the check-in.
+  - Earlier (00:50–01:00 UTC): the video script was written for the owner as a Claude Doc (link in `docs/AUTONOMOUS_PROGRESS.md`,
+    NEXT TASKS 7).
 
 - 2026-09-26 23:10 – 2026-09-27 00:20 UTC (SEO audit with the SEO-AEO-GEO Ultimate plugin, installed at the owner's request):
   - The owner asked for the `claude-seo` skill (AgriciDaniel). It isn't in the Claude plugin catalog, and the operator does not
