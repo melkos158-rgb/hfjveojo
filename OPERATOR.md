@@ -97,6 +97,12 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-27 23:03–23:20 UTC (scheduled check-in):
+  - Production healthy: worker continuous since the 17:11 deploy.
+  - Analytics: 499 / 38 visits (+1 direct), 0 paid, nothing in review or failed.
+  - Google Ads unchanged: restricted, and the EU political-ads answer is still "yes".
+  - Useful work: the uptime workflow now retries HTTP errors and prints only the status and the first 400 bytes (after the 07:04 probe whose log was truncated).
+
 - 2026-09-27 12:10–17:20 UTC (owner briefly online, then the 17:03 check-in):
   - The owner tried Resume in Google Ads and got `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN` ("Restricted Campaigns can only be activated by RFA systems"), so the restriction is on Google's side. He opened the advertiser-verification page.
   - At 17:05 the page shows his EU political-ads answer as "yes, we plan to show them", which is wrong for ORVIONIS. Correcting it is his step (a declaration in his name); asked in the daily summary.

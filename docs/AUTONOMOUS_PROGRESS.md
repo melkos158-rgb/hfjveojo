@@ -130,7 +130,10 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - Check-in note: order rows on `/admin/orders` are not read by the operator (the safety check flags it as personal-data handling). The check-in uses the aggregate counts on `/admin/analytics` and the job counts from `/api/health`; order details are the owner's view.
 - Earlier (2026-09-26 18:20 UTC+2): `faa9882` checked (multi-room form, per-photo prices, admin order pages); disclosure pack, sandbox webhook probe end to end, sandbox checkout reaches Stripe, analytics KPIs, free-preview UI.
 - Known warnings in logs: none open.
-- Uptime monitor: **one failed probe at 2026-09-27 07:04 UTC** (GitHub "Uptime #8"). The health step failed in 3 s, and its log was truncated for size, which means the body was large: most likely an edge error page rather than the JSON. The app process ran through without a break: the same worker id from 05:17 to 11:04 with a steady tick count, and health was ok at 05:05, 05:17 and 11:04. Treated as transient; investigate if it repeats.
+- Uptime monitor: **one failed probe at 2026-09-27 07:04 UTC** (GitHub "Uptime #8"). The health step failed in 3 s, and its log was truncated for size, which means the body was large: most likely an edge error page rather than the JSON. The app process ran through without a break: the same worker id from 05:17 to 11:04 with a steady tick count, and health was ok at 05:05, 05:17 and 11:04. Treated as transient; investigate if it repeats. The next probe (12:58) passed.
+  - Since 23:15 UTC the check retries HTTP errors as well (`--fail-with-body` + `--retry-all-errors`), so a one-off edge 502 no longer fails the run.
+  - A real failure now prints the status code and the first 400 bytes instead of the whole page.
+  - Tested locally against a fake 200 JSON and a 502 HTML page.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 - Uptime monitor: the GitHub workflow is correct (push run green) but GitHub's scheduler dropped almost all 15-minute runs today — treat it as best effort; a free UptimeRobot/Better Stack check on `/api/health` (keyword `"ok":true`) is the owner's 2-minute fix.
 

@@ -20,12 +20,22 @@ jobs:
     steps:
       - name: GET /api/health
         run: |
-          set -euo pipefail
-          body=$(curl -sS --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/api/health)
-          echo "$body"
-          echo "$body" | python3 -c '
+          set -uo pipefail
+          # HTTP errors (e.g. a 502 page from the edge) are retried like network errors (--fail-with-body with
+          # --retry-all-errors), and only the status and the first 400 bytes are printed: on 2026-09-27 07:04 UTC one
+          # failed probe printed a whole HTML error page and GitHub truncated the log, so the cause was invisible.
+          code=$(curl -sS -o /tmp/health.json -w "%{http_code}" --fail-with-body --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/api/health)
+          rc=$?
+          size=$(wc -c < /tmp/health.json 2>/dev/null || echo 0)
+          echo "HTTP ${code:-none}, curl exit ${rc}, ${size} bytes"
+          head -c 400 /tmp/health.json 2>/dev/null; echo
+          if [ "$rc" -ne 0 ] || [ "${code:-}" != "200" ]; then
+            echo "::error::health check failed: HTTP ${code:-none}, curl exit ${rc}"
+            exit 1
+          fi
+          python3 -c '
           import sys, json, datetime
-          d = json.load(sys.stdin)
+          d = json.load(open("/tmp/health.json"))
           assert d.get("ok") is True and d.get("db") == "up", "health not ok"
           w = d.get("worker") or {}
           assert w.get("enabled") is True, "embedded worker disabled"
@@ -40,7 +50,7 @@ jobs:
       - name: Home page renders
         run: |
           set -euo pipefail
-          code=$(curl -sS -o /tmp/home.html -w "%{http_code}" --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/)
+          code=$(curl -sS -o /tmp/home.html -w "%{http_code}" --fail-with-body --max-time 20 --retry 3 --retry-delay 10 --retry-all-errors https://orvionis.com/) || { echo "::error::home page failed: HTTP ${code:-none}"; exit 1; }
           test "$code" = "200"
           grep -q "Get the" /tmp/home.html
           echo "home page ok"
