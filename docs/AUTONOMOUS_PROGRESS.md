@@ -22,7 +22,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 **Owner away 27 Sep – ~1 Oct.** Scheduled check-ins every ~6 h. Rules are in `OPERATOR.md` → "Owner away".
 
 0. (P0, now) **Acquisition channels (2026-09-26).**
-   - Google Ads E8: **paused since it was published, never served** (found 2026-09-27 05:10 UTC); €30 campaign total until 1 Oct, balance untouched (`docs/GOOGLE_ADS_EXPERIMENT.md`). The owner enables it, adds negatives and turns off auto-apply (asked 05:12 UTC by chat + push): the operator may not edit the live campaign.
+   - Google Ads E8: **restricted by Google since it was published, never served** (found 2026-09-27 05:10 UTC). Resume fails for the owner too with `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`. The account's EU political-ads declaration was answered "yes" and has to become "No"; after that, retry, then support chat. €30 balance untouched (`docs/GOOGLE_ADS_EXPERIMENT.md`). The operator may not edit the live campaign or the owner's declarations.
    - Fiverr gig E13 Active (`docs/FIVERR_EXPERIMENT.md`). Only Manage Orders proves an order.
    - Every day: channel metrics, the ledger and the spend register in `docs/BUSINESS_METRICS.md` (90-day reinvestment policy: no withdrawals until day 91, 2026-12-25).
 1. (P0, owner) First real order — e.g. the $9 Listing Description — to see Stripe's live card form, the receipt and the delivery end to end (the operator may not open live Checkout pages: the safety classifier treats it as a real-world transaction). Then start outreach: payments are live.
@@ -130,11 +130,14 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - Check-in note: order rows on `/admin/orders` are not read by the operator (the safety check flags it as personal-data handling). The check-in uses the aggregate counts on `/admin/analytics` and the job counts from `/api/health`; order details are the owner's view.
 - Earlier (2026-09-26 18:20 UTC+2): `faa9882` checked (multi-room form, per-photo prices, admin order pages); disclosure pack, sandbox webhook probe end to end, sandbox checkout reaches Stripe, analytics KPIs, free-preview UI.
 - Known warnings in logs: none open.
+- Uptime monitor: **one failed probe at 2026-09-27 07:04 UTC** (GitHub "Uptime #8"). The health step failed in 3 s, and its log was truncated for size, which means the body was large: most likely an edge error page rather than the JSON. The app process ran through without a break: the same worker id from 05:17 to 11:04 with a steady tick count, and health was ok at 05:05, 05:17 and 11:04. Treated as transient; investigate if it repeats.
 - Railway: auto-deploy from `main`; graceful shutdown proven again today (SIGTERM → jobs handed back → exit); `RAILWAY_DEPLOYMENT_DRAINING_SECONDS` not set (default 3 s).
 - Uptime monitor: the GitHub workflow is correct (push run green) but GitHub's scheduler dropped almost all 15-minute runs today — treat it as best effort; a free UptimeRobot/Better Stack check on `/api/health` (keyword `"ok":true`) is the owner's 2-minute fix.
 
 ## LAST VERIFIED COMMIT
 
+- `814da1f` (2026-09-27 11:27 UTC): gitleaks allowlist for the public IndexNow key. CI green (secret scan + tests + build), Railway success. Carries `d02d8aa` (IndexNow): its CI tests and build passed but gitleaks flagged the key, which was a false positive. Production serves `/1b9b3b9e4ab3caa360e818027ff1d157.txt`, and `/admin/system` shows the IndexNow card ("not submitted yet" until the next hourly maintenance).
+- `5d2be50` (docs, 05:15 UTC): CI + Railway green.
 - `5c2b514` (docs) — CI success 00:33 UTC, Railway "Success - orvionis.com" 00:35 UTC; `/api/health` ok at 05:05 UTC (db up, 0 queued / 0 running / 0 failed jobs, worker ticking).
 - `15bb01a` (2026-09-27 ~00:00 UTC) — SEO release: CI + Railway success, live checks in Chrome (www → apex, new titles, WebSite graph, `/llms.txt`, `/icon`). Before it `a929437` (own site not a channel) — verified in `/admin/analytics`.
 - `faa9882` — deployed and checked (multi-room staging, run leases). `2f1d6f2` remains the last pipeline change verified with a real image edit; the free preview's, the labeled copies' and a multi-room order's real-model runs are not yet seen in production.

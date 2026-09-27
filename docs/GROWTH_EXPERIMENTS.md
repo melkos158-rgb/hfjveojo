@@ -40,6 +40,11 @@ None yet.
 
 ## Log
 
+- 2026-09-27 17:05 UTC — Day 2 close.
+  - Revenue $0, 0 paid orders, visits unchanged (498 / 30 days).
+  - **E8:** restricted by Google (Resume fails with `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`). The account's EU political-ads declaration reads "yes", which is wrong; the owner is asked to correct it to "No", then retry, then support chat.
+  - **E10:** IndexNow accepted 37 URLs (HTTP 202 at 12:00 UTC).
+  - **E13:** Manage Orders 0.
 - 2026-09-27 11:20 UTC — **E10: IndexNow built.** The hourly maintenance submits the 21 sitemap URLs plus 16 retired Ride Lab paths (404 now) once per content version to the shared IndexNow endpoint, which passes them to Bing, Yandex, Seznam, Naver, Yep and Amazon. Production only, after the public key file answers.
   - Bing baseline (`site:orvionis.com`, 11:20 UTC): about 24 results. The home page already shows the new title, and `/tools`, `/pricing`, `/real-estate`, `/contact` and `/photographers` are listed. Ride Lab pages are there too (`/en`; on www `/en/shop`, `/en/about`, `/en/faq`). The flagship and the guides are not on the first page.
   - Bing Webmaster Tools still waits for the owner.

@@ -97,6 +97,12 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-27 12:10–17:20 UTC (owner briefly online, then the 17:03 check-in):
+  - The owner tried Resume in Google Ads and got `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN` ("Restricted Campaigns can only be activated by RFA systems"), so the restriction is on Google's side. He opened the advertiser-verification page.
+  - At 17:05 the page shows his EU political-ads answer as "yes, we plan to show them", which is wrong for ORVIONIS. Correcting it is his step (a declaration in his name); asked in the daily summary.
+  - IndexNow: HTTP 202 for 37 URLs at 12:00 UTC. Production healthy; analytics unchanged.
+  - Daily summary sent (Ukrainian).
+
 - 2026-09-27 11:03–11:30 UTC (scheduled check-in, owner away):
   - Production healthy (`/api/health` ok, 0 failed jobs); `/admin/analytics` unchanged: 0 paid, 0 in review or failed,
     498 visits. Google Ads E8 still paused (no reply yet; reminder goes into the 17:03 summary).

@@ -116,6 +116,19 @@ Change history has one event only: the publish batch on 26 Sep at 23:19:05 accou
 
 Enabling it edits the live campaign, which is the owner's click (safety check). The owner was asked at 05:12 UTC by chat and push, with the negatives and auto-apply off in the same message.
 
+**It is a Google-side restriction, not a normal pause** (2026-09-27 ≈ 12:11 UTC). The owner pressed "Відновити" (Resume) in the campaign diagnostics and got "Сталася помилка. Спробуйте пізніше." His browser console showed:
+- `errorCode: CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`;
+- `originalErrorMessage: Restricted Campaigns can only be activated by RFA systems.`
+
+No advertiser can lift this, the owner included. Google's own systems or support have to. Google's help says it "may briefly pause and restrict ad spend … to conduct an investigation" and sends an in-account notification (https://support.google.com/adspolicy/answer/9872152).
+
+Next steps for the owner:
+1. Read the notifications (bell).
+2. Check Admin → Advertiser verification.
+3. Otherwise contact Google Ads support by chat with the campaign id and the error code.
+
+**Do not recreate the campaign to get around it:** "circumventing systems" is a policy violation that can suspend the account.
+
 Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the review page after a full reload:
 - Search only, US presence, English;
 - 15 keywords, exact and phrase match;
@@ -127,7 +140,7 @@ Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the revi
 ## OWNER ACTIONS (pending)
 
 The auto-mode safety check blocks the operator from editing the live campaign ("real-world transactions"). Exact steps were sent to the owner on 2026-09-26 22:20:
-0. **Enable the campaign** (asked 2026-09-27 05:12 UTC): Campaigns → "E8 Virtual Staging - Search - US" → Status → Enable. Best done after step 1, but enabling first is fine.
+0. **Get the restriction lifted** (Resume failed on 27 Sep, `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`): check the notifications and Admin → Advertiser verification, then Google Ads support chat. Once Google lifts it: enable the campaign and extend the end date past 1 Oct if the test lost days.
 1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
 2. **Auto-apply recommendations off:** Recommendations → Auto-apply → untick all → Save.
 3. Optional: Final URL suffix (campaign Settings → Campaign URL options).
@@ -140,6 +153,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-26 (to 23:04 UTC) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-27 (to 05:10 UTC) — campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-27 (to 11:05 UTC) — still paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-27 (to 17:05 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -164,6 +178,20 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-27 17:05 UTC (check-in, read-only): still restricted. The ad reads "not eligible · campaign paused"; 0 impressions, 0 clicks, €0.
+  - The advertiser-verification page now records "You confirmed that you **plan to show political ads in the EU**" (answered by the owner on 27 Sep), and the account summary reads "The account shows EU political ads". That is the opposite of the truth for ORVIONIS, which runs no political ads, and it is not what was advised.
+  - The owner is asked to change the answer to "No" (Admin → Policy → Account → "Political advertising in the EU" → "Edit answer"). Then: the campaign's own EU political-ads field, if the settings show one → "No"; Resume; support chat if it still fails.
+  - Still open: submit documents (optional-looking, review 1–10 days); the payer question (marked optional).
+  - Also completed on 26 Sep: "answered questions about your organization".
+- 2026-09-27 ≈ 12:20 UTC: Admin → Policy → Account → "Advertiser verification" lists **open tasks**:
+  - the **EU political ads declaration**, a required question under EU regulation, about 1 minute;
+  - **submit documents** (advertiser verification; Google reviews in 1–10 days);
+  - a required task under the ad-sponsor text, which currently shows "MELNYK KOSTIANTYN".
+
+  Google blocks campaign-management changes while the political-ads question is unanswered: the Ads API fails mutate calls for accounts with undeclared campaigns from 1 Apr 2026 (https://developers.google.com/google-ads/api/docs/api-policy/eu-par). The unanswered declaration is therefore the most likely cause of the restriction; this is not confirmed.
+
+  The owner answers the declaration truthfully (ORVIONIS runs no political ads), completes the other tasks, then retries Resume; support chat if it still fails.
+- 2026-09-27 ≈ 12:11 UTC: the owner pressed Resume and it failed with `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN` ("Restricted Campaigns can only be activated by RFA systems"). So Google restricted the campaign, and only Google (its systems or support) can activate it. Owner's next step: notifications, advertiser verification, support chat (a message was drafted for him in EN with a UA translation).
 - 2026-09-27 11:05 UTC (check-in, read-only): still paused. The ad reads "not eligible · campaign paused", ad quality "Good", 0 impressions, €0. No reply from the owner yet. As planned, the reminder goes into the 17:03 daily summary, with no second push.
 
 ## DISCOVERIES
@@ -179,15 +207,18 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LAST COMPLETED ACTION
 
-Read-only check at 2026-09-27 11:05 UTC: **still paused** (paused since it was created), 0 impressions, €0, balance €30. Owner asked at 05:12 UTC (chat + push) to enable it and to add the negatives and turn off auto-apply; no reply yet.
+Read-only check at 2026-09-27 17:05 UTC: **still restricted**, 0 impressions, €0, balance €30.
+- Resume fails for the owner too (`CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`).
+- The EU political-ads declaration was answered "yes, we plan to show them" and must be corrected to "No".
+- Asked in the 17:05 daily summary: correct the declaration, check the campaign's EU political-ads field, Resume, then support chat.
 
 ## NEXT EXACT ACTION
 
-1. Next check-in: is the campaign enabled? If not, remind the owner once in the 17:03 daily summary; don't send a second push.
+1. Next check-in: read the verification page (is the EU political-ads answer "No" now?) and the campaign status icon. Remind only in the next daily summary; no push.
 2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
 3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
 4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
 
 ## TIMESTAMP
 
-2026-09-27 11:20 UTC
+2026-09-27 17:15 UTC

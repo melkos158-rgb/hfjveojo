@@ -146,7 +146,11 @@ Separate metric families, observational only:
   submission: recorded on `/admin/system` after the first hourly maintenance on the new deploy.
 - **A8 released:** commit `d02d8aa`, Railway success 11:22 UTC. CI tests and build passed, but the gitleaks job flagged the
   key constant (generic high-entropy "key" rule, a false positive for a public token). That exact value is now allowlisted
-  in `.gitleaks.toml`, with the reason.
+  in `.gitleaks.toml`, with the reason (`814da1f`, CI green).
+- **A8 delivered-and-verified:** `/admin/system` (17:05 UTC) shows **HTTP 202 · accepted**: 37 URLs (the sitemap plus the
+  retired Ride Lab pages) submitted 2026-09-27 12:00 by the first hourly maintenance on the new deploy. 202 means received,
+  with the key check pending; the key file answers on production. Outcome pending: Bing recrawl. Check `site:orvionis.com`
+  on Bing against the 27 Sep baseline in 2–7 days.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.
