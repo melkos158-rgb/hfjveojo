@@ -3,15 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { trackClient } from "@/components/Analytics";
-import { computePricing, pricingInputsValid, type PricingInputs } from "@/lib/free/pricing-calc";
+import { computePricing, pricingInputsValid, PRICING_PRESETS, type PricingInputs, type PricingPresetKey } from "@/lib/free/pricing-calc";
 
 type Inputs = PricingInputs;
-
-const PRESETS: Record<string, { label: string; v: Inputs }> = {
-  wedding: { label: "Wedding photographer", v: { income: 60000, expenses: 14000, taxRate: 25, weeks: 46, hoursPerWeek: 35, shootHours: 8, editHours: 30, jobs: 24 } },
-  portrait: { label: "Family & portrait sessions", v: { income: 45000, expenses: 9000, taxRate: 25, weeks: 48, hoursPerWeek: 30, shootHours: 1.5, editHours: 4, jobs: 180 } },
-  commercial: { label: "Brand & product shoots", v: { income: 80000, expenses: 18000, taxRate: 28, weeks: 46, hoursPerWeek: 35, shootHours: 5, editHours: 10, jobs: 70 } },
-};
 
 const money = (n: number) => (Number.isFinite(n) ? n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }) : "—");
 
@@ -30,9 +24,14 @@ function Field({ label, hint, value, onChange, suffix, step = 1, min = 0 }: { la
 
 /** Cost-of-doing-business calculator: what a photographer must charge per job to hit a take-home number. Runs in the browser. */
 export function PricingCalculator() {
-  const [v, setV] = useState<Inputs>(PRESETS.wedding.v);
+  const [v, setV] = useState<Inputs>(PRICING_PRESETS.wedding.v);
+  // The preset whose numbers are on screen; editing any field makes the numbers the photographer's own.
+  const [preset, setPreset] = useState<PricingPresetKey | null>("wedding");
   const tracked = useRef(false);
-  const set = (k: keyof Inputs) => (n: number) => setV((s) => ({ ...s, [k]: n }));
+  const set = (k: keyof Inputs) => (n: number) => {
+    setPreset(null);
+    setV((s) => ({ ...s, [k]: n }));
+  };
 
   useEffect(() => {
     if (!tracked.current) {
@@ -49,14 +48,24 @@ export function PricingCalculator() {
       <div className="card space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="text-xs font-semibold tracking-wider text-gray-500 uppercase">Your numbers</div>
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(PRESETS).map(([k, p]) => (
-              <button key={k} type="button" className="btn-pill border border-line bg-bg text-gray-600 hover:text-fg" onClick={() => setV(p.v)}>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Example starting points">
+            {(Object.entries(PRICING_PRESETS) as Array<[PricingPresetKey, (typeof PRICING_PRESETS)[PricingPresetKey]]>).map(([k, p]) => (
+              <button
+                key={k}
+                type="button"
+                aria-pressed={preset === k}
+                className={`btn-pill border ${preset === k ? "border-brand/60 bg-accent-soft text-fg" : "border-line bg-bg text-gray-600 hover:text-fg"}`}
+                onClick={() => {
+                  setPreset(k);
+                  setV(p.v);
+                }}
+              >
                 {p.label}
               </button>
             ))}
           </div>
         </div>
+        <p className="text-xs text-gray-500">The buttons load example numbers. Replace every field with your own; the result updates as you type.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Take-home income you want" value={v.income} onChange={set("income")} suffix="$ / yr" step={1000} hint="After business costs and taxes." />
           <Field label="Business costs" value={v.expenses} onChange={set("expenses")} suffix="$ / yr" step={500} hint="Gear, software, insurance, website, marketing, second shooters, travel." />

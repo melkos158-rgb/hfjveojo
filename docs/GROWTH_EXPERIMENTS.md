@@ -40,6 +40,17 @@ None yet.
 
 ## Log
 
+- 2026-09-28 13:30 UTC — **E10: the photography pricing calculator page, rebuilt for its query family** (`/free/photography-pricing-calculator`).
+  - Why: it is the first ORVIONIS page with organic demand in Search Console. "photography pricing calculator" has 3 impressions at position 7.3, the real estate variant 14.5, the wedding variant 29, and 0 clicks.
+  - Shipped:
+    - a new title and description;
+    - a real estate example preset;
+    - a sourced market check: The Knot 2026 wedding data, Thumbtack real estate hourly ranges, published real estate rate cards;
+    - floor-vs-market advice that leads to the $29 pricing guide;
+    - two market FAQs;
+    - its own sitemap lastmod, so IndexNow sends only this URL.
+  - Not the E8 landing page, which is unchanged.
+  - Measure weekly from 5 Oct: position, impressions and CTR for the three queries; calculator uses (`free_tool_used`) and `cta_click` from "pricing-calculator" in `/admin/analytics`.
 - 2026-09-28 05:40 UTC — **E10: fifth guide, "Which rooms should you virtually stage?"** (`/guides/which-rooms-to-virtually-stage`).
   - Data-backed from the NAR 2025 Profile of Home Staging press release. Buyers' agents' most important room to stage: living room 37%, primary bedroom 34%, kitchen 23%, guest bedroom 7%. What sellers' agents stage: living room 91%, primary bedroom 83%, dining room 69%, kitchen 68%, guest or children's bedroom 22% each. Photos matter: 88% / 73%.
   - Adds a room-by-room plan for 1–6 photos, labeled as our recommendation. It supports E5 (multi-room orders).

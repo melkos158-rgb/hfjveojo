@@ -22,6 +22,20 @@ export type PricingResult = {
   scenarios: Array<{ jobs: number; price: number; feasible: boolean }>;
 };
 
+/**
+ * Starting points for the calculator. They are examples, not market data: every field is meant to be replaced with the
+ * photographer's own numbers. Each preset must fit its own hours (tested), so the default view never opens with a
+ * capacity warning.
+ */
+export const PRICING_PRESETS = {
+  wedding: { label: "Wedding photographer", v: { income: 60000, expenses: 14000, taxRate: 25, weeks: 46, hoursPerWeek: 35, shootHours: 8, editHours: 30, jobs: 24 } },
+  "real-estate": { label: "Real estate photographer", v: { income: 55000, expenses: 14000, taxRate: 25, weeks: 48, hoursPerWeek: 35, shootHours: 1.5, editHours: 2.5, jobs: 320 } },
+  portrait: { label: "Family & portrait sessions", v: { income: 45000, expenses: 9000, taxRate: 25, weeks: 48, hoursPerWeek: 30, shootHours: 1.5, editHours: 4, jobs: 180 } },
+  commercial: { label: "Brand & product shoots", v: { income: 80000, expenses: 18000, taxRate: 28, weeks: 46, hoursPerWeek: 35, shootHours: 5, editHours: 10, jobs: 70 } },
+} satisfies Record<string, { label: string; v: PricingInputs }>;
+
+export type PricingPresetKey = keyof typeof PRICING_PRESETS;
+
 export function computePricing(v: PricingInputs): PricingResult {
   const tax = Math.min(Math.max(v.taxRate, 0), 60) / 100;
   const revenueNeeded = v.expenses + v.income / (1 - tax); // profit is taxed; costs are not

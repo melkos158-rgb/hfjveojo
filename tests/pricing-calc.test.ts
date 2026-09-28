@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computePricing, pricingInputsValid } from "@/lib/free/pricing-calc";
+import { computePricing, pricingInputsValid, PRICING_PRESETS } from "@/lib/free/pricing-calc";
 
 describe("photography pricing calculator", () => {
   const wedding = { income: 60000, expenses: 14000, taxRate: 25, weeks: 46, hoursPerWeek: 35, shootHours: 8, editHours: 30, jobs: 24 };
@@ -21,6 +21,24 @@ describe("photography pricing calculator", () => {
     expect(r.overbooked).toBe(true);
     expect(r.jobs).toBe(42);
     expect(r.scenarios[2].feasible).toBe(false);
+  });
+
+  it("ships example presets that are valid and fit their own hours", () => {
+    expect(PRICING_PRESETS.wedding.v).toEqual(wedding);
+    for (const [key, p] of Object.entries(PRICING_PRESETS)) {
+      expect(pricingInputsValid(p.v), key).toBe(true);
+      const r = computePricing(p.v);
+      expect(r.overbooked, key).toBe(false);
+      expect(r.jobs, key).toBe(p.v.jobs);
+    }
+  });
+
+  it("prices the real estate example the way the page describes it", () => {
+    const r = computePricing(PRICING_PRESETS["real-estate"].v);
+    expect(r.revenueNeeded).toBeCloseTo(14000 + 55000 / 0.75, 2); // 87,333
+    expect(r.hoursPerJob).toBe(4);
+    expect(r.capacity).toBe(420); // 48 weeks × 35 h ÷ 4 h
+    expect(Math.round(r.pricePerJob)).toBe(273);
   });
 
   it("validates inputs", () => {

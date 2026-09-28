@@ -160,6 +160,30 @@ Separate metric families, observational only:
   (the new guide, the cost guide, `/guides`) submitted at 06:00. 200 means submitted, key verified, versus 202 on the first
   run. First-party channels: `www.google.com` 19 first-touch visits (+1 since 27 Sep); Bing `site:` still about 24 results
   at 05:10.
+- **First organic signal (Search Console, last 24 h, read 2026-09-28 ≈ 11:40 UTC; the owner shared the same view):** 11 impressions, 0 clicks.
+  - Queries (impressions, average position):
+    - "photography pricing calculator" 3, 7.3;
+    - "real estate photography pricing calculator" 2, 14.5;
+    - "wedding photography price calculator" 1, 29;
+    - "photo licensing fee calculator" 1, 79;
+    - "how much does virtual staging cost" 1, 91;
+    - "virtual staging cost" 1, 97.
+  - Pages (average position):
+    - `/free/photography-pricing-calculator` 22.7;
+    - `/guides/ab-723-virtual-staging` 4.0 (for a query Google does not show);
+    - `/guides/fair-housing-words-to-avoid` 8.0;
+    - `/guides/virtual-staging-cost` 94.
+  - Three guides that were "not on Google" on 27 Sep now show in results, a day and a half after the indexing requests. The 7-day report still ends on 25 Sep (39 impressions, only "ride lab").
+  - Done 28 Sep (s46): the calculator page now serves its query family. It is not the E8 landing page.
+    - Title "Photography pricing calculator: real estate & wedding rates"; a 157-character description.
+    - A real estate example preset ($273 floor per shoot), with the active preset highlighted.
+    - A "Market check" section:
+      - weddings: The Knot 2026 Real Weddings Study, $3,000 average, quartiles, regions, guest counts;
+      - real estate: Thumbtack hourly ranges, plus published rate cards at $150–$350 per standard package;
+      - "what it means" arithmetic tied to the calculator examples.
+    - "Floor vs. market" advice with a path to the $29 guide; two market FAQs (6 in FAQPage).
+    - Its own sitemap lastmod through `PAGE_UPDATED`, so IndexNow resubmits only this URL.
+    - Measure: Search Console position and CTR for "photography pricing calculator" (7.3), "real estate photography pricing calculator" (14.5) and "wedding photography price calculator" (29), weekly from 5 Oct.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

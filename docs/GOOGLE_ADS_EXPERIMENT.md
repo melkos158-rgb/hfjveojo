@@ -127,6 +127,20 @@ Next steps for the owner:
 2. Check Admin → Advertiser verification.
 3. Otherwise contact Google Ads support by chat with the campaign id and the error code.
 
+**Advertiser verification, 2026-09-28 12:45 UTC** (read-only; the owner completes every step himself):
+- **Completed:**
+  - the questions about the organization (26 Sep);
+  - the EU political-ads declaration, which now reads "don't plan to run EU political ads" (corrected by the owner);
+  - the payer question (28 Sep).
+- **Open:** "Submit your documents", the last task.
+- **The payments profile country is Ukraine (UA)** (Payments → Settings → Payer info). The profile is an individual, MELNYK KOSTIANTYN, with a Ukrainian address, and the country field has no edit control.
+  - Google: "You cannot change the country for an existing payments profile." In Google Ads the country changes only through a billing transfer (Payments → "Change payer" / «Змінення платника»), which creates a new profile and restarts verification.
+- **Documents for Ukraine:** "Individuals must submit a Ukrainian government-issued photo ID", and the details must exactly match the payments profile.
+  - Accepted: international or internal passport, passport card, driving licence, residence card.
+  - A Polish karta pobytu or a Polish address would not match.
+  - Advised: the Ukrainian international passport (Latin name identical to the profile) and, if asked, the profile address exactly as stored.
+- **One wrong answer found:** "Does MELNYK KOSTIANTYN manage Google Ads accounts for other organizations?" is answered **Yes**, which declares an agency. It should be **No**; the owner changes it (his declaration). The panel was left open on his screen.
+
 **Do not recreate the campaign to get around it:** "circumventing systems" is a policy violation that can suspend the account.
 
 Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the review page after a full reload:
@@ -140,7 +154,12 @@ Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the revi
 ## OWNER ACTIONS (pending)
 
 The auto-mode safety check blocks the operator from editing the live campaign ("real-world transactions"). Exact steps were sent to the owner on 2026-09-26 22:20:
-0. **Get the restriction lifted** (Resume failed on 27 Sep, `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`): check the notifications and Admin → Advertiser verification, then Google Ads support chat. Once Google lifts it: enable the campaign and extend the end date past 1 Oct if the test lost days.
+0. **Get the restriction lifted** (Resume failed on 27 Sep, `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`). State on 28 Sep 12:45 UTC:
+   - the EU political-ads answer is corrected;
+   - still to do: change the organization answer "manages accounts for other organizations" to **No**;
+   - still to do: submit the documents, a **Ukrainian** photo ID (international passport) matching the UA payments profile.
+   - Then wait for Google's review, with support chat if the campaign stays restricted.
+   - Once Google lifts it: enable the campaign and extend the end date past 1 Oct if the test lost days.
 1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
 2. **Auto-apply recommendations off:** Recommendations → Auto-apply → untick all → Save.
 3. Optional: Final URL suffix (campaign Settings → Campaign URL options).
@@ -181,6 +200,12 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-28 12:45 UTC (owner request, read-only): the owner asked where to change the country "Україна" that appears in the verification address form.
+  - Found: it is the **payments profile country (UA)**, which cannot be edited; only a billing transfer changes it.
+  - Google's Ukraine document page requires a Ukrainian-issued photo ID that matches the profile. So the fix is to keep everything Ukrainian (international passport + the profile address as stored), not to switch to Polish documents.
+  - Also found: the organization answer "manages Google Ads accounts for other organizations" = Yes (should be No).
+  - The EU political-ads answer is now "don't plan"; the payer question was answered on 28 Sep; "Submit your documents" is the last open task.
+  - Sent to the owner with two screenshots (profile country, organization panel). Nothing was clicked or submitted by the operator.
 - 2026-09-28 11:20 UTC (check-in, read-only): unchanged. Not eligible · campaign paused; €0; the EU political-ads answer is still "yes".
 - 2026-09-28 05:10 UTC (check-in, read-only): unchanged. Still restricted ("not eligible · campaign paused"), 0 impressions, €0. The EU political-ads answer is still "yes".
 - 2026-09-27 23:10 UTC (check-in, read-only): unchanged. The ad still reads "not eligible · campaign paused", and the EU political-ads answer is still "yes" (not corrected yet; 01:10 in Poland). No new message: the reminder goes in the next daily summary.
@@ -210,21 +235,27 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - **Read the campaign status from the status icon** on the Campaigns table (its label, e.g. "Призупинено") or from the ad's status column, never from the status filter chip ("Статус кампанії: Увімкнено, призупинено" lists both states) or the review page. The 26 Sep 23:04 check reported "eligible (learning)" for a campaign that was paused; how that happened is not known.
 - The account reports in **GMT+03:00 (Eastern European time)** per the footer, not GMT+2 as noted at setup. Day boundaries in Google's reports are an hour off Poland's.
 - In the owner's hidden Chrome window, Google Ads pages render only for a few seconds after a navigation: navigate → screenshot → read in one batch, and open a fresh tab when a tab freezes.
+- **The payments profile decides the verification country.** The 26 Sep setup log says "Poland", but the payments profile the account bills to is Ukraine (UA). So the verification forms lock the country to UA and require a Ukrainian-issued ID.
+  - The profile country can't be edited (a billing transfer is the only route).
+  - Documents must match the profile exactly, per country: https://support.google.com/adspolicy/answer/9872280?co=GENIE.CountryCode%3DUA
+- The organization question "manages Google Ads accounts for other organizations" declares an agency when answered Yes; a single business advertiser answers No.
 
 ## LAST COMPLETED ACTION
 
-Read-only check at 2026-09-27 17:05 UTC: **still restricted**, 0 impressions, €0, balance €30.
-- Resume fails for the owner too (`CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`).
-- The EU political-ads declaration was answered "yes, we plan to show them" and must be corrected to "No".
-- Asked in the 17:05 daily summary: correct the declaration, check the campaign's EU political-ads field, Resume, then support chat.
+2026-09-28 12:45 UTC, read-only at the owner's request: located the "Україна" in the verification forms. It is the payments profile country, which cannot be edited.
+- Advised: keep everything Ukrainian (international passport, profile address as stored), since Google's Ukraine requirements demand a Ukrainian-issued ID matching the profile.
+- Advised: change the "manages accounts for other organizations" answer to No.
+- Still restricted, €0. The EU political-ads answer is corrected.
+
+Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`).
 
 ## NEXT EXACT ACTION
 
-1. Next check-in: read the verification page (is the EU political-ads answer "No" now?) and the campaign status icon. Remind only in the next daily summary; no push.
+1. Next check-in: read the verification page and the campaign status icon. Check two things: is the organization answer "No" now, and were the documents submitted (the task moves to "in review")? Remind only in the next daily summary; no push.
 2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
 3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
 4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
 
 ## TIMESTAMP
 
-2026-09-27 17:15 UTC
+2026-09-28 12:50 UTC

@@ -17,7 +17,7 @@ import {
   validIndexNowKey,
   type IndexNowRecord,
 } from "@/lib/seo/indexnow";
-import { CONTENT_UPDATED, contentVersion, guideLastModified, sitemapEntries } from "@/lib/seo/sitemap-entries";
+import { CONTENT_UPDATED, contentVersion, guideLastModified, PAGE_UPDATED, pageLastModified, sitemapEntries } from "@/lib/seo/sitemap-entries";
 import sitemap from "@/app/sitemap";
 import { GUIDES } from "@/config/guides";
 
@@ -250,19 +250,43 @@ describe("sitemap: shared URL list", () => {
     for (const g of GUIDES) expect(entries.some((e) => e.url.endsWith(`/guides/${g.slug}`))).toBe(true);
   });
 
-  it("dates guides by their own update day, the hub by the newest guide and everything else by CONTENT_UPDATED", () => {
+  it("dates guides by their own update day, the hub by the newest guide, listed pages by PAGE_UPDATED and everything else by CONTENT_UPDATED", () => {
     const entries = sitemapEntries(APP);
     const at = (path: string) => (entries.find((e) => e.url === `${APP}${path}`)?.lastModified as Date).toISOString();
     for (const g of GUIDES) {
       expect(at(`/guides/${g.slug}`)).toBe(guideLastModified(g).toISOString());
       expect(guideLastModified(g).getTime()).toBeGreaterThanOrEqual(CONTENT_UPDATED.getTime());
     }
-    const newest = Math.max(...GUIDES.map((g) => guideLastModified(g).getTime()), CONTENT_UPDATED.getTime());
-    expect(at("/guides")).toBe(new Date(newest).toISOString());
+    const newestGuide = Math.max(...GUIDES.map((g) => guideLastModified(g).getTime()), CONTENT_UPDATED.getTime());
+    expect(at("/guides")).toBe(new Date(newestGuide).toISOString());
+    for (const p of Object.keys(PAGE_UPDATED)) {
+      expect(at(p)).toBe(pageLastModified(p).toISOString());
+      expect(pageLastModified(p).getTime()).toBeGreaterThan(CONTENT_UPDATED.getTime());
+    }
     expect(at("")).toBe(CONTENT_UPDATED.toISOString());
     expect(at("/tools/virtual-staging")).toBe(CONTENT_UPDATED.toISOString());
+    expect(pageLastModified("/tools/virtual-staging").toISOString()).toBe(CONTENT_UPDATED.toISOString());
+    const newest = Math.max(newestGuide, ...Object.keys(PAGE_UPDATED).map((p) => pageLastModified(p).getTime()));
     expect(contentVersion(entries).toISOString()).toBe(new Date(newest).toISOString());
     expect(guideLastModified({ updated: "not a date" }).toISOString()).toBe(CONTENT_UPDATED.toISOString());
     expect(guideLastModified({ updated: "2026-01-01" }).toISOString()).toBe(CONTENT_UPDATED.toISOString());
+    expect(guideLastModified({ updated: "2026-09-28T13:00:00Z" }).toISOString()).toBe("2026-09-28T13:00:00.000Z");
+  });
+
+  it("a page update on the day of an accepted submission moves the version and resubmits only the updated pages", async () => {
+    // Production on 28 Sep: the 06:00 UTC submission (new guide, hub, cost guide) was accepted at version 28 Sep 00:00;
+    // the calculator page changed the same afternoon.
+    const entries = sitemapEntries(APP);
+    const pages = new Set(Object.keys(PAGE_UPDATED).map((p) => `${APP}${p}`));
+    const before = contentVersion(entries.filter((e) => !pages.has(e.url)));
+    const expected = entries.filter((e) => (e.lastModified as Date).getTime() > before.getTime()).map((e) => e.url);
+    expect(expected.length).toBeGreaterThan(0);
+    expect(expected.every((u) => pages.has(u))).toBe(true);
+    const db = fakeDb({ version: before.toISOString(), status: 200, ok: true, at: before.toISOString(), count: 3 });
+    const f = fakeFetch();
+    const out = await maybeSubmitIndexNow(prod({ db, fetchImpl: f.impl, now: new Date(contentVersion(entries).getTime() + 3600_000) }));
+    expect(JSON.parse(String(f.calls[1].init?.body)).urlList).toEqual(expected);
+    expect(out).toEqual({ submitted: expected.length, status: 202, ok: true });
+    expect(db.current()).toMatchObject({ version: VERSION, ok: true, count: expected.length });
   });
 });

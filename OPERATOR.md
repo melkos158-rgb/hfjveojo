@@ -97,6 +97,13 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-28 11:40–13:40 UTC (owner online, between check-ins):
+  - Google Ads verification help, read-only. The owner corrected the EU political-ads answer himself.
+  - Found that the country "Україна" in the verification forms is the payments profile country, which cannot be edited.
+  - Google's Ukraine document rules require a Ukrainian ID matching the profile. Advised: international passport, the profile address as stored, and the "manages accounts for other organizations" answer changed to No.
+  - Details in `docs/GOOGLE_ADS_EXPERIMENT.md`. The operator clicked and submitted nothing.
+  - Search Console first organic signal recorded. The calculator page was rebuilt for its query family (E10, s46).
+
 - 2026-09-28 11:18–11:35 UTC (scheduled check-in):
   - Production healthy.
   - Analytics: 502 / 40 visits, including +1 organic Google first touch; 0 paid.
