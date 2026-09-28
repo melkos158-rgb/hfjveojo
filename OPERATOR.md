@@ -97,6 +97,12 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-28 05:03–05:50 UTC (scheduled check-in):
+  - Production healthy. Analytics unchanged: 499 / 38 visits, 0 paid, nothing in review or failed.
+  - Google Ads unchanged: restricted; the EU political-ads answer is still "yes".
+  - Bing `site:` unchanged at about 24 results, too early after IndexNow.
+  - Built the fifth guide (which rooms to stage, from the NAR 2025 data), per-guide sitemap dates and incremental IndexNow.
+
 - 2026-09-27 23:03–23:20 UTC (scheduled check-in):
   - Production healthy: worker continuous since the 17:11 deploy.
   - Analytics: 499 / 38 visits (+1 direct), 0 paid, nothing in review or failed.

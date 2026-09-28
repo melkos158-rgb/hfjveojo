@@ -1,38 +1,42 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/config/site";
 import { allTools } from "@/lib/tools/registry";
-import { GUIDES } from "@/config/guides";
+import { GUIDES, type Guide } from "@/config/guides";
 
 /**
- * Bump when page content changes materially. It is every URL's sitemap `lastmod`, and a new value makes the next hourly
- * maintenance notify IndexNow again (src/lib/seo/indexnow.ts). A lastmod that changes on every request makes crawlers
- * ignore it.
+ * Bump when page content changes materially across the site. It is the sitemap `lastmod` of every page except the
+ * guides, which carry their own `updated` date (never older than this), and the /guides hub, which carries the newest
+ * guide date. A lastmod that changes on every request makes crawlers ignore it. The newest lastmod is the content version
+ * that IndexNow submissions follow (src/lib/seo/indexnow.ts).
  */
 export const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
 
+const later = (a: Date, b: Date) => (b.getTime() > a.getTime() ? b : a);
+
+/** A guide's lastmod: its own `updated` day, or the site-wide date when that is newer. */
+export function guideLastModified(g: Pick<Guide, "updated">): Date {
+  const own = new Date(`${g.updated}T00:00:00Z`);
+  return Number.isNaN(own.getTime()) ? CONTENT_UPDATED : later(CONTENT_UPDATED, own);
+}
+
 /** The public, indexable URLs: /sitemap.xml and the IndexNow submission read the same list. */
 export function sitemapEntries(baseUrl: string = site.url): MetadataRoute.Sitemap {
-  const now = CONTENT_UPDATED;
-  const staticPages = [
-    "",
-    "/tools",
-    "/pricing",
-    "/real-estate",
-    "/photographers",
-    "/free",
-    "/free/fair-housing-checker",
-    "/free/photography-pricing-calculator",
-    "/guides",
-    ...GUIDES.map((g) => `/guides/${g.slug}`),
-    "/contact",
-    "/terms",
-    "/privacy",
-    "/refund-policy",
-  ];
+  const hub = GUIDES.reduce((d, g) => later(d, guideLastModified(g)), CONTENT_UPDATED);
+  const page = (p: string, lastModified: Date) => ({ url: `${baseUrl}${p}`, lastModified, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 });
   return [
-    ...staticPages.map((p) => ({ url: `${baseUrl}${p}`, lastModified: now, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 })),
+    ...["", "/tools", "/pricing", "/real-estate", "/photographers", "/free", "/free/fair-housing-checker", "/free/photography-pricing-calculator"].map((p) =>
+      page(p, CONTENT_UPDATED),
+    ),
+    page("/guides", hub),
+    ...GUIDES.map((g) => page(`/guides/${g.slug}`, guideLastModified(g))),
+    ...["/contact", "/terms", "/privacy", "/refund-policy"].map((p) => page(p, CONTENT_UPDATED)),
     ...allTools()
       .filter((t) => t.active !== false)
-      .map((t) => ({ url: `${baseUrl}/tools/${t.slug}`, lastModified: now, changeFrequency: "weekly" as const, priority: 0.9 })),
+      .map((t) => ({ url: `${baseUrl}/tools/${t.slug}`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly" as const, priority: 0.9 })),
   ];
+}
+
+/** The newest lastmod in the sitemap: a new or updated guide moves it forward, and so does a CONTENT_UPDATED bump. */
+export function contentVersion(entries: MetadataRoute.Sitemap = sitemapEntries()): Date {
+  return entries.reduce((d, e) => (e.lastModified instanceof Date ? later(d, e.lastModified) : d), CONTENT_UPDATED);
 }

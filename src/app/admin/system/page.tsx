@@ -5,7 +5,7 @@ import { aiSmokeTestAction, enqueueMaintenanceAction, ensureStripeWebhookAction,
 import { REQUIRED_WEBHOOK_EVENTS, STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
 import { stripeConfigSummary, type StripeMode } from "@/lib/stripe/mode";
 import { TEST_INTAKES } from "@/lib/tools/samples/test-intakes";
-import { CONTENT_UPDATED } from "@/lib/seo/sitemap-entries";
+import { contentVersion } from "@/lib/seo/sitemap-entries";
 import { INDEXNOW_KEY, INDEXNOW_SETTING, type IndexNowRecord } from "@/lib/seo/indexnow";
 
 export const dynamic = "force-dynamic";
@@ -78,7 +78,7 @@ export default async function AdminSystem() {
           {indexNow
             ? `${indexNow.count} URLs (the sitemap plus the retired Ride Lab pages) submitted ${fmtDate(new Date(indexNow.at))} for content version ${indexNow.version.slice(0, 10)}. `
             : "The hourly maintenance submits the sitemap URLs and the retired Ride Lab pages once the key file is live (production only). "}
-          Current content version: {CONTENT_UPDATED.toISOString().slice(0, 10)} (bump CONTENT_UPDATED in src/lib/seo/sitemap-entries.ts after material page changes to notify again). Key file:{" "}
+          Current content version (newest sitemap lastmod): {contentVersion().toISOString().slice(0, 10)}. A new guide notifies on its own; after material changes to other pages, bump CONTENT_UPDATED in src/lib/seo/sitemap-entries.ts. Key file:{" "}
           <a className="underline" href={indexNowKeyUrl}>
             {indexNowKeyUrl}
           </a>

@@ -17,13 +17,13 @@ import {
   validIndexNowKey,
   type IndexNowRecord,
 } from "@/lib/seo/indexnow";
-import { CONTENT_UPDATED, sitemapEntries } from "@/lib/seo/sitemap-entries";
+import { CONTENT_UPDATED, contentVersion, guideLastModified, sitemapEntries } from "@/lib/seo/sitemap-entries";
 import sitemap from "@/app/sitemap";
 import { GUIDES } from "@/config/guides";
 
 const APP = "https://orvionis.com";
 const KEY_URL = `${APP}/${INDEXNOW_KEY}.txt`;
-const VERSION = CONTENT_UPDATED.toISOString();
+const VERSION = contentVersion().toISOString();
 
 function fakeDb(initial: IndexNowRecord | null = null) {
   let value: IndexNowRecord | null = initial;
@@ -205,6 +205,33 @@ describe("indexnow: hourly maintenance step", () => {
   });
 });
 
+describe("indexnow: only what changed after an accepted submission", () => {
+  it("sends the URLs newer than the last accepted version, without the retired pages", async () => {
+    const older = new Date(contentVersion().getTime() - 24 * 3600_000);
+    const db = fakeDb({ version: older.toISOString(), status: 202, ok: true, at: "2026-09-27T12:00:00.000Z", count: 37 });
+    const f = fakeFetch();
+    const expected = sitemapEntries(APP)
+      .filter((e) => (e.lastModified as Date).getTime() > older.getTime())
+      .map((e) => e.url);
+    expect(expected.length).toBeGreaterThan(0);
+    expect(expected.length).toBeLessThan(sitemapEntries(APP).length);
+    const out = await maybeSubmitIndexNow(prod({ db, fetchImpl: f.impl, now: new Date("2026-09-28T12:00:00Z") }));
+    expect(out).toEqual({ submitted: expected.length, status: 202, ok: true });
+    const body = JSON.parse(String(f.calls[1].init?.body));
+    expect(body.urlList).toEqual(expected);
+    expect(body.urlList).toContain(`${APP}/guides`);
+    expect(body.urlList.some((u: string) => u.includes("/pl"))).toBe(false);
+    expect(db.current()).toMatchObject({ version: VERSION, ok: true, count: expected.length });
+  });
+
+  it("sends everything again when the last attempt was refused", async () => {
+    const db = fakeDb({ version: "2026-09-20T00:00:00.000Z", status: 429, ok: false, at: "2026-09-20T00:00:00.000Z", count: 37 });
+    const f = fakeFetch();
+    const out = await maybeSubmitIndexNow(prod({ db, fetchImpl: f.impl, now: new Date("2026-09-28T12:00:00Z") }));
+    expect(out).toMatchObject({ submitted: indexNowUrls(APP).length, ok: true });
+  });
+});
+
 describe("indexnow: retired old-site pages", () => {
   it("lists only paths that no live page or tool uses", () => {
     const live = new Set(sitemapEntries(APP).map((e) => new URL(e.url).pathname));
@@ -217,10 +244,25 @@ describe("indexnow: retired old-site pages", () => {
 });
 
 describe("sitemap: shared URL list", () => {
-  it("serves the same entries IndexNow submits, every guide included, one stable lastmod", () => {
+  it("serves the same entries IndexNow submits, every guide included", () => {
     const entries = sitemap();
     expect(entries.map((e) => e.url)).toEqual(sitemapEntries().map((e) => e.url));
     for (const g of GUIDES) expect(entries.some((e) => e.url.endsWith(`/guides/${g.slug}`))).toBe(true);
-    expect(new Set(entries.map((e) => (e.lastModified as Date).toISOString()))).toEqual(new Set([VERSION]));
+  });
+
+  it("dates guides by their own update day, the hub by the newest guide and everything else by CONTENT_UPDATED", () => {
+    const entries = sitemapEntries(APP);
+    const at = (path: string) => (entries.find((e) => e.url === `${APP}${path}`)?.lastModified as Date).toISOString();
+    for (const g of GUIDES) {
+      expect(at(`/guides/${g.slug}`)).toBe(guideLastModified(g).toISOString());
+      expect(guideLastModified(g).getTime()).toBeGreaterThanOrEqual(CONTENT_UPDATED.getTime());
+    }
+    const newest = Math.max(...GUIDES.map((g) => guideLastModified(g).getTime()), CONTENT_UPDATED.getTime());
+    expect(at("/guides")).toBe(new Date(newest).toISOString());
+    expect(at("")).toBe(CONTENT_UPDATED.toISOString());
+    expect(at("/tools/virtual-staging")).toBe(CONTENT_UPDATED.toISOString());
+    expect(contentVersion(entries).toISOString()).toBe(new Date(newest).toISOString());
+    expect(guideLastModified({ updated: "not a date" }).toISOString()).toBe(CONTENT_UPDATED.toISOString());
+    expect(guideLastModified({ updated: "2026-01-01" }).toISOString()).toBe(CONTENT_UPDATED.toISOString());
   });
 });

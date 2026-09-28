@@ -155,13 +155,14 @@
   {
    "skill": "seo-content",
    "state": "completed",
-   "reason": "Titles/descriptions and home copy aligned with the four live tools and prices; AI answer on the flagship; claims traced to the tool registry and pages.",
+   "reason": "Titles/descriptions and home copy aligned with the four live tools and prices; AI answer on the flagship; claims traced to the tool registry and pages. 2026-09-28: fifth guide 'Which rooms should you virtually stage?' from the NAR 2025 staging survey (every figure quoted from the May 6, 2025 press release; the photo plan is labeled as our recommendation).",
    "evidence_refs": [
     "docs/SEO_AUDIT.md"
    ],
    "output_refs": [
     "src/app/page.tsx",
-    "src/lib/tools/definitions/virtual-staging.ts"
+    "src/lib/tools/definitions/virtual-staging.ts",
+    "src/app/guides/which-rooms-to-virtually-stage/page.tsx"
    ],
    "blocker": null,
    "owner_decision_ref": null
@@ -285,7 +286,7 @@
   {
    "skill": "seo-sitemap",
    "state": "completed",
-   "reason": "21 canonical URLs, stable lastmod bumped to 2026-09-27; Search Console shows the sitemap last read on 26 Sep with 13 URLs. 2026-09-27: the same URL list, plus the 16 retired Ride Lab paths (404), feeds IndexNow (Bing, Yandex, Seznam, Naver, Yep, Amazon), submitted once per content version by the hourly maintenance in production (A8). Bing baseline: about 24 URLs incl. Ride Lab pages; flagship and guides not on page 1.",
+   "reason": "21 canonical URLs, stable lastmod bumped to 2026-09-27; Search Console shows the sitemap last read on 26 Sep with 13 URLs. 2026-09-27: the same URL list, plus the 16 retired Ride Lab paths (404), feeds IndexNow (Bing, Yandex, Seznam, Naver, Yep, Amazon), submitted once per content version by the hourly maintenance in production (A8). Bing baseline: about 24 URLs incl. Ride Lab pages; flagship and guides not on page 1. 2026-09-28: lastmod per guide (own updated date, hub = newest guide), IndexNow sends only newer URLs after the first accepted submission.",
    "evidence_refs": [
     "docs/SEO_AUDIT.md",
     "tests/indexnow.test.ts"
@@ -294,7 +295,8 @@
     "src/app/sitemap.ts",
     "src/lib/seo/sitemap-entries.ts",
     "src/lib/seo/indexnow.ts",
-    "public/1b9b3b9e4ab3caa360e818027ff1d157.txt"
+    "public/1b9b3b9e4ab3caa360e818027ff1d157.txt",
+    "src/app/guides/which-rooms-to-virtually-stage/page.tsx"
    ],
    "blocker": null,
    "owner_decision_ref": null

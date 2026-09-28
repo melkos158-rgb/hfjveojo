@@ -66,7 +66,7 @@ export default function VirtualStagingCostGuide() {
     description: DESCRIPTION,
     image: `${site.url}${OG_IMAGE}`,
     datePublished: "2026-09-26",
-    dateModified: "2026-09-26",
+    dateModified: "2026-09-28",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -112,7 +112,10 @@ export default function VirtualStagingCostGuide() {
       </div>
 
       <h2>What a whole listing costs</h2>
-      <p>Most vacant listings need the living room, the main bedroom and one or two more rooms staged — four to six photos.</p>
+      <p>
+        Most vacant listings need the living room, the main bedroom and one or two more rooms staged — four to six photos (see{" "}
+        <Link href="/guides/which-rooms-to-virtually-stage">which rooms to stage first</Link>).
+      </p>
       <div className="not-prose overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>

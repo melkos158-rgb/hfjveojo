@@ -6,11 +6,19 @@ export type Guide = { slug: string; title: string; description: string; audience
 
 export const GUIDES: Guide[] = [
   {
+    slug: "which-rooms-to-virtually-stage",
+    title: "Which rooms should you virtually stage?",
+    description: "Buyers' agents rank the living room (37%), primary bedroom (34%) and kitchen (23%) as the rooms that matter most to stage (NAR 2025). A plan for one to six photos, and what to skip.",
+    audience: "Real estate agents",
+    updated: "2026-09-28",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — $15 per photo" },
+  },
+  {
     slug: "virtual-staging-cost",
     title: "How much does virtual staging cost in 2026?",
     description: "Human editors charge $24–$30 per photo; AI plans run $16–$79 a month. What a whole listing costs — real prices checked in September 2026, plus NAR data on staging.",
     audience: "Real estate agents",
-    updated: "2026-09-26",
+    updated: "2026-09-28",
     tool: { slug: "virtual-staging", label: "Virtual Staging — $15 per photo" },
   },
   {

@@ -40,6 +40,12 @@ None yet.
 
 ## Log
 
+- 2026-09-28 05:40 UTC — **E10: fifth guide, "Which rooms should you virtually stage?"** (`/guides/which-rooms-to-virtually-stage`).
+  - Data-backed from the NAR 2025 Profile of Home Staging press release. Buyers' agents' most important room to stage: living room 37%, primary bedroom 34%, kitchen 23%, guest bedroom 7%. What sellers' agents stage: living room 91%, primary bedroom 83%, dining room 69%, kitchen 68%, guest or children's bedroom 22% each. Photos matter: 88% / 73%.
+  - Adds a room-by-room plan for 1–6 photos, labeled as our recommendation. It supports E5 (multi-room orders).
+  - Linked from the cost guide. The E8 landing page is untouched.
+  - The sitemap now dates guides individually. After the first accepted IndexNow submission, only newer URLs are sent: here, the new guide, the cost guide and `/guides`.
+  - E8: still restricted, and the EU political-ads answer is still "yes".
 - 2026-09-27 17:05 UTC — Day 2 close.
   - Revenue $0, 0 paid orders, visits unchanged (498 / 30 days).
   - **E8:** restricted by Google (Resume fails with `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`). The account's EU political-ads declaration reads "yes", which is wrong; the owner is asked to correct it to "No", then retry, then support chat.

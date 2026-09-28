@@ -151,6 +151,11 @@ Separate metric families, observational only:
   retired Ride Lab pages) submitted 2026-09-27 12:00 by the first hourly maintenance on the new deploy. 202 means received,
   with the key check pending; the key file answers on production. Outcome pending: Bing recrawl. Check `site:orvionis.com`
   on Bing against the 27 Sep baseline in 2–7 days.
+- **2026-09-28, E10 content + A8 refinement:**
+  - New guide `/guides/which-rooms-to-virtually-stage`, built on NAR's 2025 staging survey: the press release of May 6, 2025 is quoted for every figure, and the photo plan is marked as our own recommendation. Article markup; linked from the cost guide (cost guide `updated` 2026-09-28).
+  - Sitemap `lastmod` is now per guide: its own `updated` date, never older than `CONTENT_UPDATED`. The `/guides` hub carries the newest guide date; everything else keeps `CONTENT_UPDATED`.
+  - IndexNow follows the newest lastmod. After an accepted submission it sends only the newer URLs (protocol: changed content only).
+  - 125 tests; production build; local check: head metadata, canonical, all figures on the page, 22 sitemap URLs with the new dates, `llms.txt` and the hub list the guide, no horizontal overflow at 390 / 1280 px.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

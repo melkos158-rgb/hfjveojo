@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { env } from "@/lib/env";
-import { CONTENT_UPDATED, sitemapEntries } from "@/lib/seo/sitemap-entries";
+import { contentVersion, sitemapEntries } from "@/lib/seo/sitemap-entries";
 
 /**
  * IndexNow tells Bing and the other IndexNow engines (Yandex, Seznam, Naver, Yep, Amazon) which URLs are new or changed,
@@ -10,9 +10,11 @@ import { CONTENT_UPDATED, sitemapEntries } from "@/lib/seo/sitemap-entries";
  * INDEXNOW_KEY is not a secret. It is a public ownership token that must be served at https://<host>/<key>.txt
  * (public/<key>.txt), where the engines read it to check that the submitter controls the site.
  *
- * The hourly maintenance job calls maybeSubmitIndexNow(): it submits the sitemap URLs (plus the retired old-site paths)
- * once per CONTENT_UPDATED value, in production only, after checking that the key file is live. The protocol asks for
- * submissions only when content changes, so nothing is resent while the version stays the same.
+ * The hourly maintenance job calls maybeSubmitIndexNow(), in production only and after checking that the key file is
+ * live. The content version is the newest sitemap lastmod (contentVersion()). The first submission, or one after a
+ * failure, sends every sitemap URL plus the retired old-site paths. After that, a new version sends only the URLs whose
+ * lastmod is newer than the last accepted version: a new guide, or everything after a CONTENT_UPDATED bump. The protocol
+ * asks for submissions only when content changes, so nothing is resent while the version stays the same.
  */
 export const INDEXNOW_KEY = "1b9b3b9e4ab3caa360e818027ff1d157";
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
@@ -43,10 +45,15 @@ export const RETIRED_PATHS = [
   "/en/privacy",
 ];
 
-/** Everything one submission covers: the live sitemap URLs plus the retired paths on the same host. */
-export function indexNowUrls(baseUrl: string): string[] {
+/**
+ * The URLs one submission covers. Without `since`: every sitemap URL plus the retired paths on the same host. With `since`
+ * (the last accepted version): only the sitemap URLs whose lastmod is newer.
+ */
+export function indexNowUrls(baseUrl: string, since: Date | null = null): string[] {
   const base = baseUrl.replace(/\/+$/, "");
-  return [...sitemapEntries(base).map((e) => e.url), ...RETIRED_PATHS.map((p) => `${base}${p}`)];
+  const entries = sitemapEntries(base);
+  if (since) return entries.filter((e) => e.lastModified instanceof Date && e.lastModified.getTime() > since.getTime()).map((e) => e.url);
+  return [...entries.map((e) => e.url), ...RETIRED_PATHS.map((p) => `${base}${p}`)];
 }
 
 export type IndexNowPayload = { host: string; key: string; keyLocation: string; urlList: string[] };
@@ -140,16 +147,20 @@ export async function maybeSubmitIndexNow(
   const appEnv = opts.appEnv ?? env().APP_ENV;
   if (appEnv !== "production") return { skipped: "not production" };
   const appUrl = opts.appUrl ?? env().NEXT_PUBLIC_APP_URL;
-  const payload = indexNowPayload(appUrl, opts.urls ?? indexNowUrls(appUrl));
-  if (!payload) return { skipped: "no public host" };
+  if (!publicOrigin(appUrl)) return { skipped: "no public host" };
 
   const db = opts.db ?? prisma;
   const now = opts.now ?? new Date();
   const fetchImpl = opts.fetchImpl ?? fetch;
-  const version = CONTENT_UPDATED.toISOString();
+  const version = contentVersion(sitemapEntries(appUrl.replace(/\/+$/, ""))).toISOString();
   const row = await db.setting.findUnique({ where: { key: INDEXNOW_SETTING } });
   const stored = (row?.value ?? null) as IndexNowRecord | null;
   if (!shouldSubmit(stored, version, now)) return { skipped: "up to date" };
+  // After an accepted submission only what changed since goes out; a first or failed one sends everything again.
+  const lastAccepted = stored?.ok ? new Date(stored.version) : null;
+  const since = lastAccepted && !Number.isNaN(lastAccepted.getTime()) ? lastAccepted : null;
+  const payload = indexNowPayload(appUrl, opts.urls ?? indexNowUrls(appUrl, since));
+  if (!payload) return { skipped: "up to date" };
   // Not recorded as an attempt: the next hourly run simply checks again.
   if (!(await keyFileLive(payload.keyLocation, payload.key, fetchImpl))) return { skipped: "key file not live" };
 
