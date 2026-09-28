@@ -144,10 +144,11 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
+2026-09-28 11:20 UTC: Manage Orders shows 0 in every status. `/inbox` showed Fiverr's human check again, after a 45-second pause; it was left for the owner. The inbox is gated for the operator's visits every time, so from now on the second page is the seller dashboard (impressions / clicks), not the inbox.
 2026-09-27 11:05 UTC: Manage Orders shows 0 in every status. The inbox was behind Fiverr's human check, which was left for the owner. (26 Sep 22:20 UTC+2: gig verified Active, two phishing senders reported and blocked, owner's order-verification rules recorded.)
 ## NEXT EXACT ACTION
-1. Once a day at the 11:03 UTC check-in: **Manage Orders** first (the only order truth), then at most one more Fiverr page. If the human check shows, stop and leave it for the owner.
+1. Once a day at the 11:03 UTC check-in: **Manage Orders** first (the only order truth), then at most one more Fiverr page: the seller dashboard for impressions and clicks. The inbox is gated by Fiverr's human check and is read by the owner. If the check shows anywhere, stop and leave it for the owner.
 2. For any new inbox message, apply ORDER VERIFICATION RULES first. Replies to real buyers are drafted and sent only with the owner's approval.
 3. After 14 days live or 300 impressions: review pricing hypothesis H1.
 ## TIMESTAMP
-2026-09-27 11:20 UTC
+2026-09-28 11:25 UTC

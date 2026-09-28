@@ -97,6 +97,14 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-28 11:18–11:35 UTC (scheduled check-in):
+  - Production healthy.
+  - Analytics: 502 / 40 visits, including +1 organic Google first touch; 0 paid.
+  - IndexNow incremental run accepted: HTTP 200 for 3 URLs.
+  - Google Ads unchanged: restricted; the political-ads answer is still "yes".
+  - Fiverr: Manage Orders 0. The inbox was gated by the human check again, so from now on the second page is the seller dashboard.
+  - Admin IndexNow card copy made accurate for incremental submissions.
+
 - 2026-09-28 05:03–05:50 UTC (scheduled check-in):
   - Production healthy. Analytics unchanged: 499 / 38 visits, 0 paid, nothing in review or failed.
   - Google Ads unchanged: restricted; the EU political-ads answer is still "yes".

@@ -140,6 +140,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `68e2aaa` (2026-09-28 05:21 UTC): fifth guide, per-guide sitemap dates, incremental IndexNow. CI green, Railway success. Live: the guide renders (H1, both NAR tables), and `/sitemap.xml` has 22 URLs with the new guide, the cost guide and `/guides` dated 2026-09-28. The next hourly maintenance sends those 3 URLs to IndexNow; check `/admin/system` at the 11:03 run. To do: request indexing of the new guide in Search Console at the next GSC check.
+- `5dc1fdd` (2026-09-27 23:11 UTC): uptime workflow retries HTTP errors. The push-triggered Uptime run and CI were green.
 - `814da1f` (2026-09-27 11:27 UTC): gitleaks allowlist for the public IndexNow key. CI green (secret scan + tests + build), Railway success. Carries `d02d8aa` (IndexNow): its CI tests and build passed but gitleaks flagged the key, which was a false positive. Production serves `/1b9b3b9e4ab3caa360e818027ff1d157.txt`, and `/admin/system` shows the IndexNow card ("not submitted yet" until the next hourly maintenance).
 - `5d2be50` (docs, 05:15 UTC): CI + Railway green.
 - `5c2b514` (docs) — CI success 00:33 UTC, Railway "Success - orvionis.com" 00:35 UTC; `/api/health` ok at 05:05 UTC (db up, 0 queued / 0 running / 0 failed jobs, worker ticking).

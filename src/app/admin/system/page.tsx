@@ -76,7 +76,7 @@ export default async function AdminSystem() {
         </div>
         <p className="mt-1 text-xs text-gray-500">
           {indexNow
-            ? `${indexNow.count} URLs (the sitemap plus the retired Ride Lab pages) submitted ${fmtDate(new Date(indexNow.at))} for content version ${indexNow.version.slice(0, 10)}. `
+            ? `Last submission: ${indexNow.count} URL${indexNow.count === 1 ? "" : "s"} on ${fmtDate(new Date(indexNow.at))}, content version ${indexNow.version.slice(0, 10)} (the first submission sends every sitemap URL plus the retired Ride Lab pages; later ones only the URLs that changed). `
             : "The hourly maintenance submits the sitemap URLs and the retired Ride Lab pages once the key file is live (production only). "}
           Current content version (newest sitemap lastmod): {contentVersion().toISOString().slice(0, 10)}. A new guide notifies on its own; after material changes to other pages, bump CONTENT_UPDATED in src/lib/seo/sitemap-entries.ts. Key file:{" "}
           <a className="underline" href={indexNowKeyUrl}>

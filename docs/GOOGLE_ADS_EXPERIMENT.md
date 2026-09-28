@@ -156,6 +156,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-27 (to 17:05 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-27 (to 23:10 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 05:10 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-28 (to 11:20 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -180,6 +181,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-28 11:20 UTC (check-in, read-only): unchanged. Not eligible · campaign paused; €0; the EU political-ads answer is still "yes".
 - 2026-09-28 05:10 UTC (check-in, read-only): unchanged. Still restricted ("not eligible · campaign paused"), 0 impressions, €0. The EU political-ads answer is still "yes".
 - 2026-09-27 23:10 UTC (check-in, read-only): unchanged. The ad still reads "not eligible · campaign paused", and the EU political-ads answer is still "yes" (not corrected yet; 01:10 in Poland). No new message: the reminder goes in the next daily summary.
 - 2026-09-27 17:05 UTC (check-in, read-only): still restricted. The ad reads "not eligible · campaign paused"; 0 impressions, 0 clicks, €0.

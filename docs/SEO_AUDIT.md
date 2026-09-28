@@ -156,6 +156,10 @@ Separate metric families, observational only:
   - Sitemap `lastmod` is now per guide: its own `updated` date, never older than `CONTENT_UPDATED`. The `/guides` hub carries the newest guide date; everything else keeps `CONTENT_UPDATED`.
   - IndexNow follows the newest lastmod. After an accepted submission it sends only the newer URLs (protocol: changed content only).
   - 125 tests; production build; local check: head metadata, canonical, all figures on the page, 22 sitemap URLs with the new dates, `llms.txt` and the hub list the guide, no horizontal overflow at 390 / 1280 px.
+- **Incremental IndexNow verified (2026-09-28 11:20 UTC):** `/admin/system` shows **HTTP 200 · accepted** for **3 URLs**
+  (the new guide, the cost guide, `/guides`) submitted at 06:00. 200 means submitted, key verified, versus 202 on the first
+  run. First-party channels: `www.google.com` 19 first-touch visits (+1 since 27 Sep); Bing `site:` still about 24 results
+  at 05:10.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.
