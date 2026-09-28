@@ -184,6 +184,15 @@ Separate metric families, observational only:
     - "Floor vs. market" advice with a path to the $29 guide; two market FAQs (6 in FAQPage).
     - Its own sitemap lastmod through `PAGE_UPDATED`, so IndexNow resubmits only this URL.
     - Measure: Search Console position and CTR for "photography pricing calculator" (7.3), "real estate photography pricing calculator" (14.5) and "wedding photography price calculator" (29), weekly from 5 Oct.
+  - **Delivered-and-verified:** `c2938ca`. Its Railway build passed `npm run build` but failed at the image push. The empty commit `42f101d` redeployed it: Railway success at 13:13 UTC, and CI was green for both.
+    - Live checks: `/api/health` ok; the calculator page serves the new title, the real estate preset and the market section.
+    - `/sitemap.xml` dates the calculator `2026-09-28T12:45:00.000Z`.
+    - Verified at 17:05: `/admin/system` shows **HTTP 200 · accepted, 1 URL on 2026-09-28 14:00**. Only the calculator was resubmitted, as designed.
+  - **Provider operations, 28 Sep ≈ 13:20 UTC** (under the owner's standing yes for Search Console):
+    - URL Inspection → Request indexing for `/free/photography-pricing-calculator`: it was "URL is on Google", and the request was confirmed.
+    - The same for `/guides/which-rooms-to-virtually-stage`: it was "URL is not on Google: unknown to Google", with no sitemap listing it yet. Request confirmed.
+    - Sitemap resubmitted → "Sitemap submitted", 22 pages found (Google had read it on 28 Sep with 21).
+    - The Overview chart shows 2 web-search clicks in the last 3 months (mid-August and about 25 Sep).
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

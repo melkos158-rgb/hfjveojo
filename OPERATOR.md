@@ -97,6 +97,16 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-28 17:03–17:30 UTC (scheduled check-in + daily summary):
+  - Production healthy: `/api/health` ok, 0 jobs queued / running / failed, worker ticking.
+  - Analytics unchanged: 502 / 40 visits, 0 paid, AI $0.38.
+  - IndexNow: HTTP 200 for **1 URL** at 14:00 (the calculator page), so the single-page lastmod works.
+  - Google Ads: E8 0 impressions, €0; verification documents under review.
+  - Scheduled task "AI operator loop" (`trig_01KoEtNKBvEzGvaoWeHTPPGS`, every 2 h, push + email to the owner): its last run failed at 16:42. The owner is asked whether to turn it off.
+  - s47: docs only.
+
+- 2026-09-28 13:45–14:05 UTC (owner online): at his explicit request ("зроби будь ласка") the operator set the organization answers to his own name and "No" (Submit, verified). The owner then submitted his Ukrainian ID card and the profile address himself. Verification is under review, 3–5 business days.
+
 - 2026-09-28 11:40–13:40 UTC (owner online, between check-ins):
   - Google Ads verification help, read-only. The owner corrected the EU political-ads answer himself.
   - Found that the country "Україна" in the verification forms is the payments profile country, which cannot be edited.

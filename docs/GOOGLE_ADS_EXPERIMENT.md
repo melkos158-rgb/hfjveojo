@@ -139,7 +139,7 @@ Next steps for the owner:
   - Accepted: international or internal passport, passport card, driving licence, residence card.
   - A Polish karta pobytu or a Polish address would not match.
   - Advised: the Ukrainian international passport (Latin name identical to the profile) and, if asked, the profile address exactly as stored.
-- **One wrong answer found:** "Does MELNYK KOSTIANTYN manage Google Ads accounts for other organizations?" is answered **Yes**, which declares an agency. It should be **No**; the owner changes it (his declaration). The panel was left open on his screen.
+- **Organization answers fixed at 13:45 UTC** at the owner's explicit request: legal name MELNYK KOSTIANTYN, and **No** to "manages Google Ads accounts for other organizations". Yes had declared an agency, and "another organization's legal name" had switched the page to the client flow.
 
 **Do not recreate the campaign to get around it:** "circumventing systems" is a policy violation that can suspend the account.
 
@@ -156,8 +156,8 @@ Published 2026-09-26 22:15 UTC+2 (20:15 UTC). Settings were verified on the revi
 The auto-mode safety check blocks the operator from editing the live campaign ("real-world transactions"). Exact steps were sent to the owner on 2026-09-26 22:20:
 0. **Get the restriction lifted** (Resume failed on 27 Sep, `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`). State on 28 Sep 12:45 UTC:
    - the EU political-ads answer is corrected;
-   - still to do: change the organization answer "manages accounts for other organizations" to **No**;
-   - still to do: submit the documents, a **Ukrainian** photo ID (international passport) matching the UA payments profile.
+   - the organization answers are corrected (own name, No), done by the operator at the owner's request at 13:45 UTC;
+   - still to do (owner only): submit the documents, a **Ukrainian** photo ID (international passport) matching the UA payments profile, started fresh from "Start task".
    - Then wait for Google's review, with support chat if the campaign stays restricted.
    - Once Google lifts it: enable the campaign and extend the end date past 1 Oct if the test lost days.
 1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
@@ -176,6 +176,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-27 (to 23:10 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 05:10 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 11:20 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-28 (to 17:10 UTC) — restricted; verification documents under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -200,6 +201,16 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-28 17:10 UTC (check-in, read-only): the campaign table shows E8 with €30 (total), 26 Sep – 1 Oct, 0 impressions, 0 clicks, €0.00. Policy → Account: documents "under review". Nothing for the owner to do until Google decides.
+- 2026-09-28 ≈ 14:00 UTC: **the owner submitted the documents** (Ukrainian ID card as "Посвідчення особи державного зразка", which is Google's "passport in card form"; address as in the payments profile).
+  - Policy → Account now reads "Submit your documents — Under review: usually takes 3–5 business days", so a decision is expected Thu 1 Oct to Mon 5 Oct.
+  - After approval: check whether the campaign restriction is lifted. Then the owner enables E8 and moves its end date (currently 1 Oct) about 7 days past the first serving day, keeping the €30 total.
+  - The E8 evaluation moves with it: 7 days of serving or €30 spent, whichever comes first.
+- 2026-09-28 ≈ 13:45 UTC (owner's explicit request in chat: "зроби будь ласка", after the operator offered to set "No" and press Submit): the operator corrected the organization answers in Policy → Account.
+  - Before: the legal-name question had been switched to "Another organization's legal name". The page then offered "Submit documents for your client" and "who pays for your client's ads", which is the agency flow.
+  - After: legal name **MELNYK KOSTIANTYN**, and "doesn't manage Google Ads accounts for other organizations" (**No**) → Submit.
+  - Verified by reopening the panel: both answers saved. The page is back to "Submit your documents" and "who pays for your ads".
+  - The only open task is "Submit your documents", with a Ukrainian photo ID. The owner uploads it, starting fresh from "Start task", because the "Advertiser Identity" tab he had opened dates from the client-mode state.
 - 2026-09-28 12:45 UTC (owner request, read-only): the owner asked where to change the country "Україна" that appears in the verification address form.
   - Found: it is the **payments profile country (UA)**, which cannot be edited; only a billing transfer changes it.
   - Google's Ukraine document page requires a Ukrainian-issued photo ID that matches the profile. So the fix is to keep everything Ukrainian (international passport + the profile address as stored), not to switch to Polish documents.
@@ -251,7 +262,10 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 ## NEXT EXACT ACTION
 
-1. Next check-in: read the verification page and the campaign status icon. Check two things: is the organization answer "No" now, and were the documents submitted (the task moves to "in review")? Remind only in the next daily summary; no push.
+1. Every check-in: read Policy → Account (documents "under review" since 28 Sep ≈ 14:00 UTC, 3–5 business days) and the campaign status icon, read-only.
+   - When verification is approved: see whether Resume is possible (the restriction lifted).
+   - Then send the owner the exact clicks: enable the campaign, move the end date ~7 days past the first serving day, €30 total unchanged.
+   - Remind only in the daily summary unless the approval arrives, which is worth one message.
 2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
 3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
 4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).

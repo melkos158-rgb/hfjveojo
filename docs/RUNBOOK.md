@@ -60,6 +60,7 @@ Free staging previews (order form, watermarked): at most `FREE_PREVIEWS_PER_DAY`
 | Emails not arriving | Resend domain not verified / `EMAIL_PROVIDER=console` | verify DNS; check Resend logs |
 | AI failures | `/admin/ai-costs` failed calls; provider status page | fallback provider via `ANTHROPIC_API_KEY`; retry orders |
 | Disk/DB growth | `/admin/system` stored files | switch `STORAGE_BACKEND=s3`; retention purges hourly |
+| Railway "Deployment failed" but CI is green | Railway deployment → Build Logs: does `npm run build` finish, with the failure at "image push" / "Failed to build an image"? (seen 2026-09-28 on `c2938ca`) | The live site keeps the previous deploy, so nothing is down. Redeploy: Railway → deployment → ⋯ → Redeploy, or push an empty commit. If `npm run build` itself failed, fix the code instead. |
 
 ## Weekly (Monday, 30 minutes)
 

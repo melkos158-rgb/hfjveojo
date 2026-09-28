@@ -147,6 +147,10 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `42f101d` (2026-09-28 13:13 UTC), an empty redeploy commit carrying `c2938ca` (the calculator page).
+  - The Railway build of `c2938ca` passed `npm run build` but failed at the image push (13:03 UTC). CI was green (gitleaks, typecheck, tests, build), so the empty commit redeployed it, and Railway reported success.
+  - Live: `/api/health` ok (db up, 0 jobs queued / running / failed, worker ticking); the calculator page shows the new title, preset and market section; the sitemap dates it 12:45 UTC.
+  - Search Console: indexing requested for the calculator and the fifth guide; sitemap resubmitted (22 pages).
 - `68e2aaa` (2026-09-28 05:21 UTC): fifth guide, per-guide sitemap dates, incremental IndexNow. CI green, Railway success. Live: the guide renders (H1, both NAR tables), and `/sitemap.xml` has 22 URLs with the new guide, the cost guide and `/guides` dated 2026-09-28. The next hourly maintenance sends those 3 URLs to IndexNow; check `/admin/system` at the 11:03 run. To do: request indexing of the new guide in Search Console at the next GSC check.
 - `5dc1fdd` (2026-09-27 23:11 UTC): uptime workflow retries HTTP errors. The push-triggered Uptime run and CI were green.
 - `814da1f` (2026-09-27 11:27 UTC): gitleaks allowlist for the public IndexNow key. CI green (secret scan + tests + build), Railway success. Carries `d02d8aa` (IndexNow): its CI tests and build passed but gitleaks flagged the key, which was a false positive. Production serves `/1b9b3b9e4ab3caa360e818027ff1d157.txt`, and `/admin/system` shows the IndexNow card ("not submitted yet" until the next hourly maintenance).
