@@ -93,6 +93,54 @@ Made a small free thing for anyone writing listing copy: paste the description, 
 
 ✍️ Nothing, but check group rules; link only where allowed.
 
+### re-fb-group-ab723 — California agent groups, value first (virtual staging)
+
+📤 EN:
+Quick heads-up for California agents, in case it slipped past anyone: since January 1, 2026, AB 723 requires a disclosure next to any virtually staged or digitally altered listing photo, plus access to the original.
+
+In practice: "Virtually staged" on or right next to the photo, the original uploaded right after it in the MLS, and a link or QR code to the original on portals, social posts and flyers.
+
+I wrote a plain-English checklist with the sources (bill text, SDMLS, Bay East): orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+Full disclosure: I run a small virtual staging service ($15 a photo). Every order comes with labeled copies, a public page with the original and a QR code, so that part is ready to use. Ask away in the comments.
+
+🇺🇦 UA — переклад для контролю:
+Коротке нагадування для агентів у Каліфорнії, раптом хтось пропустив: з 1 січня 2026 року закон AB 723 вимагає позначку біля кожного віртуально застейдженого або цифрово зміненого фото в оголошенні, а також доступ до оригіналу.
+
+На практиці: «Virtually staged» на фото або одразу поруч, оригінал завантажений одразу після нього в MLS, а на порталах, у соцмережах і на флаєрах — посилання або QR-код на оригінал.
+
+Я написав простий чекліст із джерелами (текст закону, SDMLS, Bay East): orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+Чесно скажу: у мене невеликий сервіс віртуального стейджингу ($15 за фото). Кожне замовлення йде з підписаними копіями, публічною сторінкою з оригіналом і QR-кодом, тож ця частина вже готова. Питайте в коментарях.
+
+✍️ Nothing. California groups only. One group per day, never the same text twice in one day. Where the rules frown on links (Southern California Real Estate Professionals), post without the link and give it in a comment when asked. Never promise legal certainty.
+
+### re-fb-group-calc — US agent groups, value first (free staging cost calculator)
+
+📤 EN:
+For anyone comparing virtual staging prices, I made a free calculator. Enter photos per listing and listings per month, and it shows what you'd pay with per-photo services ($24–$30 a photo), a monthly AI subscription, or physical staging (NAR's median is $1,500). It also shows when a subscription is the cheaper choice.
+
+orvionis.com/free/virtual-staging-cost-calculator?utm_source=fb_group&exp=e4-virtual-staging
+
+Disclosure: one of the options in it is mine ($15 a photo, free watermarked preview on your own photo first). Questions welcome.
+
+🇺🇦 UA — переклад для контролю:
+Для всіх, хто порівнює ціни на віртуальний стейджинг: я зробив безкоштовний калькулятор. Вводиш, скільки фото в оголошенні і скільки оголошень на місяць, і він показує, скільки ти заплатиш у сервісах з оплатою за фото ($24–$30 за фото), за місячну AI-підписку або за справжній стейджинг (медіана за даними NAR — $1,500). А ще показує, коли підписка виходить дешевшою.
+
+orvionis.com/free/virtual-staging-cost-calculator?utm_source=fb_group&exp=e4-virtual-staging
+
+Чесно кажу: один із варіантів у ньому мій ($15 за фото, спершу безкоштовне превʼю з водяним знаком на твоєму фото). Питання вітаються.
+
+✍️ Nothing. Re-check the prices on the calculator page before reusing this after October 2026.
+
+### re-fb-group-reply — someone in a group asks who to use for virtual staging
+
+📤 EN: I run one, so take this with that in mind: ORVIONIS, $15 a photo, about two minutes, and you can see a free watermarked preview on your own photo before paying. In California it also includes the AB 723 labeled copies. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+🇺🇦 UA — переклад для контролю: У мене свій такий сервіс, тож враховуй це: ORVIONIS, $15 за фото, десь дві хвилини, і перед оплатою можна безкоштовно подивитися превʼю з водяним знаком на своєму фото. Для Каліфорнії ще входять підписані копії під AB 723. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+✍️ Answer only real questions, in the thread. The strict groups (Lab Coat Agents) allow product talk only as an answer to a question.
+
 ### photo-ig-dm-1 — photographer, first contact
 
 📤 EN: Hey [name], your [type, e.g. beach elopement] set from [month] is lovely. I built a small tool that writes and designs a branded pricing guide PDF from your real packages — about five minutes of questions, $29, no subscription. It's new and I'm looking for the first photographers to try it and tell me what's missing. Want the link?
@@ -108,6 +156,43 @@ Made a small free thing for anyone writing listing copy: paste the description, 
 🇺🇦 UA: Привіт, [name], [deliverable] зробив свою справу? Якщо щось не так, відпиши, що змінити — одна правка включена. А якщо спрацювало, не проти сказати одним рядком, що змусило тебе погодитися? Це допомагає мені вирішити, що будувати далі.
 
 ✍️ [name], [deliverable].
+
+## Facebook groups for agents (checked 2026-09-29 through the owner's Facebook, read-only)
+
+The owner joins and posts himself, answering join questions truthfully (a virtual staging service, not a realtor). Numbers are from each group's About page on 29 Sep 2026.
+
+| Group | Link | Size, activity | Vendor posts |
+| --- | --- | --- | --- |
+| Southern California Real Estate Professionals | https://www.facebook.com/groups/SoCalRealEstateProfessionals | public, 25.0k, 81 posts that day | allowed: rules name home staging and RE photography "with useful information"; sales posts "once in a while"; repeats and third-party links get blocked |
+| REALTORS® - Northern California | https://www.facebook.com/groups/RealtorsGroup | public, 16.9k, 66 posts that day | allowed in moderation ("TOO much self-promotion" is not); one admin is a virtual tour company |
+| California Realtor | https://www.facebook.com/groups/328642043896502 | public, 10.3k, 17 posts that day | no rules listed; invites listings, news and real estate laws (the AB 723 post fits) |
+| California Real Estate | https://www.facebook.com/groups/4737211546357168 | public, 50.6k, 290 posts that day | "please don't spam, keep it professional"; posts sink fast |
+| Southern California Real Estate and Services | https://www.facebook.com/groups/759924907456250 | public, 13.4k, 45 posts that day | services welcome (lenders, title, escrow, any real estate business) |
+| All Realtors and related Professionals | https://www.facebook.com/groups/350007408391439 | public, 85.2k, 299 posts that day, US-wide | no rules listed; very noisy |
+
+Not for promotion:
+- **Lab Coat Agents** (https://www.facebook.com/groups/labcoatagents, private, 168k). No self-promotion without admin approval. Product talk only when answering a question. No messages to members without their explicit permission.
+- **New Real Estate Agents** (https://www.facebook.com/groups/NewRealEstateAgentsGroup, private, 73k). Only paid sponsors may promote or post links.
+- The "virtual staging" groups (for example https://www.facebook.com/groups/virtualstagings, 8k) are mostly other staging vendors; buyers there are rare.
+
+**Log:**
+- 2026-09-29 ≈ 18:30 UTC, at the owner's explicit request ("Вступай за мене"): the operator joined all six groups in the owner's Chrome. They are public and admitted him at once, with no questions.
+- The operator typed three posts, and the owner presses Publish himself:
+  - All Realtors and related Professionals: `re-fb-group-calc`;
+  - Southern California Real Estate Professionals: `re-fb-group-ab723` for SoCal, with the SDMLS line and no link (the checklist is offered in the comments);
+  - REALTORS® - Northern California: the question variant below, with the Bay East line and the guide link.
+- The other three groups get fresh texts from 30 Sep, so the account does not post a promotion in six groups on its first day.
+- Check ≈ 25 minutes after the owner published:
+  - SoCal Professionals is live: https://www.facebook.com/groups/SoCalRealEstateProfessionals/posts/4229101407234094/
+  - Northern California is live, with the guide's link card: https://www.facebook.com/groups/RealtorsGroup/posts/3270337369822424/
+  - Both had 0 comments and 0 reactions so far.
+  - All Realtors: **pending**. The admins review new members' posts ("Ваш запит на перевірку все ще на розгляді"). Leave it; never press "Скасувати перевірку".
+  - `/admin/analytics`: 529 / 63 (was 514 / 49 at 17:05). First Facebook traffic: `fb_group` 6 page views, plus `m.facebook.com` 2 and `www.facebook.com` 3 without the tag; some may be the owner's own clicks. `google` (ads) rose from 3 to 7 page views. Funnel unchanged (3 → 7 → 0), 0 paid.
+
+Question variant used for Northern California:
+> NorCal agents, a practical AB 723 question: how are you handling the disclosure on virtually staged photos? / Since January 1, 2026, a staged or otherwise digitally altered listing photo needs a disclosure next to it and access to the original. Bay East, for example, asks for the label ("altered", "digitally altered" or "AI altered") and the original uploaded right after the staged photo. / I put the rules and a 7-step checklist on one page, with sources: [guide link with `utm_source=fb_group&exp=e4-virtual-staging`] / I also run a virtual staging service ($15 a photo) that hands you the labeled copies, a public page with the original and a QR code. Curious what your brokerage tells you to do.
+
+Cadence: join all six, then post in one or two groups a day with a different template each time (`re-fb-group-ab723` for California groups, `re-fb-group-calc` for the rest). Answer every comment. No private messages unless someone asks for one. Also search each group for "virtual staging" and answer real questions with `re-fb-group-reply`. Results show up in `/admin/analytics` as channel `fb_group`.
 
 ## What to say when they ask
 

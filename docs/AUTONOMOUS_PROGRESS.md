@@ -33,6 +33,15 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## DONE (verified in production unless noted)
 
+- 2026-09-29 19:45 UTC (built; goes live with the next Railway deploy): **owner email updates** at the owner's request.
+  - Entries in `src/content/owner-updates.ts` are emailed once each to ADMIN_EMAILS from hello@orvionis.com by the job loop, a few seconds after a deploy starts.
+  - Sent ids are stored in `Setting` `ops.owner_updates`. A failed send retries every 5 minutes, and at most 3 go out per run.
+  - `/admin/system` has an "Owner email updates" card.
+  - The first entry says that updates now arrive by email, gives the state on 29 Sep and lists what is needed from him.
+  - 142 tests pass, including 7 new ones (one guards against email addresses and phone numbers in the public list).
+  - Railway had an open incident, "API degradation causing slow or stuck deployments" (since 15:29 UTC). `81a878b` had no deployment by 19:31 UTC.
+- 2026-09-29 ≈ 18:30 UTC: **Facebook groups (E9 outreach).** Six public US agent groups were found and joined at the owner's request. Three posts were published by the owner: two are live, one awaits admin review. Details and texts are in `docs/OUTREACH.md`.
+
 - 2026-09-25: Ride Lab → ORVIONIS on the same repo/service/domain; V1 platform (Next 15, Prisma, Stripe Checkout + webhooks, AI engine with cost accounting, admin console, magic-link auth, jobs on Postgres).
 - 2026-09-26 00:45: embedded job loop (no worker service), `/api/health` heartbeat.
 - 01:05: per-tool Open Graph cards, SEO titles.

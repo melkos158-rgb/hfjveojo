@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { env } from "@/lib/env";
+import { adminEmails, env } from "@/lib/env";
 import { StatusBadge, fmtDate, Kpi } from "@/components/admin/Kpi";
 import { aiSmokeTestAction, enqueueMaintenanceAction, ensureStripeWebhookAction, requeueJobAction, runPipelineTestAction, stripeWebhookProbeAction, toggleKillSwitchAction } from "@/app/admin/actions";
 import { REQUIRED_WEBHOOK_EVENTS, STRIPE_BRAND, stripeAccountSummary, stripeWebhookCheck, type StripeAccountSummary, type StripeWebhookCheck } from "@/lib/stripe/branding";
@@ -7,13 +7,15 @@ import { stripeConfigSummary, type StripeMode } from "@/lib/stripe/mode";
 import { TEST_INTAKES } from "@/lib/tools/samples/test-intakes";
 import { contentVersion } from "@/lib/seo/sitemap-entries";
 import { INDEXNOW_KEY, INDEXNOW_SETTING, type IndexNowRecord } from "@/lib/seo/indexnow";
+import { OWNER_UPDATES_SETTING, parseOwnerUpdatesRecord, pendingOwnerUpdates } from "@/lib/ops/owner-updates";
+import { OWNER_UPDATES } from "@/content/owner-updates";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminSystem() {
   const e = env();
   const cfg = stripeConfigSummary();
-  const [jobs, errors, kill, stripeEvents, counts, smokeLast, stripeModes, indexNowRow] = await Promise.all([
+  const [jobs, errors, kill, stripeEvents, counts, smokeLast, stripeModes, indexNowRow, ownerUpdatesRow] = await Promise.all([
     prisma.job.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.errorLog.findMany({ orderBy: { createdAt: "desc" }, take: 30 }),
     prisma.setting.findUnique({ where: { key: "ai.kill_switch" } }),
@@ -27,7 +29,13 @@ export default async function AdminSystem() {
     prisma.setting.findUnique({ where: { key: "ai.smoke_test_last" } }),
     Promise.all((["live", "test"] as const).map((mode) => loadStripeMode(mode, cfg))),
     prisma.setting.findUnique({ where: { key: INDEXNOW_SETTING } }),
+    prisma.setting.findUnique({ where: { key: OWNER_UPDATES_SETTING } }),
   ]);
+  const ownerUpdates = parseOwnerUpdatesRecord(ownerUpdatesRow?.value);
+  const ownerUpdatesPending = pendingOwnerUpdates(OWNER_UPDATES, ownerUpdates.sent);
+  const ownerUpdatesSentHere = OWNER_UPDATES.length - ownerUpdatesPending.length;
+  const ownerUpdatesAt = (ownerUpdatesRow?.value as { at?: string } | null)?.at;
+  const adminEmailCount = adminEmails().length;
   const lastSmoke = smokeLast?.value as { ok: boolean; message: string; at: string } | null;
   const indexNow = indexNowRow?.value as IndexNowRecord | null;
   const indexNowKeyUrl = `${e.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "")}/${INDEXNOW_KEY}.txt`;
@@ -83,6 +91,20 @@ export default async function AdminSystem() {
             {indexNowKeyUrl}
           </a>
           . Google does not use IndexNow: Search Console covers it.
+        </p>
+      </div>
+
+      <div className="card">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-bold">Owner email updates</h2>
+          <span className={`badge ${ownerUpdatesPending.length ? "bg-amber-50 text-amber-700" : "bg-green-50 text-green-700"}`}>
+            {`${ownerUpdatesSentHere} of ${OWNER_UPDATES.length} sent${ownerUpdatesPending.length ? ` · ${ownerUpdatesPending.length} pending` : ""}`}
+          </span>
+        </div>
+        <p className="mt-1 text-xs text-gray-500">
+          {ownerUpdatesAt ? `Last email: ${fmtDate(new Date(ownerUpdatesAt))}. ` : "Nothing sent yet. "}
+          The operator&apos;s updates in src/content/owner-updates.ts go once each to the ADMIN_EMAILS addresses ({adminEmailCount}) from {e.EMAIL_FROM}, a few seconds after a deploy starts (production only; a failed send retries every 5 minutes).
+          {ownerUpdatesPending.length ? ` Pending: ${ownerUpdatesPending.map((u) => u.id).join(", ")}.` : ""}
         </p>
       </div>
 

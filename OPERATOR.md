@@ -95,7 +95,19 @@ Still the owner's (account sign-in is not something the operator does):
 8. [ ] Browser extension (thin client, no secrets) — only when a tool benefits from in-page capture (e.g. listing description from an MLS page); no demand signal yet.
 7. [ ] Share-preview check after deploy: paste https://orvionis.com/real-estate into a preview debugger (opengraph.xyz or the Facebook Sharing Debugger) once; the card is cached by platforms for ~24h after first share.
 
+## Owner email updates (since 2026-09-29)
+
+The owner asked to get updates by ORVIONIS email. To send one:
+1. Append an entry to `src/content/owner-updates.ts`: a new unique id (`YYYY-MM-DD-slug`), a subject and a plain-text body in Ukrainian.
+2. The repo is public, so keep it to business status, as in docs/. No personal data, contact details, secrets or order details; a test enforces the obvious cases.
+3. Commit it with the check-in transfer. After the deploy, the job loop emails it once to ADMIN_EMAILS from hello@orvionis.com.
+4. Confirm on `/admin/system` → "Owner email updates" ("N of N sent").
+
+The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner update. Decisions he must make also get an update, plus a push. Replies to these emails go to hello@orvionis.com, which the operator cannot read, so he answers in the Claude chat.
+
 ## Session log
+
+- 2026-09-29 ≈ 19:25 UTC: the owner offered a Telegram chat with his second number as the channel for questions. **Not used.** Sending from his account needs his OK for each message, operating Telegram needs his computer awake, and it would expose his private chats. The channel stays SendUserMessage plus push; he was asked to allow notifications for the Claude app. His screenshot showed his ID document, so he was advised not to share such screenshots. No number or document detail is recorded anywhere.
 
 - 2026-09-29 17:04–17:40 UTC (scheduled check-in, daily summary):
   - Production healthy; `422cb5c` confirmed (Railway success, CI green).

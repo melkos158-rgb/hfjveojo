@@ -67,6 +67,26 @@ async function requeueStaleJobsIfDue(): Promise<void> {
   await requeueStaleJobs();
 }
 
+/**
+ * Operator → owner email updates (src/content/owner-updates.ts) ship with a deploy, so the first tick of a new process
+ * sends what is new. Once a check finds nothing left, this process stops checking; a failed send retries every 5 minutes.
+ * Never throws: it must not stop the tick from claiming jobs.
+ */
+const OWNER_UPDATES_EVERY_MS = 5 * 60_000;
+let ownerUpdatesDone = false;
+let lastOwnerUpdatesAt = 0;
+async function sendOwnerUpdatesIfDue(): Promise<void> {
+  if (ownerUpdatesDone || Date.now() - lastOwnerUpdatesAt < OWNER_UPDATES_EVERY_MS) return;
+  lastOwnerUpdatesAt = Date.now();
+  try {
+    const { sendPendingOwnerUpdates } = await import("@/lib/ops/owner-updates");
+    const outcome = await sendPendingOwnerUpdates();
+    if ("skipped" in outcome) ownerUpdatesDone = true;
+  } catch (err) {
+    log.warn("owner_updates.check_failed", { error: (err as Error).message });
+  }
+}
+
 async function scheduleMaintenanceIfDue(): Promise<void> {
   const now = new Date();
   if (now.getUTCMinutes() > 4) return; // once per hour, in the first minutes
@@ -89,6 +109,7 @@ export function createJobLoop(opts: LoopOptions): JobLoop {
         await scheduleDailyReportIfDue();
         await scheduleMaintenanceIfDue();
         await requeueStaleJobsIfDue();
+        await sendOwnerUpdatesIfDue();
       }
       while (state.running < opts.concurrency) {
         const job = await claimNextJob(opts.workerId);
