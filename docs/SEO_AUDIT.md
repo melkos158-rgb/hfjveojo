@@ -216,6 +216,13 @@ Separate metric families, observational only:
     - "virtual staging cost" 1, 97.
   - The last 24 h add "virtual staging pricing" (2).
   - Decision: a free **virtual staging cost calculator** (details in `docs/GROWTH_EXPERIMENTS.md`). A licensing fee calculator was rejected for lack of citable data.
+- **2026-09-29 17:05 UTC check:**
+  - `422cb5c` (the staging cost calculator) is live, and Railway reports success.
+  - IndexNow: **HTTP 200 · 3 URLs at 16:00** (the calculator, `/free`, `/real-estate`), as designed.
+  - Search Console, last 24 h: 1 click, 24 impressions, CTR 4.2 %, average position 8.8. Visible queries: "photography pricing calculator" (position 8) and "virtual staging cost" (95).
+  - URL Inspection → Request indexing for `/free/virtual-staging-cost-calculator`: it was "URL is not on Google", and the request was confirmed.
+  - `/guides/which-rooms-to-virtually-stage` is now **"URL is on Google"**, about a day after the 28 Sep request.
+  - The checklist guide's inspection froze in the hidden window, so it was not read (requested at 05:10).
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

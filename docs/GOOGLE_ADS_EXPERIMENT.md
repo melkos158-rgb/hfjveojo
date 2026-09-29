@@ -106,6 +106,12 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 
 ## STATUS
 
+**E8 is enabled and serving (2026-09-29 17:05 UTC, read-only).** The owner enabled it at about 11:45 UTC.
+- Campaigns table: green status dot, "Відповідає вимогам" (eligible), €30 total, dates still **26 Sep – 1 Oct**. An account alert reads "1 campaign will end soon".
+- First ad traffic, from `/admin/analytics`: channel `google` (first touch = a Google Ads click id) shows **3 page views**. Sessions rose by 2 since 11:25 UTC, and Virtual Staging views by 2 since 05:10. No new intake, preview or checkout (funnel still 3 → 7 → 0).
+- Google's own numbers were not readable. The table held a 26–28 Sep range, and the date picker ignored every click in the hidden window. Google's reports are not real time either.
+- Still pending from the owner: move the end date to 6 Oct, or the €30 is paced into the two days left.
+
 **Advertiser verification PASSED on 2026-09-29** (seen 11:25 UTC). Policy → Account lists every task as completed: the organization questions, documents "submitted 29 Sep", EU political ads "no", the payer. The disclosure card reads "Advertiser identity verified · MELNYK KOSTIANTYN · UA".
 - The campaign is still **paused** (ad: "Не відповідає вимогам · Кампанію призупинено", quality "Good"), and its end date is still 1 Oct.
 - The owner was asked by chat and push at 11:30 UTC for three things:
@@ -188,6 +194,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-28 (to 23:10 UTC) — paused/restricted; verification under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 05:10 UTC) — verification "Розглядається" (under review); campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 11:25 UTC) — **verification passed**; campaign still paused (owner to enable) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-29 (to 17:05 UTC) — **enabled ≈ 11:45, serving**; Google's report not readable (date picker frozen) | not read | not read | site: 2 ad sessions, 3 page views | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -212,6 +219,10 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-29 17:05 UTC (check-in, read-only): **E8 is serving.**
+  - `/admin/analytics`: channel `google` = 3 page views; sessions 47 → 49 since 11:25 UTC; Virtual Staging views 14 → 16 since 05:10. No new intake, preview or checkout.
+  - Campaigns table: eligible, €30 total, 26 Sep – 1 Oct; alert "1 campaign will end soon". The report range was 26–28 Sep. "Last 30 days" ends yesterday in account time. Clicks on "Today", "All time" and the days field did not apply in the hidden window, so impressions, cost and search terms were not read.
+  - No negatives to add yet: the search terms were not visible.
 - 2026-09-29 ≈ 11:50 UTC (owner asked "look at Google Ads now", read-only): **the owner enabled E8.**
   - The campaign row has a green status dot, "Відповідає вимогам" (eligible), €30 total.
   - The dates are still **26 Sep – 1 Oct 2026**; the end date was not moved. Asked again to move it to 6 Oct, so the €30 is not paced into about two days.
@@ -275,10 +286,14 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
   - The profile country can't be edited (a billing transfer is the only route).
   - Documents must match the profile exactly, per country: https://support.google.com/adspolicy/answer/9872280?co=GENIE.CountryCode%3DUA
 - The organization question "manages Google Ads accounts for other organizations" declares an agency when answered Yes; a single business advertiser answers No.
+- **The site's channel `google` counts page views, not clicks.** `/admin/analytics` credits every page view of a session whose first touch was a Google Ads click id (`gclid`/`gbraid`/`wbraid`) to `google`. Compare the session count to estimate clicks, and use Google's click count once it is readable.
+- "Останні 30 днів" (last 30 days) ends **yesterday** in account time (GMT+3), so the current day's serving is not in that view. In the hidden Chrome window the date picker opens, but choosing a preset does not apply, and the tab then freezes.
 
 ## LAST COMPLETED ACTION
 
-2026-09-28 12:45 UTC, read-only at the owner's request: located the "Україна" in the verification forms. It is the payments profile country, which cannot be edited.
+2026-09-29 17:05 UTC, read-only check-in: E8 eligible and serving. The site shows 2 ad sessions (3 page views) and 0 checkouts. Google's own numbers were not readable because of the frozen date picker. End date still 1 Oct.
+
+Earlier, 2026-09-28 12:45 UTC, read-only at the owner's request: located the "Україна" in the verification forms. It is the payments profile country, which cannot be edited.
 - Advised: keep everything Ukrainian (international passport, profile address as stored), since Google's Ukraine requirements demand a Ukrainian-issued ID matching the profile.
 - Advised: change the "manages accounts for other organizations" answer to No.
 - Still restricted, €0. The EU political-ads answer is corrected.
@@ -287,15 +302,13 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 ## NEXT EXACT ACTION
 
-1. Every check-in: is the campaign enabled and serving?
-   - Read the status icon, the ad status, impressions, clicks, cost and the search terms (read-only).
-   - If it is still paused, remind the owner in the daily summary only (he was asked on 29 Sep 11:30).
-   - If he reports an error on enabling, draft the Google Ads support message.
-   - Once it serves: METRICS every check-in; list new negative keywords for the owner from the search terms (DECISION RULES).
-2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
-3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
-4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
+1. Every check-in: read Google's numbers for E8 (impressions, clicks, cost, search terms), read-only.
+   - Open a fresh tab. If the table's date range excludes today, try the date picker once. If it freezes, record the site's `google` sessions instead.
+   - List new negative keywords for the owner from the search terms (DECISION RULES).
+2. Is the end date still 1 Oct? Remind the owner in the daily summary (asked on 29 Sep at 11:30 and 17:05). A campaign-total budget paced into three days may spend fast. The €30 cap holds either way.
+3. Every day until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
+4. 7 Oct 05:03 UTC (or when €30 is spent): final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
 
 ## TIMESTAMP
 
-2026-09-28 12:50 UTC
+2026-09-29 17:30 UTC

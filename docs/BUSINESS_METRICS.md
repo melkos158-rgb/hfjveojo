@@ -35,7 +35,7 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | **Net revenue** | **$0** | gross − refunds − Stripe − marketplace fees |
 | AI / API costs | $0.38 | `/admin/analytics` (pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports) |
 | **Gross profit** | **−$0.38** | net revenue − variable costs (AI) |
-| Advertising spend | €0.00 spent | Google Ads E8: €30 prepaid by the owner (balance €30.00 on 27 Sep). The campaign has never served: **restricted by Google** pending advertiser verification. The owner submitted the documents on 28 Sep ≈ 14:00 UTC, and review takes 3–5 business days. |
+| Advertising spend | **serving since 29 Sep ≈ 11:45 UTC; amount not yet read** (≤ €30 by the campaign cap) | Google Ads E8: €30 prepaid by the owner (balance €30.00 on 27 Sep). Verification passed on 29 Sep and the owner enabled the campaign. Google's cost for 29 Sep was not readable at 17:05 UTC (frozen date picker); read it at the next check-in. |
 | Infrastructure | Railway Hobby plan | owner-paid; monthly amount → from the Railway invoice (not yet recorded) |
 | AI subscriptions (Claude, etc.) | owner-paid | amount to record from the owner's billing (not yet recorded) |
 | **Net profit** | **−$0.38 − fixed costs** | gross profit − ads − infrastructure − subscriptions |
@@ -45,7 +45,7 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Channel | Spend | Paid orders | Revenue | Profit | ROAS | Revenue per € / $ spent |
 | --- | --- | --- | --- | --- | --- | --- |
-| google (E8, Search) | €0 (of €30 cap); campaign restricted by Google, 0 impressions | 0 | $0 | $0 | — | — |
+| google (E8, Search) | serving since 29 Sep ≈ 11:45 UTC; cost not read yet (≤ €30 cap); site: 2 ad sessions, 3 page views, 0 checkouts | 0 | $0 | $0 | — | — |
 | fiverr (E13, gig live 26 Sep) | $0 (20 % fee only on sales) | 0 (Manage Orders) | $0 | $0 | — | — |
 | outreach (E1–E3) | founder time only | 0 | $0 | $0 | — | — |
 | direct / organic | $0 | 0 | $0 | $0 | — | — |
@@ -54,8 +54,15 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Date | Item | Reason | Hypothesis | Expected outcome | Metric | Limit | Status / result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep and never served, €0 spent. Advertiser verification **passed 29 Sep**, and the owner is asked to move the end date to 6 Oct and enable the campaign. Evaluation on 7 Oct (or when €30 is spent), by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
+| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep; restricted until advertiser verification **passed 29 Sep**. The owner enabled it at ≈ 11:45 UTC and it is serving: 2 ad sessions by 17:05 UTC, 0 checkouts. The end date is still 1 Oct (owner asked to move it to 6 Oct). Evaluation on 7 Oct (or when €30 is spent), by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
+
+## Snapshot — 2026-09-29 17:05 UTC (last 30 days, `/admin/analytics`)
+
+- 514 / 49 page views and sessions, by first touch: direct 480, `www.google.com` 25, **`google` 3** (Google Ads click id, the first ad traffic), Gmail app 6.
+- Funnel 3 → 7 → 0 (unchanged); $0 revenue; AI $0.38; delivered / review / failed 0 / 0 / 0. Virtual Staging views 16 (+2 since 05:10).
+- Google Ads: serving; Google's cost not readable today. Fiverr: not checked (11:03 only).
+- Search Console, last 24 h: 1 click, 24 impressions, average position 8.8.
 
 ## Snapshot — 2026-09-29 11:25 UTC
 

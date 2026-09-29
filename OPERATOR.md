@@ -97,6 +97,13 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-29 17:04–17:40 UTC (scheduled check-in, daily summary):
+  - Production healthy; `422cb5c` confirmed (Railway success, CI green).
+  - Analytics: 514 / 49, with the **first ad traffic**: channel `google` 3 page views in 2 sessions. 0 paid; funnel unchanged.
+  - Google Ads: eligible and serving, end date still 1 Oct. Google's own numbers were not readable (the date picker ignores clicks in the hidden window).
+  - IndexNow accepted the 3 calculator URLs at 16:00. Search Console: indexing requested for the staging cost calculator; the which-rooms guide is now indexed.
+  - Still waiting on the owner: the end date, the yes/no on the "AI operator loop" task, and the outreach channel.
+
 - 2026-09-29 11:45–15:30 UTC (owner online):
   - Google Ads read-only: the owner **enabled E8** and it is eligible. The end date is still 1 Oct; he was asked again to move it to 6 Oct.
   - At his request the operator reviewed the Search Console queries and built the free virtual staging cost calculator (s51).

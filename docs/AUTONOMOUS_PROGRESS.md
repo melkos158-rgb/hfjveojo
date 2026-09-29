@@ -22,7 +22,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 **Owner away 27 Sep – ~1 Oct.** Scheduled check-ins every ~6 h. Rules are in `OPERATOR.md` → "Owner away".
 
 0. (P0, now) **Acquisition channels (2026-09-26).**
-   - Google Ads E8: **restricted by Google since it was published, never served** (found 2026-09-27 05:10 UTC). Resume fails for the owner too with `CAMPAIGN_ERROR_CANNOT_ACTIVATE_RESTRICTED_CAMPAIGN`. The account's EU political-ads declaration was answered "yes" and has to become "No"; after that, retry, then support chat. €30 balance untouched (`docs/GOOGLE_ADS_EXPERIMENT.md`). The operator may not edit the live campaign or the owner's declarations.
+   - Google Ads E8: advertiser verification **passed on 29 Sep**, and the owner enabled the campaign at about 11:45 UTC. It is **serving**: by 17:05 UTC the site had its first ad traffic, 3 page views in 2 sessions with a Google Ads click id, and no intake or checkout yet. The end date is still 1 Oct; the owner is asked to move it to 6 Oct. Evaluation on 7 Oct 05:03 UTC (`docs/GOOGLE_ADS_EXPERIMENT.md`). The operator may not edit the live campaign or the owner's declarations, and the landing page `/tools/virtual-staging` stays unchanged while the test runs.
    - Fiverr gig E13 Active (`docs/FIVERR_EXPERIMENT.md`). Only Manage Orders proves an order.
    - Every day: channel metrics, the ledger and the spend register in `docs/BUSINESS_METRICS.md` (90-day reinvestment policy: no withdrawals until day 91, 2026-12-25).
 1. (P0, owner) First real order — e.g. the $9 Listing Description — to see Stripe's live card form, the receipt and the delivery end to end (the operator may not open live Checkout pages: the safety classifier treats it as a real-world transaction). Then start outreach: payments are live.
@@ -144,7 +144,8 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-09-27 05:05 UTC — `5c2b514` live (Railway success 00:35 UTC). `/api/health`: ok, db up, 0 queued / 0 running / 0 failed jobs, worker ticking. `/admin/analytics` (30 days): 0 paid orders; delivered / review / failed 0 / 0 / 0. Stripe checkouts: **LIVE** since 2026-09-26 18:50 UTC+2. GA4 inactive until the measurement id is set.
+- Last verified: 2026-09-29 17:05 UTC — `422cb5c` live (Railway success). `/api/health`: ok, db up, 0 queued / 0 running / 0 failed jobs, worker ticking. `/admin/analytics` (30 days): 514 page views / 49 sessions, 0 paid orders; delivered / review / failed 0 / 0 / 0. Stripe checkouts: **LIVE** since 2026-09-26 18:50 UTC+2. GA4 inactive until the measurement id is set.
+- Earlier: 2026-09-27 05:05 UTC — `5c2b514` live (Railway success 00:35 UTC), the same health and order counts.
 - Check-in note: order rows on `/admin/orders` are not read by the operator (the safety check flags it as personal-data handling). The check-in uses the aggregate counts on `/admin/analytics` and the job counts from `/api/health`; order details are the owner's view.
 - Earlier (2026-09-26 18:20 UTC+2): `faa9882` checked (multi-room form, per-photo prices, admin order pages); disclosure pack, sandbox webhook probe end to end, sandbox checkout reaches Stripe, analytics KPIs, free-preview UI.
 - Known warnings in logs: none open.
@@ -157,6 +158,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `422cb5c` (2026-09-29 15:32 UTC): free virtual staging cost calculator. CI green; **Railway "Success - orvionis.com"** (confirmed at 17:05 UTC).
+  - Railway started the deploy 7 minutes after the push and posted "pending" for a long time. The new instance was already serving: `/api/health` ok with a new worker id, and `/free/virtual-staging-cost-calculator` live (H1, $75 for 5 photos).
+  - 17:05 UTC: `/admin/system` shows IndexNow **HTTP 200, 3 URLs at 16:00** (the calculator, `/free`, `/real-estate`). Search Console: indexing requested for the calculator ("URL is not on Google" before the request).
 - `e3e7de9` (2026-09-29 00:07 UTC): sixth guide + $29 tool page links. CI green, Railway success.
   - Live: `/api/health` ok on the new instance; the guide renders (H1, $29 CTA); `/sitemap.xml` dates the guide and `/tools/photographer-pricing-guide` 2026-09-29.
   - Next: at the 05:03 check-in `/admin/system` should show IndexNow sending those URLs plus `/guides`, and Search Console should get an indexing request for the guide.

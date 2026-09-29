@@ -24,7 +24,7 @@ Each experiment has a hypothesis, a test, one metric, a status, a result and a d
 
 | ID | Hypothesis | Test | Cost | Owner action? |
 | --- | --- | --- | --- | --- |
-| E8 | High-intent search traffic for "virtual staging" converts at ≥ 2 % at $15/photo | **Published 2026-09-26 22:15 but paused since creation — has not served** (found 27 Sep 05:10 UTC): Search, US, 15 exact/phrase keywords, 1 RSA, Maximize clicks ≤ €1.50, **campaign total €30 for 26 Sep – 1 Oct** (`docs/GOOGLE_ADS_EXPERIMENT.md`); owner enables it, adds negatives + turns off auto-apply | €30 | yes — enable (asked 27 Sep 05:12 UTC) |
+| E8 | High-intent search traffic for "virtual staging" converts at ≥ 2 % at $15/photo | **Serving since 29 Sep ≈ 11:45 UTC.** Google restricted it until advertiser verification passed on 29 Sep; then the owner enabled it. Search, US, 15 exact/phrase keywords, 1 RSA, Maximize clicks ≤ €1.50, **campaign total €30**, end date still 1 Oct (`docs/GOOGLE_ADS_EXPERIMENT.md`). First data at 17:05 UTC: 2 ad sessions, 0 checkouts | €30 | yes — move the end date to 6 Oct; negatives + auto-apply off |
 | E9 | 20 personal DMs per day to agents with vacant or new listings produce the first paid orders within 7 days | `docs/OUTREACH.md` templates (EN, with UA control copy), UTM per template, log the hours | ~30 min/day of founder time | yes — sent from the owner's accounts |
 | E10 | Long-tail guides bring organic visitors who use the free tools and buy | guides (AB 723, photo tips, fair-housing wording), free tools linked to paid tools | operator time | no |
 | E11 | "Remove furniture / declutter" sells next to staging. Incumbent: BoxBrownie item removal US$10 standard, US$5 minor | concierge-first: offer it by hand to the first staging customers, automate once 3 are sold | ~0 | no |
@@ -40,6 +40,7 @@ None yet.
 
 ## Log
 
+- 2026-09-29 17:05 UTC — **E8 is serving.** The site's first ad traffic: channel `google` 3 page views in 2 sessions. No intake, preview or checkout yet. Google's own numbers were not readable (the date picker froze in the hidden window). The staging cost calculator is live and indexing was requested; IndexNow sent its 3 URLs at 16:00.
 - 2026-09-29 15:15 UTC — **E10/E4: free virtual staging cost calculator** (`/free/virtual-staging-cost-calculator`). The owner asked to look at the Search Console queries and decide on a new feature.
   - Evidence, Search Console 28 days to 27 Sep plus the last 24 h:
     - the photography pricing calculator family ranks best ("photography pricing calculator" position 7.8, the real estate variant 14.7, the wedding variant 29);
