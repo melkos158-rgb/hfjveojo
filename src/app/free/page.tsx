@@ -4,7 +4,7 @@ import { FREE_TOOLS } from "@/config/free-tools";
 
 export const metadata: Metadata = {
   title: "Free tools",
-  description: "Small, useful tools that run in your browser: a fair-housing checker for listing copy and a photography pricing calculator. No sign-up.",
+  description: "Small, useful tools that run in your browser: a fair-housing checker for listing copy, a virtual staging cost calculator and a photography pricing calculator. No sign-up.",
   alternates: { canonical: "/free" },
 };
 

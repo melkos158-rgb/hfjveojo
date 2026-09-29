@@ -25,7 +25,10 @@ export const CATEGORIES: CategoryInfo[] = [
     title: "Real estate",
     live: ["Raw walkthrough → 5 listing clips", "Listing facts → MLS description + social captions", "Empty room photo → 2 virtually staged versions"],
     planned: ["Listing files → marketing package", "Floor plan sketch → clean 2D floor plan"],
-    free: [{ label: "Fair housing checker — paste your remarks, see risky phrases and your character count", href: "/free/fair-housing-checker" }],
+    free: [
+      { label: "Fair housing checker — paste your remarks, see risky phrases and your character count", href: "/free/fair-housing-checker" },
+      { label: "Virtual staging cost calculator — what your listings cost with human editors, AI subscriptions or pay-per-photo AI", href: "/free/virtual-staging-cost-calculator" },
+    ],
     cta: "See real-estate tools",
   },
   {

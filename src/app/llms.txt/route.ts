@@ -36,6 +36,7 @@ export async function GET(): Promise<Response> {
     "## Free tools",
     "",
     `- [Fair housing checker](${url("/free/fair-housing-checker")}): paste listing remarks to see risky fair-housing phrases with a rewrite hint and a character count; runs in the browser, no sign-up.`,
+    `- [Virtual staging cost calculator](${url("/free/virtual-staging-cost-calculator")}): photos per listing and listings per month → the cost with human editors, AI subscriptions and pay-per-photo AI, from published prices with sources; runs in the browser.`,
     `- [Photography pricing calculator](${url("/free/photography-pricing-calculator")}): the minimum price per job and per hour from your income target, costs, tax rate and hours, with real estate, wedding, portrait and commercial examples and sourced US market rates for wedding and real estate photography; runs in the browser.`,
     "",
     "## Policies",

@@ -98,6 +98,11 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
   Checklist in `docs/LEGAL_FLAGS.md`.
 - 2026-09-27 00:20 UTC: **SEO audit + fixes** (SEO-AEO-GEO Ultimate plugin; `docs/SEO_AUDIT.md`): metadata always in `<head>` (was in `<body>` for Googlebot/AI crawlers on 12 pages), www → apex 308, WebSite + Organization graph, current titles/descriptions, flagship in nav/footer, cost-guide cross-links, AI answer on the flagship, `/llms.txt` from the live catalog. `a929437`: own site no longer counted as a channel (verified in production).
+- 2026-09-29 15:15 UTC: **free virtual staging cost calculator** (`/free/virtual-staging-cost-calculator`, E10/E4), chosen from the Search Console queries at the owner's request.
+  - Pure comparison logic in `src/lib/free/staging-cost.ts` (tested): per-photo options, the smallest Virtual Staging AI plan for the volume, NAR physical-staging median, and the cheapest choice for a one-off listing and for every month.
+  - The page has a FAQ (FAQPage), sources checked 29 Sep and an OG card. It is listed on `/free`, `/real-estate` and `llms.txt`, with PAGE_UPDATED times so IndexNow sends only the changed URLs.
+  - 135 tests pass; a new test checks that every free tool has a page and a sitemap entry. The mobile overflow found in the local check was fixed (`min-w-0`).
+  - The E8 landing page is untouched.
 - 2026-09-29 00:05 UTC: **sixth guide, "What to put in a photography pricing guide: a checklist"** (E10/E2).
   - Eight sections, the mistakes to avoid, and one sourced number (The Knot's $3,000 average).
   - Links to the free calculator and the $29 tool; the $29 tool page links back through the definition's `guides`.

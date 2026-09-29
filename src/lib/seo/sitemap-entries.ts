@@ -22,6 +22,9 @@ export const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
 export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
   "/tools/photographer-pricing-guide": "2026-09-29",
+  "/free/virtual-staging-cost-calculator": "2026-09-29T15:00:00Z",
+  "/free": "2026-09-29T15:00:00Z",
+  "/real-estate": "2026-09-29T15:00:00Z",
 };
 
 const later = (a: Date, b: Date) => (b.getTime() > a.getTime() ? b : a);
@@ -48,7 +51,7 @@ export function sitemapEntries(baseUrl: string = site.url): MetadataRoute.Sitema
   const hub = GUIDES.reduce((d, g) => later(d, guideLastModified(g)), CONTENT_UPDATED);
   const page = (p: string, lastModified: Date) => ({ url: `${baseUrl}${p}`, lastModified, changeFrequency: "weekly" as const, priority: p === "" ? 1 : 0.7 });
   return [
-    ...["", "/tools", "/pricing", "/real-estate", "/photographers", "/free", "/free/fair-housing-checker", "/free/photography-pricing-calculator"].map((p) =>
+    ...["", "/tools", "/pricing", "/real-estate", "/photographers", "/free", "/free/fair-housing-checker", "/free/virtual-staging-cost-calculator", "/free/photography-pricing-calculator"].map((p) =>
       page(p, pageLastModified(p)),
     ),
     page("/guides", hub),

@@ -97,6 +97,10 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-29 11:45–15:30 UTC (owner online):
+  - Google Ads read-only: the owner **enabled E8** and it is eligible. The end date is still 1 Oct; he was asked again to move it to 6 Oct.
+  - At his request the operator reviewed the Search Console queries and built the free virtual staging cost calculator (s51).
+
 - 2026-09-29 11:22–11:40 UTC (scheduled check-in, Fiverr day):
   - Production healthy.
   - Analytics: 511 / 47 visits, 0 paid.

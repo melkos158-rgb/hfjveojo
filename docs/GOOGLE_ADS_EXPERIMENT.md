@@ -212,6 +212,10 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-29 ≈ 11:50 UTC (owner asked "look at Google Ads now", read-only): **the owner enabled E8.**
+  - The campaign row has a green status dot, "Відповідає вимогам" (eligible), €30 total.
+  - The dates are still **26 Sep – 1 Oct 2026**; the end date was not moved. Asked again to move it to 6 Oct, so the €30 is not paced into about two days.
+  - Ad status and today's numbers were not read yet (the ads page was still loading).
 - 2026-09-29 11:25 UTC (check-in, read-only): **verification passed.**
   - Policy → Account: every task completed ("Ви надіслали документи", answer sent 29 Sep); the disclosure card shows "Advertiser identity verified".
   - Ads table: the RSA reads "Не відповідає вимогам · Кампанію призупинено" (quality "Добре"), 0 impressions, €0.

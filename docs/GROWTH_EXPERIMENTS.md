@@ -40,6 +40,18 @@ None yet.
 
 ## Log
 
+- 2026-09-29 15:15 UTC — **E10/E4: free virtual staging cost calculator** (`/free/virtual-staging-cost-calculator`). The owner asked to look at the Search Console queries and decide on a new feature.
+  - Evidence, Search Console 28 days to 27 Sep plus the last 24 h:
+    - the photography pricing calculator family ranks best ("photography pricing calculator" position 7.8, the real estate variant 14.7, the wedding variant 29);
+    - staging-price queries show up for our main product: "virtual staging cost" 97, "how much does virtual staging cost" 91, "virtual staging pricing" 2 impressions in 24 h;
+    - "photo licensing fee calculator" 79.
+  - Why this tool: tool pages get impressions fastest for us (the calculator case), and staging price is buyer intent for the $15 product. It is also a second free tool for agents.
+  - What it shows: from photos per listing and listings per month, the cost with a human editor ($24 / $30 per photo), a Virtual Staging AI plan ($16–$79/mo with yearly billing), ORVIONIS ($15), and physical staging (NAR median $1,500).
+  - It reports the cheapest option for a one-off listing and for the same volume every month. It says honestly that a subscription wins at steady volume.
+  - Prices were re-checked on 29 Sep. Linked from `/free`, `/real-estate` and `llms.txt`.
+  - Not linked from the E8 landing page or the cost guide while the ad test runs.
+  - Rejected for now: a photo licensing fee calculator, because there are no citable usage multipliers and it would mean inventing pricing.
+  - Measure: Search Console impressions and positions for staging cost/pricing queries; `free_tool_used` for the tool; `cta_click` from "staging-cost-calculator".
 - 2026-09-29 00:05 UTC — **E10: sixth guide, "What to put in a photography pricing guide: a checklist"** (`/guides/photography-pricing-guide-checklist`, for photographers; supports E2).
   - Eight sections, each with what to include and a tip, plus the mistakes that cost bookings. The checklist is marked as our recommendation.
   - One sourced number: The Knot 2026 Real Weddings Study, $3,000 average, regional $2,600–$3,800.

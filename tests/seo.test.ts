@@ -69,6 +69,18 @@ describe("seo: /llms.txt is built from the live catalog and the guide list", () 
     }
   });
 
+  it("has a page for every free tool, and lists each one in the sitemap", async () => {
+    const { existsSync } = await import("node:fs");
+    const path = await import("node:path");
+    const { FREE_TOOLS } = await import("@/config/free-tools");
+    const { sitemapEntries } = await import("@/lib/seo/sitemap-entries");
+    const urls = new Set(sitemapEntries(site.url).map((e) => e.url));
+    for (const t of FREE_TOOLS) {
+      expect(existsSync(path.join(process.cwd(), "src/app", t.href, "page.tsx")), t.href).toBe(true);
+      expect(urls.has(`${site.url}${t.href}`), t.href).toBe(true);
+    }
+  });
+
   it("lists every live tool with its price, and every guide, as absolute links", async () => {
     const res = await llmsTxt();
     expect(res.headers.get("content-type")).toContain("text/plain");

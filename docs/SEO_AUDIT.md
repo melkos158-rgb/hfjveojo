@@ -204,6 +204,18 @@ Separate metric families, observational only:
   - First-party: `www.google.com` first-touch visits went from 20 to 25 overnight.
   - Indexing requested for `/guides/photography-pricing-guide-checklist` ("unknown to Google" before the request).
   - `/guides/which-rooms-to-virtually-stage` is still "unknown to Google", with yesterday's request pending.
+- **2026-09-29 15:00 UTC — Search Console queries, 28 days (31 Aug – 27 Sep):** 2 clicks, 89 impressions, CTR 2.2%, average position 9.2.
+  - Queries (impressions, position):
+    - "photography pricing calculator" 6, 7.8;
+    - "ride lab" 4, 8.5;
+    - "real estate photography pricing calculator" 3, 14.7;
+    - "orvion" 2, 70;
+    - "wedding photography price calculator" 1, 29;
+    - "photo licensing fee calculator" 1, 79;
+    - "how much does virtual staging cost" 1, 91;
+    - "virtual staging cost" 1, 97.
+  - The last 24 h add "virtual staging pricing" (2).
+  - Decision: a free **virtual staging cost calculator** (details in `docs/GROWTH_EXPERIMENTS.md`). A licensing fee calculator was rejected for lack of citable data.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.
