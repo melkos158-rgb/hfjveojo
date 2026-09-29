@@ -6,6 +6,14 @@ export type Guide = { slug: string; title: string; description: string; audience
 
 export const GUIDES: Guide[] = [
   {
+    slug: "photography-pricing-guide-checklist",
+    title: "What to put in a photography pricing guide: a checklist",
+    description: "The 8 sections a photography pricing guide needs — packages, add-ons, process, booking terms and FAQ — what to write in each, and how to check your prices first.",
+    audience: "Photographers",
+    updated: "2026-09-29",
+    tool: { slug: "photographer-pricing-guide", label: "Photographer Pricing Guide — $29" },
+  },
+  {
     slug: "which-rooms-to-virtually-stage",
     title: "Which rooms should you virtually stage?",
     description: "Buyers' agents rank the living room (37%), primary bedroom (34%) and kitchen (23%) as the rooms that matter most to stage (NAR 2025). A plan for one to six photos, and what to skip.",

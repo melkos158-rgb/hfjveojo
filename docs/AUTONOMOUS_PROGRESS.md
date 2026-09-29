@@ -98,6 +98,11 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
   Checklist in `docs/LEGAL_FLAGS.md`.
 - 2026-09-27 00:20 UTC: **SEO audit + fixes** (SEO-AEO-GEO Ultimate plugin; `docs/SEO_AUDIT.md`): metadata always in `<head>` (was in `<body>` for Googlebot/AI crawlers on 12 pages), www → apex 308, WebSite + Organization graph, current titles/descriptions, flagship in nav/footer, cost-guide cross-links, AI answer on the flagship, `/llms.txt` from the live catalog. `a929437`: own site no longer counted as a channel (verified in production).
+- 2026-09-29 00:05 UTC: **sixth guide, "What to put in a photography pricing guide: a checklist"** (E10/E2).
+  - Eight sections, the mistakes to avoid, and one sourced number (The Knot's $3,000 average).
+  - Links to the free calculator and the $29 tool; the $29 tool page links back through the definition's `guides`.
+  - Tool pages now take their sitemap lastmod from `PAGE_UPDATED` too, and a new test checks that every guide in the list has a page and an existing tool.
+  - 129 tests pass. The E8 landing page is untouched.
 - 2026-09-28 13:30 UTC: **photography pricing calculator page rebuilt for its search queries** (E10; `docs/SEO_AUDIT.md`, first organic signal).
   - New title and description, a real estate preset ($273 floor per shoot) and a highlighted active preset.
   - A sourced "Market check": The Knot 2026 Real Weddings Study ($3,000 average, quartiles, regions), Thumbtack real estate hourly ranges, published rate cards at $150–$350.
@@ -147,6 +152,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `16a0c3a` (2026-09-28 17:12 UTC, docs only): CI green, Railway success; `/api/health` ok on the new instance (0 jobs queued / running / failed, worker ticking).
 - `42f101d` (2026-09-28 13:13 UTC), an empty redeploy commit carrying `c2938ca` (the calculator page).
   - The Railway build of `c2938ca` passed `npm run build` but failed at the image push (13:03 UTC). CI was green (gitleaks, typecheck, tests, build), so the empty commit redeployed it, and Railway reported success.
   - Live: `/api/health` ok (db up, 0 jobs queued / running / failed, worker ticking); the calculator page shows the new title, preset and market section; the sitemap dates it 12:45 UTC.

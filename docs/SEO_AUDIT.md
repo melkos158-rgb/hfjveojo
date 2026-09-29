@@ -193,6 +193,9 @@ Separate metric families, observational only:
     - The same for `/guides/which-rooms-to-virtually-stage`: it was "URL is not on Google: unknown to Google", with no sitemap listing it yet. Request confirmed.
     - Sitemap resubmitted → "Sitemap submitted", 22 pages found (Google had read it on 28 Sep with 21).
     - The Overview chart shows 2 web-search clicks in the last 3 months (mid-August and about 25 Sep).
+- **2026-09-29, sixth guide:** `/guides/photography-pricing-guide-checklist` (photographers), with Article markup and links to the calculator and the $29 tool.
+  - The $29 tool page gained two related links (guide, calculator), so it gets its own lastmod through `PAGE_UPDATED`; tool URLs now read that map too.
+  - Local check: title, a 156-character description, canonical, Article JSON-LD; the sitemap dates the guide, `/guides` and the tool page 29 Sep; `llms.txt` and the hub list it; no horizontal overflow at 390 px.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.

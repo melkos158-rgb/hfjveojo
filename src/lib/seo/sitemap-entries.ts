@@ -21,6 +21,7 @@ export const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
  */
 export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
+  "/tools/photographer-pricing-guide": "2026-09-29",
 };
 
 const later = (a: Date, b: Date) => (b.getTime() > a.getTime() ? b : a);
@@ -55,7 +56,7 @@ export function sitemapEntries(baseUrl: string = site.url): MetadataRoute.Sitema
     ...["/contact", "/terms", "/privacy", "/refund-policy"].map((p) => page(p, pageLastModified(p))),
     ...allTools()
       .filter((t) => t.active !== false)
-      .map((t) => ({ url: `${baseUrl}/tools/${t.slug}`, lastModified: CONTENT_UPDATED, changeFrequency: "weekly" as const, priority: 0.9 })),
+      .map((t) => ({ url: `${baseUrl}/tools/${t.slug}`, lastModified: pageLastModified(`/tools/${t.slug}`), changeFrequency: "weekly" as const, priority: 0.9 })),
   ];
 }
 

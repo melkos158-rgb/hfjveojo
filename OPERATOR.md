@@ -97,6 +97,14 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-28 23:04 – 29 Sep 00:20 UTC (scheduled check-in):
+  - Production healthy.
+  - Analytics: 504 / 41 visits, +1 first-touch visit from `www.google.com` (20 in total); 0 paid.
+  - Google Ads: E8 paused/restricted, €0, verification under review.
+  - Fiverr: not checked (11:03 only).
+  - Built the sixth guide (photography pricing guide checklist) and linked it and the calculator from the $29 tool page. s48, pushed after 00:00 UTC so the 29 Sep dates are not in the future.
+  - Still waiting on the owner's yes/no for turning off the failing "AI operator loop" task.
+
 - 2026-09-28 17:03–17:30 UTC (scheduled check-in + daily summary):
   - Production healthy: `/api/health` ok, 0 jobs queued / running / failed, worker ticking.
   - Analytics unchanged: 502 / 40 visits, 0 paid, AI $0.38.

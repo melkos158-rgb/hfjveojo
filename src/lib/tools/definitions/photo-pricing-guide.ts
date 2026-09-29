@@ -253,6 +253,10 @@ export const photoPricingGuideTool: ToolDefinition<PricingGuideIntake> = {
       { q: "What about my logo?", a: "V1 uses your studio name and brand color in a clean typographic layout. Logo placement is coming next." },
       { q: "Is it legal advice?", a: "No. The policies section restates the policies you provide. Contracts are not included." },
     ],
+    guides: [
+      { href: "/guides/photography-pricing-guide-checklist", label: "What to put in a photography pricing guide" },
+      { href: "/free/photography-pricing-calculator", label: "Free photography pricing calculator" },
+    ],
     ctaLabel: "Create my pricing guide — $29",
     guarantee: "If the guide is unusable, tell us within 7 days and we refund you.",
     deliveryPromise: "Usually ready in under 5 minutes.",

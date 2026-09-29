@@ -273,15 +273,16 @@ describe("sitemap: shared URL list", () => {
     expect(guideLastModified({ updated: "2026-09-28T13:00:00Z" }).toISOString()).toBe("2026-09-28T13:00:00.000Z");
   });
 
-  it("a page update on the day of an accepted submission moves the version and resubmits only the updated pages", async () => {
-    // Production on 28 Sep: the 06:00 UTC submission (new guide, hub, cost guide) was accepted at version 28 Sep 00:00;
-    // the calculator page changed the same afternoon.
+  it("after an accepted submission, a newer lastmod (even on the same day) resubmits only the newer pages", async () => {
+    // Production on 28 Sep: the 06:00 UTC submission was accepted at version 28 Sep 00:00, and the calculator page
+    // (PAGE_UPDATED, 12:45 UTC) changed the same afternoon; only that URL went out at 14:00.
     const entries = sitemapEntries(APP);
-    const pages = new Set(Object.keys(PAGE_UPDATED).map((p) => `${APP}${p}`));
-    const before = contentVersion(entries.filter((e) => !pages.has(e.url)));
+    const times = [...new Set(entries.map((e) => (e.lastModified as Date).getTime()))].sort((a, b) => a - b);
+    expect(times.length).toBeGreaterThan(1);
+    const before = new Date(times[times.length - 2]); // the previous content version
     const expected = entries.filter((e) => (e.lastModified as Date).getTime() > before.getTime()).map((e) => e.url);
     expect(expected.length).toBeGreaterThan(0);
-    expect(expected.every((u) => pages.has(u))).toBe(true);
+    expect(expected.length).toBeLessThan(entries.length);
     const db = fakeDb({ version: before.toISOString(), status: 200, ok: true, at: before.toISOString(), count: 3 });
     const f = fakeFetch();
     const out = await maybeSubmitIndexNow(prod({ db, fetchImpl: f.impl, now: new Date(contentVersion(entries).getTime() + 3600_000) }));

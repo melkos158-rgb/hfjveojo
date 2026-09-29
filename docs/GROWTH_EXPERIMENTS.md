@@ -40,6 +40,13 @@ None yet.
 
 ## Log
 
+- 2026-09-29 00:05 UTC — **E10: sixth guide, "What to put in a photography pricing guide: a checklist"** (`/guides/photography-pricing-guide-checklist`, for photographers; supports E2).
+  - Eight sections, each with what to include and a tip, plus the mistakes that cost bookings. The checklist is marked as our recommendation.
+  - One sourced number: The Knot 2026 Real Weddings Study, $3,000 average, regional $2,600–$3,800.
+  - Leads to the free calculator and the $29 Photographer Pricing Guide (sample PDF link).
+  - The $29 tool page now links to the guide and the calculator (definition data only; the shared tool template and the E8 landing page are unchanged).
+  - Sitemap: the guide, `/guides` and `/tools/photographer-pricing-guide` are dated 29 Sep, so IndexNow sends only those.
+  - Measure: Search Console impressions for "photography pricing guide" queries from 6 Oct; `cta_click` to the $29 tool.
 - 2026-09-28 13:30 UTC — **E10: the photography pricing calculator page, rebuilt for its query family** (`/free/photography-pricing-calculator`).
   - Why: it is the first ORVIONIS page with organic demand in Search Console. "photography pricing calculator" has 3 impressions at position 7.3, the real estate variant 14.5, the wedding variant 29, and 0 clicks.
   - Shipped:

@@ -177,6 +177,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-28 (to 05:10 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 11:20 UTC) — restricted by Google | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 17:10 UTC) — restricted; verification documents under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-28 (to 23:10 UTC) — paused/restricted; verification under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -201,6 +202,9 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-28 23:10 UTC (check-in, read-only): E8 status "Призупинено" (paused), €0.00; "Submit your documents — Under review: usually takes 3–5 business days".
+  - The campaign settings page still shows the €30 campaign total and dates 26 Sep – 1 Oct.
+  - Google's help confirms the budget type can't change after creation. It does not say whether the end date of a campaign-total budget can be moved; check that when enabling, with the owner.
 - 2026-09-28 17:10 UTC (check-in, read-only): the campaign table shows E8 with €30 (total), 26 Sep – 1 Oct, 0 impressions, 0 clicks, €0.00. Policy → Account: documents "under review". Nothing for the owner to do until Google decides.
 - 2026-09-28 ≈ 14:00 UTC: **the owner submitted the documents** (Ukrainian ID card as "Посвідчення особи державного зразка", which is Google's "passport in card form"; address as in the payments profile).
   - Policy → Account now reads "Submit your documents — Under review: usually takes 3–5 business days", so a decision is expected Thu 1 Oct to Mon 5 Oct.

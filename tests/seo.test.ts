@@ -56,6 +56,19 @@ describe("seo: /llms.txt is built from the live catalog and the guide list", () 
     await resetDatabase();
   });
 
+  it("has a page for every guide in the list, and every guide's tool exists", async () => {
+    const { existsSync } = await import("node:fs");
+    const path = await import("node:path");
+    const { allTools } = await import("@/lib/tools/registry");
+    const slugs = new Set(allTools().map((t) => t.slug));
+    expect(new Set(GUIDES.map((g) => g.slug)).size).toBe(GUIDES.length);
+    for (const g of GUIDES) {
+      expect(existsSync(path.join(process.cwd(), "src/app/guides", g.slug, "page.tsx")), g.slug).toBe(true);
+      expect(g.updated, g.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      if (g.tool) expect(slugs.has(g.tool.slug), `${g.slug} → ${g.tool.slug}`).toBe(true);
+    }
+  });
+
   it("lists every live tool with its price, and every guide, as absolute links", async () => {
     const res = await llmsTxt();
     expect(res.headers.get("content-type")).toContain("text/plain");
