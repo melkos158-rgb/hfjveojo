@@ -57,6 +57,13 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep and never served, €0 spent: restricted by Google until advertiser verification passes (documents under review since 28 Sep). The test window moves: evaluate after 7 days of serving or when €30 is spent, by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
 
+## Snapshot — 2026-09-29 05:10 UTC (last 30 days, `/admin/analytics`)
+
+- 509 / 46 visits and sessions: direct 478, **`www.google.com` 25 (+5 overnight)**, Gmail app 6.
+- Funnel 3 → 7 → 0; $0 revenue; AI $0.38; delivered / review / failed 0 / 0 / 0.
+- Virtual Staging views 14 (+1).
+- Google Ads €0 (verification under review).
+
 ## Snapshot — 2026-09-28 17:10 UTC (last 30 days, `/admin/analytics`; at 23:10: 504 / 41 visits, `www.google.com` 20 first-touch visits (+1), still 0 paid)
 
 Unchanged since 11:20:

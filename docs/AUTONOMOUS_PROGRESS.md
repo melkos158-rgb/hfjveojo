@@ -152,6 +152,9 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## LAST VERIFIED COMMIT
 
+- `e3e7de9` (2026-09-29 00:07 UTC): sixth guide + $29 tool page links. CI green, Railway success.
+  - Live: `/api/health` ok on the new instance; the guide renders (H1, $29 CTA); `/sitemap.xml` dates the guide and `/tools/photographer-pricing-guide` 2026-09-29.
+  - Next: at the 05:03 check-in `/admin/system` should show IndexNow sending those URLs plus `/guides`, and Search Console should get an indexing request for the guide.
 - `16a0c3a` (2026-09-28 17:12 UTC, docs only): CI green, Railway success; `/api/health` ok on the new instance (0 jobs queued / running / failed, worker ticking).
 - `42f101d` (2026-09-28 13:13 UTC), an empty redeploy commit carrying `c2938ca` (the calculator page).
   - The Railway build of `c2938ca` passed `npm run build` but failed at the image push (13:03 UTC). CI was green (gitleaks, typecheck, tests, build), so the empty commit redeployed it, and Railway reported success.

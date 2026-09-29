@@ -97,6 +97,15 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-29 05:04–05:25 UTC (scheduled check-in):
+  - Production healthy.
+  - Analytics: 509 / 46 visits, `www.google.com` 25 (+5 overnight); 0 paid.
+  - IndexNow accepted 3 URLs at 01:00.
+  - Search Console, 24 h: 23 impressions, 1 click; staging-price queries are appearing. Indexing requested for the sixth guide.
+  - Google Ads: verification under review, campaign paused, €0.
+  - The owner's Chrome disconnected during the Ads campaign-table read; nothing else was affected.
+  - s48 (`e3e7de9`) was verified at 00:07.
+
 - 2026-09-28 23:04 – 29 Sep 00:20 UTC (scheduled check-in):
   - Production healthy.
   - Analytics: 504 / 41 visits, +1 first-touch visit from `www.google.com` (20 in total); 0 paid.

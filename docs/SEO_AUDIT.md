@@ -196,6 +196,14 @@ Separate metric families, observational only:
 - **2026-09-29, sixth guide:** `/guides/photography-pricing-guide-checklist` (photographers), with Article markup and links to the calculator and the $29 tool.
   - The $29 tool page gained two related links (guide, calculator), so it gets its own lastmod through `PAGE_UPDATED`; tool URLs now read that map too.
   - Local check: title, a 156-character description, canonical, Article JSON-LD; the sitemap dates the guide, `/guides` and the tool page 29 Sep; `llms.txt` and the hub list it; no horizontal overflow at 390 px.
+- **2026-09-29 05:10 UTC check:**
+  - IndexNow: **HTTP 200 · 3 URLs at 01:00** (the sixth guide, `/guides`, the $29 tool page).
+  - Search Console, last 24 h: 1 click, 23 impressions, average position 24.4.
+    - Queries: "virtual staging pricing" 2, "photography pricing calculator" 1, "real estate photography pricing calculator" 1, "photo licensing fee calculator" 1, "how much does virtual staging cost" 1, "virtual staging cost" 1.
+    - Staging-price queries now appear alongside the calculator family.
+  - First-party: `www.google.com` first-touch visits went from 20 to 25 overnight.
+  - Indexing requested for `/guides/photography-pricing-guide-checklist` ("unknown to Google" before the request).
+  - `/guides/which-rooms-to-virtually-stage` is still "unknown to Google", with yesterday's request pending.
 - **provider-outcome-pending:** crawling/indexing of the requested URLs, the new home title in results, the Ride Lab
   removals ("Processing" → "Approved"), Bing coverage. Check Search Console → Pages/Removals and `site:orvionis.com` in
   2–7 days.
