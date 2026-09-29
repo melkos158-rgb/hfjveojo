@@ -54,8 +54,14 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Date | Item | Reason | Hypothesis | Expected outcome | Metric | Limit | Status / result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep and never served, €0 spent: restricted by Google until advertiser verification passes (documents under review since 28 Sep). The test window moves: evaluate after 7 days of serving or when €30 is spent, by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
+| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep and never served, €0 spent. Advertiser verification **passed 29 Sep**, and the owner is asked to move the end date to 6 Oct and enable the campaign. Evaluation on 7 Oct (or when €30 is spent), by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
+
+## Snapshot — 2026-09-29 11:25 UTC
+
+- 511 / 47 visits and sessions; funnel 3 → 7 → 0; $0 revenue; AI $0.38; delivered / review / failed 0 / 0 / 0.
+- Fiverr Manage Orders 0.
+- Google Ads: **advertiser verification passed**; the campaign is paused until the owner enables it, €0.
 
 ## Snapshot — 2026-09-29 05:10 UTC (last 30 days, `/admin/analytics`)
 

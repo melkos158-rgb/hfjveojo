@@ -97,6 +97,13 @@ Still the owner's (account sign-in is not something the operator does):
 
 ## Session log
 
+- 2026-09-29 11:22–11:40 UTC (scheduled check-in, Fiverr day):
+  - Production healthy.
+  - Analytics: 511 / 47 visits, 0 paid.
+  - Fiverr: Manage Orders 0; the seller dashboard is now behind Fiverr's human check too, so from now on Manage Orders only.
+  - **Google Ads: advertiser verification passed.** The owner was asked by chat + push to move the end date to 6 Oct, enable E8 and turn auto-apply off.
+  - The E8 evaluation task moved to 7 Oct 05:03 UTC.
+
 - 2026-09-29 05:04–05:25 UTC (scheduled check-in):
   - Production healthy.
   - Analytics: 509 / 46 visits, `www.google.com` 25 (+5 overnight); 0 paid.

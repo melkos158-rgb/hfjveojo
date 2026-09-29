@@ -106,6 +106,14 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 
 ## STATUS
 
+**Advertiser verification PASSED on 2026-09-29** (seen 11:25 UTC). Policy → Account lists every task as completed: the organization questions, documents "submitted 29 Sep", EU political ads "no", the payer. The disclosure card reads "Advertiser identity verified · MELNYK KOSTIANTYN · UA".
+- The campaign is still **paused** (ad: "Не відповідає вимогам · Кампанію призупинено", quality "Good"), and its end date is still 1 Oct.
+- The owner was asked by chat and push at 11:30 UTC for three things:
+  - move the end date to **6 Oct 2026** (Settings → Other settings → Start and end dates), keeping the €30 total;
+  - **enable** the campaign;
+  - turn auto-apply recommendations off.
+- The E8 final evaluation is rescheduled to **7 Oct 05:03 UTC**. If enabling still fails, the next step is Google Ads support.
+
 **The campaign is PAUSED and has never served** (found 2026-09-27 05:10 UTC, read-only):
 - the campaign's status icon reads "Призупинено" (paused);
 - the ad reads "Не відповідає вимогам · Кампанію призупинено" (not eligible, campaign paused);
@@ -179,6 +187,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-28 (to 17:10 UTC) — restricted; verification documents under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-28 (to 23:10 UTC) — paused/restricted; verification under review | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 05:10 UTC) — verification "Розглядається" (under review); campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
+| 2026-09-29 (to 11:25 UTC) — **verification passed**; campaign still paused (owner to enable) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 
 ## DECISION RULES
 
@@ -203,6 +212,12 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 - 2026-09-26 23:04 UTC: read-only check. Eligible (learning), no impressions yet, €0 spent; no negatives in the change history. Owner away until ~1 Oct: daily read-only checks continue.
 - 2026-09-27 ~00:20 UTC: landing page `/tools/virtual-staging` updated with the SEO release, **before the first impression** (0 at the last check). New title/description, an FAQ answer "Is this AI virtual staging?", a link to the cost guide; offer, price and order form unchanged. From here the page stays constant until the 1 Oct evaluation.
 - 2026-09-27 05:10 UTC (check-in, read-only): **the campaign is paused and has never served.** Evidence: the campaign status icon, the ad status ("campaign paused") and the account banner. Change history holds only the publish batch (no pause event); billing balance €30.00, cost €0. The 23:04 "eligible (learning)" reading was wrong. Owner asked to enable it, plus the negatives and auto-apply off, by chat and push (05:12). The test window shrinks: until he enables it, E8 is not running.
+- 2026-09-29 11:25 UTC (check-in, read-only): **verification passed.**
+  - Policy → Account: every task completed ("Ви надіслали документи", answer sent 29 Sep); the disclosure card shows "Advertiser identity verified".
+  - Ads table: the RSA reads "Не відповідає вимогам · Кампанію призупинено" (quality "Добре"), 0 impressions, €0.
+  - Owner asked by chat + push to move the end date to 6 Oct, enable the campaign and turn auto-apply off.
+  - The E8 evaluation task moved from 2 Oct to 7 Oct 05:03 UTC.
+  - Note: the campaign settings page still freezes when scrolled to "Other settings" in the hidden window, so the operator did not see the date editor.
 - 2026-09-29 05:10 UTC (check-in, read-only): Policy → Account shows the documents "Розглядається (зазвичай від 3 до 5 робочих днів)", i.e. under review. The campaign table was not read: the owner's Chrome disconnected mid-check. The campaign is paused, so it cannot spend.
 - 2026-09-28 23:10 UTC (check-in, read-only): E8 status "Призупинено" (paused), €0.00; "Submit your documents — Under review: usually takes 3–5 business days".
   - The campaign settings page still shows the €30 campaign total and dates 26 Sep – 1 Oct.
@@ -268,10 +283,11 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 ## NEXT EXACT ACTION
 
-1. Every check-in: read Policy → Account (documents "under review" since 28 Sep ≈ 14:00 UTC, 3–5 business days) and the campaign status icon, read-only.
-   - When verification is approved: see whether Resume is possible (the restriction lifted).
-   - Then send the owner the exact clicks: enable the campaign, move the end date ~7 days past the first serving day, €30 total unchanged.
-   - Remind only in the daily summary unless the approval arrives, which is worth one message.
+1. Every check-in: is the campaign enabled and serving?
+   - Read the status icon, the ad status, impressions, clicks, cost and the search terms (read-only).
+   - If it is still paused, remind the owner in the daily summary only (he was asked on 29 Sep 11:30).
+   - If he reports an error on enabling, draft the Google Ads support message.
+   - Once it serves: METRICS every check-in; list new negative keywords for the owner from the search terms (DECISION RULES).
 2. After the owner enables it: confirm the status icon, then the first impressions and clicks, and the search terms report (add negatives through the owner). Check that the negatives and auto-apply changes are visible.
 3. Every day until 1 Oct: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES.
 4. 1 Oct: final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
