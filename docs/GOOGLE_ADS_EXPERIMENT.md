@@ -48,7 +48,9 @@ Exact and phrase match, high intent:
 
 ### Negative keywords
 
-software, app, apps, free, jobs, job, career, careers, hiring, salary, tutorial, how to, course, training, diy, download, template, photoshop, blender, 3d model, matterport, virtual tour.
+software, app, apps, free, jobs, job, career, careers, hiring, salary, tutorial, how to, course, training, diy, download, template, photoshop, blender, 3d model, matterport, virtual tour, what is.
+
+Status 29 Sep 23:10 UTC: **not added yet**. "free home staging software" got a click. "what is" was added to the list after "what is virtual staging" showed.
 
 ### Ads
 
@@ -105,6 +107,18 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 - **Ad spend** is logged as a channel cost in `/admin/experiments`, so the profit estimate subtracts it.
 
 ## STATUS
+
+**First serving day, read at 2026-09-29 23:10 UTC** (account day 29 Sep, GMT+3; "last 30 days" now covers it):
+- **37 impressions, 8 clicks, €11.69 spent** (of the €30 total). CTR 21.62 %, average CPC €1.46, close to the €1.50 cap.
+- Site (`/admin/analytics`, channel `google`): 18 page views. No intake, preview or checkout from ad visitors (funnel still 3 → 7 → 0).
+- Search terms, 4 visible:
+  - "free home staging software": 1 click, €1.48. A DIY-software search, so **the planned negatives are not in place**.
+  - "what is virtual staging", "free virtual staging for realtors" and "room staging": 1 impression each, 0 clicks.
+  - Google hides the rest as "other search terms": 7 clicks, 33 impressions, €10.21.
+- Pace: €11.69 in about 9 hours. With the end date still 1 Oct, the remaining €18.31 will go on 30 Sep – 1 Oct.
+- Asked of the owner (chat message and an owner-update email):
+  - add the negative list, plus "what is";
+  - the end date now matters less than the negatives.
 
 **E8 is enabled and serving (2026-09-29 17:05 UTC, read-only).** The owner enabled it at about 11:45 UTC.
 - Campaigns table: green status dot, "Відповідає вимогам" (eligible), €30 total, dates still **26 Sep – 1 Oct**. An account alert reads "1 campaign will end soon".
@@ -195,6 +209,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-29 (to 05:10 UTC) — verification "Розглядається" (under review); campaign paused | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 11:25 UTC) — **verification passed**; campaign still paused (owner to enable) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 17:05 UTC) — **enabled ≈ 11:45, serving**; Google's report not readable (date picker frozen) | not read | not read | site: 2 ad sessions, 3 page views | — | — | 0 | 0 | $0 | $0 | — | — |
+| **2026-09-29, full account day (GMT+3), read 23:10 UTC** | **€11.69** | **37** | **8** | 21.62 % | €1.46 | 0 | 0 | $0 | −€11.69 | 0 | — |
 
 ## DECISION RULES
 
@@ -206,6 +221,12 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-09-29 23:10 UTC (check-in, read-only): **first-day numbers.**
+  - Campaigns table ("last 30 days" = 26–29 Sep): 37 impressions, 8 clicks, €11.69, CTR 21.62 %, CPC €1.46.
+  - Search terms report (`/aw/keywords/searchterms`): "free home staging software" 1 click (€1.48); three more terms at 1 impression each; "other search terms" 7 clicks, €10.21.
+  - The negatives were never added, as the "free … software" click shows. The list goes to the owner again, with "what is" added.
+  - Site: channel `google` 18 page views, Virtual Staging views 16 → 28, no intake, preview or checkout.
+  - `get_page_text` is now refused on ads.google.com ("Permission denied for reading page content on this domain"); screenshots and `find` still work.
 - 2026-09-26: business info entered truthfully:
   - owner's description;
   - services Virtual staging, Real Estate, Interior Design, Photographic & Digital Arts (irrelevant software/electronics categories removed);
@@ -308,7 +329,9 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 2. Is the end date still 1 Oct? Remind the owner in the daily summary (asked on 29 Sep at 11:30 and 17:05). A campaign-total budget paced into three days may spend fast. The €30 cap holds either way.
 3. Every day until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
 4. 7 Oct 05:03 UTC (or when €30 is spent): final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
+5. At the last check-in (1 Oct 17:03 UTC), look at the end date. If it is still 1 Oct, the money runs out that day. Then move the evaluation task (trig_0157xqpW4GE2QDXcSZNQQ7wA) to 2 Oct 05:03 UTC and tell the owner.
+6. Every check-in: have the negatives appeared? Check the change history, or whether "free … software" stops showing in the search terms.
 
 ## TIMESTAMP
 
-2026-09-29 17:30 UTC
+2026-09-29 23:20 UTC

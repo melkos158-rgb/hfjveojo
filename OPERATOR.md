@@ -107,6 +107,13 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-09-29 23:04–23:35 UTC (scheduled check-in):
+  - Production healthy on `91e2a77`.
+  - Analytics: 540 / 70, 0 paid.
+  - **Google Ads day 1: 8 clicks, €11.69, 0 checkouts.** A "free home staging software" click shows the negatives are missing.
+  - Facebook: SoCal post has 1 comment (reply drafted), Northern California has 0, All Realtors is still pending.
+  - Owner update #2 (negatives, numbers, the comment) committed for email. A chat message was left too, with no push at night.
+
 - 2026-09-29 ≈ 19:25 UTC: the owner offered a Telegram chat with his second number as the channel for questions. **Not used.** Sending from his account needs his OK for each message, operating Telegram needs his computer awake, and it would expose his private chats. The channel stays SendUserMessage plus push; he was asked to allow notifications for the Claude app. His screenshot showed his ID document, so he was advised not to share such screenshots. No number or document detail is recorded anywhere.
 
 - 2026-09-29 17:04–17:40 UTC (scheduled check-in, daily summary):

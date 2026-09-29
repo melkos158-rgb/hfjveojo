@@ -187,7 +187,15 @@ Not for promotion:
   - Northern California is live, with the guide's link card: https://www.facebook.com/groups/RealtorsGroup/posts/3270337369822424/
   - Both had 0 comments and 0 reactions so far.
   - All Realtors: **pending**. The admins review new members' posts ("Ваш запит на перевірку все ще на розгляді"). Leave it; never press "Скасувати перевірку".
+  - 23:10 UTC, about 4 hours in:
+    - SoCal Professionals has **1 comment**, a generic compliance remark that may be an engagement account. A reply was drafted for the owner (below).
+    - Northern California: 0 comments, 0 reactions.
+    - All Realtors: still waiting for admin review.
+    - No new Facebook visits since 19:16.
   - `/admin/analytics`: 529 / 63 (was 514 / 49 at 17:05). First Facebook traffic: `fb_group` 6 page views, plus `m.facebook.com` 2 and `www.facebook.com` 3 without the tag; some may be the owner's own clicks. `google` (ads) rose from 3 to 7 page views. Funnel unchanged (3 → 7 → 0), 0 paid.
+
+Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
+> Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
 
 Question variant used for Northern California:
 > NorCal agents, a practical AB 723 question: how are you handling the disclosure on virtually staged photos? / Since January 1, 2026, a staged or otherwise digitally altered listing photo needs a disclosure next to it and access to the original. Bay East, for example, asks for the label ("altered", "digitally altered" or "AI altered") and the original uploaded right after the staged photo. / I put the rules and a 7-step checklist on one page, with sources: [guide link with `utm_source=fb_group&exp=e4-virtual-staging`] / I also run a virtual staging service ($15 a photo) that hands you the labeled copies, a public page with the original and a QR code. Curious what your brokerage tells you to do.
