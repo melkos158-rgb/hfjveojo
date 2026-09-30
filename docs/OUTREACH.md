@@ -211,6 +211,11 @@ Not for promotion:
   - Northern California: 0 reactions, 0 comments. All Realtors: the membership review was still pending at 13:05.
   - `/admin/analytics`: `fb_group` 6 → 13 page views between 13:05 and 17:05, no intake.
   - The California Real Estate and SoCal RE & Services feeds are mostly spam (job offers, "investor" posts), so few working agents read them. Future posts go first to the groups with real discussion (SoCal Professionals, Northern California).
+- 30 Sep ≈ 22:20 UTC (the owner asked to look at the posts), read-only. **Correction to the 17:00 entry: none of the day-2 posts is live.**
+  - Each group's «Ваш контент» (your content) page lists the post as awaiting admin review: California Real Estate, Southern California Real Estate and Services, and California Realtor. All Realtors has been waiting since 29 Sep.
+  - Live: SoCal Professionals (3 reactions, 2 comments: the commenter's and the owner's reply) and Northern California (0 reactions, 0 comments).
+  - So 2 of the 6 posts are visible, and 4 wait for admins. **From now on a post's state is read on the group's «Ваш контент» page**, which is where the 17:00 misreading showed up.
+  - What follows: post where posts go live (SoCal Professionals, Northern California), and in the other groups answer real questions with helpful comments until the admins know the account.
 
 Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
 > Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
@@ -250,6 +255,52 @@ Question variant used for Northern California:
 > NorCal agents, a practical AB 723 question: how are you handling the disclosure on virtually staged photos? / Since January 1, 2026, a staged or otherwise digitally altered listing photo needs a disclosure next to it and access to the original. Bay East, for example, asks for the label ("altered", "digitally altered" or "AI altered") and the original uploaded right after the staged photo. / I put the rules and a 7-step checklist on one page, with sources: [guide link with `utm_source=fb_group&exp=e4-virtual-staging`] / I also run a virtual staging service ($15 a photo) that hands you the labeled copies, a public page with the original and a QR code. Curious what your brokerage tells you to do.
 
 Cadence: join all six, then post in one or two groups a day with a different template each time (`re-fb-group-ab723` for California groups, `re-fb-group-calc` for the rest). Answer every comment. No private messages unless someone asks for one. Also search each group for "virtual staging" and answer real questions with `re-fb-group-reply`. Results show up in `/admin/analytics` as channel `fb_group`.
+
+## Short video (E15, from 1 Oct)
+
+Files: `ORVIONIS_VIDEO_REFERENCES/videos/` on the owner's PC (not in git), 1080×1920, 13–15 s, silent (the owner adds a sound in the app). Built by `make_videos.py` in the same folder from real assets only: the before/after of test order #6, real UI screenshots, the official logo.
+
+Post one a day, the same file on TikTok, Reels and Shorts, around 16:00–18:00 UTC (morning in the US). Links for the profiles:
+- TikTok: `https://orvionis.com/tools/virtual-staging?utm_source=tiktok&utm_medium=social&utm_campaign=video-test`
+- Instagram: `https://orvionis.com/tools/virtual-staging?utm_source=instagram&utm_medium=social&utm_campaign=video-test`
+- YouTube: `https://orvionis.com/tools/virtual-staging?utm_source=youtube&utm_medium=social&utm_campaign=video-test`
+
+If a platform doesn't allow a profile link yet, the end card of every video shows orvionis.com.
+
+**Accounts, set up on 30 Sep** (the operator typed and uploaded in the owner's Chrome; the owner pressed every final Save, Publish and Confirm):
+- **TikTok:** @orvionis.staging ("orvionis" was taken), name "ORVIONIS · Virtual Staging", logo avatar. Bio: "Virtual staging for US listings · $15/photo · free preview · orvionis.com". The profile has no clickable link yet, so TikTok visitors type the address and count as `direct`. The owner posted `video-v1` on 30 Sep: **251 views**, 2 followers at 22:55 UTC (read from the profile page; TikTok Studio pages time out in the extension).
+- **YouTube:** channel "ORVIONIS · Virtual Staging", @orvionis.staging ("@orvionis" was taken), description, logo, and a 2560×1440 banner with the real before/after. Channel link "Virtual staging, $15/photo" → the YouTube link above. The Short "Empty listing? Same room, virtually staged in about 2 minutes" is public (AI-use disclosure: yes): 4 views at 22:45 UTC, 8 at 22:55. The first tagged visits arrived: `youtube` 3 page views. Clickable links in video descriptions need the channel's phone verification (owner).
+- **Instagram:** @orvionis_, the owner's existing account renamed for ORVIONIS. Logo avatar, and the bio above is saved: "Virtual staging for real estate listings. 2 staged versions in ~2 min · $15/photo · free preview · AB 723 labels · orvionis.com". The owner added the profile link orvionis.com from his phone. The link Instagram serves carries `utm_source=ig&utm_medium=social&utm_content=link_in_bio`, so these visits arrive as channel **`ig`**, not `instagram`. 1 Reel, 0 followers at 22:55 UTC.
+
+Profile bio (TikTok, ≤ 80 characters):
+> Virtual staging for listings · $15/photo · free preview · AB 723 labels
+
+UA: Віртуальний стейджинг для оголошень · $15 за фото · безкоштовне превʼю · позначки AB 723
+
+Profile bio (Instagram / YouTube):
+> Virtual staging for listings. Empty room in, 2 staged versions out in about 2 minutes. $15 a photo, free preview first. AB 723 labels included.
+
+UA: Віртуальний стейджинг для оголошень. Порожня кімната на вході, 2 застейджені версії на виході десь за 2 хвилини. $15 за фото, спершу безкоштовне превʼю. Позначки під AB 723 — у комплекті.
+
+`video-v1` (before/after):
+> Empty rooms are hard to picture. Same room, virtually staged in about 2 minutes. Walls, floors and windows stay exactly as shot. $15 a photo, free preview first. Link in bio.
+> #realestate #virtualstaging #realtor #listingphotos #homestaging
+
+UA: Порожні кімнати важко уявити. Та сама кімната, віртуально застейджена десь за 2 хвилини. Стіни, підлога й вікна лишаються точно як на фото. $15 за фото, спершу безкоштовне превʼю. Посилання в профілі.
+
+`video-v2` (how it works):
+> How it works: upload a photo of the empty room, see a free watermarked preview, then get 2 staged versions for $15. California agents also get the AB 723 labeled copies. Link in bio.
+> #virtualstaging #realestatetips #realtor #listingphotos #realestateagent
+
+UA: Як це працює: завантажуєш фото порожньої кімнати, бачиш безкоштовне превʼю з водяним знаком, потім отримуєш 2 застейджені версії за $15. Агенти в Каліфорнії також отримують копії з позначкою AB 723. Посилання в профілі.
+
+`video-v3` (California, AB 723):
+> California agents: since Jan 1, 2026, a virtually staged listing photo needs a disclosure next to it and the original available to buyers (AB 723). Every ORVIONIS order comes with a labeled copy plus a public link and QR code to the original. Check your MLS rules too. Link in bio.
+> #californiarealestate #realestate #virtualstaging #realtor #ab723
+
+UA: Агенти в Каліфорнії: з 1 січня 2026 року біля віртуально застейдженого фото в оголошенні має бути позначка, а оригінал — доступний покупцям (AB 723). Кожне замовлення ORVIONIS містить копію з позначкою, публічне посилання і QR-код на оригінал. Правила своєї MLS теж перевірте. Посилання в профілі.
+
+More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 
 ## What to say when they ask
 

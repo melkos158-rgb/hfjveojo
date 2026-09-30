@@ -52,6 +52,10 @@ software, app, apps, free, jobs, job, career, careers, hiring, salary, tutorial,
 
 Status 29 Sep 23:10 UTC: **not added yet**. "free home staging software" got a click. "what is" was added to the list after "what is virtual staging" showed.
 
+**Added 30 Sep ≈ 22:05 UTC** at campaign level (broad-match negatives). At the owner's request the operator typed the 23 terms, one per line, into the campaign's negative-keyword panel, and the owner pressed Save himself. 29 and 30 Sep ran without them; 1 Oct, the last day, runs with them. Verified at 22:55 UTC: 23 listed.
+
+Proposed on 30 Sep at 22:55 UTC from the search terms (homeowners who want to rearrange their own room), waiting for the owner: rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room" (the last two as phrase match).
+
 ### Ads
 
 One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Every claim is true on the live site:
@@ -107,6 +111,13 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 - **Ad spend** is logged as a channel cost in `/admin/experiments`, so the profit estimate subtracts it.
 
 ## STATUS
+
+**Day 2 complete, read at 2026-09-30 ≈ 22:45 UTC** (account day 30 Sep, GMT+3):
+- **104 impressions, 9 clicks, €10.50** (the 26–30 Sep total minus day 1). CTR 8.65 %, average CPC ≈ €1.17.
+- 26–30 Sep: 141 impressions, 17 clicks, **€22.19 of the €30**, CPC €1.31, 0 conversions. €7.81 is left for 1 Oct, the last day.
+- Site (`/admin/analytics`, channel `google`): 30 page views. No intake, preview or checkout from ad visitors (funnel still 3 → 7 → 0).
+- **Negatives added at ≈ 22:05 UTC**, typed by the operator at the owner's request and saved by the owner.
+- At this CPC the €30 buys about 23 clicks in total, well short of the 60-click rule in DECISION RULES. The evaluation will say what the clicks and the page behaviour show, not whether search "works".
 
 **First serving day, read at 2026-09-29 23:10 UTC** (account day 29 Sep, GMT+3; "last 30 days" now covers it):
 - **37 impressions, 8 clicks, €11.69 spent** (of the €30 total). CTR 21.62 %, average CPC €1.46, close to the €1.50 cap.
@@ -188,7 +199,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
    - still to do (owner only): submit the documents, a **Ukrainian** photo ID (international passport) matching the UA payments profile, started fresh from "Start task".
    - Then wait for Google's review, with support chat if the campaign stays restricted.
    - Once Google lifts it: enable the campaign and extend the end date past 1 Oct if the test lost days.
-1. **Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.
+1. ~~**Negative keywords** (campaign level): Campaigns → E8 → Keywords → Negative keywords → + → paste the list above → Save.~~ **Done 30 Sep ≈ 22:05 UTC** (typed by the operator at the owner's request, saved by the owner).
 2. **Auto-apply recommendations off:** Recommendations → Auto-apply → untick all → Save.
 3. Optional: Final URL suffix (campaign Settings → Campaign URL options).
 4. Before the first paid ad order is uploaded: create the conversion action "ORVIONIS paid order" (Goals → Conversions → + New → Import → Track conversions from clicks). Wait 6 h before the first upload.
@@ -211,6 +222,8 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-29 (to 17:05 UTC) — **enabled ≈ 11:45, serving**; Google's report not readable (date picker frozen) | not read | not read | site: 2 ad sessions, 3 page views | — | — | 0 | 0 | $0 | $0 | — | — |
 | **2026-09-29, full account day (GMT+3), read 23:10 UTC** | **€11.69** | **37** | **8** | 21.62 % | €1.46 | 0 | 0 | $0 | −€11.69 | 0 | — |
 | 2026-09-30 (to 17:05 UTC) — eligible, serving; today's report not readable (date presets don't apply) | not read | not read | site: `google` 25 page views (18 at the end of 29 Sep) | — | — | 0 | 0 | $0 | — | — | — |
+| **2026-09-30, full account day (GMT+3), read ≈ 22:45 UTC** (26–30 Sep total minus 29 Sep) | **€10.50** | **104** | **9** | 8.65 % | €1.17 | 0 | 0 | $0 | −€10.50 | 0 | — |
+| **Total 26–30 Sep** | **€22.19** | **141** | **17** | 12.06 % | €1.31 | 0 | 0 | $0 | −€22.19 | 0 | — |
 
 ## DECISION RULES
 
@@ -222,6 +235,23 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-09-30 ≈ 22:55 UTC (read-only, ahead of the 23:03 check-in): **negatives verified, search terms read.**
+  - Negative keywords page: "1–23 з 23", all at campaign level on E8, broad match. The owner's save went through.
+  - Search terms, 26–30 Sep. Visible clicks, 3 (€4.16); the chart puts 1 on 29 Sep and 2 on 30 Sep:
+    - "free home staging software": 1 click, €1.48 (29 Sep);
+    - "rearrange my room virtual": 1 click, 4 impressions, €1.35;
+    - "rearrange my room virtual free": 1 click, 2 impressions, €1.33.
+  - Impressions without clicks include buyer terms ("virtual staging services company" 2, "virtual staging for real estate photos" 1) and many consumer ones: "ai rearrange furniture free", "ai staging free", "best free virtual staging app", "free staging app for furniture", "how to stage furniture with ai", "interium app", "rearrange my living room ai free", "rearrange this room for me", "room arrangement ai", "show in my room", and a pasted AI prompt ("i want help redecorating my space…").
+  - The other 14 clicks (€18.03) are "other search terms", which Google hides.
+  - **Finding:** besides DIY-software searches, E8 reaches homeowners who want an AI app to rearrange their own room. Neither group buys a $15 listing edit. The saved list blocks "free", "app" and "how to". Proposed to the owner for the last day (he saves): rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room".
+- 2026-09-30 ≈ 22:45 UTC (the owner asked how the numbers look, read-only): **day 2 complete.**
+  - Campaigns table, "Останні 7 днів" (through 30 Sep in account time): 141 impressions, 17 clicks, €22.19, CPC €1.31, 0 conversions.
+  - Day 2 alone (minus day 1): **104 impressions, 9 clicks, €10.50, CPC ≈ €1.17**. €7.81 of the €30 is left for 1 Oct.
+  - Site (`/admin/analytics`): channel `google` 30 page views (25 at 17:05). Still no intake, preview or checkout from ads.
+- 2026-09-30 ≈ 22:00–22:05 UTC (the owner in chat: "Додай мінус-слова… ти відкрий сторінку покажи пальцьом куди треба тицьнути", then "мінус слова впиши я просто опублікую"): **negatives added.**
+  - The operator opened E8 → Keywords → Negative keywords and sent two annotated screenshots of where to click.
+  - Then, as the owner asked, the operator typed the 23 terms one per line into the add panel, with campaign E8 chosen in the picker. The operator did not save.
+  - The owner pressed Save himself ("слова опублікував", ≈ 22:05 UTC).
 - 2026-09-30 17:05 UTC (check-in, read-only): **ads.google.com opens again** in the Chrome extension (page loaded at 16:58 UTC). Screenshots work; page text still returns only the footer.
   - Campaigns table, range "Останні 7 днів" (26–29 Sep): E8 "Відповідає вимогам" (eligible), €30 total, **26 Sep – 1 Oct**, optimization score 80.6 %. 37 impressions, 8 clicks, €11.69, 0 conversions. Alert "1 campaign will end soon".
   - Today's numbers were not read. The date picker opened, but neither "Сьогодні" nor the next-period arrow applied.
@@ -323,7 +353,9 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LAST COMPLETED ACTION
 
-2026-09-30 17:05 UTC, read-only check-in: E8 eligible and serving, end date 1 Oct, **0 negatives**. Google's numbers are readable again for past days (37 impressions, 8 clicks, €11.69 through 29 Sep). Today's were not, because the date presets don't apply. Site: `google` 25 page views, 0 checkouts.
+2026-09-30 ≈ 22:45 UTC, read-only: day 2 complete, **104 impressions, 9 clicks, €10.50**. The 26–30 Sep total is 141 / 17 / €22.19 with 0 checkouts, and €7.81 is left for 1 Oct. The negatives were added at ≈ 22:05 UTC (typed by the operator at the owner's request, saved by the owner).
+
+Earlier, 2026-09-30 17:05 UTC, read-only check-in: E8 eligible and serving, end date 1 Oct, **0 negatives**. Google's numbers are readable again for past days (37 impressions, 8 clicks, €11.69 through 29 Sep). Today's were not, because the date presets don't apply. Site: `google` 25 page views, 0 checkouts.
 
 Earlier, 2026-09-29 17:05 UTC, read-only check-in: E8 eligible and serving. The site shows 2 ad sessions (3 page views) and 0 checkouts. Google's own numbers were not readable because of the frozen date picker. End date still 1 Oct.
 
@@ -337,15 +369,14 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 ## NEXT EXACT ACTION
 
 1. Every check-in: read Google's numbers for E8 (impressions, clicks, cost, search terms), read-only.
-   - Open a fresh tab. If the table's date range excludes today, try the date picker once. If it freezes, record the site's `google` sessions instead.
-   - 30 Sep 23:03 UTC: past midnight in account time (GMT+3), "Останні 7 днів" covers 30 Sep. Read day 2 and its search terms then.
-   - List new negative keywords for the owner from the search terms (DECISION RULES).
-2. Is the end date still 1 Oct? Remind the owner in the daily summary (asked on 29 Sep at 11:30 and 17:05). A campaign-total budget paced into three days may spend fast. The €30 cap holds either way.
-3. Every day until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
-4. 7 Oct 05:03 UTC (or when €30 is spent): final evaluation, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register).
-5. At the last check-in (1 Oct 17:03 UTC), look at the end date. If it is still 1 Oct, the money runs out that day. Then move the evaluation task (trig_0157xqpW4GE2QDXcSZNQQ7wA) to 2 Oct 05:03 UTC and tell the owner.
-6. Every check-in: have the negatives appeared? Check the change history, or whether "free … software" stops showing in the search terms.
+   - Open a fresh tab. A day's numbers show only after midnight in account time (GMT+3 = 21:00 UTC); the date presets don't apply in the extension.
+   - The 30 Sep search terms and the 23 saved negatives are verified (LOG, 22:55 UTC). If the owner says «впиши», type the 7 proposed negatives into the add panel for him to save, then check the list shows 30.
+   - List any new negative keywords for the owner from the search terms (DECISION RULES).
+2. The end date stays 1 Oct: the owner left it, and the 30 Sep update email told him the rest would go on 30 Sep – 1 Oct. No more reminders.
+3. Until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
+4. At the 1 Oct 17:03 UTC check-in: the end date is still 1 Oct, so move the evaluation task (trig_0157xqpW4GE2QDXcSZNQQ7wA) to 2 Oct 05:03 UTC and say so in the daily summary.
+5. 2 Oct 05:03 UTC: final evaluation from the full 1 Oct numbers and search terms, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register). After that the landing page may change (E14).
 
 ## TIMESTAMP
 
-2026-09-30 17:15 UTC
+2026-09-30 23:00 UTC

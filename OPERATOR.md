@@ -35,7 +35,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Owner away 2026-09-27 → ~2026-10-01 (autonomous mode)
 
-- **Schedule:** check-ins run into this Cowork session every ~6 h: 05:03, 11:03, 17:03 and 23:03 UTC, from 26 Sep 23:03 to 1 Oct 17:03. The final E8 evaluation runs 2 Oct 05:03 UTC. Find them with `list_triggers`.
+- **Schedule:** check-ins run into this Cowork session every ~6 h: 05:03, 11:03, 17:03 and 23:03 UTC, from 26 Sep 23:03 to 1 Oct 17:03. The final E8 evaluation task is set for 7 Oct 05:03 UTC; since the campaign ends on 1 Oct, the 1 Oct 17:03 check-in moves it to 2 Oct 05:03 UTC. Find them with `list_triggers`.
 - **The owner's PC must stay on** with the Claude desktop app and Chrome running. Without it there is no Chrome (Ads / Fiverr / Railway / admin) and no git push; the cloud can't reach orvionis.com or GitHub.
 - **Fiverr (owner's choice): the gig stays active.** A real order goes like this:
   1. verify it in Manage Orders;
@@ -66,7 +66,7 @@ Still the owner's (account sign-in is not something the operator does):
 
 **Current, 2026-09-26 22:00 UTC+2. Do these first; the older numbered items below are history.**
 - **Google Ads, live campaign `E8 Virtual Staging - Search - US` (id 24292280138).** The auto-mode safety check blocks the operator from editing a live campaign ("real-world transactions"). The owner does these:
-  - (a) add the campaign-level negative keywords (list in `docs/GOOGLE_ADS_EXPERIMENT.md`);
+  - (a) ~~add the campaign-level negative keywords (list in `docs/GOOGLE_ADS_EXPERIMENT.md`)~~ done 30 Sep ≈ 22:05 UTC (23 terms, verified); 7 more proposed on 30 Sep at 22:55 UTC;
   - (b) Recommendations → Auto-apply → untick everything;
   - (c) optional: campaign Settings → Campaign URL options → Final URL suffix (value in the doc);
   - (d) before the first paid ad order is uploaded: create the conversion action "ORVIONIS paid order" (Import → clicks).
@@ -106,6 +106,14 @@ The owner asked to get updates by ORVIONIS email. To send one:
 The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner update. Decisions he must make also get an update, plus a push. Replies to these emails go to hello@orvionis.com, which the operator cannot read, so he answers in the Claude chat.
 
 ## Session log
+
+- 2026-09-30 17:20–23:05 UTC (owner online, phone and PC):
+  - Growth plan to 25 Dec written as a Claude Doc at his request ("be the general manager"), and copied into his Obsidian vault for ChatGPT/Codex. Higgsfield advice: don't buy now; 14-day free test first (E15 rule).
+  - Three 13–15 s videos made from real assets only (`make_videos.py`), plus a logo avatar and a YouTube banner. The owner opened TikTok, YouTube and Instagram in the session. The operator typed profiles and uploads; the owner pressed every final Confirm, Publish and Save (the safety check blocks those clicks for the operator).
+  - Google Ads: at his request the operator typed the 23 negatives into E8's add panel, and he saved them (≈ 22:05 UTC). Verified at 22:55: 23 listed. Day 2: 9 clicks, €10.50; total €22.19, 0 checkouts. 7 more negatives proposed from the search terms (rearrange-my-room homeowners); they wait for his «впиши».
+  - Facebook correction: at 22:20 all three day-2 posts turned out to be awaiting admin review, not live. 2 of 6 posts are live. The docs and his chat were corrected; the 17:13 daily email said otherwise, so tomorrow's summary carries a one-line correction.
+  - Socials at 22:55: TikTok `video-v1` 251 views, YouTube Short 8, Instagram (@orvionis_) 1 Reel; site `youtube` 3 page views. His Instagram link arrives as `ig`.
+  - Health ok (22:49); analytics 565 / 91; 0 paid.
 
 - 2026-09-30 13:03–17:20 UTC (owner online from his phone, then the 17:03 check-in):
   - 13:05, the owner asked about the business and TikTok. Health ok; analytics 544 / 74, 0 paid. Facebook: SoCal 2 likes, the reply still typed; NorCal 0; All Realtors pending; the three day-2 posts still in their composers. TikTok: no account connected, no video; offered to generate it in Higgsfield.
