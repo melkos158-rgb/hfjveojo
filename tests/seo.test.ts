@@ -95,3 +95,27 @@ describe("seo: /llms.txt is built from the live catalog and the guide list", () 
     expect(body).not.toMatch(/\/(admin|api|dashboard|orders|checkout|login)\b/);
   });
 });
+
+describe("seo: short links for places without a clickable link", () => {
+  it("sends /tt (and /TT) to the staging page tagged as TikTok, with a temporary redirect", async () => {
+    const redirects = await nextConfig.redirects!();
+    for (const source of ["/tt", "/TT"]) {
+      const r = redirects.find((x) => x.source === source);
+      expect(r, source).toBeDefined();
+      expect(r!.permanent).toBe(false);
+      const url = new URL(r!.destination, APP);
+      expect(url.pathname).toBe("/tools/virtual-staging");
+      expect(url.searchParams.get("utm_source")).toBe("tiktok");
+      expect(url.searchParams.get("utm_medium")).toBe("social");
+    }
+  });
+
+  it("never shadows a real page", async () => {
+    const { existsSync } = await import("node:fs");
+    const redirects = await nextConfig.redirects!();
+    for (const r of redirects) {
+      const seg = r.source.replace(/^\//, "");
+      expect(existsSync(`src/app/${seg}`), r.source).toBe(false);
+    }
+  });
+});

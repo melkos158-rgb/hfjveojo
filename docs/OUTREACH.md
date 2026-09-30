@@ -267,6 +267,8 @@ Post one a day, the same file on TikTok, Reels and Shorts, around 16:00–18:00 
 
 If a platform doesn't allow a profile link yet, the end card of every video shows orvionis.com.
 
+**TikTok short link: orvionis.com/tt** (from 30 Sep, `next.config.ts` → `SHORT_LINKS`). TikTok gives a clickable bio link only from 1,000 followers or to a registered business account, so the TikTok bio and captions show `orvionis.com/tt`. It redirects (307) to the TikTok-tagged link above, so a visitor who types it counts as `tiktok` instead of `direct`. In TikTok captions, write "orvionis.com/tt" instead of "Link in bio".
+
 **Accounts, set up on 30 Sep** (the operator typed and uploaded in the owner's Chrome; the owner pressed every final Save, Publish and Confirm):
 - **TikTok:** @orvionis.staging ("orvionis" was taken), name "ORVIONIS · Virtual Staging", logo avatar. Bio: "Virtual staging for US listings · $15/photo · free preview · orvionis.com". The profile has no clickable link yet, so TikTok visitors type the address and count as `direct`. The owner posted `video-v1` on 30 Sep: **251 views**, 2 followers at 22:55 UTC (read from the profile page; TikTok Studio pages time out in the extension).
 - **YouTube:** channel "ORVIONIS · Virtual Staging", @orvionis.staging ("@orvionis" was taken), description, logo, and a 2560×1440 banner with the real before/after. Channel link "Virtual staging, $15/photo" → the YouTube link above. The Short "Empty listing? Same room, virtually staged in about 2 minutes" is public (AI-use disclosure: yes): 4 views at 22:45 UTC, 8 at 22:55. The first tagged visits arrived: `youtube` 3 page views. Clickable links in video descriptions need the channel's phone verification (owner).
