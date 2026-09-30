@@ -107,6 +107,13 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-09-30 23:05–23:55 UTC (owner: "what's next — say it or do it, keep moving"):
+  - Shipped s58 (`9bc0211`): short link `orvionis.com/tt` → the staging page tagged `tiktok` (TikTok has no clickable bio link below 1,000 followers). CI and Railway green; verified in production.
+  - Built the sale fixes from the growth plan in a separate working copy, to ship after E8 ends (1 Oct 21:00 UTC): E14 first screen, free first photo by confirmed email, volume pricing (up to 10 rooms, $12 from 5, $99 for 10), one-line cookie notice on phones. 164 tests; checked in a local production build at 390/1366 px. Backups: `/mnt/user-data/outputs/release-e14.tgz` and `.git/xfer/pending/` on the owner's PC. A one-off reminder into this session fires at 1 Oct 21:05 UTC (trig_018H39KpjvujXquBjaw94irq).
+  - Follow-up marketing emails are not built: CAN-SPAM needs a business postal address in each one, and there is none yet (owner decision later).
+  - Google Ads: the 7 extra negatives were typed for the owner to save; the save is unconfirmed (see GOOGLE_ADS_EXPERIMENT LOG). At 23:50 the Chrome extension disconnected; the device bridge still works.
+  - The 23:03 check-in's items were covered by the 22:44–23:05 work (health, analytics, Ads day 2, socials, docs shipped as s57).
+
 - 2026-09-30 17:20–23:05 UTC (owner online, phone and PC):
   - Growth plan to 25 Dec written as a Claude Doc at his request ("be the general manager"), and copied into his Obsidian vault for ChatGPT/Codex. Higgsfield advice: don't buy now; 14-day free test first (E15 rule).
   - Three 13–15 s videos made from real assets only (`make_videos.py`), plus a logo avatar and a YouTube banner. The owner opened TikTok, YouTube and Instagram in the session. The operator typed profiles and uploads; the owner pressed every final Confirm, Publish and Save (the safety check blocks those clicks for the operator).

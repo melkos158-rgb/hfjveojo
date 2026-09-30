@@ -235,6 +235,9 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-09-30 ≈ 23:05 UTC (the owner: "так шо далі делаєм кажи або роби", read as a yes to the offer "напиши «впиши»"): the operator typed the 7 proposed negatives (rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room") into E8's add panel with campaign E8 picked, and asked the owner to press "Зберегти". Not saved by the operator.
+  - ≈ 23:47 UTC the operator reloaded the negatives page to see whether they were saved. The page then stayed "busy", possibly on a "leave site?" prompt that would drop unsaved text. At 23:50 the Chrome extension disconnected (browser closed or the PC asleep), so the result is unknown.
+  - The owner was told: if the browser asks "leave site?", stay and press Save; if the words are gone, write «ще раз». Check at the next check-in: 23 or 30 negatives.
 - 2026-09-30 ≈ 22:55 UTC (read-only, ahead of the 23:03 check-in): **negatives verified, search terms read.**
   - Negative keywords page: "1–23 з 23", all at campaign level on E8, broad match. The owner's save went through.
   - Search terms, 26–30 Sep. Visible clicks, 3 (€4.16); the chart puts 1 on 29 Sep and 2 on 30 Sep:
@@ -370,7 +373,7 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 1. Every check-in: read Google's numbers for E8 (impressions, clicks, cost, search terms), read-only.
    - Open a fresh tab. A day's numbers show only after midnight in account time (GMT+3 = 21:00 UTC); the date presets don't apply in the extension.
-   - The 30 Sep search terms and the 23 saved negatives are verified (LOG, 22:55 UTC). If the owner says «впиши», type the 7 proposed negatives into the add panel for him to save, then check the list shows 30.
+   - The 30 Sep search terms and the 23 saved negatives are verified (LOG, 22:55 UTC). The 7 proposed ones were typed at 23:05 for the owner to save; check whether the list shows 30, and retype them if he asks («ще раз»).
    - List any new negative keywords for the owner from the search terms (DECISION RULES).
 2. The end date stays 1 Oct: the owner left it, and the 30 Sep update email told him the rest would go on 30 Sep – 1 Oct. No more reminders.
 3. Until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
