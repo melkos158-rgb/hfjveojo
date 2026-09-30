@@ -107,6 +107,25 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-09-30 12:32–12:50 UTC (the owner asked "how is it going"; computer back online):
+  - Analytics: 544 / 74; `google` 22 ad page views; funnel 3 → 7 → 0; 0 paid.
+  - Fiverr Manage Orders: 0 in every status.
+  - Facebook: SoCal post has 2 likes and 1 comment; NorCal has 0; All Realtors is still pending.
+  - Google Ads: the extension now denies ads.google.com (page text and screenshots), so it was not read.
+  - The docs from 05:03 and 11:03 shipped as s55.
+
+- 2026-09-30 11:04–11:20 UTC (scheduled check-in, Fiverr day): the owner's computer was still off (no extension, no bridge).
+  - The site answered through WebFetch: `/tools/virtual-staging` up, H1 and $15 price.
+  - Google Ads, Fiverr, Facebook and `/admin` were not readable, and nothing could be committed.
+  - A chat message went out: leave the computer on with sleep disabled; plus the three day-2 group texts to copy, or the offer to type them in once he is at the computer.
+
+- 2026-09-30 05:04–05:40 UTC (scheduled check-in): **the owner's computer was asleep.** The Chrome extension and the device bridge were not connected (retried once).
+  - The homepage answered through WebFetch; `/api/health` is disallowed there by our own robots.txt.
+  - Admin, Google Ads and Facebook were not readable, and nothing could be committed. The docs wait in the cloud clone for the next transfer.
+  - Done meanwhile:
+    - day-2 texts for the three remaining Facebook groups (`docs/OUTREACH.md`);
+    - a review of the ad landing page from a local production build: E14, to run after E8 ends.
+
 - 2026-09-29 23:04–23:35 UTC (scheduled check-in):
   - Production healthy on `91e2a77`.
   - Analytics: 540 / 70, 0 paid.

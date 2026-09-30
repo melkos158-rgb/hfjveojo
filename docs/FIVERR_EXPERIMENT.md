@@ -144,6 +144,8 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
+2026-09-30 12:35 UTC (the owner was back online): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred).
+2026-09-30 11:05 UTC: **not checked.** The owner's computer was off (no Chrome extension, no device bridge, retried). Fiverr notifies the owner of any order directly. The next look is at the next check-in that finds Chrome connected.
 2026-09-29 11:25 UTC: **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). After a 40-second pause the seller dashboard showed Fiverr's human check ("It needs a human touch"), which was left for the owner. From now on the operator opens **Manage Orders only**, since both the inbox and the dashboard are gated for its visits. The owner reads impressions and messages himself.
 2026-09-28 11:20 UTC: Manage Orders shows 0 in every status. `/inbox` showed Fiverr's human check again, after a 45-second pause; it was left for the owner. The inbox is gated for the operator's visits every time, so from now on the second page is the seller dashboard (impressions / clicks), not the inbox.
 2026-09-27 11:05 UTC: Manage Orders shows 0 in every status. The inbox was behind Fiverr's human check, which was left for the owner. (26 Sep 22:20 UTC+2: gig verified Active, two phishing senders reported and blocked, owner's order-verification rules recorded.)

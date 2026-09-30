@@ -187,6 +187,11 @@ Not for promotion:
   - Northern California is live, with the guide's link card: https://www.facebook.com/groups/RealtorsGroup/posts/3270337369822424/
   - Both had 0 comments and 0 reactions so far.
   - All Realtors: **pending**. The admins review new members' posts ("Ваш запит на перевірку все ще на розгляді"). Leave it; never press "Скасувати перевірку".
+  - 30 Sep 12:35 UTC, about 18 hours in:
+    - SoCal Professionals: 2 likes, 1 comment, no reply from the owner yet.
+    - Northern California: 0 comments.
+    - All Realtors: still under admin review.
+    - `fb_group` still 6 page views.
   - 23:10 UTC, about 4 hours in:
     - SoCal Professionals has **1 comment**, a generic compliance remark that may be an engagement account. A reply was drafted for the owner (below).
     - Northern California: 0 comments, 0 reactions.
@@ -196,6 +201,37 @@ Not for promotion:
 
 Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
 > Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+**Day 2 texts (30 Sep), one per remaining group, each different.** Post them at least an hour apart, ideally 16:00–19:00 UTC (morning in California).
+
+`re-fb-group-ca-question` for **California Realtor**:
+> Question for California listing agents: has your MLS pushed back on a virtually staged photo since AB 723 kicked in?
+>
+> The rule itself is simple: a disclosure next to the altered photo, and a way for buyers to see the original. The part that's easy to miss is syndication. SDMLS, for example, wants the label and the original to carry through to IDX and syndication feeds.
+>
+> I keep a one-page checklist with the bill text and the SDMLS and Bay East requirements, if it helps: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+>
+> (I run a small virtual staging service, so I built the labeling into it.)
+
+UA: Питання до агентів у Каліфорнії: чи ваша MLS уже відхиляла віртуально застейджене фото, відколи діє AB 723? / Саме правило просте: позначка біля зміненого фото і спосіб для покупців побачити оригінал. Найлегше пропустити синдикацію: SDMLS, наприклад, хоче, щоб позначка й оригінал доходили і в IDX, і в синдикаційні фіди. / У мене є чекліст на одну сторінку з текстом закону й вимогами SDMLS і Bay East, якщо стане в пригоді: [посилання] / (У мене невеликий сервіс віртуального стейджингу, тож позначки я вбудував у нього.)
+
+`re-fb-group-ca-flip` for **California Real Estate** (investors and agents):
+> For flippers and listing agents with vacant homes: I made a free calculator that compares what staging a listing actually costs. Enter photos per listing and listings per month, and it lays out per-photo virtual staging ($15 to $30 a photo), a monthly AI subscription, and physical staging (NAR's median is $1,500 for a staging service). It also tells you when a subscription is the cheaper option.
+>
+> orvionis.com/free/virtual-staging-cost-calculator?utm_source=fb_group&exp=e4-virtual-staging
+>
+> Disclosure: the $15 option is mine. In California staged photos need an AB 723 label, and mine include it.
+
+UA: Для фліпперів і агентів із порожніми будинками: я зробив безкоштовний калькулятор, який порівнює, скільки насправді коштує стейджинг оголошення. Вводиш фото на оголошення й оголошення на місяць, і він показує віртуальний стейджинг з оплатою за фото ($15–$30 за фото), місячну AI-підписку і справжній стейджинг (медіана NAR — $1,500 за послугу). А ще каже, коли підписка вигідніша. / [посилання] / Чесно: варіант за $15 — мій. У Каліфорнії застейджені фото потребують позначки за AB 723, і в моїх вона є.
+
+`re-fb-group-socal-service` for **Southern California Real Estate and Services** (services welcome):
+> SoCal agents with an empty listing: try virtual staging on one of your own room photos. You see a free watermarked preview first; if you like it, it's $15 a photo (two versions each), ready in about two minutes, with the AB 723 labeled copy and a page with the original included. Walls, floors and windows stay exactly as shot; only furniture is added.
+>
+> Before/after and the free preview: orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+UA: Агенти Південної Каліфорнії з порожнім оголошенням: спробуйте віртуальний стейджинг на одному з ваших фото кімнати. Спершу ви бачите безкоштовне превʼю з водяним знаком; якщо сподобається — $15 за фото (по дві версії), готово десь за дві хвилини, з підписаною копією під AB 723 і сторінкою з оригіналом. Стіни, підлога й вікна лишаються точно як на фото, додаються тільки меблі. / До/після і безкоштовне превʼю: [посилання]
+
+✍️ Nothing to change in any of the three. The third links to the E8 landing page: the page itself does not change, and `utm_source=fb_group` keeps these visits apart from ad clicks.
 
 Question variant used for Northern California:
 > NorCal agents, a practical AB 723 question: how are you handling the disclosure on virtually staged photos? / Since January 1, 2026, a staged or otherwise digitally altered listing photo needs a disclosure next to it and access to the original. Bay East, for example, asks for the label ("altered", "digitally altered" or "AI altered") and the original uploaded right after the staged photo. / I put the rules and a 7-step checklist on one page, with sources: [guide link with `utm_source=fb_group&exp=e4-virtual-staging`] / I also run a virtual staging service ($15 a photo) that hands you the labeled copies, a public page with the original and a QR code. Curious what your brokerage tells you to do.

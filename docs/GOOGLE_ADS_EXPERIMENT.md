@@ -221,6 +221,10 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-09-30 12:35 UTC (the owner asked how it's going): **the Chrome extension now refuses ads.google.com** ("Permission denied for this action on this domain"). Screenshots are refused too; page text has been refused since 29 Sep 23:10. The operator does not work around it. Google Ads numbers now come from the owner, or from the extension once he allows the site again.
+  - Site-side (`/admin/analytics`): channel `google` 22 page views (18 at 23:06), still no intake or checkout.
+- 2026-09-30 05:05 UTC (check-in): not read. The owner's computer was asleep, with no Chrome extension and no device bridge. Day-1 numbers stand as read at 23:10 UTC.
+- Landing page review for after the test: see E14 in `docs/GROWTH_EXPERIMENTS.md`. The page is unchanged while E8 runs.
 - 2026-09-29 23:10 UTC (check-in, read-only): **first-day numbers.**
   - Campaigns table ("last 30 days" = 26–29 Sep): 37 impressions, 8 clicks, €11.69, CTR 21.62 %, CPC €1.46.
   - Search terms report (`/aw/keywords/searchterms`): "free home staging software" 1 click (€1.48); three more terms at 1 impression each; "other search terms" 7 clicks, €10.21.
