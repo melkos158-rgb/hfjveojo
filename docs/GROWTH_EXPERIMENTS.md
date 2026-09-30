@@ -41,6 +41,8 @@ None yet.
 
 ## Log
 
+- 2026-09-30 17:05 UTC — **E8 day 2 (partial):** eligible, end date 1 Oct, **0 negatives**. Google's 30 Sep numbers are not readable before midnight GMT+3. Site: `google` 25 page views (18 at the end of 29 Sep), no intake, preview or checkout.
+  - **E9 (Facebook groups):** 6 posts in 6 groups, 4 live and 2 awaiting admin review; 1 comment (not a buyer) and the owner's reply. `fb_group` 13 page views, no intake. Two of the groups are mostly spam; future posts favour the ones with real discussion.
 - 2026-09-29 23:10 UTC — **E8 day 1:** 37 impressions, 8 clicks, €11.69 (CPC €1.46, CTR 21.6 %).
   - Site: 18 ad page views, no intake, preview or checkout.
   - Only 4 search terms are visible; one is a "free home staging software" click, so the negatives are still missing.

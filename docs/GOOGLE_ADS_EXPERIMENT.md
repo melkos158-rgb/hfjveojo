@@ -210,6 +210,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-29 (to 11:25 UTC) — **verification passed**; campaign still paused (owner to enable) | €0 | 0 | 0 | — | — | 0 | 0 | $0 | $0 | — | — |
 | 2026-09-29 (to 17:05 UTC) — **enabled ≈ 11:45, serving**; Google's report not readable (date picker frozen) | not read | not read | site: 2 ad sessions, 3 page views | — | — | 0 | 0 | $0 | $0 | — | — |
 | **2026-09-29, full account day (GMT+3), read 23:10 UTC** | **€11.69** | **37** | **8** | 21.62 % | €1.46 | 0 | 0 | $0 | −€11.69 | 0 | — |
+| 2026-09-30 (to 17:05 UTC) — eligible, serving; today's report not readable (date presets don't apply) | not read | not read | site: `google` 25 page views (18 at the end of 29 Sep) | — | — | 0 | 0 | $0 | — | — | — |
 
 ## DECISION RULES
 
@@ -221,6 +222,12 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-09-30 17:05 UTC (check-in, read-only): **ads.google.com opens again** in the Chrome extension (page loaded at 16:58 UTC). Screenshots work; page text still returns only the footer.
+  - Campaigns table, range "Останні 7 днів" (26–29 Sep): E8 "Відповідає вимогам" (eligible), €30 total, **26 Sep – 1 Oct**, optimization score 80.6 %. 37 impressions, 8 clicks, €11.69, 0 conversions. Alert "1 campaign will end soon".
+  - Today's numbers were not read. The date picker opened, but neither "Сьогодні" nor the next-period arrow applied.
+  - Negative keywords page: "У вас поки немає мінус-слів", so **0 negatives**. The list is with the owner (chat on 29–30 Sep, and the 30 Sep owner update email).
+  - Site (`/admin/analytics`): channel `google` 25 page views (22 at 13:05, 18 at the end of 29 Sep). No intake, preview or checkout from ads.
+  - Search terms were not re-read: the readable range still ends on 29 Sep, which is already recorded.
 - 2026-09-30 12:35 UTC (the owner asked how it's going): **the Chrome extension now refuses ads.google.com** ("Permission denied for this action on this domain"). Screenshots are refused too; page text has been refused since 29 Sep 23:10. The operator does not work around it. Google Ads numbers now come from the owner, or from the extension once he allows the site again.
   - Site-side (`/admin/analytics`): channel `google` 22 page views (18 at 23:06), still no intake or checkout.
 - 2026-09-30 05:05 UTC (check-in): not read. The owner's computer was asleep, with no Chrome extension and no device bridge. Day-1 numbers stand as read at 23:10 UTC.
@@ -312,11 +319,13 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
   - Documents must match the profile exactly, per country: https://support.google.com/adspolicy/answer/9872280?co=GENIE.CountryCode%3DUA
 - The organization question "manages Google Ads accounts for other organizations" declares an agency when answered Yes; a single business advertiser answers No.
 - **The site's channel `google` counts page views, not clicks.** `/admin/analytics` credits every page view of a session whose first touch was a Google Ads click id (`gclid`/`gbraid`/`wbraid`) to `google`. Compare the session count to estimate clicks, and use Google's click count once it is readable.
-- "Останні 30 днів" (last 30 days) ends **yesterday** in account time (GMT+3), so the current day's serving is not in that view. In the hidden Chrome window the date picker opens, but choosing a preset does not apply, and the tab then freezes.
+- "Останні 30 днів" (last 30 days) ends **yesterday** in account time (GMT+3), so the current day's serving is not in that view. In the hidden Chrome window the date picker opens, but choosing a preset does not apply, and the tab then freezes. On 30 Sep 17:00 UTC the same happened while the page rendered normally: neither "Сьогодні" nor the next-period arrow applied. Read a day after midnight GMT+3 instead.
 
 ## LAST COMPLETED ACTION
 
-2026-09-29 17:05 UTC, read-only check-in: E8 eligible and serving. The site shows 2 ad sessions (3 page views) and 0 checkouts. Google's own numbers were not readable because of the frozen date picker. End date still 1 Oct.
+2026-09-30 17:05 UTC, read-only check-in: E8 eligible and serving, end date 1 Oct, **0 negatives**. Google's numbers are readable again for past days (37 impressions, 8 clicks, €11.69 through 29 Sep). Today's were not, because the date presets don't apply. Site: `google` 25 page views, 0 checkouts.
+
+Earlier, 2026-09-29 17:05 UTC, read-only check-in: E8 eligible and serving. The site shows 2 ad sessions (3 page views) and 0 checkouts. Google's own numbers were not readable because of the frozen date picker. End date still 1 Oct.
 
 Earlier, 2026-09-28 12:45 UTC, read-only at the owner's request: located the "Україна" in the verification forms. It is the payments profile country, which cannot be edited.
 - Advised: keep everything Ukrainian (international passport, profile address as stored), since Google's Ukraine requirements demand a Ukrainian-issued ID matching the profile.
@@ -329,6 +338,7 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 1. Every check-in: read Google's numbers for E8 (impressions, clicks, cost, search terms), read-only.
    - Open a fresh tab. If the table's date range excludes today, try the date picker once. If it freezes, record the site's `google` sessions instead.
+   - 30 Sep 23:03 UTC: past midnight in account time (GMT+3), "Останні 7 днів" covers 30 Sep. Read day 2 and its search terms then.
    - List new negative keywords for the owner from the search terms (DECISION RULES).
 2. Is the end date still 1 Oct? Remind the owner in the daily summary (asked on 29 Sep at 11:30 and 17:05). A campaign-total budget paced into three days may spend fast. The €30 cap holds either way.
 3. Every day until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
@@ -338,4 +348,4 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 ## TIMESTAMP
 
-2026-09-29 23:20 UTC
+2026-09-30 17:15 UTC

@@ -187,6 +187,10 @@ Not for promotion:
   - Northern California is live, with the guide's link card: https://www.facebook.com/groups/RealtorsGroup/posts/3270337369822424/
   - Both had 0 comments and 0 reactions so far.
   - All Realtors: **pending**. The admins review new members' posts ("Ваш запит на перевірку все ще на розгляді"). Leave it; never press "Скасувати перевірку".
+  - 30 Sep ≈ 12:50 UTC, at the owner's request:
+    - The reply to the SoCal comment was typed under the comment for him to send. Facebook put the commenter's tag first, so the text starts "Thanks!".
+    - The three day-2 posts were typed into composers in separate tabs (California Realtor, California Real Estate, SoCal RE & Services), unpublished. He publishes them at 18:00, 19:00 and 20:00 Warsaw time.
+    - The owner asked whether the commenter is a potential client. Answer: nothing suggests it. No question, no price or turnaround ask, a generic compliment. Such comments usually come from other vendors or engagement accounts. The reply is still worth it for the other readers.
   - 30 Sep 12:35 UTC, about 18 hours in:
     - SoCal Professionals: 2 likes, 1 comment, no reply from the owner yet.
     - Northern California: 0 comments.
@@ -198,6 +202,15 @@ Not for promotion:
     - All Realtors: still waiting for admin review.
     - No new Facebook visits since 19:16.
   - `/admin/analytics`: 529 / 63 (was 514 / 49 at 17:05). First Facebook traffic: `fb_group` 6 page views, plus `m.facebook.com` 2 and `www.facebook.com` 3 without the tag; some may be the owner's own clicks. `google` (ads) rose from 3 to 7 page views. Funnel unchanged (3 → 7 → 0), 0 paid.
+- 30 Sep ≈ 13:05 and 17:00 UTC (the owner asked for the status, then the 17:03 check-in), read-only:
+  - The owner sent the SoCal reply at ≈ 13:00 UTC. It shows under the comment with the guide's link card. SoCal Professionals: 2 reactions, 2 comments (the commenter's and the reply).
+  - He published all three day-2 posts at ≈ 14:00 UTC, together rather than an hour apart:
+    - California Real Estate (`re-fb-group-ca-flip`): live, 0 reactions, 0 comments at 17:00.
+    - Southern California Real Estate and Services (`re-fb-group-socal-service`): live, 0 reactions, 0 comments.
+    - California Realtor (`re-fb-group-ca-question`): **awaiting admin review** ("Ваш допис очікує на перевірку").
+  - Northern California: 0 reactions, 0 comments. All Realtors: the membership review was still pending at 13:05.
+  - `/admin/analytics`: `fb_group` 6 → 13 page views between 13:05 and 17:05, no intake.
+  - The California Real Estate and SoCal RE & Services feeds are mostly spam (job offers, "investor" posts), so few working agents read them. Future posts go first to the groups with real discussion (SoCal Professionals, Northern California).
 
 Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
 > Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging

@@ -107,6 +107,11 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-09-30 13:03–17:20 UTC (owner online from his phone, then the 17:03 check-in):
+  - 13:05, the owner asked about the business and TikTok. Health ok; analytics 544 / 74, 0 paid. Facebook: SoCal 2 likes, the reply still typed; NorCal 0; All Realtors pending; the three day-2 posts still in their composers. TikTok: no account connected, no video; offered to generate it in Higgsfield.
+  - 16:55 and 17:03: ads.google.com opens again (read-only): eligible, end date 1 Oct, 0 negatives; 30 Sep numbers not readable before midnight GMT+3. Analytics 554 / 82, `google` 25, `fb_group` 13, 0 paid. Facebook: the reply was published ≈ 13:00 and the three day-2 posts ≈ 14:00 (2 live with 0 reactions, 1 awaiting review).
+  - Shipped as s56: these docs and the owner update "2026-09-30-daily".
+
 - 2026-09-30 12:32–12:50 UTC (the owner asked "how is it going"; computer back online):
   - Analytics: 544 / 74; `google` 22 ad page views; funnel 3 → 7 → 0; 0 paid.
   - Fiverr Manage Orders: 0 in every status.
