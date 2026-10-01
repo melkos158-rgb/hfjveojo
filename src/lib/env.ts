@@ -46,6 +46,9 @@ const schema = z.object({
   FREE_PREVIEWS_PER_DAY: z.coerce.number().int().nonnegative().default(15),
   FREE_PREVIEWS_PER_IP: z.coerce.number().int().positive().default(2),
   AI_PREVIEW_QUALITY: z.enum(["low", "medium", "high"]).default("medium"),
+  /** Free first photo (virtual staging, one per person, confirmed by email): claimed per UTC day, and requests per IP per day. 0 = off. */
+  FREE_PHOTOS_PER_DAY: z.coerce.number().int().nonnegative().default(10),
+  FREE_PHOTOS_PER_IP: z.coerce.number().int().positive().default(2),
 
   /** Google sign-in is offered on /login only when both are set (OAuth client → Authorized redirect URI: <APP_URL>/api/auth/google/callback). */
   GOOGLE_CLIENT_ID: z.string().optional().default(""),

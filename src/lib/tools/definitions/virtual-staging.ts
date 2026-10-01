@@ -5,18 +5,19 @@ import { getFileBuffer } from "@/lib/storage";
 import { AppError } from "@/lib/errors";
 import { AiProviderError } from "@/lib/ai/types";
 import { SAMPLE_VIRTUAL_STAGING_RESULT } from "@/lib/tools/samples/virtual-staging";
+import { STAGING_MAX_ROOMS, STAGING_UNIT_CENTS, STAGING_VOLUME_TIERS } from "@/config/staging-pricing";
 import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelStagedPhoto, originalPhotoUrl } from "@/lib/tools/disclosure";
 
 /**
  * Virtual Staging — photos of empty (or dated) rooms → two photorealistic staged versions of each photo, ready for
- * the MLS. Up to MAX_ROOMS photos per order at the per-photo price (quantity = rooms). The customer pays first; the
+ * the MLS. Up to MAX_ROOMS photos per order at the per-photo price, lower from 5 photos (pricing.volume; quantity = rooms). The customer pays first; the
  * image model edits each photo without touching walls, floors, windows or fixtures. Per room: 2 JPEGs (PNG fallback)
  * + 2 labeled copies (disclosure pack); one JSON note for the order.
  */
 
 const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "patio or outdoor"] as const;
 const STYLES = ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"] as const;
-export const MAX_ROOMS = 6;
+export const MAX_ROOMS = STAGING_MAX_ROOMS;
 
 const roomSchema = z.object({
   photoFileId: z.string().trim().min(1, "Upload the room photo").max(64),
@@ -141,13 +142,13 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   category: "real-estate",
   tagline: "Empty-room photos in, two staged MLS-ready versions of each out — about two minutes per photo",
   description:
-    "Upload photos of empty (or nearly empty) rooms — up to six per order — choose the room type of each and one of six styles, and receive two photorealistic virtually staged versions of every photo — walls, floors, windows and perspective untouched — as MLS-ready JPG files, in about two minutes per photo.",
+    "Upload photos of empty (or nearly empty) rooms — up to ten per order — choose the room type of each and one of six styles, and receive two photorealistic virtually staged versions of every photo — walls, floors, windows and perspective untouched — as MLS-ready JPG files, in about two minutes per photo.",
   initialStatus: "LIVE",
   version: 1,
   fulfillment: "AUTO",
   featured: true,
   io: {
-    input: "Photos of the empty rooms, up to 6 (JPG/PNG/WebP, up to 8 MB each)",
+    input: "Photos of the empty rooms, up to 10 (JPG/PNG/WebP, up to 8 MB each)",
     output: "2 photorealistic staged versions of each photo (JPG, MLS-ready)",
     processingTime: "About 2 minutes per photo",
     ctaLabel: "Stage my photos",
@@ -162,7 +163,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
         required: true,
         max: MAX_ROOMS,
         options: ROOM_TYPES.map((r) => ({ value: r, label: r[0].toUpperCase() + r.slice(1) })),
-        help: "Up to 6 rooms per order, priced per photo. Straight-on, well lit, empty or nearly empty. Landscape works best.",
+        help: "Up to 10 rooms per order: $15 per photo, $12 each from 5 photos, $99 for 10. Straight-on, well lit, empty or nearly empty. Landscape works best.",
       },
       {
         key: "style",
@@ -177,9 +178,11 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   pricing: {
     sku: "VIRTUAL_STAGING",
     name: "Virtual Staging — 2 versions per photo",
-    priceCents: 1500,
+    priceCents: STAGING_UNIT_CENTS,
     currency: "usd",
     unit: { one: "photo", many: "photos" },
+    // 5 photos $60, 10 photos $99: one listing's worth of rooms in one order (src/config/staging-pricing.ts).
+    volume: STAGING_VOLUME_TIERS,
     // Sources (checked 2026-09-26): boxbrownie.com/virtual-staging — US$30 per image, 48 hours; Bella Virtual Staging's
     // price comparison of 2026-07-20 — Styldod $23 ($16 on 8+ photos), BoxBrownie $30, Stuccco $35, Bella $37, 24–48 h.
     compareAtText: "Staging services with human editors charge about $23–37 per photo and take 24–48 hours",
@@ -190,26 +193,37 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     subheadline: "Upload photos of the empty rooms, pick a style, and get two photorealistic staged versions of each exact photo — same walls, same windows, same light — in about two minutes per photo.",
     bullets: [
       "2 staged versions of each photo, 1024 px or larger, JPG ready for the MLS",
-      "Up to 6 rooms in one order, $15 per photo — pick the room type of each",
+      "Up to 10 rooms in one order: $15 per photo, $12 each from 5 photos, $99 for 10 — pick the room type of each",
       "The architecture stays untouched: walls, floors, windows, fixtures, perspective",
       "6 styles: modern, scandinavian, farmhouse, mid-century, luxury, coastal",
       "Before/after side by side on your order page, downloads kept 90 days",
       "Disclosure pack for California AB 723 and MLS rules: labeled copies, a public link and QR code to the original photo, and the line to paste next to it",
     ],
     howItWorks: [
-      { title: "1. Upload the photos", text: "Up to 6 well-lit photos of empty rooms, up to 8 MB each. Pick the room type of each photo and one style." },
-      { title: "2. Pay $15 per photo", text: "Secure checkout via Stripe. Staging starts immediately." },
+      { title: "1. Upload the photos", text: "Up to 10 well-lit photos of empty rooms, up to 8 MB each. Pick the room type of each photo and one style." },
+      { title: "2. First photo free, then $15", text: "Your first photo is free once you confirm your email. After that, $15 per photo via secure Stripe checkout; staging starts immediately." },
       { title: "3. Download both versions of each", text: "About two minutes per photo later: two staged variations of every room on your order page and by email." },
     ],
     faq: [
       { q: "Does it change the room itself?", a: "No. Furniture, rugs, lighting and decor are added; walls, floors, windows, doors and the camera angle are kept as photographed. If something structural did change, reply to the delivery email and we redo it." },
       { q: "Do I have to disclose virtual staging?", a: "Almost everywhere, yes. In California, AB 723 (in force since January 1, 2026) requires digitally altered listing photos to carry a disclosure next to the image and the unaltered original to be available — on your own site, or through a public link or QR code elsewhere. Most MLS boards ask for a “virtually staged” or “digitally altered” label with the original uploaded right after the staged photo. Every order includes a disclosure pack: labeled copies, a public page with the original photo plus a QR code, and the line to paste. It helps you comply; you remain responsible for your listing." },
       { q: "What photos work best?", a: "Straight-on or slight angle, daylight, the whole room in frame, nothing blocking the floor. Cluttered rooms get staged too, but empty rooms give the cleanest result." },
-      { q: "Can I see it on my photo before paying?", a: "Yes. Upload your photo in the order form and press “See a free preview” — you get one staged version of your (first) photo, watermarked and at reduced size, in about a minute (a few per day). The paid order gives you two full-resolution versions of every photo without watermarks." },
-      { q: "Can I stage several rooms, or get another style?", a: "Up to 6 rooms fit in one order at $15 per photo — each photo gets two versions in the style you pick, and each photo gets its own room type. For a second style of the same rooms, place another order." },
+      { q: "Can I see it on my photo before paying?", a: "Yes, two ways. Your first photo is free: upload one photo, leave your email and click the link we send — you get the full result, two versions without watermarks. Or press “See a free preview” for one watermarked, downsized version of your (first) photo in about a minute (a few per day)." },
+      { q: "Is the first photo really free?", a: "Yes: one photo per person, no card. It is the same order a customer pays $15 for — two full-resolution versions and the disclosure pack — and it starts when you click the link in the email we send, so we know the address is yours. There is a daily limit; when it is reached, the form says so, and the free watermarked preview still works." },
+      { q: "Can I stage several rooms, or get another style?", a: "Up to 10 rooms fit in one order: $15 per photo, $12 each from 5 photos, and $99 for 10 — each photo gets two versions in the style you pick, and each photo gets its own room type. For a second style of the same rooms, place another order." },
       { q: "Is this AI virtual staging?", a: "Yes. An AI image model adds the furniture and decor to your own photo, instructed to keep the walls, floors, windows and camera angle as they are. That is why it takes minutes instead of the 8–48 hours human editing services quote, and costs $15 instead of their $24–$30 per photo (prices in our cost guide). If the room's structure changed anyway, or a version is unusable, one redo is included." },
     ],
     ctaLabel: "Stage my photo — $15",
+    heroResult: {
+      before: { src: "/img/hero-staging-before.webp", width: 700, height: 470, alt: "Before: an empty living room with three windows and an oak floor" },
+      after: {
+        src: "/img/hero-staging-after.webp",
+        width: 700,
+        height: 474,
+        alt: "After: the same room virtually staged with a sofa, rug, coffee table, armchairs, a floor lamp and framed prints",
+      },
+      caption: "Real result: the photo our pipeline returned, not retouched. Walls, floor, windows and camera angle are as photographed.",
+    },
     ctaLabelMany: "Stage {n} photos — {total}",
     guarantee: "If the room's structure was changed or the result is unusable, one redo is included; otherwise a refund.",
     deliveryPromise: "Usually ready in about 2 minutes per photo.",
@@ -222,11 +236,12 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   },
   seo: {
     title: "AI virtual staging — $15 per photo, 2 versions in minutes | ORVIONIS",
-    description: "Upload photos of empty rooms, pick one of six styles and get two photorealistic AI-staged versions of each photo in about two minutes. $15 per photo, up to 6 rooms, free watermarked preview, no subscription.",
+    description: "Upload photos of empty rooms, pick one of six styles and get two photorealistic AI-staged versions of each photo in about two minutes. First photo free, then $15 per photo ($12 from 5 photos), no subscription.",
     keywords: ["virtual staging", "virtual staging software", "virtually staged photos", "AI virtual staging", "empty room staging"],
     ogImage: "img/sample-virtual-staging-og.jpg",
   },
   disclosurePack: true,
+  freeFirstPhoto: true,
   quantity: (i) => i.rooms.length,
   photoInputs: (i) => i.rooms.map((r, idx) => ({ fileId: r.photoFileId, label: i.rooms.length > 1 ? `Room ${idx + 1} · ${r.roomType}` : "Your photo" })),
   preview: {

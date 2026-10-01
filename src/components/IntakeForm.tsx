@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { IntakeField } from "@/lib/tools/types";
 import { trackClient } from "@/components/Analytics";
 import { gaEventThen, gaItem as toGaItem } from "@/lib/ga";
+import { nextVolumeTier, volumeTotalCents, type VolumeTier } from "@/lib/tools/volume";
 
 type Props = {
   toolSlug: string;
@@ -19,10 +20,10 @@ type Props = {
   /** For the GA4 begin_checkout event (no personal data). */
   gaItem?: { name: string; priceCents: number; currency: string };
   /**
-   * Tools priced per unit (a "rooms" field: one unit per photo). Display only — the server prices the order.
-   * `ctaMany` may use {n} and {total}.
+   * Tools priced per unit (a "rooms" field: one unit per photo). Display only — the server prices the order with the
+   * same volume tiers (src/lib/tools/volume.ts). `ctaMany` may use {n} and {total}.
    */
-  perUnit?: { unitCents: number; one: string; many: string; ctaMany?: string };
+  perUnit?: { unitCents: number; one: string; many: string; ctaMany?: string; tiers?: VolumeTier[]; max?: number };
   /**
    * Admin use (orders paid on a marketplace): submit the validated intake to this callback instead of starting a
    * Stripe checkout. The email field and the terms line are hidden; `extraFields` renders above the button.
@@ -31,6 +32,19 @@ type Props = {
   extraFields?: React.ReactNode;
   heading?: string;
   submitLabel?: string;
+  /**
+   * Free first photo (virtual staging): with exactly one photo the form offers it next to the paid order. `notice` is
+   * why the visitor came back from the emailed link (used / expired / soldout / invalid / error), shown above the form.
+   */
+  freePhoto?: { available: boolean; notice?: string | null };
+};
+
+const FREE_NOTICES: Record<string, string> = {
+  used: "This email has already had its free photo — the next ones are $15 each.",
+  expired: "That free-photo link was replaced by a newer one or is no longer valid. Request a new one below.",
+  soldout: "Today's free photos are gone. Your link still works tomorrow (it's valid for 7 days), or see a free watermarked preview now.",
+  invalid: "That link didn't work. Request a new one below.",
+  error: "Something went wrong with that link. Try it again in a minute, or request a new one below.",
 };
 
 type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
@@ -51,7 +65,7 @@ function initialValue(f: IntakeField): string {
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, initialValue(f)])));
   const [email, setEmail] = useState(initialEmail ?? "");
   const [uploading, setUploading] = useState<string | null>(null);
@@ -71,11 +85,19 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   const [pvError, setPvError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const pvRequest = useRef(0);
+  // Which button submitted the form: the free first photo or the paid order.
+  const intent = useRef<"free" | "paid">("paid");
+  const [freeSent, setFreeSent] = useState<{ email: string; devLink?: string } | null>(null);
 
   const uploadedRooms = rooms.filter((r) => r.fileId);
   const quantity = roomsField ? Math.max(1, uploadedRooms.length) : 1;
   const hasPhoto = roomsField ? uploadedRooms.length > 0 && Boolean(uploadedRooms[0].roomType) : imageKey ? Boolean(values[imageKey]) : false;
   const firstRoomFileId = uploadedRooms[0]?.fileId ?? null;
+  const offerFree = Boolean(freePhoto?.available && !onSubmitIntake);
+  // The free photo is exactly one photo; with more, the order is paid (the form says how to get the free one).
+  const freeMode = offerFree && (roomsField ? uploadedRooms.length === 1 : true);
+  // The heading speaks about the free photo until a second photo makes it a paid order.
+  const freeHeading = offerFree && (roomsField ? uploadedRooms.length <= 1 : true);
 
   useEffect(() => {
     if (pvSince === null) return;
@@ -254,6 +276,24 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       }
     }
     setSubmitting(true);
+    if (freeMode && intent.current === "free") {
+      try {
+        const res = await fetch(`/api/tools/${toolSlug}/free`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, intake: values }),
+        });
+        const data = (await res.json()) as { ok?: boolean; email?: string; devLink?: string; message?: string };
+        if (!res.ok || !data.ok) throw new Error(data.message ?? "We couldn't send the email right now. Please try again.");
+        trackClient("free_photo_requested", { tool: toolSlug });
+        setFreeSent({ email: data.email ?? email, devLink: data.devLink });
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
     if (onSubmitIntake) {
       try {
         await onSubmitIntake({ email, intake: values });
@@ -277,7 +317,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       };
       if (gaItem && !(adminSandbox && sandbox)) {
         const item = { ...toGaItem({ slug: toolSlug, name: gaItem.name }, gaItem.priceCents), quantity };
-        gaEventThen("begin_checkout", { currency: gaItem.currency.toUpperCase(), value: (gaItem.priceCents * quantity) / 100, items: [item] }, go);
+        gaEventThen("begin_checkout", { currency: gaItem.currency.toUpperCase(), value: (total ?? gaItem.priceCents * quantity) / 100, items: [item] }, go);
       } else go();
     } catch (err) {
       setError((err as Error).message);
@@ -285,18 +325,48 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
     }
   };
 
-  const total = perUnit ? perUnit.unitCents * quantity : null;
+  const unitsMax = Math.max(quantity, perUnit?.max ?? quantity);
+  const total = perUnit ? volumeTotalCents(quantity, perUnit.unitCents, perUnit.tiers, unitsMax) : null;
+  const fullPrice = perUnit ? perUnit.unitCents * quantity : null;
+  const nextTier = perUnit ? nextVolumeTier(quantity, perUnit.tiers, unitsMax) : null;
+  // e.g. 9 photos already cost what 10 cost: the 10th is free.
+  const nextUnitFree = perUnit && quantity < unitsMax ? volumeTotalCents(quantity + 1, perUnit.unitCents, perUnit.tiers, unitsMax) === total : false;
   const buttonLabel =
-    perUnit && quantity > 1 && perUnit.ctaMany ? perUnit.ctaMany.replace("{n}", String(quantity)).replace("{total}", money(perUnit.unitCents * quantity)) : ctaLabel;
+    perUnit && quantity > 1 && perUnit.ctaMany ? perUnit.ctaMany.replace("{n}", String(quantity)).replace("{total}", money(total ?? 0)) : ctaLabel;
+
+  if (freeSent) {
+    return (
+      <div className="card space-y-4" id="order" role="status">
+        <h2 className="text-xl font-bold">Check your inbox</h2>
+        <p className="text-sm text-gray-700">
+          We sent a link to <strong className="text-fg">{freeSent.email}</strong>. Click it, and your staged photo is ready about 2 minutes later — on the page that opens, and by email.
+        </p>
+        <p className="text-xs text-gray-500">Nothing there in a minute? Check spam or promotions. The link works for 7 days.</p>
+        {freeSent.devLink ? (
+          <a className="text-xs text-accent underline" href={freeSent.devLink}>
+            Local test: open the link
+          </a>
+        ) : null}
+        <button type="button" className="text-sm font-semibold text-accent hover:underline" onClick={() => setFreeSent(null)}>
+          Wrong email? Start over
+        </button>
+      </div>
+    );
+  }
+
+  const notice = freePhoto?.notice ? FREE_NOTICES[freePhoto.notice] : undefined;
 
   return (
     <form onSubmit={submit} onFocus={onFocus} className="card space-y-5" id="order">
       <div>
-        <h2 className="text-xl font-bold">{heading ?? "Start your order"}</h2>
+        <h2 className="text-xl font-bold">{heading ?? (freeHeading ? "Stage your first photo free" : "Start your order")}</h2>
         <p className="mt-1 text-sm text-gray-600">
-          {priceLabel} · {deliveryPromise} · Secure payment via Stripe on the next step.
+          {freeHeading
+            ? `Upload one room photo, leave your email and click the link we send — no card. After that, ${priceLabel} · ${deliveryPromise}`
+            : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
         </p>
       </div>
+      {notice ? <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">{notice}</p> : null}
 
       {fields.map((f) => (
         <div key={f.key}>
@@ -386,10 +456,20 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
               ) : (
                 <p className="text-xs text-gray-500">That's the maximum of {f.max ?? 6} photos for one order.</p>
               )}
-              {perUnit && uploadedRooms.length > 1 ? (
-                <p className="text-sm font-semibold">
-                  {uploadedRooms.length} {perUnit.many} × {money(perUnit.unitCents)} = {money(total ?? 0)}
-                </p>
+              {perUnit && uploadedRooms.length > 1 && total !== null ? (
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold">
+                    {uploadedRooms.length} {perUnit.many} = {money(total)}
+                    {fullPrice !== null && total < fullPrice ? <span className="font-normal text-green-600"> · you save {money(fullPrice - total)}</span> : null}
+                  </p>
+                  {nextUnitFree ? (
+                    <p className="text-xs text-gray-500">One more {perUnit.one} costs nothing extra — add it.</p>
+                  ) : nextTier ? (
+                    <p className="text-xs text-gray-500">
+                      Add {nextTier.from - uploadedRooms.length} more and every {perUnit.one} is {money(nextTier.unitCents)}.
+                    </p>
+                  ) : null}
+                </div>
               ) : null}
             </div>
           ) : f.type === "image" ? (
@@ -436,7 +516,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
         </div>
       ))}
 
-      {preview && (imageKey || roomsField) ? (
+      {preview && (imageKey || roomsField) && !freeMode ? (
         <div className="rounded-xl border border-line bg-bg p-3">
           {pvReady ? (
             <div>
@@ -475,7 +555,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       {onSubmitIntake ? null : (
         <div>
           <label className="field-label" htmlFor="f-email">
-            Your email (for the order page and delivery) <span className="text-red-500">*</span>
+            {freeMode ? "Your email (the link to your free photo goes here)" : "Your email (for the order page and delivery)"} <span className="text-red-500">*</span>
           </label>
           <input id="f-email" type="email" required className="field-input" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
@@ -492,9 +572,26 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
         </label>
       ) : null}
 
-      <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null}>
-        {submitting ? (onSubmitIntake ? "Creating the order…" : "Redirecting to secure checkout…") : (submitLabel ?? buttonLabel)}
-      </button>
+      {freeMode ? (
+        <div className="space-y-3">
+          <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null} onClick={() => (intent.current = "free")}>
+            {submitting && intent.current === "free" ? "Sending the link…" : "Stage it free — first photo"}
+          </button>
+          <p className="text-center text-xs text-gray-500">No card. Click the link we email you and the photo is ready about 2 minutes later. One free photo per person.</p>
+          <button type="submit" className="btn-secondary w-full" disabled={submitting || uploading !== null} onClick={() => (intent.current = "paid")}>
+            {submitting && intent.current === "paid" ? "Redirecting to secure checkout…" : `Or pay ${perUnit ? money(perUnit.unitCents) : priceLabel} and start right away`}
+          </button>
+        </div>
+      ) : (
+        <>
+          <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null} onClick={() => (intent.current = "paid")}>
+            {submitting ? (onSubmitIntake ? "Creating the order…" : "Redirecting to secure checkout…") : (submitLabel ?? buttonLabel)}
+          </button>
+          {offerFree && roomsField && uploadedRooms.length > 1 ? (
+            <p className="text-center text-xs text-gray-500">First time here? Keep just one photo in the form and it&rsquo;s free.</p>
+          ) : null}
+        </>
+      )}
       {onSubmitIntake ? null : (
         <p className="text-center text-xs text-gray-500">
           By ordering you agree to our <a className="underline" href="/terms">Terms</a> and <a className="underline" href="/refund-policy">Refund Policy</a>.

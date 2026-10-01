@@ -8,6 +8,7 @@ import { randomToken } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
 import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
 import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
+import { volumeTotalCents } from "@/lib/tools/volume";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
@@ -84,6 +85,11 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   const fileIds = [...new Set(photoInputsOf(def as ToolDefinition<unknown>, intake).map((p) => p.fileId))];
   // Units charged (e.g. rooms): the total is always computed here, never taken from the client.
   const quantity = quantityOf(def as ToolDefinition<unknown>, intake);
+  // Volume pricing (e.g. 5 photos $60, 10 for $99), never more than a larger order would cost.
+  const maxUnits = def.intake.fields.find((f) => f.type === "rooms")?.max ?? quantity;
+  const totalCents = volumeTotalCents(quantity, product.priceCents, def.pricing.volume, Math.max(quantity, maxUnits));
+  // Stripe shows "n × unit price" when the total divides evenly (it does for every current tier), else one line.
+  const perUnitLine = totalCents % quantity === 0;
   if (fileIds.length > 0) {
     const files = await prisma.file.findMany({
       where: { id: { in: fileIds } },
@@ -119,7 +125,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       productId: product.id,
       status: "PENDING",
       intake: intake as object,
-      amountCents: product.priceCents * quantity,
+      amountCents: totalCents,
       quantity,
       currency: product.currency,
       accessToken: randomToken(24),
@@ -148,11 +154,14 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       customer_email: email,
       line_items: [
         {
-          quantity,
+          quantity: perUnitLine ? quantity : 1,
           price_data: {
             currency: product.currency || env().STRIPE_CURRENCY,
-            unit_amount: product.priceCents,
-            product_data: { name: product.name, description: def.tagline.slice(0, 200) },
+            unit_amount: perUnitLine ? totalCents / quantity : totalCents,
+            product_data: {
+              name: perUnitLine || quantity === 1 ? product.name : `${product.name} (${quantity} ${def.pricing.unit?.many ?? "units"})`,
+              description: def.tagline.slice(0, 200),
+            },
           },
         },
       ],
@@ -184,7 +193,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,
     experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: product.priceCents * quantity, quantity, mode },
+    props: { tool: def.id, amountCents: totalCents, quantity, mode },
   });
   return { orderId: order.id, checkoutUrl: session.url };
 }

@@ -35,7 +35,7 @@ Rule: no secrets in this file — only names, ids, paths and states.
 
 ## Owner away 2026-09-27 → ~2026-10-01 (autonomous mode)
 
-- **Schedule:** check-ins run into this Cowork session every ~6 h: 05:03, 11:03, 17:03 and 23:03 UTC, from 26 Sep 23:03 to 1 Oct 17:03. The final E8 evaluation task is set for 7 Oct 05:03 UTC; since the campaign ends on 1 Oct, the 1 Oct 17:03 check-in moves it to 2 Oct 05:03 UTC. Find them with `list_triggers`.
+- **Schedule:** check-ins ran into this Cowork session every ~6 h from 26 Sep 23:03 to 1 Oct 17:03 UTC. The E8 final evaluation runs 2 Oct 05:03 UTC (moved from 7 Oct on 1 Oct 00:36). **From 2 Oct the operator is the project manager** (owner's yes on 1 Oct): three check-ins a day, ≈ 08:52 / 14:52 / 20:52 Warsaw, as one-off tasks that the evening run keeps scheduling two days ahead — the routine is in `docs/AUTONOMOUS_PROGRESS.md` → "MANAGER CHECK-INS". The old "AI operator loop" (fresh sessions every 2 h, failing since 25 Sep) is disabled. Find them with `list_triggers`.
 - **The owner's PC must stay on** with the Claude desktop app and Chrome running. Without it there is no Chrome (Ads / Fiverr / Railway / admin) and no git push; the cloud can't reach orvionis.com or GitHub.
 - **Fiverr (owner's choice): the gig stays active.** A real order goes like this:
   1. verify it in Manage Orders;

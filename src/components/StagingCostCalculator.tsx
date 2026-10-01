@@ -1,5 +1,6 @@
 "use client";
 
+import { STAGING_PRICE_LINE } from "@/config/staging-pricing";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { trackClient } from "@/components/Analytics";
@@ -93,7 +94,7 @@ export function StagingCostCalculator() {
                 <tr key={o.key} className="border-t border-line align-top">
                   <td className="py-2 pr-3 text-fg">
                     {o.name}
-                    <div className="text-xs text-gray-500">{money(o.perPhoto)} per photo</div>
+                    <div className="text-xs text-gray-500">{o.priceNote ?? `${money(o.perPhoto)} per photo`}</div>
                   </td>
                   <td className="py-2 pr-3 font-semibold text-fg">{money(o.perListing)}</td>
                   <td className="py-2 pr-3 text-fg">{money(o.perMonth)}</td>
@@ -129,11 +130,11 @@ export function StagingCostCalculator() {
         <div className="mt-6 rounded-xl border border-accent/40 bg-accent/10 p-4">
           <div className="font-semibold text-fg">See it on your own photo before you pay</div>
           <p className="mt-1 text-sm text-gray-600">
-            ORVIONIS stages up to six rooms per order at $15 per photo, two versions of each, with labeled copies for the MLS disclosure. The free watermarked preview uses your own photo.
+            ORVIONIS stages up to ten rooms per order: {STAGING_PRICE_LINE}, two versions of each, with labeled copies for the MLS disclosure. Your first photo is free (one per person).
           </p>
           <div className="mt-3">
             <Link href="/tools/virtual-staging" className="btn-primary" onClick={() => trackClient("cta_click", { from: "staging-cost-calculator" })}>
-              Stage a photo — $15
+              Stage your first photo free
             </Link>
           </div>
         </div>

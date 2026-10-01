@@ -49,6 +49,9 @@ export type Kpis = {
   /** Free watermarked previews shown, and how many of those sessions went on to checkout. */
   previewsShown: number;
   previewSessionsToCheckout: number;
+  /** Free first photos claimed (email confirmed) in the period, and how many of those people have also paid for an order. */
+  freePhotosClaimed: number;
+  freePhotoPayers: number;
 };
 
 export const STRIPE_FEE_PCT = 0.029;
@@ -61,13 +64,14 @@ export function estimateStripeFeesCents(orders: Array<{ amountCents: number }>):
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions] =
+  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions, freeClaims] =
     await Promise.all([
       prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true, path: true } }),
       prisma.event.findMany({ where: { name: "intake_started", createdAt: range }, select: { props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range }, select: { props: true } }),
       prisma.order.findMany({
-        where: { paidAt: range, isTest: false },
+        // Free first photos are paid for by nobody: they are counted apart (freePhotosClaimed), never as revenue.
+        where: { paidAt: range, isTest: false, free: false },
         select: {
           id: true,
           toolId: true,
@@ -80,7 +84,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
           payments: { select: { amountCents: true, feeCents: true }, orderBy: { createdAt: "asc" }, take: 1 },
         },
       }),
-      prisma.order.count({ where: { deliveredAt: range, isTest: false } }),
+      prisma.order.count({ where: { deliveredAt: range, isTest: false, free: false } }),
       prisma.refund.aggregate({ _sum: { amountCents: true }, _count: true, where: { createdAt: range, status: "SUCCEEDED" } }),
       prisma.order.count({ where: { status: "REVIEW" } }),
       prisma.order.count({ where: { status: "FAILED" } }),
@@ -91,6 +95,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
+      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false }, select: { customerEmail: true } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
   const previewSessionIds = new Set(previewEvents.map((e) => e.sessionId).filter(Boolean) as string[]);
@@ -196,7 +201,21 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     freeToolUses,
     previewsShown: previewEvents.length,
     previewSessionsToCheckout: [...previewSessionIds].filter((id) => checkoutSessionIds.has(id)).length,
+    freePhotosClaimed: freeClaims.length,
+    freePhotoPayers: await freePhotoPayers(freeClaims.map((o) => o.customerEmail)),
   };
+}
+
+/** Of the people who got a free photo, how many have paid for an order (any time; the free photo is the first touch). */
+async function freePhotoPayers(emails: string[]): Promise<number> {
+  const unique = [...new Set(emails)];
+  if (unique.length === 0) return 0;
+  const payers = await prisma.order.findMany({
+    where: { customerEmail: { in: unique }, free: false, isTest: false, paidAt: { not: null }, status: { notIn: ["REFUNDED", "CANCELED"] } },
+    select: { customerEmail: true },
+    distinct: ["customerEmail"],
+  });
+  return payers.length;
 }
 
 export function daysAgo(n: number): Date {

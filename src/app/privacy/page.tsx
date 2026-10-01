@@ -41,6 +41,9 @@ export default function PrivacyPage() {
           details, your name, brokerage or social handle as you want them on the result, or your business details), the
           photos and logos you upload and any links to your footage. We use them to produce and deliver your order
           (performance of the contract). Each order has a private link to its status and files; we email it to you.
+          For a free first photo we email you a confirmation link first; the photo is staged only after you click it,
+          and we keep a normalised form of your email address so that each person gets one free photo. An unconfirmed
+          request is kept like any other upload.
         </li>
         <li>
           <strong>Payments</strong> — you pay on Stripe&apos;s checkout page. Your full card number and security code go to

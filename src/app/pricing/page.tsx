@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pricing: $9 to $49 per result, no subscription",
   description:
-    "Every price on one page: virtual staging $15 per photo (up to 6 rooms per order), listing description $9, listing clips $49, photographer pricing guide $29. Paid once through Stripe, with delivery times and the refund policy.",
+    "Every price on one page: virtual staging $15 per photo ($12 each from 5 photos, $99 for 10, first photo free), listing description $9, listing clips $49, photographer pricing guide $29. Paid once through Stripe, with delivery times and the refund policy.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -18,9 +18,10 @@ export default async function PricingPage() {
     <div className="container-x py-12">
       <h1 className="text-3xl font-bold">Pricing</h1>
       <p className="mt-2 max-w-2xl text-gray-600">
-        Every tool has one fixed price and a delivery promise. You pay when you order; you get a refund if we can&apos;t deliver
-        what the page promised (see the <Link className="underline" href="/refund-policy">refund policy</Link>). Bundles and
-        monthly plans will be offered once enough customers ask for them — not before.
+        Every tool has a fixed price and a delivery promise. Virtual staging costs less per photo from 5 photos in one order,
+        and your first photo is free (one per person). You pay when you order; you get a refund if we can&apos;t deliver what
+        the page promised (see the <Link className="underline" href="/refund-policy">refund policy</Link>). Monthly plans will
+        be offered once enough customers ask for them — not before.
       </p>
       <div className="mt-8 overflow-hidden rounded-xl border border-line">
         <table className="w-full text-left text-sm">
@@ -43,7 +44,15 @@ export default async function PricingPage() {
                 </td>
                 <td className="hidden px-4 py-3 text-gray-600 md:table-cell">{c.def.io.input}</td>
                 <td className="px-4 py-3 text-gray-600">{c.def.io.processingTime}</td>
-                <td className="px-4 py-3 text-right font-bold">{formatUsd(c.priceCents).replace(/\.00$/, "")}</td>
+                <td className="px-4 py-3 text-right font-bold">
+                  {formatUsd(c.priceCents).replace(/\.00$/, "")}
+                  {c.def.pricing.unit ? <span className="font-normal text-gray-500"> / {c.def.pricing.unit.one}</span> : null}
+                  {c.def.pricing.volume?.length ? (
+                    <div className="text-xs font-normal text-gray-500">
+                      {c.def.pricing.volume.map((t) => `${formatUsd(t.unitCents).replace(/\.00$/, "")} from ${t.from}`).join(" · ")}
+                    </div>
+                  ) : null}
+                </td>
               </tr>
             ))}
           </tbody>

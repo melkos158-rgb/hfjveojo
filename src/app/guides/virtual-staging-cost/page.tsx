@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { stagingListingCents } from "@/config/staging-pricing";
 import { site } from "@/config/site";
 
 const SLUG = "virtual-staging-cost";
@@ -50,10 +51,10 @@ const MODELS: Array<{ model: string; example: string; price: string; time: strin
   },
 ];
 
-const LISTING_COST: Array<{ label: string; perPhoto: number | null; note?: string }> = [
+const LISTING_COST: Array<{ label: string; perPhoto: number | null; note?: string; cost?: (rooms: number) => number }> = [
   { label: "Human editor at US$30", perPhoto: 30 },
   { label: "Human editor at $24", perPhoto: 24 },
-  { label: "ORVIONIS at $15", perPhoto: 15 },
+  { label: "ORVIONIS ($15, or $12 each from 5 photos)", perPhoto: 15, cost: (rooms) => stagingListingCents(rooms) / 100 },
   { label: "AI subscription", perPhoto: null, note: "$16–19 for the month if the listing fits the plan (6 or 20 photos)" },
 ];
 
@@ -135,8 +136,8 @@ export default function VirtualStagingCostGuide() {
                   </td>
                 ) : (
                   <>
-                    <td className="py-2 pr-3">${r.perPhoto * 4}</td>
-                    <td className="py-2">${r.perPhoto * 6}</td>
+                    <td className="py-2 pr-3">${r.cost ? r.cost(4) : r.perPhoto * 4}</td>
+                    <td className="py-2">${r.cost ? r.cost(6) : r.perPhoto * 6}</td>
                   </>
                 )}
               </tr>
@@ -174,11 +175,11 @@ export default function VirtualStagingCostGuide() {
 
       <h2>Our price</h2>
       <p>
-        <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> is $15 per photo, up to six rooms per order, with two
-        staged versions of each photo in about two minutes and six styles. Walls, floors and windows stay as photographed; if
+        <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> is $15 per photo, $12 each from five photos and $99
+        for ten, up to ten rooms per order, with two staged versions of each photo in about two minutes and six styles. Walls, floors and windows stay as photographed; if
         the room&apos;s structure was changed or the result is unusable, one redo is included, otherwise a refund. Every order
-        comes with a disclosure pack (labeled copies and a link to the original), and you can see a free watermarked preview of
-        your own photo before you pay.
+        comes with a disclosure pack (labeled copies and a link to the original). Your first photo is free (one per person), and
+        you can also see a free watermarked preview of your own photo before you pay.
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">

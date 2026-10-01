@@ -38,37 +38,49 @@ export function CookieConsent({ analytics = false }: { analytics?: boolean }) {
     setVisible(false);
   };
 
+  // On phones the notice is one short line, so it never covers the page's main button; the full text is on sm+.
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-2xl rounded-xl border border-line bg-card p-4 text-sm shadow-lg">
+    <div className="fixed inset-x-3 bottom-3 z-50 mx-auto max-w-2xl rounded-xl border border-line bg-card px-3 py-2 text-xs shadow-lg sm:inset-x-4 sm:bottom-4 sm:p-4 sm:text-sm">
       {analytics ? (
-        <>
-          <p className="text-gray-700">
-            We use a sign-in cookie and our own first-party cookies that remember how you found us and count visits with a
-            random ID. If you accept, Google Analytics also measures which pages help people. No advertising trackers.
-            See our <a className="underline" href="/privacy">privacy policy</a>.
+        <div className="flex items-center gap-2 sm:block">
+          <p className="flex-1 text-gray-700">
+            <span className="sm:hidden">
+              Allow Google Analytics? Our own cookies are always on. <a className="underline" href="/privacy">Privacy</a>
+            </span>
+            <span className="hidden sm:inline">
+              We use a sign-in cookie and our own first-party cookies that remember how you found us and count visits with a
+              random ID. If you accept, Google Analytics also measures which pages help people. No advertising trackers.
+              See our <a className="underline" href="/privacy">privacy policy</a>.
+            </span>
           </p>
-          <div className="mt-3 flex flex-wrap justify-end gap-2">
-            <button type="button" onClick={() => close(false)} className="btn-secondary px-4 py-2">
+          <div className="flex shrink-0 gap-2 sm:mt-3 sm:justify-end">
+            <button type="button" onClick={() => close(false)} className="btn-secondary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm">
               Decline
             </button>
-            <button type="button" onClick={() => close(true)} className="btn-primary px-4 py-2">
-              Accept Google Analytics
+            <button type="button" onClick={() => close(true)} className="btn-primary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm">
+              <span className="sm:hidden">Accept</span>
+              <span className="hidden sm:inline">Accept Google Analytics</span>
             </button>
           </div>
-        </>
+        </div>
       ) : (
-        <>
-          <p className="text-gray-700">
-            We use a sign-in cookie and our own first-party cookies: one remembers how you found us (90 days), the other
-            counts visits with a random ID (6 months). No third-party or advertising trackers. See our{" "}
-            <a className="underline" href="/privacy">privacy policy</a>.
+        <div className="flex items-center gap-3 sm:block">
+          <p className="flex-1 text-gray-700">
+            <span className="sm:hidden">
+              Only our own cookies, no ad trackers. <a className="underline" href="/privacy">Privacy</a>
+            </span>
+            <span className="hidden sm:inline">
+              We use a sign-in cookie and our own first-party cookies: one remembers how you found us (90 days), the other
+              counts visits with a random ID (6 months). No third-party or advertising trackers. See our{" "}
+              <a className="underline" href="/privacy">privacy policy</a>.
+            </span>
           </p>
-          <div className="mt-3 flex justify-end">
-            <button type="button" onClick={() => close(null)} className="btn-primary px-4 py-2">
+          <div className="shrink-0 sm:mt-3 sm:flex sm:justify-end">
+            <button type="button" onClick={() => close(null)} className="btn-primary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm">
               Got it
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

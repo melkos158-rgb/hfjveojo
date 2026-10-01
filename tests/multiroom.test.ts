@@ -131,6 +131,22 @@ describe("multi-room virtual staging", () => {
     expect(original?.photos).toEqual(rooms.map((r, i) => ({ fileId: r.photoFileId, label: `Room ${i + 1} · ${r.roomType}` })));
   });
 
+  it("prices larger orders with the volume tiers on the server: 5 photos $60, 9 or 10 photos $99", async () => {
+    const roomsOf = async (n: number) =>
+      (await materializeTestIntake({ rooms: Array.from({ length: n }, () => ({ photoFileId: PHOTO, roomType: "bedroom" })), style: "modern", notes: "" })).rooms;
+    for (const [n, total, unit] of [
+      [5, 6000, 1200],
+      [9, 9900, 1100],
+      [10, 9900, 990],
+    ] as const) {
+      const rooms = await roomsOf(n);
+      const { orderId } = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: `vol${n}@example.com`, intakeRaw: { rooms: JSON.stringify(rooms), style: "modern" } });
+      const order = await prisma.order.findUniqueOrThrow({ where: { id: orderId } });
+      expect([order.amountCents, order.quantity]).toEqual([total, n]);
+      expect(sessions.at(-1)?.line_items).toMatchObject([{ quantity: n, price_data: { unit_amount: unit } }]);
+    }
+  });
+
   it("waits out the image API's per-minute limit instead of failing a multi-room order", async () => {
     setRateLimitWaitForTests(5);
     const intake = await materializeTestIntake({

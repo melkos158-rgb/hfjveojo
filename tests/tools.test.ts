@@ -105,7 +105,7 @@ describe("tool registry", () => {
     expect(staging.intake.schema.safeParse({ photoFileId: "clx123", style: "art deco" }).success).toBe(false);
   });
 
-  it("virtual staging takes up to 6 rooms (JSON from the form or an array), each with its own room type, priced per photo", async () => {
+  it("virtual staging takes up to 10 rooms (JSON from the form or an array), each with its own room type, priced per photo", async () => {
     const { photoInputsOf, quantityOf } = await import("@/lib/tools/photos");
     const staging = getToolBySlug("virtual-staging")!;
     const rooms = [
@@ -127,8 +127,10 @@ describe("tool registry", () => {
     expect(photoInputsOf(staging, { rooms: rooms.slice(0, 1), style: "modern" })).toEqual([{ fileId: "clxa", label: "Your photo" }]);
     expect(quantityOf(staging, { rooms: rooms.slice(0, 1), style: "modern" })).toBe(1);
 
-    const seven = Array.from({ length: 7 }, (_, i) => ({ photoFileId: `clx${i}`, roomType: "bedroom" }));
-    expect(staging.intake.schema.safeParse({ rooms: seven, style: "modern" }).success).toBe(false);
+    const ten = Array.from({ length: 10 }, (_, i) => ({ photoFileId: `clx${i}`, roomType: "bedroom" }));
+    expect(staging.intake.schema.safeParse({ rooms: ten, style: "modern" }).success).toBe(true);
+    const eleven = Array.from({ length: 11 }, (_, i) => ({ photoFileId: `clx${i}`, roomType: "bedroom" }));
+    expect(staging.intake.schema.safeParse({ rooms: eleven, style: "modern" }).success).toBe(false);
     expect(staging.intake.schema.safeParse({ rooms: [], style: "modern" }).success).toBe(false);
     expect(staging.intake.schema.safeParse({ rooms: "[]", style: "modern" }).success).toBe(false);
     expect(staging.intake.schema.safeParse({ rooms: "not json", style: "modern" }).success).toBe(false);
@@ -136,7 +138,7 @@ describe("tool registry", () => {
     expect(staging.intake.schema.safeParse({ rooms: [{ photoFileId: "", roomType: "bedroom" }], style: "modern" }).success).toBe(false);
     // a tool without units is always quantity 1; invalid intake never multiplies the price
     expect(quantityOf(getToolBySlug("listing-description")!, sampleListingDescriptionIntake)).toBe(1);
-    expect(quantityOf(staging, { rooms: seven, style: "modern" })).toBe(1);
+    expect(quantityOf(staging, { rooms: eleven, style: "modern" })).toBe(1);
   });
 
   it("virtual staging prompt keeps the architecture fixed and carries the customer's notes", async () => {

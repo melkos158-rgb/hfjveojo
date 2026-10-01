@@ -4,11 +4,30 @@
  */
 export const STAGING_PRICES_CHECKED = "September 29, 2026";
 
-export type PerPhotoOption = { key: string; name: string; perPhoto: number; note: string };
+import { STAGING_PRICE_LINE, STAGING_UNIT_CENTS, stagingListingCents } from "@/config/staging-pricing";
+
+export type PerPhotoOption = {
+  key: string;
+  name: string;
+  /** Base price per photo, in dollars. */
+  perPhoto: number;
+  note: string;
+  /** Volume pricing: the price of one listing's photos, in dollars (default perPhoto × photos). */
+  perListingFor?: (photos: number) => number;
+  /** How the price is quoted when it isn't flat, e.g. "$15 per photo, $12 each from 5 photos, $99 for 10". */
+  priceNote?: string;
+};
 
 /** Pay-per-photo options, cheapest first. */
 export const PER_PHOTO_OPTIONS: PerPhotoOption[] = [
-  { key: "orvionis", name: "ORVIONIS (AI, 2 versions of each photo)", perPhoto: 15, note: "About 2 minutes per photo, no subscription" },
+  {
+    key: "orvionis",
+    name: "ORVIONIS (AI, 2 versions of each photo)",
+    perPhoto: STAGING_UNIT_CENTS / 100,
+    note: "About 2 minutes per photo, no subscription",
+    perListingFor: (photos) => stagingListingCents(photos) / 100,
+    priceNote: STAGING_PRICE_LINE,
+  },
   { key: "virtualstaging-com", name: "VirtualStaging.com (human editor)", perPhoto: 24, note: "8–24 hours" },
   { key: "boxbrownie", name: "BoxBrownie (human editor)", perPhoto: 30, note: "Under 48 hours, free changes within 2 months" },
 ];
@@ -48,7 +67,10 @@ export function compareStagingCost(photosPerListing: number, listingsPerMonth: n
   const p = clampInt(photosPerListing, LIMITS.photos.min, LIMITS.photos.max);
   const l = clampInt(listingsPerMonth, LIMITS.listings.min, LIMITS.listings.max);
   const photosPerMonth = p * l;
-  const perPhoto = PER_PHOTO_OPTIONS.map((o) => ({ ...o, perListing: o.perPhoto * p, perMonth: o.perPhoto * photosPerMonth }));
+  const perPhoto = PER_PHOTO_OPTIONS.map((o) => {
+    const perListing = o.perListingFor ? o.perListingFor(p) : o.perPhoto * p;
+    return { ...o, perListing, perMonth: perListing * l };
+  });
   const plan = SUBSCRIPTION_PLANS.find((x) => x.photosPerMonth >= photosPerMonth);
   const subscription = plan
     ? { plan, perMonth: plan.perMonth, billedYearly: plan.billedYearly, perPhoto: plan.perMonth / photosPerMonth, unusedPerMonth: plan.photosPerMonth - photosPerMonth }

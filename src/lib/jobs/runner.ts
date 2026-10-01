@@ -42,10 +42,16 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
         const legacyIp = await dropLegacyIpData();
         const stale = await requeueStaleJobs();
         // Abandoned checkouts: PENDING orders older than 24h are closed so they stop polluting the funnel — except
-        // checkouts Stripe reported completed with a payment still settling (bank debits take days).
+        // checkouts Stripe reported completed with a payment still settling (bank debits take days), and free photos,
+        // whose emailed link works for FREE_CLAIM_TTL_SECONDS (closed below once it has run out).
         const abandoned = await prisma.order.updateMany({
-          where: { status: "PENDING", checkoutCompletedAt: null, createdAt: { lt: new Date(Date.now() - 24 * 3600 * 1000) } },
+          where: { status: "PENDING", free: false, checkoutCompletedAt: null, createdAt: { lt: new Date(Date.now() - 24 * 3600 * 1000) } },
           data: { status: "CANCELED", errorMessage: "abandoned checkout (auto-closed after 24h)" },
+        });
+        const { FREE_CLAIM_TTL_SECONDS } = await import("@/lib/orders/free-photo");
+        const unclaimedFree = await prisma.order.updateMany({
+          where: { status: "PENDING", free: true, createdAt: { lt: new Date(Date.now() - FREE_CLAIM_TTL_SECONDS * 1000) } },
+          data: { status: "CANCELED", errorMessage: "free photo: the emailed link was not clicked in time" },
         });
         // Stripe fees that were not settled yet when the payment was recorded.
         const { syncMissingPaymentFees } = await import("@/lib/stripe/fees");
@@ -59,7 +65,7 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           log.warn("jobs.indexnow_failed", { error: err.message });
           return { skipped: "error" };
         });
-        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, fees, indexnow });
+        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, unclaimedFree: unclaimedFree.count, fees, indexnow });
         break;
       }
       default:

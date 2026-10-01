@@ -1,3 +1,4 @@
+import type { VolumeTier } from "@/lib/tools/volume";
 import type { z } from "zod";
 import type { Fulfillment, ToolStatus, OutputType } from "@prisma/client";
 import type { AiCall, AiCallContext, ImageEditCall } from "@/lib/ai";
@@ -41,6 +42,8 @@ export type ToolPricing = {
   compareAtText?: string;
   /** Tools priced per unit (see ToolDefinition.quantity): what one unit is called, e.g. { one: "photo", many: "photos" }. */
   unit?: { one: string; many: string };
+  /** Lower unit prices for larger orders (src/lib/tools/volume.ts); the base unit price is the product's price. */
+  volume?: VolumeTier[];
 };
 
 /** One block of a sample deliverable as shown on the tool page. */
@@ -80,7 +83,12 @@ export type LandingCopy = {
   guides?: Array<{ href: string; label: string }>;
   deliveryPromise: string;
   sample?: SampleResult;
+  /** First screen shows a real result instead of the category picture: the sample's before and after. */
+  heroResult?: { before: HeroImage; after: HeroImage; caption: string };
 };
+
+/** A picture under /public with its intrinsic size (next/image needs it) and alt text. */
+export type HeroImage = { src: string; width: number; height: number; alt: string };
 
 export type SeoMeta = {
   title: string;
@@ -174,6 +182,11 @@ export type ToolDefinition<TIntake = Record<string, unknown>> = {
   conciergeChecklist?: string[];
   /** Free watermarked preview on the order form (see ToolPreview). */
   preview?: ToolPreview<TIntake>;
+  /**
+   * One free order of a single photo per person (full resolution, no watermark), claimed from a link emailed to the
+   * customer — src/lib/orders/free-photo.ts.
+   */
+  freeFirstPhoto?: boolean;
   /** Digitally altered photos: the order gets the disclosure pack (labeled copies, public original + QR, text) — src/lib/tools/disclosure.ts. */
   disclosurePack?: boolean;
   /** Units charged (e.g. photos): the order total is price × quantity, computed server-side. Default 1. */

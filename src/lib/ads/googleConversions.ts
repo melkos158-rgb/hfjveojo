@@ -32,6 +32,7 @@ export async function googleAdsConversions(opts: { from: Date; to: Date; convers
   const orders = await prisma.order.findMany({
     where: {
       isTest: false,
+      free: false, // a free first photo is not a sale
       paidAt: { gte: opts.from, lt: opts.to },
       status: { notIn: ["PENDING", "CANCELED", "REFUNDED"] },
     },

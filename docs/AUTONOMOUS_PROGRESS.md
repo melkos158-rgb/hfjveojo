@@ -17,9 +17,24 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 - **End-to-end pipeline proven in production** for all four tools (orders #2–#6, all `isTest`): synthetic paid event → real AI fulfilment → QC → delivery + emails. The only untested link is Stripe's own card form (needs a human with the test card).
 - Free lead magnet: `/free/fair-housing-checker`. Search Console: domain verified, sitemap submitted.
 
+## MANAGER CHECK-INS (standing routine, from 2 Oct 2026)
+
+The owner made the operator the project's manager on 1 Oct ("якщо це буде краще для проекту то звісно ставимо"): three check-ins a day, about 08:52, 14:52 and 20:52 Warsaw time, delivered into this Cowork session as one-off scheduled tasks. Device-bound reminders can't be recurring, so **the evening run always schedules the three check-ins of the day after tomorrow** (send_later, 06:52 / 12:52 / 18:52 UTC while Warsaw is UTC+2; from 25 Oct, UTC+1: 07:52 / 13:52 / 19:52 UTC). Keep a buffer of at least one full day; if a run finds the buffer empty, refill it first. The old fresh-session "AI operator loop" (every 2 h, failing) is disabled.
+
+Every run:
+1. `/api/health`, `/admin/analytics` (aggregates only): paid and free orders, anything in REVIEW/FAILED → fix or tell the owner.
+2. Funnel: where people drop (page views → free photo / preview → checkout → paid). Socials (TikTok, YouTube, Instagram) and any running ad campaign, read-only.
+3. Midday run only: Fiverr Manage Orders + inbox, one slow look (rules in `docs/FIVERR_EXPERIMENT.md`).
+4. Useful work from NEXT TASKS: fixes, features, guides, videos from real assets. Tests, transfer, verify CI and the deploy.
+5. Docs, ledger (`docs/BUSINESS_METRICS.md`) and the vault (`Проєкти/ORVIONIS/`, newest journal entries on top, `#джерело/claude-code`).
+
+Evening run: one short Ukrainian daily summary to the owner (money, traffic, orders, what was done, what needs him) with a one-line list of things waiting for his "так" (posts, spend, messages to people). Monday evenings: the week's plan with numbers and budget asks. Otherwise message him only for incidents, real orders or decisions.
+
+Never without his explicit yes: spending money or buying anything, publishing on his accounts, messages to people in his name. Never: secrets in chat/files/commits, Railway variables, final Publish/Save/Confirm clicks (he presses those).
+
 ## CURRENT PRIORITY
 
-**Owner away 27 Sep – ~1 Oct.** Scheduled check-ins every ~6 h. Rules are in `OPERATOR.md` → "Owner away".
+**Manager mode from 2 Oct** (see MANAGER CHECK-INS above); until then the "owner away" check-ins (`OPERATOR.md`).
 
 0. (P0, now) **Acquisition channels (2026-09-26).**
    - Google Ads E8: advertiser verification **passed on 29 Sep**, and the owner enabled the campaign at about 11:45 UTC. It is **serving**. Day 1 (29 Sep, account time): 37 impressions, **8 clicks, €11.69**. Day 2 (30 Sep): 104 impressions, **9 clicks, €10.50**. Total €22.19 of €30, 0 intakes, 0 checkouts. The 23 negatives went in on 30 Sep at ≈ 22:05 UTC (typed by the operator, saved by the owner); 7 more are proposed from the search terms (homeowners who want to rearrange their room). The end date stays 1 Oct (€7.81 left), so the evaluation moves to 2 Oct 05:03 UTC (`docs/GOOGLE_ADS_EXPERIMENT.md`). The operator may not save changes to the live campaign or the owner's declarations, and the landing page `/tools/virtual-staging` stays unchanged while the test runs.
@@ -132,7 +147,7 @@ Companion files: `OPERATOR.md` (infrastructure facts, owner actions, long sessio
 
 ## IN PROGRESS
 
-- **Sale fixes, built and tested, waiting for E8 to end (ship after 1 Oct 21:00 UTC, when the ad account's day ends).** Built on 30 Sep 23:10 – 1 Oct 00:00 UTC at the owner's "move on, don't sit" in a separate working copy (cloud `/home/claude/orv-e14`), so check-in doc transfers can't ship it early. 164 tests pass; local production build checked at 390 px and 1366 px with Playwright, the free-photo flow end to end with the mock model.
+- **Sale fixes: shipping now (transfer s60, 1 Oct ≈ 23:15 UTC).** E8 ended at 21:00 UTC (Google Ads reads "Завершено": €29.98, 23 clicks, 0 conversions). The 37 files were copied into the main clone, which then passed 164 tests, `tsc` and a production build; a local production server served the new first screen, the free offer, the volume prices and `/tt`. Built on 30 Sep 23:10 – 1 Oct 00:00 UTC at the owner's "move on, don't sit" in a separate working copy (cloud `/home/claude/orv-e14`), so check-in doc transfers can't ship it early. 164 tests pass; local production build checked at 390 px and 1366 px with Playwright, the free-photo flow end to end with the mock model.
   - **E14 first screen** on `/tools/virtual-staging`: the real before/after (after large, before inset, "Real result · not retouched"), primary button "Stage your first photo free", on phones the headline → proof → button order; a one-line cookie notice on phones.
   - **Free first photo:** one photo per person, full resolution, no watermark, no card. The form creates a PENDING $0 order and emails a signed link (7 days); the click claims it (`Order.free`, unique `Order.freeKey` = normalised email, Gmail dots/+tags folded) and the normal pipeline runs. Caps: `FREE_PHOTOS_PER_DAY` 10, `FREE_PHOTOS_PER_IP` 2, 3 requests per person a day, none past 50 % of the daily AI budget, no throwaway inboxes. Excluded from revenue, paid orders and Google Ads conversions; own KPI "Free first photos" (+ how many paid later). Migration `20261001000000_order_free_photo` (two columns, one unique index).
   - **Volume pricing:** up to 10 rooms per order, $15 per photo, $12 each from 5, $99 for 10 (9 photos never cost more than 10), one price table (`src/config/staging-pricing.ts`) for the tool, the order form, the cost calculator, the guides and the pricing page.

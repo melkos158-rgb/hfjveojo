@@ -62,7 +62,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
   return (
     <div className="container-x max-w-3xl py-12">
       <OrderStatusLive orderId={order.id} token={t} initialStatus={order.status} />
-      {PAID_STATUSES.includes(order.status) && !order.isTest ? (
+      {PAID_STATUSES.includes(order.status) && !order.isTest && !order.free ? (
         <GaPurchase
           orderId={order.id}
           tool={{ slug: order.tool.slug, name: order.tool.name }}
@@ -87,7 +87,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
         </div>
         <div>
           <div className="text-gray-500">Amount</div>
-          <div className="font-medium">{formatUsd(order.amountCents)}</div>
+          <div className="font-medium">{order.free ? "Free — your first photo" : formatUsd(order.amountCents)}</div>
         </div>
         <div>
           <div className="text-gray-500">{delivered ? "Delivered" : "Expected by"}</div>
@@ -102,7 +102,11 @@ export default async function OrderPage({ params, searchParams }: Props) {
       ) : null}
 
       {order.status === "PENDING" ? (
-        <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>
+        order.free ? (
+          <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for you to confirm your email: click the link in the email we sent, and staging starts right away.</p>
+        ) : (
+          <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">Waiting for Stripe to confirm the payment. If you closed the checkout, <Link className="underline" href={`/tools/${order.tool.slug}`}>start again</Link>.</p>
+        )
       ) : null}
 
       {!redoInProgress && ["PAID", "PROCESSING"].includes(order.status) ? (
@@ -234,13 +238,29 @@ export default async function OrderPage({ params, searchParams }: Props) {
           {delivered ? (
             <>
               <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <h3 className="font-semibold">Got another one?</h3>
-                  <p className="text-sm text-gray-600">Same price, same turnaround — {order.tool.name} for the next listing or enquiry.</p>
-                </div>
-                <Link href={`/tools/${order.tool.slug}`} className="btn-primary">
-                  Order again
-                </Link>
+                {order.free && toolDef ? (
+                  <>
+                    <div>
+                      <h3 className="font-semibold">Stage the rest of the listing</h3>
+                      <p className="text-sm text-gray-600">
+                        {formatUsd(toolDef.pricing.priceCents)} per photo, up to {toolDef.intake.fields.find((f) => f.type === "rooms")?.max ?? 6} rooms in one order, same two versions and disclosure pack.
+                      </p>
+                    </div>
+                    <Link href={`/tools/${order.tool.slug}#order`} className="btn-primary">
+                      Stage more photos
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <div>
+                      <h3 className="font-semibold">Got another one?</h3>
+                      <p className="text-sm text-gray-600">Same price, same turnaround — {order.tool.name} for the next listing or enquiry.</p>
+                    </div>
+                    <Link href={`/tools/${order.tool.slug}`} className="btn-primary">
+                      Order again
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="card mt-6">
                 <h3 className="font-semibold">How did we do?</h3>

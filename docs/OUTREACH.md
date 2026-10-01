@@ -7,7 +7,7 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 - Sample results on every tool page: https://orvionis.com/tools/listing-description#example ($9, MLS copy + captions), https://orvionis.com/tools/photographer-pricing-guide#example (real 5-page PDF), https://orvionis.com/tools/listing-clips#example (clip plan).
 - Free tool for agents: https://orvionis.com/free/fair-housing-checker — paste listing copy, see risky phrases + character count. Best value-first opener; it is useful even if they never buy.
 - Cheapest first purchase: Listing Description, $9, about 5 minutes. Use it as the entry offer for cold contacts; $49 clips are the upsell once they have paid once.
-- Most visual proof: Virtual Staging, $15 per photo (up to 6 rooms in one order), about 2 minutes per photo — https://orvionis.com/tools/virtual-staging#example shows a real before/after, and the order form makes a **free watermarked preview on the prospect's own photo** (a few per day). Use it for vacant listings (empty rooms in the photos); the picture sells itself.
+- Most visual proof: Virtual Staging, $15 per photo, $12 each from 5 photos, $99 for 10 (up to 10 rooms in one order), about 2 minutes per photo — https://orvionis.com/tools/virtual-staging#example shows a real before/after. **From 1 Oct the first photo is free**: one photo per person, the full result without watermarks, started by a link in the confirmation email (daily limit). The free watermarked preview on the prospect's own photo still works too. Use it for vacant listings (empty rooms in the photos); the picture sells itself.
 - Tracking: add `?utm_source=<channel>&exp=<experiment>` to every link (`e3-listing-description`, `e1-listing-clips`, `e2-photo-pricing-guide`, `e4-virtual-staging`); the channel shows up in /admin/analytics.
 
 ## Daily routine (45–60 minutes)
@@ -48,10 +48,10 @@ Hey [name], the [street] listing looks sharp. I write MLS descriptions + the Ins
 ### re-ig-dm-staging — Instagram DM to an agent or photographer with a vacant listing (empty rooms in the photos)
 
 📤 EN — send as is:
-Hey [name], the [street] listing shoots well but the empty rooms are working against you. I stage room photos in about two minutes each: same walls, floors and windows, just furniture added. There's a free watermarked preview on your own photo; after that it's $15 a photo (two versions each), up to six rooms in one order. No subscription. Before/after: orvionis.com/tools/virtual-staging#example. Want to try it on the living room?
+Hey [name], the [street] listing shoots well but the empty rooms are working against you. I stage room photos in about two minutes each: same walls, floors and windows, just furniture added. Your first photo is free; after that it's $15 a photo (two versions each), $12 from five photos. No subscription. Before/after: orvionis.com/tools/virtual-staging#example. Want to try it on the living room?
 
 🇺🇦 UA — контроль:
-Привіт, [name], лістинг на [street] добре знятий, але порожні кімнати працюють проти тебе. Я стейджу фото кімнат приблизно за дві хвилини на кожне: ті самі стіни, підлога й вікна, лише додані меблі. На своєму фото можна безкоштовно подивитися превʼю з водяним знаком; далі — $15 за фото (по дві версії), до шести кімнат в одному замовленні. Без підписки. До/після: orvionis.com/tools/virtual-staging#example. Хочеш спробувати на вітальні?
+Привіт, [name], лістинг на [street] добре знятий, але порожні кімнати працюють проти тебе. Я стейджу фото кімнат приблизно за дві хвилини на кожне: ті самі стіни, підлога й вікна, лише додані меблі. Перше фото — безкоштовно; далі $15 за фото (по дві версії), $12 від пʼяти фото. Без підписки. До/після: orvionis.com/tools/virtual-staging#example. Хочеш спробувати на вітальні?
 
 ✍️ Personalise: [name], [street], the room you name. Add `?utm_source=instagram_dm&exp=e4-virtual-staging`. Only send to listings that are actually empty — the message is wrong for furnished ones.
 
@@ -61,10 +61,10 @@ Hey [name], the [street] listing shoots well but the empty rooms are working aga
 When: California only — AB 723 has required a disclosure next to digitally altered listing photos (and access to the original) since January 1, 2026.
 
 📤 EN — готове до відправки:
-Hey [name], quick one on the [street] listing. If you stage those empty rooms virtually, AB 723 now wants a label next to each staged photo and a link to the original. My staging covers that: labeled copies, a public page and QR code with the original, and the line to paste. $15 a photo, free watermarked preview first. Before/after: orvionis.com/tools/virtual-staging#example
+Hey [name], quick one on the [street] listing. If you stage those empty rooms virtually, AB 723 now wants a label next to each staged photo and a link to the original. My staging covers that: labeled copies, a public page and QR code with the original, and the line to paste. $15 a photo, and your first photo is free. Before/after: orvionis.com/tools/virtual-staging#example
 
 🇺🇦 UA — переклад для контролю:
-Привіт, [name], коротко про лістинг на [street]. Якщо стейджитимеш ці порожні кімнати віртуально, AB 723 тепер вимагає позначку біля кожного застейдженого фото і посилання на оригінал. Мій стейджинг це покриває: копії з позначкою, публічна сторінка й QR-код з оригіналом і рядок, який треба вставити. $15 за фото, спершу безкоштовне превʼю з водяним знаком. До/після: orvionis.com/tools/virtual-staging#example
+Привіт, [name], коротко про лістинг на [street]. Якщо стейджитимеш ці порожні кімнати віртуально, AB 723 тепер вимагає позначку біля кожного застейдженого фото і посилання на оригінал. Мій стейджинг це покриває: копії з позначкою, публічна сторінка й QR-код з оригіналом і рядок, який треба вставити. $15 за фото, а перше фото — безкоштовно. До/після: orvionis.com/tools/virtual-staging#example
 
 ✍️ Personalise: [name], [street]. California listings only; add `?utm_source=instagram_dm&exp=e4-virtual-staging`. Never promise legal certainty — the pack helps them comply, they stay responsible.
 ### re-free-checker — Reddit / Facebook group comment or post, value first (no link to paid)
@@ -270,7 +270,7 @@ If a platform doesn't allow a profile link yet, the end card of every video show
 **TikTok short link: orvionis.com/tt** (from 30 Sep, `next.config.ts` → `SHORT_LINKS`). TikTok gives a clickable bio link only from 1,000 followers or to a registered business account, so the TikTok bio and captions show `orvionis.com/tt`. It redirects (307) to the TikTok-tagged link above, so a visitor who types it counts as `tiktok` instead of `direct`. In TikTok captions, write "orvionis.com/tt" instead of "Link in bio".
 
 **Accounts, set up on 30 Sep** (the operator typed and uploaded in the owner's Chrome; the owner pressed every final Save, Publish and Confirm):
-- **TikTok:** @orvionis.staging ("orvionis" was taken), name "ORVIONIS · Virtual Staging", logo avatar. Bio: "Virtual staging for US listings · $15/photo · free preview · orvionis.com". The profile has no clickable link yet, so TikTok visitors type the address and count as `direct`. The owner posted `video-v1` on 30 Sep: **251 views**, 2 followers at 22:55 UTC (read from the profile page; TikTok Studio pages time out in the extension).
+- **TikTok:** @orvionis.staging ("orvionis" was taken), name "ORVIONIS · Virtual Staging", logo avatar. Bio: "Virtual staging for US listings · $15/photo · free preview · orvionis.com" (30 Sep 23:58 UTC: changed to "… orvionis.com/tt", typed by the operator for the owner to save; the edit-profile dialog has no website field for this account). The profile has no clickable link yet, so TikTok visitors type the address and count as `direct`. The owner posted `video-v1` on 30 Sep: **251 views**, 2 followers at 22:55 UTC (read from the profile page; TikTok Studio pages time out in the extension).
 - **YouTube:** channel "ORVIONIS · Virtual Staging", @orvionis.staging ("@orvionis" was taken), description, logo, and a 2560×1440 banner with the real before/after. Channel link "Virtual staging, $15/photo" → the YouTube link above. The Short "Empty listing? Same room, virtually staged in about 2 minutes" is public (AI-use disclosure: yes): 4 views at 22:45 UTC, 8 at 22:55. The first tagged visits arrived: `youtube` 3 page views. Clickable links in video descriptions need the channel's phone verification (owner).
 - **Instagram:** @orvionis_, the owner's existing account renamed for ORVIONIS. Logo avatar, and the bio above is saved: "Virtual staging for real estate listings. 2 staged versions in ~2 min · $15/photo · free preview · AB 723 labels · orvionis.com". The owner added the profile link orvionis.com from his phone. The link Instagram serves carries `utm_source=ig&utm_medium=social&utm_content=link_in_bio`, so these visits arrive as channel **`ig`**, not `instagram`. 1 Reel, 0 followers at 22:55 UTC.
 
@@ -301,6 +301,20 @@ UA: Як це працює: завантажуєш фото порожньої �
 > #californiarealestate #realestate #virtualstaging #realtor #ab723
 
 UA: Агенти в Каліфорнії: з 1 січня 2026 року біля віртуально застейдженого фото в оголошенні має бути позначка, а оригінал — доступний покупцям (AB 723). Кожне замовлення ORVIONIS містить копію з позначкою, публічне посилання і QR-код на оригінал. Правила своєї MLS теж перевірте. Посилання в профілі.
+
+**From 2 Oct, once the free first photo is live in production (release s60):** use these captions. On TikTok, end with `orvionis.com/tt` instead of "Link in bio".
+
+`video-v2` (how it works), new caption:
+> How it works: upload a photo of the empty room and confirm your email. Your first photo comes back staged, in 2 versions, free. After that it's $15 a photo, $12 from five. California agents also get AB 723 labeled copies. Link in bio.
+> #virtualstaging #realestatetips #realtor #listingphotos #realestateagent
+
+UA: Як це працює: завантажуєш фото порожньої кімнати й підтверджуєш email. Перше фото повертається застейдженим, у 2 версіях, безкоштовно. Далі $15 за фото, $12 від пʼяти. Агенти в Каліфорнії також отримують копії з позначкою AB 723. Посилання в профілі.
+
+`video-v3` (California): the caption above stays; on TikTok it ends "Check your MLS rules too. orvionis.com/tt".
+
+Proposed bios, which the owner saves only once the release is live:
+- TikTok (68 characters): "Virtual staging for US listings · first photo free · orvionis.com/tt". UA: «Віртуальний стейджинг для оголошень у США · перше фото безкоштовно · orvionis.com/tt».
+- Instagram: "Virtual staging for real estate listings. 2 staged versions in ~2 min · first photo free · then $15/photo · AB 723 labels · orvionis.com". UA: «Віртуальний стейджинг для оголошень. 2 застейджені версії за ~2 хв · перше фото безкоштовно · далі $15 за фото · позначки AB 723 · orvionis.com».
 
 More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 

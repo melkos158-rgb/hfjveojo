@@ -12,10 +12,16 @@ import { SampleResult } from "@/components/SampleResult";
 import { isAdmin } from "@/lib/auth/guards";
 import { GaViewItem } from "@/components/GaEvents";
 import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
+import { HeroResult } from "@/components/HeroResult";
+import { freePhotoAvailability } from "@/lib/orders/free-photo";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ slug: string }> };
+type PageProps = Params & { searchParams: Promise<{ free?: string }> };
+
+/** Reasons a visitor comes back from the free-photo email link without an order page (see /api/free/claim). */
+const FREE_NOTICES = new Set(["used", "expired", "soldout", "invalid", "error"]);
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
@@ -33,8 +39,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-export default async function ToolPage({ params }: Params) {
+export default async function ToolPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const { free: freeParam } = await searchParams;
   const def = getToolBySlug(slug);
   if (!def) notFound();
   const item = (await liveCatalog()).find((c) => c.def.id === def.id);
@@ -44,6 +51,9 @@ export default async function ToolPage({ params }: Params) {
   const priceText = def.quantity && def.pricing.unit ? `${formatUsd(price)} per ${def.pricing.unit.one}` : `${formatUsd(price)} one-time`;
   const l = def.landing;
   const visual = categoryVisual(def.category);
+  // Free first photo: offered only while today's free photos and their share of the AI budget last.
+  const freeOffer = Boolean(item && def.freeFirstPhoto && (await freePhotoAvailability()).available);
+  const freeNotice = freeParam && FREE_NOTICES.has(freeParam) ? freeParam : null;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -65,6 +75,56 @@ export default async function ToolPage({ params }: Params) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <GaViewItem tool={{ slug: def.slug, name: def.name }} priceCents={price} currency={item?.currency ?? def.pricing.currency} />
 
+      {l.heroResult ? (
+        <section className="bg-mist">
+          {/* Mobile: headline, then the real before/after, then the button — the proof is on the first screen. */}
+          <div className="container-x grid gap-x-10 gap-y-6 py-10 sm:py-14 lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_1fr] lg:items-center">
+            <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
+              <p className="eyebrow">{def.category.replace("-", " ")} · {def.fulfillment === "AUTO" ? "instant" : `${def.sla.deliveryHours}h delivery`}</p>
+              <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">{l.headline}</h1>
+            </div>
+            <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+              <HeroResult hero={l.heroResult} />
+            </div>
+            <div className="flex flex-col lg:col-start-1 lg:row-start-2 lg:self-start">
+              <p className="order-2 mt-5 max-w-2xl text-lg text-gray-700 lg:order-1 lg:mt-0">{l.subheadline}</p>
+              <div className="order-1 flex flex-wrap items-center gap-x-4 gap-y-3 lg:order-2 lg:mt-6">
+                {freeOffer ? (
+                  <>
+                    <a href="#order" className="btn-primary">
+                      Stage your first photo free
+                    </a>
+                    <span className="text-sm text-gray-600">No card · then {priceText} · {l.deliveryPromise}</span>
+                  </>
+                ) : (
+                  <>
+                    <a href="#order" className="btn-primary">
+                      {l.ctaLabel}
+                    </a>
+                    {def.preview ? (
+                      <a href="#order" className="btn-secondary">
+                        {def.preview.label}
+                      </a>
+                    ) : null}
+                    <span className="text-sm text-gray-600">
+                      {priceText} · {l.deliveryPromise}
+                    </span>
+                  </>
+                )}
+              </div>
+              <dl className="order-3 mt-5 grid max-w-xl gap-2 text-sm sm:grid-cols-[auto_1fr]">
+                <dt className="text-gray-500">You send</dt>
+                <dd className="text-fg">{def.io.input}</dd>
+                <dt className="text-gray-500">You get</dt>
+                <dd className="font-medium text-fg">{def.io.output}</dd>
+                <dt className="text-gray-500">Time</dt>
+                <dd className="text-fg">{def.io.processingTime}</dd>
+              </dl>
+              {def.pricing.compareAtText ? <p className="order-4 mt-3 text-xs text-gray-500">{def.pricing.compareAtText}</p> : null}
+            </div>
+          </div>
+        </section>
+      ) : (
       <section className="bg-mist">
         <div className={`container-x grid items-center gap-10 py-14 ${visual ? "lg:grid-cols-[1.1fr_0.9fr]" : ""}`}>
           <div>
@@ -106,6 +166,7 @@ export default async function ToolPage({ params }: Params) {
           ) : null}
         </div>
       </section>
+      )}
 
       {l.sample ? <SampleResult sample={l.sample} toolName={def.name} /> : null}
 
@@ -173,7 +234,19 @@ export default async function ToolPage({ params }: Params) {
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
                 gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}
-                perUnit={def.quantity && def.pricing.unit ? { unitCents: price, one: def.pricing.unit.one, many: def.pricing.unit.many, ctaMany: l.ctaLabelMany } : undefined}
+                perUnit={
+                  def.quantity && def.pricing.unit
+                    ? {
+                        unitCents: price,
+                        one: def.pricing.unit.one,
+                        many: def.pricing.unit.many,
+                        ctaMany: l.ctaLabelMany,
+                        tiers: def.pricing.volume,
+                        max: def.intake.fields.find((f) => f.type === "rooms")?.max,
+                      }
+                    : undefined
+                }
+                freePhoto={def.freeFirstPhoto ? { available: freeOffer, notice: freeNotice } : undefined}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

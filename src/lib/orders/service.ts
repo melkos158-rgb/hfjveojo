@@ -10,6 +10,7 @@ import { log } from "@/lib/logger";
 import { outputsToDeliver } from "@/lib/orders/deliverables";
 import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
 import { linkify } from "@/lib/email/layout";
+import { formatUsd } from "@/lib/ai/pricing";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
   return appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
@@ -66,8 +67,13 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
   const fileLinks = toDeliver.filter((o) => o.fileId).map((o) => `${o.title}: ${signedFileUrl(o.fileId as string)}`);
   const link = orderUrl(order);
   const brand = env().NEXT_PUBLIC_BRAND_NAME;
+  const intro = redo
+    ? "Here is the new version of your order. It replaces the earlier files on your order page."
+    : order.free
+      ? "Here is your free staged photo: two versions of your room at full resolution, plus copies labeled “Virtually staged” for the MLS."
+      : (def?.delivery.emailIntro ?? "Your order is ready.");
   const lines = [
-    redo ? "Here is the new version of your order. It replaces the earlier files on your order page." : (def?.delivery.emailIntro ?? "Your order is ready."),
+    intro,
     ...(note ? ["", note] : []),
     "",
     `Order page: ${link}`,
@@ -75,11 +81,17 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     ...fileLinks,
     "",
     redo ? "Reply to this email if anything is still off." : "Reply to this email if anything is off — one revision round is included.",
-    ...(def ? ["", `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`] : []),
+    ...(def
+      ? ["", order.free ? `Stage the rest of the listing: ${formatUsd(def.pricing.priceCents)} per photo — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}` : `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`]
+      : []),
   ];
   await sendEmail({
     to: order.customerEmail,
-    subject: redo ? `Your redo is ready — ${brand} order #${order.number}` : (def?.delivery.emailSubject ?? `Your ${brand} order #${order.number} is ready`),
+    subject: redo
+      ? `Your redo is ready — ${brand} order #${order.number}`
+      : order.free
+        ? "Your free staged photo is ready"
+        : (def?.delivery.emailSubject ?? `Your ${brand} order #${order.number} is ready`),
     text: lines.join("\n"),
     html: `<p>${lines.map(linkify).join("<br/>")}</p>`,
   });

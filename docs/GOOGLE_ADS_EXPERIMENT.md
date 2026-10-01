@@ -54,7 +54,7 @@ Status 29 Sep 23:10 UTC: **not added yet**. "free home staging software" got a c
 
 **Added 30 Sep ≈ 22:05 UTC** at campaign level (broad-match negatives). At the owner's request the operator typed the 23 terms, one per line, into the campaign's negative-keyword panel, and the owner pressed Save himself. 29 and 30 Sep ran without them; 1 Oct, the last day, runs with them. Verified at 22:55 UTC: 23 listed.
 
-Proposed on 30 Sep at 22:55 UTC from the search terms (homeowners who want to rearrange their own room), waiting for the owner: rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room" (the last two as phrase match).
+Added 30 Sep ≈ 23:10 UTC from the search terms (homeowners who want to rearrange their own room), typed by the operator and saved by the owner: rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room" (the last two as phrase match). Verified 23:58 UTC: 30 negatives.
 
 ### Ads
 
@@ -111,6 +111,12 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 - **Ad spend** is logged as a channel cost in `/admin/experiments`, so the profit estimate subtracts it.
 
 ## STATUS
+
+**E8 has ENDED (read 2026-10-01 ≈ 23:05 UTC, read-only).** The campaigns table shows status "Завершено" (ended) and €30.00 total, 26 Sep – 1 Oct.
+- **Final totals, 26 Sep – 1 Oct: 248 impressions, 23 clicks, €29.98 of the €30.** CTR 9.27 %, average CPC €1.30, **0 conversions**.
+- Last day, 1 Oct (totals minus 26–30 Sep): 107 impressions, 6 clicks, €7.79. CTR 5.61 %, CPC €1.30. It ran with all 30 negatives.
+- Google's reports can lag by a few hours. The 05:03 UTC evaluation on 2 Oct re-reads the totals and the 1 Oct search terms.
+- The €30 is spent with 0 orders, so DECISION RULES say stop. No top-up without a changed hypothesis. The sale-fix release (free first photo, volume pricing, result-first hero) is that change, and it ships after the ads ended.
 
 **Day 2 complete, read at 2026-09-30 ≈ 22:45 UTC** (account day 30 Sep, GMT+3):
 - **104 impressions, 9 clicks, €10.50** (the 26–30 Sep total minus day 1). CTR 8.65 %, average CPC ≈ €1.17.
@@ -224,6 +230,8 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 | 2026-09-30 (to 17:05 UTC) — eligible, serving; today's report not readable (date presets don't apply) | not read | not read | site: `google` 25 page views (18 at the end of 29 Sep) | — | — | 0 | 0 | $0 | — | — | — |
 | **2026-09-30, full account day (GMT+3), read ≈ 22:45 UTC** (26–30 Sep total minus 29 Sep) | **€10.50** | **104** | **9** | 8.65 % | €1.17 | 0 | 0 | $0 | −€10.50 | 0 | — |
 | **Total 26–30 Sep** | **€22.19** | **141** | **17** | 12.06 % | €1.31 | 0 | 0 | $0 | −€22.19 | 0 | — |
+| **2026-10-01, last day (GMT+3), read ≈ 23:05 UTC** (final total minus 26–30 Sep) | **€7.79** | **107** | **6** | 5.61 % | €1.30 | 0 | 0 | $0 | −€7.79 | 0 | — |
+| **FINAL, 26 Sep – 1 Oct (campaign ended)** | **€29.98** | **248** | **23** | 9.27 % | €1.30 | 0 | 0 | $0 | −€29.98 | 0 | — |
 
 ## DECISION RULES
 
@@ -235,9 +243,11 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-10-01 ≈ 23:05 UTC (release reminder, read-only): **E8 ended.** The campaigns table reads "Завершено" (ended). Final: 248 impressions, 23 clicks, €29.98, 0 conversions. The sale-fix release can ship now.
 - 2026-09-30 ≈ 23:05 UTC (the owner: "так шо далі делаєм кажи або роби", read as a yes to the offer "напиши «впиши»"): the operator typed the 7 proposed negatives (rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room") into E8's add panel with campaign E8 picked, and asked the owner to press "Зберегти". Not saved by the operator.
   - ≈ 23:47 UTC the operator reloaded the negatives page to see whether they were saved. The page then stayed "busy", possibly on a "leave site?" prompt that would drop unsaved text. At 23:50 the Chrome extension disconnected (browser closed or the PC asleep), so the result is unknown.
-  - The owner was told: if the browser asks "leave site?", stay and press Save; if the words are gone, write «ще раз». Check at the next check-in: 23 or 30 negatives.
+  - The owner was told: if the browser asks "leave site?", stay and press Save; if the words are gone, write «ще раз».
+  - ≈ 23:58 UTC (extension back): the negatives page reads **"1–30 із 30"**. The owner saved the 7, so 1 Oct runs with 30 negatives.
 - 2026-09-30 ≈ 22:55 UTC (read-only, ahead of the 23:03 check-in): **negatives verified, search terms read.**
   - Negative keywords page: "1–23 з 23", all at campaign level on E8, broad match. The owner's save went through.
   - Search terms, 26–30 Sep. Visible clicks, 3 (€4.16); the chart puts 1 on 29 Sep and 2 on 30 Sep:
@@ -373,11 +383,11 @@ Earlier, at 2026-09-27 17:05 UTC: Resume failed for the owner too (`CAMPAIGN_ERR
 
 1. Every check-in: read Google's numbers for E8 (impressions, clicks, cost, search terms), read-only.
    - Open a fresh tab. A day's numbers show only after midnight in account time (GMT+3 = 21:00 UTC); the date presets don't apply in the extension.
-   - The 30 Sep search terms and the 23 saved negatives are verified (LOG, 22:55 UTC). The 7 proposed ones were typed at 23:05 for the owner to save; check whether the list shows 30, and retype them if he asks («ще раз»).
+   - The 30 Sep search terms and all 30 negatives are verified (LOG, 23:58 UTC). Read the 1 Oct search terms on 2 Oct.
    - List any new negative keywords for the owner from the search terms (DECISION RULES).
 2. The end date stays 1 Oct: the owner left it, and the 30 Sep update email told him the rest would go on 30 Sep – 1 Oct. No more reminders.
 3. Until the campaign ends: fill METRICS (spend, impressions, clicks, CTR, CPC, checkouts, orders, revenue) from Google Ads plus `/admin/analytics` (channel `google`), and apply DECISION RULES. Keep `/tools/virtual-staging` unchanged.
-4. At the 1 Oct 17:03 UTC check-in: the end date is still 1 Oct, so move the evaluation task (trig_0157xqpW4GE2QDXcSZNQQ7wA) to 2 Oct 05:03 UTC and say so in the daily summary.
+4. ~~Move the evaluation task to 2 Oct 05:03 UTC~~ done on 1 Oct at 00:36 UTC (trig_0157xqpW4GE2QDXcSZNQQ7wA); the owner was told in chat.
 5. 2 Oct 05:03 UTC: final evaluation from the full 1 Oct numbers and search terms, recorded in GROWTH_EXPERIMENTS.md and BUSINESS_METRICS.md (spend register). After that the landing page may change (E14).
 
 ## TIMESTAMP
