@@ -24,7 +24,8 @@ export function HeroResult({ hero }: { hero: { before: HeroImage; after: HeroIma
           <span className="absolute top-3 left-3 rounded-full bg-black/70 px-2.5 py-1 text-[11px] font-medium text-white">Real result · not retouched</span>
         </div>
         <div className="absolute bottom-0 left-3 w-[38%] overflow-hidden rounded-xl border-2 border-white bg-card shadow-lg sm:left-5">
-          <Image src={hero.before.src} alt={hero.before.alt} width={hero.before.width} height={hero.before.height} unoptimized className="h-auto w-full" />
+          {/* Eager: the inset is above the fold, and a lazy image there loads late (an empty frame on first paint). */}
+          <Image src={hero.before.src} alt={hero.before.alt} width={hero.before.width} height={hero.before.height} loading="eager" unoptimized className="h-auto w-full" />
           <span className="absolute top-1.5 left-1.5 rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white uppercase">Before</span>
         </div>
       </div>

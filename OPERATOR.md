@@ -107,6 +107,14 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-10-01 23:03–23:45 UTC (release reminder; the 05:03, 11:03 and 17:03 check-ins had fired while the session was idle, so their duties ran here):
+  - Google Ads (read-only): E8 **ended** ("Завершено"). Final 248 impressions, 23 clicks, €29.98, 0 conversions.
+  - Shipped the sale fixes as s60 (`70e12eb`): E14 first screen, E17 free first photo, E18 volume prices, with migration `20261001000000_order_free_photo`. Main clone: 164 tests, `tsc`, production build, local smoke test. CI and Railway green. Checked in production: health, first screen, free-photo form, `/pricing`, the "Free first photos" KPI (proof that the migration ran), and the claim route's bad-token redirect.
+  - Fiverr Manage Orders 0 in every status. `/admin/analytics`: 575 / 99, funnel 3 → 7 → 0, AI $0.40.
+  - s61: the hero's before inset loads eagerly (it was lazy above the fold); post-release docs; owner email "2026-10-01-daily" (the daily summary).
+  - The owner asked for "the best video, with sound and effects, 10,000 views". He was told that no tool guarantees views, and what the plan needs: the Motion Reel plugin (he installed it, plus Remotion), a yes for up to 60 Higgsfield credits (Kling 3.0 transition from the real before to the real after), the trending sound added in the app, and more real before/after pairs.
+  - `mkxfer2.sh` (scratchpad) handles new files: list them in `sN.new`. The sweep list grows by those files after the transfer.
+
 - 2026-09-30 23:05–23:55 UTC (owner: "what's next — say it or do it, keep moving"):
   - Shipped s58 (`9bc0211`): short link `orvionis.com/tt` → the staging page tagged `tiktok` (TikTok has no clickable bio link below 1,000 followers). CI and Railway green; verified in production.
   - Built the sale fixes from the growth plan in a separate working copy, to ship after E8 ends (1 Oct 21:00 UTC): E14 first screen, free first photo by confirmed email, volume pricing (up to 10 rooms, $12 from 5, $99 for 10), one-line cookie notice on phones. 164 tests; checked in a local production build at 390/1366 px. Backups: `/mnt/user-data/outputs/release-e14.tgz` and `.git/xfer/pending/` on the owner's PC. A one-off reminder into this session fires at 1 Oct 21:05 UTC (trig_018H39KpjvujXquBjaw94irq).
