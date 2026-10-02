@@ -264,8 +264,8 @@ describe("sitemap: shared URL list", () => {
       expect(pageLastModified(p).getTime()).toBeGreaterThan(CONTENT_UPDATED.getTime());
     }
     expect(at("")).toBe(CONTENT_UPDATED.toISOString());
-    expect(at("/tools/virtual-staging")).toBe(CONTENT_UPDATED.toISOString());
-    expect(pageLastModified("/tools/virtual-staging").toISOString()).toBe(CONTENT_UPDATED.toISOString());
+    expect(at("/tools/listing-description")).toBe(CONTENT_UPDATED.toISOString());
+    expect(pageLastModified("/tools/listing-description").toISOString()).toBe(CONTENT_UPDATED.toISOString());
     const newest = Math.max(newestGuide, ...Object.keys(PAGE_UPDATED).map((p) => pageLastModified(p).getTime()));
     expect(contentVersion(entries).toISOString()).toBe(new Date(newest).toISOString());
     expect(guideLastModified({ updated: "not a date" }).toISOString()).toBe(CONTENT_UPDATED.toISOString());

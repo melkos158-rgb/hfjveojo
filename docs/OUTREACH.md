@@ -135,11 +135,21 @@ orvionis.com/free/virtual-staging-cost-calculator?utm_source=fb_group&exp=e4-vir
 
 ### re-fb-group-reply — someone in a group asks who to use for virtual staging
 
-📤 EN: I run one, so take this with that in mind: ORVIONIS, $15 a photo, about two minutes, and you can see a free watermarked preview on your own photo before paying. In California it also includes the AB 723 labeled copies. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+📤 EN: I run one, so take this with that in mind: ORVIONIS, about two minutes a photo, and your first photo is free (full resolution, no watermark). After that it's $15 a photo, $12 from five. In California it also includes the AB 723 labeled copies. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
 
-🇺🇦 UA — переклад для контролю: У мене свій такий сервіс, тож враховуй це: ORVIONIS, $15 за фото, десь дві хвилини, і перед оплатою можна безкоштовно подивитися превʼю з водяним знаком на своєму фото. Для Каліфорнії ще входять підписані копії під AB 723. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+🇺🇦 UA — переклад для контролю: У мене свій такий сервіс, тож враховуй це: ORVIONIS, десь дві хвилини на фото, і перше фото безкоштовне (повна роздільність, без водяного знака). Далі $15 за фото, $12 від пʼяти. Для Каліфорнії ще входять підписані копії під AB 723. orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
 
 ✍️ Answer only real questions, in the thread. The strict groups (Lab Coat Agents) allow product talk only as an answer to a question.
+
+### re-fb-group-free-photo — agent groups that allow services (the free first photo, from 2 Oct)
+
+📤 EN — готове до відправки:
+Agents with a vacant listing: I'll stage one of your room photos for free. Upload it, confirm your email, and two staged versions come back in a few minutes, full resolution, no watermark. Walls, windows and floors stay as shot, only furniture gets added. After the first one it's $15 a photo. A real before/after so you can judge first: orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+🇺🇦 UA — переклад для контролю:
+Агенти з порожнім оголошенням: застейджу одне фото вашої кімнати безкоштовно. Завантажуєте його, підтверджуєте email, і за кілька хвилин приходять дві застейджені версії в повній роздільності, без водяного знака. Стіни, вікна й підлога лишаються як на фото, додаються тільки меблі. Після першого — $15 за фото. Справжнє до/після, щоб спершу оцінити: orvionis.com/tools/virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
+
+✍️ Nothing to personalise. Only in groups whose rules allow services (Southern California Real Estate and Services does); in the others answer questions with `re-fb-group-reply`. One post per group, and answer every comment.
 
 ### photo-ig-dm-1 — photographer, first contact
 
@@ -315,6 +325,15 @@ UA: Як це працює: завантажуєш фото порожньої �
 Proposed bios, which the owner saves only once the release is live:
 - TikTok (68 characters): "Virtual staging for US listings · first photo free · orvionis.com/tt". UA: «Віртуальний стейджинг для оголошень у США · перше фото безкоштовно · orvionis.com/tt».
 - Instagram: "Virtual staging for real estate listings. 2 staged versions in ~2 min · first photo free · then $15/photo · AB 723 labels · orvionis.com". UA: «Віртуальний стейджинг для оголошень. 2 застейджені версії за ~2 хв · перше фото безкоштовно · далі $15 за фото · позначки AB 723 · orvionis.com».
+
+`video-v4` (first photo free, 12 s, made on 2 Oct with the Motion Reel plugin): `ORVIONIS_VIDEO_REFERENCES/videos/orvionis_v4_first_photo_free.mp4`, cover frame `orvionis_v4_cover.png`, source `ORVIONIS_VIDEO_REFERENCES/reels/reel-orv-free-photo-src.tgz` (re-render with the skill). Real assets only: the registered before/after of order #6, the live page at 390 px, the official mark; synthesized house track and SFX, mastered to -14 LUFS, so no music licence is needed. On TikTok and Instagram a trending sound can go under it at low volume.
+> Empty listing photo? Same photo, 2 minutes later. Same walls, same windows, same light. Your first photo is free, then $15 a photo. Link in bio.
+> #realestate #virtualstaging #realtor #listingphotos #homestaging #realestateagent
+
+UA: Порожнє фото оголошення? Те саме фото, 2 хвилини потому. Ті самі стіни, ті самі вікна, те саме світло. Перше фото безкоштовно, далі $15 за фото. Посилання в профілі.
+
+- TikTok: replace "Link in bio." with "orvionis.com/tt", and turn on TikTok's "AI-generated content" label (the staged room is AI output).
+- YouTube Shorts title: "Empty room to staged listing photo in 2 minutes (first photo free)"; answer "yes" to the altered or synthetic content question, as with v1.
 
 More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 

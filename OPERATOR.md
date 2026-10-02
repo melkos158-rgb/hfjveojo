@@ -107,6 +107,11 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-10-01 23:45 – 2026-10-02 00:15 UTC (owner asleep: "work, improve, a cool video for all platforms, report at 8"):
+  - `video-v4` built with the Motion Reel plugin in the cloud sandbox (`/home/claude/reels`, ephemeral): real before/after registered with OpenCV ECC (walls/windows aligned), the live page shot from a local production build of the same code with the cookie card dismissed and Inter as the system sans, synthesized house at 120 bpm, 23 SFX hits all within 20 ms of an onset, -14 LUFS. Video, cover and the full source archive are in `ORVIONIS_VIDEO_REFERENCES/` on his PC (not in git).
+  - s62: sitemap dates for the pages changed on 1 Oct (tool page, pricing, privacy, cost calculator, three guides) so IndexNow resubmits them; the staging page title leads with "first photo free"; guide links read "Virtual Staging — first photo free"; new group post `re-fb-group-free-photo` and v4 captions.
+  - A one-off reminder fires at 05:40 UTC for the 08:00 Warsaw morning report (trig_01QJj5Ca8P46b1kDaaGqhPi2).
+
 - 2026-10-01 23:03–23:45 UTC (release reminder; the 05:03, 11:03 and 17:03 check-ins had fired while the session was idle, so their duties ran here):
   - Google Ads (read-only): E8 **ended** ("Завершено"). Final 248 impressions, 23 clicks, €29.98, 0 conversions.
   - Shipped the sale fixes as s60 (`70e12eb`): E14 first screen, E17 free first photo, E18 volume prices, with migration `20261001000000_order_free_photo`. Main clone: 164 tests, `tsc`, production build, local smoke test. CI and Railway green. Checked in production: health, first screen, free-photo form, `/pricing`, the "Free first photos" KPI (proof that the migration ran), and the claim route's bad-token redirect.
