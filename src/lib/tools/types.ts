@@ -85,10 +85,25 @@ export type LandingCopy = {
   sample?: SampleResult;
   /** First screen shows a real result instead of the category picture: the sample's before and after. */
   heroResult?: { before: HeroImage; after: HeroImage; caption: string };
+  /** The same room in every style the tool offers, under the example result. */
+  styleGallery?: StyleGalleryData;
 };
 
 /** A picture under /public with its intrinsic size (next/image needs it) and alt text. */
 export type HeroImage = { src: string; width: number; height: number; alt: string };
+
+/** A HeroImage plus a small thumbnail (360×240) of the same picture. */
+export type GalleryImage = HeroImage & { thumb: string };
+
+/** "One room, six styles": the same empty room and the real result of each style (src/components/StyleGallery.tsx). */
+export type StyleGalleryData = {
+  title: string;
+  intro: string;
+  before: GalleryImage;
+  styles: Array<{ label: string; image: GalleryImage }>;
+  caption: string;
+  link?: { href: string; label: string };
+};
 
 export type SeoMeta = {
   title: string;

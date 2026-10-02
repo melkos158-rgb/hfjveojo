@@ -9,6 +9,7 @@ import { getSession } from "@/lib/auth/session";
 import Image from "next/image";
 import { categoryVisual } from "@/lib/tools/visuals";
 import { SampleResult } from "@/components/SampleResult";
+import { StyleGallery } from "@/components/StyleGallery";
 import { isAdmin } from "@/lib/auth/guards";
 import { GaViewItem } from "@/components/GaEvents";
 import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
@@ -169,6 +170,7 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
       )}
 
       {l.sample ? <SampleResult sample={l.sample} toolName={def.name} /> : null}
+      {l.styleGallery ? <StyleGallery gallery={l.styleGallery} /> : null}
 
       <section className="container-x grid gap-10 py-14 lg:grid-cols-5">
         <div className="space-y-10 lg:col-span-3">

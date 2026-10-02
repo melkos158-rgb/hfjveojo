@@ -6,6 +6,14 @@ export type Guide = { slug: string; title: string; description: string; audience
 
 export const GUIDES: Guide[] = [
   {
+    slug: "virtual-staging-styles",
+    title: "Virtual staging styles: one room in six looks",
+    description: "Modern, Scandinavian, farmhouse, mid-century, luxury or coastal? The same empty living room staged in all six, what defines each style, and which listings each one suits.",
+    audience: "Real estate agents",
+    updated: "2026-10-02",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
     slug: "free-virtual-staging",
     title: "Free virtual staging: what you actually get for free in 2026",
     description: "Which services let you stage a photo free (a first image, a few AI designs, a free upload), the catches to check, and what a whole listing costs after. Checked October 2, 2026.",

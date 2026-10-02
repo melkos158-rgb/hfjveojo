@@ -1,4 +1,4 @@
-import type { SampleResult } from "@/lib/tools/types";
+import type { GalleryImage, SampleResult, StyleGalleryData } from "@/lib/tools/types";
 
 /**
  * Sample shown on /tools/virtual-staging and the home page. The "before" is a sample photo of an empty room;
@@ -39,6 +39,36 @@ export const SAMPLE_VIRTUAL_STAGING_RESULT: SampleResult = {
     height: 480,
   },
   note: "Label it “virtually staged” in the MLS — most boards require it. If anything structural changes in your result, one redo is included.",
+};
+
+const room = (name: string, alt: string): GalleryImage => ({
+  src: `/img/styles/living-room-${name}.webp`,
+  thumb: `/img/styles/living-room-${name}-thumb.webp`,
+  width: 1200,
+  height: 800,
+  alt,
+});
+
+/**
+ * "One room, six styles" on /tools/virtual-staging and in the styles guide. The empty room is a free stock photo
+ * (Pexels 3958955, Pexels licence) that production staged once per style through the marketing lab
+ * (src/lib/ops/lab.ts) — the customer pipeline, 2026-10-02. One of the two versions of each run is shown, unedited
+ * apart from resizing to 1200×800.
+ */
+export const STYLE_GALLERY: StyleGalleryData = {
+  title: "One room, six styles",
+  intro: "Not sure which style fits your listing? Here is the same empty living room, staged by ORVIONIS in each of the six styles you can order.",
+  before: room("empty", "An empty living room with a white fireplace mantel, a wall of four tall windows with wood blinds, a ceiling fan and a dark wood floor"),
+  styles: [
+    { label: "Modern", image: room("modern", "The same living room staged in a modern style: a cream sofa, a black steel coffee table on a jute rug, an armchair, a large table lamp, an olive tree and a landscape print over the mantel") },
+    { label: "Scandinavian", image: room("scandinavian", "The same living room staged in a Scandinavian style: a cream sofa with a chaise and a knit throw, a round oak coffee table, a wood-frame armchair, a jute rug, a tall plant and a mountain print over the mantel") },
+    { label: "Farmhouse", image: room("farmhouse", "The same living room staged in a farmhouse style: a rolled-arm sofa with plaid pillows, a carved rustic wood coffee table, an armchair with a green throw, a tripod floor lamp and a landscape painting over the mantel") },
+    { label: "Mid-century", image: room("mid-century", "The same living room staged in a mid-century style: a wood-frame lounge chair with olive cushions, an oval walnut coffee table, a light sofa with orange pillows, a fiddle-leaf fig and abstract orange art over the mantel") },
+    { label: "Luxury", image: room("luxury", "The same living room staged in a luxury style: a cream sectional with a chunky knit throw, a dark wood coffee table, a wood-frame armchair, a tall ceramic table lamp and framed landscape art") },
+    { label: "Coastal", image: room("coastal", "The same living room staged in a coastal style: a white slipcovered sofa with blue and striped pillows, a light-blue armchair, a whitewashed coffee table, wicker side tables, a coral print and a seascape over the mantel") },
+  ],
+  caption: "Real results, not retouched: a free stock photo of an empty room (Curtis Adams, Pexels) run through ORVIONIS once per style — the same pipeline as your order. Each run returns two versions; one is shown here, resized. The walls, windows, fireplace and ceiling fan stay as photographed.",
+  link: { href: "/guides/virtual-staging-styles", label: "How to pick a style for your listing" },
 };
 
 /**

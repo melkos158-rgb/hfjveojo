@@ -4,7 +4,7 @@ import type { ImageEditCall } from "@/lib/ai";
 import { getFileBuffer } from "@/lib/storage";
 import { AppError } from "@/lib/errors";
 import { AiProviderError } from "@/lib/ai/types";
-import { SAMPLE_VIRTUAL_STAGING_RESULT } from "@/lib/tools/samples/virtual-staging";
+import { SAMPLE_VIRTUAL_STAGING_RESULT, STYLE_GALLERY } from "@/lib/tools/samples/virtual-staging";
 import { STAGING_MAX_ROOMS, STAGING_UNIT_CENTS, STAGING_VOLUME_TIERS } from "@/config/staging-pricing";
 import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelStagedPhoto, originalPhotoUrl } from "@/lib/tools/disclosure";
 
@@ -230,7 +230,9 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
     guarantee: "If the room's structure was changed or the result is unusable, one redo is included; otherwise a refund.",
     deliveryPromise: "Usually ready in about 2 minutes per photo.",
     sample: SAMPLE_VIRTUAL_STAGING_RESULT,
+    styleGallery: STYLE_GALLERY,
     guides: [
+      { href: "/guides/virtual-staging-styles", label: "The six styles on one room" },
       { href: "/guides/virtual-staging-cost", label: "What virtual staging costs in 2026" },
       { href: "/guides/photographing-rooms-for-virtual-staging", label: "10 tips for room photos that stage well" },
       { href: "/guides/ab-723-virtual-staging", label: "AB 723 checklist (California)" },

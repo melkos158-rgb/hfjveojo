@@ -31,7 +31,7 @@ export const LAB_REQUESTS: readonly LabRequest[] = [
     imageUrl: pexels(3958955),
     roomType: "living room",
     styles: ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"],
-    credit: "Pexels photo 3958955, Pexels licence",
+    credit: "Pexels photo 3958955 by Curtis Adams, Pexels licence",
   },
   {
     id: "unsplash-1668910242969",
