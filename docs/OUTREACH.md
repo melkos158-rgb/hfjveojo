@@ -343,6 +343,16 @@ UA: Агенти в Каліфорнії: з 1 січня 2026 року AB 723 �
 
 On TikTok: "orvionis.com/tt" instead of "Link in bio." and the AI-generated content label on.
 
+`video-v6` (3D, "explosive", 11.25 s, 2 Oct): `ORVIONIS_VIDEO_REFERENCES/videos/orvionis_v6_explosive_3d.mp4`, TikTok cut `orvionis_v6_explosive_3d_tiktok.mp4` (end card orvionis.com/tt), cover `orvionis_v6_cover.png`, source `reels/reel-orv-explosive-src.tgz` (`tools_scene3d.py` builds the 3D layers from the two real photos, `scene3d.js` renders them, `sound.sh` rebuilds the audio). The 3D is an edit of the photo: nothing in it is generated.
+> 3, 2, 1… staged. Same empty room, now with a sofa, rug, art and plants. Walls and windows untouched. Your first photo is free, then $15 a photo. Link in bio.
+> #realestate #virtualstaging #realtor #listingphotos #homestaging #realestateagent #justlisted
+
+UA: 3, 2, 1… застейджено. Та сама порожня кімната, тепер з диваном, килимом, картинами й рослинами. Стіни й вікна не змінені. Перше фото безкоштовно, далі $15 за фото. Посилання в профілі.
+
+- TikTok: the `_tiktok` file, "orvionis.com/tt" instead of "Link in bio.", AI-generated content label on.
+- YouTube Shorts title: "3, 2, 1… staged: empty room to furnished listing photo (first photo free)"; "yes" to altered or synthetic content.
+- If someone asks for 3D tours: "Not yet. You get two staged photos of each room, the 3D move is just how we edited the video." UA: «Поки ні. Ти отримуєш дві застейджені фотографії кожної кімнати, а 3D-рух — це просто монтаж відео.»
+
 More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 
 ## What to say when they ask
