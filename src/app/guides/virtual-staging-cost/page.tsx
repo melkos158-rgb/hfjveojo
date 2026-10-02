@@ -170,7 +170,7 @@ export default function VirtualStagingCostGuide() {
       <ul>
         <li>Staging dozens of photos every month? An AI subscription is the cheapest per photo.</li>
         <li>Need a designer to style a difficult room, or several changes at once? A human editing service.</li>
-        <li>A listing now and then, and you want it today? Pay per photo — and look at a preview of your own photo before you pay.</li>
+        <li>A listing now and then, and you want it today? Pay per photo — and try it on your own photo first (see <Link href="/guides/free-virtual-staging">what&apos;s free in virtual staging</Link>).</li>
       </ul>
 
       <h2>Our price</h2>
