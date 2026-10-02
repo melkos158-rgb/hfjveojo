@@ -1,0 +1,6 @@
+# production checks after s71 (abcb14d)
+verify/s71/guide.html https://orvionis.com/guides/virtual-staging-styles
+verify/s71/tool.html https://orvionis.com/tools/virtual-staging
+verify/s71/living-room-modern.webp https://orvionis.com/img/styles/living-room-modern.webp
+verify/s71/og.jpg https://orvionis.com/img/guide-staging-styles-og.jpg
+verify/s71/sitemap.xml https://orvionis.com/sitemap.xml
