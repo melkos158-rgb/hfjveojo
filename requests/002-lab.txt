@@ -1,0 +1,3 @@
+# marketing lab results (src/lib/ops/lab.ts), re-run by touching this file
+@manifest https://orvionis.com/api/lab/manifest
+# run 1
