@@ -363,7 +363,18 @@ UA: 3, 2, 1… дивись, як порожня кімната сама себ�
 - YouTube: "yes" to altered or synthetic content.
 - If asked whether we make such videos: "The video is our edit. You get two staged photos of each room, in about two minutes." UA: «Відео — це наш монтаж. Ти отримуєш дві застейджені фотографії кожної кімнати приблизно за дві хвилини.»
 
-More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
+`video-v8` (one room, six styles, 16 s, 2 Oct): the owner said the videos all look alike and asked for new photos and a new idea. A free-licence stock photo of an empty living room (Pexels 3958955) was staged in production by the marketing lab (`src/lib/ops/lab.ts`) in all six styles with the exact customer pipeline; the video shows one of the two delivered versions per style, as delivered (each registered onto the empty photo's frame by a sub-1 % shift so the walls hold still at the cuts). Hook "ONE EMPTY ROOM." → the six results flash by → "SAME PHOTO." → each style for four beats with story bars, a wipe on every downbeat and punch-ins on three of them → "WHICH ONE WOULD YOU LIST? Comment 1 – 6" over all six → "FIRST PHOTO FREE." + URL. New synthesized track (135 bpm, F dorian), -14.1 LUFS, stems checked for clipping. Files in `ORVIONIS_VIDEO_REFERENCES/videos/`: `orvionis_v8_six_styles.mp4`, TikTok cut `orvionis_v8_six_styles_tiktok.mp4` (orvionis.com/tt), cover `orvionis_v8_cover.png`; source `reels/reel-orv-v8-src.tgz`.
+> Same empty living room, six styles: modern, Scandinavian, farmhouse, mid-century, luxury, coastal. The walls, the windows and even the ceiling fan stay exactly where they were. Which one would you list it with? Comment 1–6. First photo free, then $15 a photo. Link in bio.
+> #virtualstaging #realestate #realtor #listingphotos #homestaging #interiordesign #realestateagent
+
+UA: Та сама порожня вітальня, шість стилів: модерн, скандинавський, фермерський, мідсенчурі, люкс, прибережний. Стіни, вікна і навіть стельовий вентилятор лишаються точно там, де були. З яким би ти виставив її на продаж? Напиши в коментарях 1–6. Перше фото безкоштовно, далі $15 за фото. Посилання в профілі.
+
+- TikTok: the TikTok cut, "orvionis.com/tt" instead of "Link in bio.", **AI-generated content label on** (the staged photos are AI edits).
+- YouTube: "yes" to altered or synthetic content.
+- Pin a first comment with the answer key if people ask which is which: "1 modern · 2 Scandinavian · 3 farmhouse · 4 mid-century · 5 luxury · 6 coastal".
+- If asked whose listing it is: "None — it's a free stock photo of an empty room, staged by ORVIONIS for this video. Your own photo works the same way: the first one is free." UA: «Нічий — це безкоштовне стокове фото порожньої кімнати, яке ORVIONIS застейджив для цього відео. З твоїм фото працює так само: перше безкоштовно.»
+
+More before/after sets now come from the marketing lab: add free-licence empty-room photos to `src/content/lab-requests.ts` (append only), deploy, and production stages them within its budget share; the media bridge (branch `media-bridge`) fetches the results. Already staged on 2 Oct: four more rooms (a white bedroom, a living room with a stone fireplace, one with green walls and a vaulted ceiling, a portrait bedroom), 2–3 styles each, for the next videos (e.g. "guess the real photo").
 
 ## What to say when they ask
 
