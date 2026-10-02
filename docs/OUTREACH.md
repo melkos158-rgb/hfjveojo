@@ -353,6 +353,16 @@ UA: 3, 2, 1… застейджено. Та сама порожня кімнат
 - YouTube Shorts title: "3, 2, 1… staged: empty room to furnished listing photo (first photo free)"; "yes" to altered or synthetic content.
 - If someone asks for 3D tours: "Not yet. You get two staged photos of each room, the 3D move is just how we edited the video." UA: «Поки ні. Ти отримуєш дві застейджені фотографії кожної кімнати, а 3D-рух — це просто монтаж відео.»
 
+`video-v7` (AI staging + real 3D, 11.25 s, 2 Oct): the owner bought Higgsfield Pro and asked for "the most awesome video". Beats 4–10 are an AI shot (Higgsfield, MiniMax H3, 2K) whose first frame is the real empty photo of order #6 and whose last frame is the real staged result: the rug unrolls, then sofa, tables, chairs, art and tree appear, time-remapped so each piece lands on a half beat. Everything else is real (3D doorway walk, divider, live page, offer). Files are in the owner's Higgsfield uploads (`orvionis_v7_ai_staging.mp4`, TikTok cut `orvionis_v7_ai_staging_tiktok.mp4`); plates and the composite script are in `ORVIONIS_VIDEO_REFERENCES/reels/v7/` and on the repo branch `marketing-media` (never deployed; used because the cloud sandboxes can only meet on GitHub).
+> 3, 2, 1… watch this empty room stage itself. Rug, sofa, tables, chairs, art. Same walls, same windows. Your first photo is free, then $15 a photo. Link in bio.
+> #realestate #virtualstaging #realtor #listingphotos #homestaging #realestateagent #justlisted
+
+UA: 3, 2, 1… дивись, як порожня кімната сама себе обставляє. Килим, диван, столи, крісла, картини. Ті самі стіни, ті самі вікна. Перше фото безкоштовно, далі $15 за фото. Посилання в профілі.
+
+- TikTok: the TikTok cut, "orvionis.com/tt" instead of "Link in bio.", **AI-generated content label on** (the clip contains AI video).
+- YouTube: "yes" to altered or synthetic content.
+- If asked whether we make such videos: "The video is our edit. You get two staged photos of each room, in about two minutes." UA: «Відео — це наш монтаж. Ти отримуєш дві застейджені фотографії кожної кімнати приблизно за дві хвилини.»
+
 More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 
 ## What to say when they ask
