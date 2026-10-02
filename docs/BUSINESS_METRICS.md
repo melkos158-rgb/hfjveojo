@@ -33,21 +33,21 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | Stripe fees | $0 | actual fee per payment (balance transaction) |
 | Marketplace fees (Fiverr 20 %) | $0 | |
 | **Net revenue** | **$0** | gross − refunds − Stripe − marketplace fees |
-| AI / API costs | $0.39 | `/admin/analytics` (pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports) |
-| **Gross profit** | **−$0.39** | net revenue − variable costs (AI) |
-| Advertising spend | **€22.19** (29 Sep €11.69 + 30 Sep €10.50) | Google Ads E8: 17 clicks at €1.31 average, of the €30 campaign total prepaid by the owner; €7.81 left for 1 Oct, the last day. Read on 30 Sep ≈ 22:45 UTC from the campaigns table. A day's spend shows after midnight in account time (GMT+3). |
+| AI / API costs | $0.40 | `/admin/analytics` (pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports) |
+| **Gross profit** | **−$0.40** | net revenue − variable costs (AI) |
+| Advertising spend | **€29.98** (29 Sep €11.69 + 30 Sep €10.50 + 1 Oct €7.79) | Google Ads E8, final: 23 clicks at €1.30 average, of the €30 campaign total prepaid by the owner. Campaign ended 1 Oct; evaluated 2 Oct 05:10 UTC (stop). |
 | Infrastructure | Railway Hobby plan | owner-paid; monthly amount → from the Railway invoice (not yet recorded) |
 | AI subscriptions (Claude, etc.) | owner-paid | amount to record from the owner's billing (not yet recorded) |
-| **Net profit** | **−$0.39 − €22.19 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
+| **Net profit** | **−$0.40 − €29.98 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
 | **Cash available for reinvestment (business-generated)** | **$0** | all spending so far is owner-funded; nothing has been earned yet |
 
 ## Revenue and profit per channel
 
 | Channel | Spend | Paid orders | Revenue | Profit | ROAS | Revenue per € / $ spent |
 | --- | --- | --- | --- | --- | --- | --- |
-| google (E8, Search) | €22.19 (141 impressions, 17 clicks, CPC €1.31, 29–30 Sep); site: 30 page views (30 Sep 22:45 UTC), 0 intakes, 0 checkouts | 0 | $0 | −€22.19 | 0 | 0 |
+| google (E8, Search, ended 1 Oct) | €29.98 (248 impressions, 23 clicks, CPC €1.30); site: 38 page views, 0 intakes, 0 checkouts | 0 | $0 | −€29.98 | 0 | 0 |
 | fb_group (E9, Facebook groups, from 29 Sep) | $0 (founder time); 2 posts live, 4 awaiting admin review (corrected 30 Sep 22:20 UTC); site: 13 page views (30 Sep 22:45 UTC), 0 intakes | 0 | $0 | $0 | — | — |
-| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time); `video-v1`: TikTok 251 views, YouTube Short 8 views, Instagram posted; site: `youtube` 3 page views, `ig` 0 (30 Sep 22:55 UTC), 0 intakes. TikTok has no clickable profile link yet, so its visits land in `direct` | 0 | $0 | $0 | — | — |
+| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time); 2 Oct 05:15 UTC: TikTok 772 / 767 / 276 views (v1 / v2 / 2 Oct video), 2 followers; YouTube Shorts 32 / 18 / 42; Instagram 3 Reels, about 1 play; site: `youtube` 3 page views, `ig` 0, `tiktok` 0, 0 intakes | 0 | $0 | $0 | — | — |
 | fiverr (E13, gig live 26 Sep) | $0 (20 % fee only on sales) | 0 (Manage Orders) | $0 | $0 | — | — |
 | outreach (E1–E3) | founder time only | 0 | $0 | $0 | — | — |
 | direct / organic | $0 | 0 | $0 | $0 | — | — |
@@ -56,8 +56,17 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 
 | Date | Item | Reason | Hypothesis | Expected outcome | Metric | Limit | Status / result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep; restricted until advertiser verification **passed 29 Sep**. The owner enabled it at ≈ 11:45 UTC. Day 1 (29 Sep): **€11.69, 8 clicks**; day 2 (30 Sep): **€10.50, 9 clicks**; 0 checkouts. Negatives added 30 Sep ≈ 22:05 UTC. The end date stays 1 Oct (€7.81 left), so the evaluation moves to 2 Oct 05:03 UTC, by the rules in `docs/GOOGLE_ADS_EXPERIMENT.md` |
+| 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep; restricted until advertiser verification **passed 29 Sep**. The owner enabled it at ≈ 11:45 UTC. Day 1 (29 Sep): **€11.69, 8 clicks**; day 2 (30 Sep): **€10.50, 9 clicks**; 0 checkouts. Negatives added 30 Sep ≈ 22:05 UTC. **Final (ended 1 Oct): €29.98, 248 impressions, 23 clicks, 0 intakes, 0 checkouts, 0 orders. Evaluated 2 Oct 05:10 UTC: stop.** Visible search terms were consumers redecorating their own room. €20 of the owner's €50 limit is unused; a second test (E8b) only with his yes |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
+
+## Snapshot — 2026-10-02 05:15 UTC (last 30 days, `/admin/analytics`)
+
+- 575 / 99 page views and sessions (unchanged since 1 Oct 23:10 UTC; US night). By first touch: direct 483, `google` 38, `www.google.com` 25, `fb_group` 13, Gmail app 6, `www.facebook.com` 5, `youtube` 3, `m.facebook.com` 2. No `tiktok` or `ig` visits yet.
+- Funnel 3 → 7 → 0; $0 revenue; AI $0.40; free first photos 0 claimed (live since 1 Oct 23:17 UTC); delivered / review / failed 0 / 0 / 0.
+- Google Ads E8 final: €29.98, 23 clicks, 0 conversions; evaluated: stop.
+- Short video: TikTok v1 772, v2 767, the 2 Oct video 276 views, 2 followers; YouTube Shorts 32 / 18 / 42; Instagram 3 Reels, about 1 play, 0 followers.
+- Facebook: the SoCal Professionals post 5 reactions, 2 comments (no new comments).
+- Fiverr Manage Orders 0. Production: `/api/health` ok, db up, jobs 0 / 0 / 0, worker ticking (05:08 UTC).
 
 ## Snapshot — 2026-09-30 22:55 UTC (last 30 days, `/admin/analytics`)
 

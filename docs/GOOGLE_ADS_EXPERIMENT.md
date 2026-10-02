@@ -112,6 +112,13 @@ One responsive search ad (15 headlines, 4 descriptions, ad strength "Good"). Eve
 
 ## STATUS
 
+**FINAL EVALUATION, 2026-10-02 05:10 UTC (read-only; numbers unchanged from the 1 Oct 23:05 read).**
+- **Result:** €29.98 spent, 248 impressions, 23 clicks, CTR 9.27 %, CPC €1.30. Site channel `google`: 38 page views, **0 intakes, 0 previews, 0 checkouts, 0 paid orders**. Revenue $0, profit −€29.98, ROAS 0; cost per paid order undefined (no order).
+- **Search terms (26 Sep – 1 Oct):** the 6 visible clicks (€8.09) all came from homeowner or DIY decor searches: "ai room decorator" (2 clicks), "free home staging software", "rearrange my room virtual", "rearrange my room virtual free", "room reorganizer ai". The realtor-intent queries ("virtual staging", "virtual staging service", "ai virtual staging") got impressions and **no clicks**. Google hides the other 17 clicks (€21.89) as "other search terms".
+- **Diagnosis:** phrase-match close variants bought mostly the wrong audience (people redecorating their own room), and the page asked $15 up front. 23 clicks is far below the 60-click rule, so the test cannot say whether search converts for agents; it says this keyword setup attracted consumers.
+- **Decision (DECISION RULES):** €30 gone with 0 orders → **stop, no top-up** on the same hypothesis. E8 is closed.
+- **Changed hypothesis, ready if the owner wants a second test (E8b, needs his explicit yes):** the page now offers a free first photo with the real before/after on the first screen; keywords become **exact match only** on agent intent ("virtual staging", "virtual staging service", "virtual staging company", "virtual staging for realtors", "real estate virtual staging", "free virtual staging for realtors"); negatives add decorator, decor, rearrange, reorganizer, "my room", app, software, diy. Cap **€20** (the rest of the owner's €50 limit), 5 days, max CPC €1.50. Metric: free photos claimed by `google` visitors; ≥ 2 claims → keep going, 0 claims after ≥ 12 clicks → stop paid search and put the effort into video, groups and SEO. Before it starts: one real free photo through production (owner's email) and the import conversion action "ORVIONIS paid order".
+
 **E8 has ENDED (read 2026-10-01 ≈ 23:05 UTC, read-only).** The campaigns table shows status "Завершено" (ended) and €30.00 total, 26 Sep – 1 Oct.
 - **Final totals, 26 Sep – 1 Oct: 248 impressions, 23 clicks, €29.98 of the €30.** CTR 9.27 %, average CPC €1.30, **0 conversions**.
 - Last day, 1 Oct (totals minus 26–30 Sep): 107 impressions, 6 clicks, €7.79. CTR 5.61 %, CPC €1.30. It ran with all 30 negatives.
@@ -243,6 +250,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-10-02 05:10 UTC (final evaluation, read-only): numbers unchanged; search terms read; conclusion and the E8b proposal in STATUS. Owner report sent with the morning report.
 - 2026-10-01 ≈ 23:05 UTC (release reminder, read-only): **E8 ended.** The campaigns table reads "Завершено" (ended). Final: 248 impressions, 23 clicks, €29.98, 0 conversions. The sale-fix release can ship now.
 - 2026-09-30 ≈ 23:05 UTC (the owner: "так шо далі делаєм кажи або роби", read as a yes to the offer "напиши «впиши»"): the operator typed the 7 proposed negatives (rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room") into E8's add panel with campaign E8 picked, and asked the owner to press "Зберегти". Not saved by the operator.
   - ≈ 23:47 UTC the operator reloaded the negatives page to see whether they were saved. The page then stayed "busy", possibly on a "leave site?" prompt that would drop unsaved text. At 23:50 the Chrome extension disconnected (browser closed or the PC asleep), so the result is unknown.
