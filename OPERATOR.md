@@ -107,6 +107,11 @@ The 17:03 daily summary goes both to the chat (SendUserMessage) and as an owner 
 
 ## Session log
 
+- 2026-10-02 12:10–13:20 UTC (owner online from his phone, then the midday check-in):
+  - He couldn't open the v7 links and asked for the files in the chat. The AI band (253 KB) was carried out of the Higgsfield sandbox, the finals were rebuilt from the lossless plates and sent in the chat; a 1-frame "+ PLANTS" ghost at the STAGED→WALLS cut was fixed on the way (`word()` resets globalAlpha, so the v6 caption list leaked into beat 12.00–12.02).
+  - **He heard crackle in the audio.** Root cause: `tools_cine.py` read the 24-bit `music_base.wav` with a 16-bit guess, so v6 and v7 music was a full-scale clipped square wave; the -14 LUFS normalisation hid it on the meters. Fixed read + a stem guard in `sound.sh`, remixed, re-muxed v6 and v7 (main + TikTok), resent and saved to `videos/`. Lesson: check each stem's sample range (share of samples at full scale), not only the master's LUFS and peak.
+  - Midday check-in: health ok, analytics 576 / 100, 0 paid, free first photos 0, review/failed 0; TikTok 772 / 769 / 742, YouTube 32 / 18 / 80; Fiverr Manage Orders 0; s67 CI and Railway green. Docs shipped as s68.
+
 - 2026-10-01 23:45 – 2026-10-02 00:15 UTC (owner asleep: "work, improve, a cool video for all platforms, report at 8"):
   - `video-v4` built with the Motion Reel plugin in the cloud sandbox (`/home/claude/reels`, ephemeral): real before/after registered with OpenCV ECC (walls/windows aligned), the live page shot from a local production build of the same code with the cookie card dismissed and Inter as the system sans, synthesized house at 120 bpm, 23 SFX hits all within 20 ms of an onset, -14 LUFS. Video, cover and the full source archive are in `ORVIONIS_VIDEO_REFERENCES/` on his PC (not in git).
   - s62: sitemap dates for the pages changed on 1 Oct (tool page, pricing, privacy, cost calculator, three guides) so IndexNow resubmits them; the staging page title leads with "first photo free"; guide links read "Virtual Staging — first photo free"; new group post `re-fb-group-free-photo` and v4 captions.

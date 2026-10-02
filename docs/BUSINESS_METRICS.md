@@ -47,7 +47,7 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | --- | --- | --- | --- | --- | --- | --- |
 | google (E8, Search, ended 1 Oct) | €29.98 (248 impressions, 23 clicks, CPC €1.30); site: 38 page views, 0 intakes, 0 checkouts | 0 | $0 | −€29.98 | 0 | 0 |
 | fb_group (E9, Facebook groups, from 29 Sep) | $0 (founder time); 2 posts live, 4 awaiting admin review (corrected 30 Sep 22:20 UTC); site: 13 page views (30 Sep 22:45 UTC), 0 intakes | 0 | $0 | $0 | — | — |
-| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time); 2 Oct 05:15 UTC: TikTok 772 / 767 / 276 views (v1 / v2 / 2 Oct video), 2 followers; YouTube Shorts 32 / 18 / 42; Instagram 3 Reels, about 1 play; site: `youtube` 3 page views, `ig` 0, `tiktok` 0, 0 intakes | 0 | $0 | $0 | — | — |
+| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time) + Higgsfield credits (owner's plan); 2 Oct 12:58 UTC: TikTok 772 / 769 / 742 views (v1 / v2 / v5 California); YouTube Shorts 32 / 18 / 80; Instagram 3 Reels, 0 followers; site: `youtube` 3 page views, `ig` 0, `tiktok` 0, 0 intakes | 0 | $0 | $0 | — | — |
 | fiverr (E13, gig live 26 Sep) | $0 (20 % fee only on sales) | 0 (Manage Orders) | $0 | $0 | — | — |
 | outreach (E1–E3) | founder time only | 0 | $0 | $0 | — | — |
 | direct / organic | $0 | 0 | $0 | $0 | — | — |
@@ -59,6 +59,13 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep; restricted until advertiser verification **passed 29 Sep**. The owner enabled it at ≈ 11:45 UTC. Day 1 (29 Sep): **€11.69, 8 clicks**; day 2 (30 Sep): **€10.50, 9 clicks**; 0 checkouts. Negatives added 30 Sep ≈ 22:05 UTC. **Final (ended 1 Oct): €29.98, 248 impressions, 23 clicks, 0 intakes, 0 checkouts, 0 orders. Evaluated 2 Oct 05:10 UTC: stop.** Visible search terms were consumers redecorating their own room. €20 of the owner's €50 limit is unused; a second test (E8b) only with his yes |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
+
+## Snapshot — 2026-10-02 12:58 UTC (last 30 days, `/admin/analytics`)
+
+- 576 / 100 page views and sessions (+1 since 05:15; US morning). By first touch: direct 484, `google` 38, `www.google.com` 25, `fb_group` 13, Gmail app 6, `www.facebook.com` 5, `youtube` 3, `m.facebook.com` 2. Still no `tiktok` or `ig` visits.
+- Funnel 3 → 7 → 0; $0 revenue; AI $0.41; free staging previews 1; free first photos 0 claimed; delivered / review / failed 0 / 0 / 0. Virtual Staging funnel 54 → 1 → 1 → 2.
+- Short video: TikTok v1 772, v2 769, v5 (California) 742 views; YouTube Shorts 32 / 18 / 80; Instagram 3 Reels, 0 followers. v6 and v7 are not posted yet. Their audio was broken until 13:05 UTC (see GROWTH_EXPERIMENTS E15), fixed files in `ORVIONIS_VIDEO_REFERENCES/videos/`.
+- Fiverr Manage Orders 0 in every status (12:58 UTC). Production: `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2ee5e99be724-14` ticking (12:55 UTC); s67 `22a9889` CI and Railway green.
 
 ## Snapshot — 2026-10-02 05:15 UTC (last 30 days, `/admin/analytics`)
 
