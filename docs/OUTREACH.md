@@ -13,6 +13,10 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 ## Daily routine (45–60 minutes)
 
 **From 2 Oct (E19): the Realtor DM Tracker** (private claude.ai artifact, link in the operator's chat) holds the day's batch: 10 agents with one written message each, copy buttons, status, the 3-day follow-up and reply templates. The operator finds and writes, the owner sends from @orvionis_ and marks the status; check-ins read the statuses and add the next batch.
+- Since 3 Oct each agent has a send day (Warsaw date). «Сьогодні» shows who to write today, «Наступні» the later days. A batch held for the E19 check is marked «Чекає перевірки перших 20» and stays out of «Сьогодні» until the operator releases it.
+- **Batch 3** (prepared 2–3 Oct overnight, held): 20 agents in new markets: Atlanta 4, Houston 3, Orlando 4, Austin 2, Nashville 5, Denver 2. They were picked first for vacant-home work: probate and estate specialists, a builder's new-construction agent, high-volume listing agents, team leads.
+  - Days: 10 on 4 Oct, 10 on 5 Oct. They are released only after the E19 check on the first 20.
+  - Sources: web search for public profiles, then one read of each profile (bio, follower count, latest post captions; about 30 profiles, nothing liked, followed or sent). Phone numbers and emails were redacted at read time, and no addresses were stored.
 
 0. Cold contacts get the $9 offer (`re-ig-dm-9`) first; walkthrough posters get `re-ig-dm-1` (clips). One paid $9 order is worth more than ten "interested" replies — it proves the funnel end to end.
 1. Find 15 agents who posted a walkthrough in the last 7 days (Instagram: search `#listingvideo`, `#justlisted`, `#[city]realestate`, watch Reels; TikTok: `#realestatetok`). Save handle + listing + one specific detail.
@@ -236,6 +240,7 @@ Not for promotion:
   - He attached the collage `ORVIONIS_VIDEO_REFERENCES/fb/same-room-six-styles.jpg`: the guide's stock room, empty and in all six styles, marked "All six virtually staged".
   - The post has no link: the group blocks repeats and third-party links, so it asks a question instead.
   - The owner presses Publish himself.
+- 2 Oct ≈ 22:00 UTC: the owner published it. At 23:10 UTC it was **awaiting admin review** («В очікуванні · 1» on the group's pending-content page), although the first SoCal post had gone live at once. So SoCal Professionals now reviews this account's posts too. Check it on the group's «Ваш контент» page.
 
 Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
 > Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging

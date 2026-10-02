@@ -45,6 +45,12 @@ None yet.
 
 ## Log
 
+- 2026-10-02 23:45 UTC — **overnight work, chosen by the operator** (the owner: "сам думай").
+  - State at 23:10 UTC: the owner posted `video-v8` on TikTok at 19:53 UTC (373 views by 23:06), on YouTube Shorts and on Instagram (4 posts). The second SoCal Professionals post is awaiting admin review.
+  - **E19:** the tracker's tabs now follow each agent's send day.
+  - **E19:** batch 3 (20 agents, 6 new markets) was written and is held for the E19 check (see `docs/OUTREACH.md` → Daily routine).
+  - **E13:** a Fiverr kit, for the owner to upload. It is `video-v8` without the URL, the price and the comment ask: a `variant=fiverr` end card ("YOUR ROOM, ANY STYLE.", "VIRTUAL STAGING", "6 styles · 2 staged versions per photo"), laid out 16:9 over a blurred room. With it comes a 1280×769 first gallery image of the six real results (`ORVIONIS_VIDEO_REFERENCES/fiverr/`).
+  - No new Facebook groups: even SoCal Professionals now reviews this account's posts.
 - 2026-10-02 16:05 UTC — **E9: a second SoCal Professionals post, built around the six-style collage.**
   - The group check at 15:55 UTC: 2 posts live (SoCal Professionals: 5 reactions, 2 comments; Northern California: 0). Three posts are still awaiting admin review after two days, and the All Realtors membership is pending.
   - The new post is a question ("which one would you go with: 1 to 6?") with the AB 723 note, the collage and no link. It was typed in the owner's Chrome at his "так", and he publishes it.

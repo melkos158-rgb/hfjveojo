@@ -9,6 +9,11 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
 - **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-09-27 11:05 UTC. Manage Orders is the only source of truth.
 - Inbox: not read on 27 Sep. Fiverr's "It needs a human touch" check appeared on `/inbox` even after a 35-second pause following Manage Orders. The operator never solves it, so the owner reads the inbox. With Manage Orders at 0, no message can be a real order.
 - Within an hour of going live, three phishing messages arrived. Two were reported and blocked; see SECURITY INCIDENTS.
+- **Impressions since 26 Sep are unknown.** The seller dashboard has been gated for the operator since 29 Sep, so the owner reads it; the number goes here.
+- **Gig media kit, ready 2 Oct (not uploaded yet).** The files are in `ORVIONIS_VIDEO_REFERENCES/fiverr/` on the owner's PC:
+  - `orvionis_v8_fiverr_gig.mp4`, the gig video: 16:9, 16 s, 6.5 MB, under Fiverr's 75 s / 50 MB limits. It has no URL, no price and no off-platform ask; the only brand text is the ORVIONIS mark and the "Virtually staged by ORVIONIS" chip.
+  - `orvionis_fiverr_gig_six_styles.jpg`, a new first gallery image at 1280×769: the empty stock room and its six real staged results.
+  - The owner uploads both in Gig → Edit → Gallery and saves. The operator does not edit the gig.
 
 ## ORDER VERIFICATION RULES (owner, permanent)
 
