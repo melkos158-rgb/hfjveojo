@@ -15,8 +15,10 @@ import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelSt
  * + 2 labeled copies (disclosure pack); one JSON note for the order.
  */
 
-const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "patio or outdoor"] as const;
-const STYLES = ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"] as const;
+export const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "patio or outdoor"] as const;
+export const STYLES = ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"] as const;
+export type StagingRoomType = (typeof ROOM_TYPES)[number];
+export type StagingStyle = (typeof STYLES)[number];
 export const MAX_ROOMS = STAGING_MAX_ROOMS;
 
 const roomSchema = z.object({

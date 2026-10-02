@@ -87,6 +87,32 @@ async function sendOwnerUpdatesIfDue(): Promise<void> {
   }
 }
 
+/**
+ * Marketing lab (src/lib/ops/lab.ts): stages the stock photos of src/content/lab-requests.ts, at most one run per call
+ * and only within its share of the daily AI budget. Deliberately not awaited — a run takes a minute or two and must
+ * never hold up job claims. Once nothing is left to stage, this process stops checking (new requests ship with a deploy).
+ */
+const LAB_EVERY_MS = 2 * 60_000;
+let labDone = false;
+let labRunning = false;
+let lastLabAt = 0;
+function runLabIfDue(): void {
+  if (labDone || labRunning || Date.now() - lastLabAt < LAB_EVERY_MS) return;
+  lastLabAt = Date.now();
+  labRunning = true;
+  void (async () => {
+    try {
+      const { runLabOnce } = await import("@/lib/ops/lab");
+      const outcome = await runLabOnce();
+      if ("skipped" in outcome && (outcome.skipped === "nothing to do" || outcome.skipped === "not production")) labDone = true;
+    } catch (err) {
+      log.warn("lab.check_failed", { error: (err as Error).message });
+    } finally {
+      labRunning = false;
+    }
+  })();
+}
+
 async function scheduleMaintenanceIfDue(): Promise<void> {
   const now = new Date();
   if (now.getUTCMinutes() > 4) return; // once per hour, in the first minutes
@@ -110,6 +136,7 @@ export function createJobLoop(opts: LoopOptions): JobLoop {
         await scheduleMaintenanceIfDue();
         await requeueStaleJobsIfDue();
         await sendOwnerUpdatesIfDue();
+        runLabIfDue();
       }
       while (state.running < opts.concurrency) {
         const job = await claimNextJob(opts.workerId);
