@@ -1,0 +1,31 @@
+# Lives only on the media-bridge branch (never on main, never deployed).
+# Downloads the media listed in requests/*.txt into out/ and commits it, so a sandbox that can only reach
+# raw.githubusercontent.com can read marketing material (stock photos, ORVIONIS lab results, renders).
+name: media-bridge
+on:
+  push:
+    branches: [media-bridge]
+    paths: ["requests/**"]
+permissions:
+  contents: write
+concurrency:
+  group: media-bridge
+  cancel-in-progress: false
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: media-bridge
+      - name: Fetch listed media
+        run: python3 .github/bridge.py
+      - name: Commit fetched files
+        run: |
+          git config user.name "media-bridge"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add out
+          if git diff --cached --quiet; then echo "nothing new"; exit 0; fi
+          git commit -m "bridge: fetched media"
+          git push origin HEAD:media-bridge
