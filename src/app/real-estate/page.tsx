@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "For real estate agents: virtual staging, listing copy and clips",
   description:
-    "Virtual staging from $15 per photo, MLS-ready listing descriptions for $9 and five vertical listing clips for $49 — ordered per listing, no subscription. Plus a free fair-housing checker for your remarks.",
+    "Virtual staging with your first photo free, then $15 per photo, MLS-ready listing descriptions for $9 and five vertical listing clips for $49 — ordered per listing, no subscription. Plus a free fair-housing checker for your remarks.",
   alternates: { canonical: "/real-estate" },
 };
 

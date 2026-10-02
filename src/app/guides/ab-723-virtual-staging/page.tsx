@@ -86,7 +86,7 @@ export default function Ab723GuidePage() {
 
       <h2>How ORVIONIS handles it</h2>
       <p>
-        Every <Link href="/tools/virtual-staging">Virtual Staging</Link> order ($15 per photo, two staged versions in about two minutes) comes with a <strong>disclosure pack</strong>: a labeled copy of each version, a public page with the unaltered original, a QR code to it for print, and the line to paste next to the photo. Walls, floors, windows and fixtures are left exactly as photographed. You can see a free, watermarked preview on your own photo before paying.
+        Every <Link href="/tools/virtual-staging">Virtual Staging</Link> order (your first photo free, then $15 per photo; two staged versions in about two minutes) comes with a <strong>disclosure pack</strong>: a labeled copy of each version, a public page with the unaltered original, a QR code to it for print, and the line to paste next to the photo. Walls, floors, windows and fixtures are left exactly as photographed. Your first photo is free, so you can check the result on your own listing before paying anything.
       </p>
       <p>
         Comparing providers first? See <Link href="/guides/virtual-staging-cost">what virtual staging costs in 2026</Link> — human
@@ -94,7 +94,7 @@ export default function Ab723GuidePage() {
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">
-          Stage a photo — $15
+          Stage your first photo free
         </Link>
       </p>
 

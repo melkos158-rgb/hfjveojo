@@ -58,7 +58,7 @@ export default function PhotographingRoomsGuide() {
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">
-          Stage a photo — $15
+          Stage your first photo free
         </Link>
       </p>
     </div>

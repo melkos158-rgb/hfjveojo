@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: { absolute: `${site.name} — AI virtual staging and listing marketing for agents` },
   description:
-    "Upload what you have, get the finished result: AI virtual staging for $15 a photo (two versions in about two minutes), MLS listing descriptions for $9, listing clips for $49 and photographer pricing guides for $29. No subscription.",
+    "Upload what you have, get the finished result: AI virtual staging with your first photo free, then $15 a photo (two versions in about two minutes), MLS listing descriptions for $9, listing clips for $49 and photographer pricing guides for $29. No subscription.",
   alternates: { canonical: "/" },
 };
 
@@ -146,10 +146,10 @@ export default async function HomePage() {
               </div>
               <div className="grid gap-2 text-xs text-gray-500 sm:grid-cols-2">
                 <div>Before · one photo of the empty room, room type, style</div>
-                <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes, $15 per photo</div>
+                <div className="sm:text-right">After · real pipeline output, unedited — 2 versions per photo, about 2 minutes · first photo free, then $15</div>
               </div>
               <Link href="/tools/virtual-staging#example" className="mt-auto text-sm font-semibold text-accent hover:underline">
-                See the sample, or preview your own photo free →
+                See the sample, or stage your first photo free →
               </Link>
             </div>
 

@@ -335,6 +335,14 @@ UA: Порожнє фото оголошення? Те саме фото, 2 хв
 - TikTok: replace "Link in bio." with "orvionis.com/tt", and turn on TikTok's "AI-generated content" label (the staged room is AI output).
 - YouTube Shorts title: "Empty room to staged listing photo in 2 minutes (first photo free)"; answer "yes" to the altered or synthetic content question, as with v1.
 
+`video-v5` (California, AB 723, 12 s, 2 Oct): `ORVIONIS_VIDEO_REFERENCES/videos/orvionis_v5_ab723_california.mp4`, cover `orvionis_v5_cover.png`, source `reels/reel-orv-ab723-src.tgz`. Hook "CALIFORNIA AGENT?", then "STAGED PHOTOS NEED A DISCLOSURE.", the real "Virtually staged" label stamped at the pipeline's own position, and "LABELED COPIES · ORIGINAL PHOTO PAGE · QR CODE FOR FLYERS".
+> California agents: since Jan 1, 2026, AB 723 wants a disclosure next to every virtually staged listing photo and the original available to buyers. Every ORVIONIS order comes with labeled copies, a page with the original photo and a QR code for flyers. Your first photo is free. Not legal advice, check your MLS rules too. Link in bio.
+> #californiarealestate #realestate #virtualstaging #realtor #ab723
+
+UA: Агенти в Каліфорнії: з 1 січня 2026 року AB 723 вимагає позначку біля кожного віртуально застейдженого фото в оголошенні й доступ покупців до оригіналу. Кожне замовлення ORVIONIS містить копії з позначкою, сторінку з оригінальним фото і QR-код для флаєрів. Перше фото безкоштовно. Це не юридична порада, правила своєї MLS теж перевірте. Посилання в профілі.
+
+On TikTok: "orvionis.com/tt" instead of "Link in bio." and the AI-generated content label on.
+
 More videos need more real before/after sets: 5–10 empty-room photos (the owner's own or stock with a commercial licence) run through ORVIONIS.
 
 ## What to say when they ask

@@ -167,7 +167,7 @@ export default function WhichRoomsGuide() {
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">
-          Stage your rooms — $15 per photo
+          Stage your first photo free
         </Link>
       </p>
 

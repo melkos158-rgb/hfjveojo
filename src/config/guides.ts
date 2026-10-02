@@ -18,7 +18,7 @@ export const GUIDES: Guide[] = [
     title: "Which rooms should you virtually stage?",
     description: "Buyers' agents rank the living room (37%), primary bedroom (34%) and kitchen (23%) as the rooms that matter most to stage (NAR 2025). A plan for one to six photos, and what to skip.",
     audience: "Real estate agents",
-    updated: "2026-10-01",
+    updated: "2026-10-02",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -26,7 +26,7 @@ export const GUIDES: Guide[] = [
     title: "How much does virtual staging cost in 2026?",
     description: "Human editors charge $24–$30 per photo; AI plans run $16–$79 a month. What a whole listing costs — real prices checked in September 2026, plus NAR data on staging.",
     audience: "Real estate agents",
-    updated: "2026-10-01",
+    updated: "2026-10-02",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -42,7 +42,7 @@ export const GUIDES: Guide[] = [
     title: "AB 723 and virtual staging: the California checklist",
     description: "What California's AB 723 requires for virtually staged listing photos since January 1, 2026 — and a 7-step checklist.",
     audience: "California agents",
-    updated: "2026-09-26",
+    updated: "2026-10-02",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -50,7 +50,7 @@ export const GUIDES: Guide[] = [
     title: "10 tips for room photos that stage well",
     description: "How to shoot empty rooms so virtual staging looks real: light, height, lens, angles and what to leave out.",
     audience: "Agents and listing photographers",
-    updated: "2026-10-01",
+    updated: "2026-10-02",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
 ];

@@ -45,9 +45,9 @@ const MODELS: Array<{ model: string; example: string; price: string; time: strin
   {
     model: "AI per photo, no subscription",
     example: "ORVIONIS",
-    price: "$15 per photo (2 versions of each)",
+    price: "$15 per photo, $12 each from 5 (2 versions of each); first photo free",
     time: "About 2 minutes per photo",
-    bestFor: "An agent with a listing now and then; free preview first",
+    bestFor: "An agent with a listing now and then; try it on your own photo first, free",
   },
 ];
 
@@ -183,7 +183,7 @@ export default function VirtualStagingCostGuide() {
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">
-          Stage a photo — $15
+          Stage your first photo free
         </Link>
       </p>
 
