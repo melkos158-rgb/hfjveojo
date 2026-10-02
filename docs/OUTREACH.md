@@ -12,6 +12,8 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 
 ## Daily routine (45–60 minutes)
 
+**From 2 Oct (E19): the Realtor DM Tracker** (private claude.ai artifact, link in the operator's chat) holds the day's batch: 10 agents with one written message each, copy buttons, status, the 3-day follow-up and reply templates. The operator finds and writes, the owner sends from @orvionis_ and marks the status; check-ins read the statuses and add the next batch.
+
 0. Cold contacts get the $9 offer (`re-ig-dm-9`) first; walkthrough posters get `re-ig-dm-1` (clips). One paid $9 order is worth more than ten "interested" replies — it proves the funnel end to end.
 1. Find 15 agents who posted a walkthrough in the last 7 days (Instagram: search `#listingvideo`, `#justlisted`, `#[city]realestate`, watch Reels; TikTok: `#realestatetok`). Save handle + listing + one specific detail.
 2. Like/comment something specific on the post, then send `re-ig-dm-1`.
@@ -226,6 +228,14 @@ Not for promotion:
   - Live: SoCal Professionals (3 reactions, 2 comments: the commenter's and the owner's reply) and Northern California (0 reactions, 0 comments).
   - So 2 of the 6 posts are visible, and 4 wait for admins. **From now on a post's state is read on the group's «Ваш контент» page**, which is where the 17:00 misreading showed up.
   - What follows: post where posts go live (SoCal Professionals, Northern California), and in the other groups answer real questions with helpful comments until the admins know the account.
+- 2 Oct ≈ 15:55 UTC (the owner asked to check the groups), read-only:
+  - Live: SoCal Professionals (5 reactions, 2 comments) and Northern California (0 reactions, 0 comments).
+  - Still awaiting admin review after two days: California Realtor, California Real Estate, SoCal RE & Services. All Realtors: the membership is still pending.
+- 2 Oct ≈ 16:05 UTC, at the owner's "так":
+  - The operator opened SoCal Professionals in a new tab of the owner's Chrome and typed `re-fb-group-styles` (below).
+  - He attached the collage `ORVIONIS_VIDEO_REFERENCES/fb/same-room-six-styles.jpg`: the guide's stock room, empty and in all six styles, marked "All six virtually staged".
+  - The post has no link: the group blocks repeats and third-party links, so it asks a question instead.
+  - The owner presses Publish himself.
 
 Reply drafted for the first comment (SoCal post, 29 Sep); the owner posts it himself:
 > Thanks, [first name]. The label is the easy part; keeping the original attached to every syndicated copy is where it slips. Here's the checklist I mentioned, sources included: orvionis.com/guides/ab-723-virtual-staging?utm_source=fb_group&exp=e4-virtual-staging
@@ -263,6 +273,17 @@ UA: Агенти Південної Каліфорнії з порожнім о�
 
 Question variant used for Northern California:
 > NorCal agents, a practical AB 723 question: how are you handling the disclosure on virtually staged photos? / Since January 1, 2026, a staged or otherwise digitally altered listing photo needs a disclosure next to it and access to the original. Bay East, for example, asks for the label ("altered", "digitally altered" or "AI altered") and the original uploaded right after the staged photo. / I put the rules and a 7-step checklist on one page, with sources: [guide link with `utm_source=fb_group&exp=e4-virtual-staging`] / I also run a virtual staging service ($15 a photo) that hands you the labeled copies, a public page with the original and a QR code. Curious what your brokerage tells you to do.
+
+`re-fb-group-styles` for **Southern California Real Estate Professionals** (2 Oct). It goes with the six-style collage and has no link:
+> Same empty living room, six staging styles. If this were your listing, which one would you go with: 1 to 6?
+>
+> I ran a free stock photo through my staging tool once per style to see how much the style changes the feel of the same room. Curious what SoCal buyers respond to.
+>
+> (All six are virtually staged, so in California they'd need the AB 723 label.)
+
+UA: Та сама порожня вітальня, шість стилів стейджингу. Якби це було ваше оголошення, який би ви обрали: від 1 до 6? / Я прогнав безкоштовне стокове фото через свій інструмент для стейджингу, по разу на кожен стиль, щоб побачити, наскільки стиль змінює відчуття від тієї самої кімнати. Цікаво, на що реагують покупці в Південній Каліфорнії. / (Усі шість віртуально застейджені, тож у Каліфорнії їм потрібна позначка за AB 723.)
+
+If someone asks which tool it is or wants the photos larger, reply with the guide. It shows all six large, with notes on each style: orvionis.com/guides/virtual-staging-styles?utm_source=fb_group&exp=e4-virtual-staging
 
 Cadence: join all six, then post in one or two groups a day with a different template each time (`re-fb-group-ab723` for California groups, `re-fb-group-calc` for the rest). Answer every comment. No private messages unless someone asks for one. Also search each group for "virtual staging" and answer real questions with `re-fb-group-reply`. Results show up in `/admin/analytics` as channel `fb_group`.
 
@@ -373,6 +394,15 @@ UA: Та сама порожня вітальня, шість стилів: мо
 - YouTube: "yes" to altered or synthetic content.
 - Pin a first comment with the answer key if people ask which is which: "1 modern · 2 Scandinavian · 3 farmhouse · 4 mid-century · 5 luxury · 6 coastal".
 - If asked whose listing it is: "None — it's a free stock photo of an empty room, staged by ORVIONIS for this video. Your own photo works the same way: the first one is free." UA: «Нічий — це безкоштовне стокове фото порожньої кімнати, яке ORVIONIS застейджив для цього відео. З твоїм фото працює так само: перше безкоштовно.»
+
+`video-v9` (guess the style, 16.9 s, made 2 Oct for 3 Oct): four other lab rooms (a white bedroom, a living room with a stone fireplace, a green living room with a vaulted ceiling, a portrait bedroom). Each round: the empty room, then the staged result with three style options, a 2-1 countdown and the answer in green; ends on "How many did you get? Comment your score: 0 – 4" and "First photo free". New track (128 bpm, A minor), -14.1 LUFS, stems checked. Files in `ORVIONIS_VIDEO_REFERENCES/videos/`: `orvionis_v9_guess_the_style.mp4`, TikTok cut `orvionis_v9_guess_the_style_tiktok.mp4`, cover `orvionis_v9_cover.png`; source `reels/reel-orv-v9-src.tgz`.
+> Guess the style: 4 empty rooms, staged by ORVIONIS. How many did you get? Comment your score, 0–4. First photo free, then $15 a photo. Link in bio.
+> #virtualstaging #realestate #realtor #interiordesign #homestaging #listingphotos
+
+UA: Вгадай стиль: 4 порожні кімнати, обставлені ORVIONIS. Скільки вгадав? Напиши свій рахунок у коментарях, від 0 до 4. Перше фото безкоштовно, далі $15 за фото. Посилання в профілі.
+
+- TikTok: the TikTok cut, "orvionis.com/tt" instead of "Link in bio.", AI-generated content label on. YouTube: "yes" to altered or synthetic content.
+- Reply to score comments ("4/4, nice eye") — replies keep the video in circulation.
 
 More before/after sets now come from the marketing lab: add free-licence empty-room photos to `src/content/lab-requests.ts` (append only), deploy, and production stages them within its budget share; the media bridge (branch `media-bridge`) fetches the results. Already staged on 2 Oct: four more rooms (a white bedroom, a living room with a stone fireplace, one with green walls and a vaulted ceiling, a portrait bedroom), 2–3 styles each, for the next videos (e.g. "guess the real photo").
 

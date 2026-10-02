@@ -33,12 +33,12 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | Stripe fees | $0 | actual fee per payment (balance transaction) |
 | Marketplace fees (Fiverr 20 %) | $0 | |
 | **Net revenue** | **$0** | gross − refunds − Stripe − marketplace fees |
-| AI / API costs | $0.40 | `/admin/analytics` (pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports) |
-| **Gross profit** | **−$0.40** | net revenue − variable costs (AI) |
+| AI / API costs | $2.06 | `/admin/analytics`, 2 Oct 18:55 UTC: pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports, and the 2 Oct marketing lab (+$1.65) |
+| **Gross profit** | **−$2.06** | net revenue − variable costs (AI) |
 | Advertising spend | **€29.98** (29 Sep €11.69 + 30 Sep €10.50 + 1 Oct €7.79) | Google Ads E8, final: 23 clicks at €1.30 average, of the €30 campaign total prepaid by the owner. Campaign ended 1 Oct; evaluated 2 Oct 05:10 UTC (stop). |
 | Infrastructure | Railway Hobby plan | owner-paid; monthly amount → from the Railway invoice (not yet recorded) |
 | AI subscriptions (Claude, etc.) | owner-paid | amount to record from the owner's billing (not yet recorded) |
-| **Net profit** | **−$0.40 − €29.98 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
+| **Net profit** | **−$2.06 − €29.98 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
 | **Cash available for reinvestment (business-generated)** | **$0** | all spending so far is owner-funded; nothing has been earned yet |
 
 ## Revenue and profit per channel
@@ -46,8 +46,9 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | Channel | Spend | Paid orders | Revenue | Profit | ROAS | Revenue per € / $ spent |
 | --- | --- | --- | --- | --- | --- | --- |
 | google (E8, Search, ended 1 Oct) | €29.98 (248 impressions, 23 clicks, CPC €1.30); site: 38 page views, 0 intakes, 0 checkouts | 0 | $0 | −€29.98 | 0 | 0 |
-| fb_group (E9, Facebook groups, from 29 Sep) | $0 (founder time); 2 posts live, 4 awaiting admin review (corrected 30 Sep 22:20 UTC); site: 13 page views (30 Sep 22:45 UTC), 0 intakes | 0 | $0 | $0 | — | — |
-| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time) + Higgsfield credits (owner's plan); 2 Oct 12:58 UTC: TikTok 772 / 769 / 742 views (v1 / v2 / v5 California); YouTube Shorts 32 / 18 / 80; Instagram 3 Reels, 0 followers; site: `youtube` 3 page views, `ig` 0, `tiktok` 0, 0 intakes | 0 | $0 | $0 | — | — |
+| fb_group (E9, Facebook groups, from 29 Sep) | $0 (founder time); 2 Oct 15:55 UTC: 2 posts live (SoCal Professionals 5 reactions, 2 comments; Northern California 0), 3 awaiting admin review since 30 Sep, All Realtors membership pending; a collage post typed for SoCal Professionals at 16:05, unpublished at 18:55; site: 13 page views, 0 intakes | 0 | $0 | $0 | — | — |
+| instagram_dm (E19, personal DMs to agents, from 2 Oct) | $0 (founder time); 10 sent 2 Oct ≈ 15:40–15:47 UTC, 1 human reply (passed to her builder), 1 auto-reply; site: 0 `instagram_dm` page views (the link goes out after a reply), 0 free photos | 0 | $0 | $0 | — | — |
+| youtube / ig / tiktok (E15, short video, from 30 Sep) | $0 (founder time) + Higgsfield credits (owner's plan); 2 Oct 18:55 UTC: TikTok 772 / 769 / 743 views (v1 / v2 / v5 California), flat since the first hours; YouTube Shorts 32 / 18 / 80; Instagram 3 posts, 0 followers; v6–v9 not posted yet; site: `youtube` 3 page views, `ig` 0, `tiktok` 0, 0 intakes | 0 | $0 | $0 | — | — |
 | fiverr (E13, gig live 26 Sep) | $0 (20 % fee only on sales) | 0 (Manage Orders) | $0 | $0 | — | — |
 | outreach (E1–E3) | founder time only | 0 | $0 | $0 | — | — |
 | direct / organic | $0 | 0 | $0 | $0 | — | — |
@@ -58,8 +59,16 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-09-26 | Google Ads E8: Search, US, "virtual staging service" intent | find a paid channel for the $15/photo staging tool | US agents who search for a virtual staging service will buy at $15 per photo after a free preview | ≥ 1 paid order from ~35–40 clicks (≈ €0.76–1.50 CPC) | paid orders, cost per paid order vs ≈ $14 contribution per photo | **€30** campaign total + €30 prepaid balance (owner authorized ≤ €50) | published 26 Sep; restricted until advertiser verification **passed 29 Sep**. The owner enabled it at ≈ 11:45 UTC. Day 1 (29 Sep): **€11.69, 8 clicks**; day 2 (30 Sep): **€10.50, 9 clicks**; 0 checkouts. Negatives added 30 Sep ≈ 22:05 UTC. **Final (ended 1 Oct): €29.98, 248 impressions, 23 clicks, 0 intakes, 0 checkouts, 0 orders. Evaluated 2 Oct 05:10 UTC: stop.** Visible search terms were consumers redecorating their own room. €20 of the owner's €50 limit is unused; a second test (E8b) only with his yes |
 | 2026-09-26 | Fiverr gig E13 (virtual staging) | marketplace buyers who already look for staging | new-seller pricing $10 / $25 / $45 converts on Fiverr search | first order within 14 days of going live | impressions → clicks → orders (Manage Orders), net after 20 % | $0 cash; fee only on sales | live 26 Sep; 0 impressions, 0 orders |
-| 2026-10-02 | Marketing lab: OpenAI image edits (gpt-image-2 medium) on 5 free-licence stock photos of empty rooms, 15 style runs × 2 versions | the owner: "the videos all look alike, use other photos"; AI spend approved ("все шо треба то трать") | real ORVIONIS output on new rooms makes fresher videos that hold viewers longer than v4–v7 (all built on order #6) | `video-v8` and the next videos beat v4–v7 on views or comments within 7 days | views, comments, tagged visits, free first photos claimed | code guard: 35 % of the $5 daily AI budget, 16 lab calls a day | done 2 Oct 13:40–14:10 UTC: 15 runs, cost-log estimate **≈ $1.65** (11 cents a run; the provider's bill is checked against `/admin/analytics` AI spend at the evening check-in). Used in `video-v8` |
+| 2026-10-02 | Marketing lab: OpenAI image edits (gpt-image-2 medium) on 5 free-licence stock photos of empty rooms, 15 style runs × 2 versions | the owner: "the videos all look alike, use other photos"; AI spend approved ("все шо треба то трать") | real ORVIONIS output on new rooms makes fresher videos that hold viewers longer than v4–v7 (all built on order #6) | `video-v8` and the next videos beat v4–v7 on views or comments within 7 days | views, comments, tagged visits, free first photos claimed | code guard: 35 % of the $5 daily AI budget, 16 lab calls a day | done 2 Oct 13:40–14:10 UTC: 15 runs, cost-log estimate **≈ $1.65** (11 cents a run). Evening check: `/admin/analytics` AI spend went from $0.41 (12:58 UTC) to $2.06 (18:55 UTC), +$1.65, as estimated. That figure comes from our own cost log; OpenAI's invoice isn't visible from here. Used in `video-v8`, `video-v9`, the style gallery and the styles guide |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
+
+## Snapshot — 2026-10-02 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
+
+- 579 / 103 page views and sessions (576 / 100 at 12:58). By first touch: direct 487, `google` 38, `www.google.com` 25, `fb_group` 13, Gmail app 6, `www.facebook.com` 5, `youtube` 3, `m.facebook.com` 2. No `tiktok`, `ig` or `instagram_dm` visits yet.
+- Funnel 3 → 7 → 0; $0 revenue; AI **$2.06** (the lab added $1.65); free staging previews 1; free first photos 0 claimed; delivered / review / failed 0 / 0 / 0. Virtual Staging funnel 54 → 1 → 1 → 2.
+- Instagram DMs (E19): 10 sent, 1 human reply, 1 auto-reply, 10 queued for 3 Oct. Facebook: 2 posts live (SoCal Professionals 5 reactions, 2 comments), 3 awaiting admin review, 1 typed and waiting for the owner's Publish.
+- Short video: TikTok v1 772, v2 769, v5 743 views (flat since the morning); YouTube Shorts 32 / 18 / 80; Instagram 3 posts, 0 followers. v6–v9 not posted yet.
+- Production: `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-5aa9f6a937ef-14` ticking (18:54 UTC); s71 `abcb14d` CI and Railway green.
 
 ## Snapshot — 2026-10-02 12:58 UTC (last 30 days, `/admin/analytics`)
 
