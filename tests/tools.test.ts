@@ -160,11 +160,13 @@ describe("tool registry", () => {
     const { stagingPrompt } = await import("@/lib/tools/definitions/virtual-staging");
     const kitchen = stagingPrompt({ roomType: "kitchen", style: "modern", notes: "" });
     expect(kitchen).toContain("bar stools");
-    expect(kitchen).toContain("pendant lights, spotlights and the range hood");
+    expect(kitchen).toContain("Count the ceiling lights in the photo");
+    expect(kitchen).toContain("small recessed spotlights and pendant lights");
     expect(kitchen).not.toContain("seating or a bed");
     const bathroom = stagingPrompt({ roomType: "bathroom", style: "modern", notes: "" });
     expect(bathroom).toContain("towels");
     expect(bathroom).toContain("No other furniture");
+    expect(bathroom).toContain("no new rails, hooks, shelves or mirrors");
     const outdoor = stagingPrompt({ roomType: "patio or outdoor", style: "coastal", notes: "" });
     expect(outdoor).toContain("No wall art and no indoor lamps outside");
     expect(outdoor).toContain("nothing already in the photo is removed");

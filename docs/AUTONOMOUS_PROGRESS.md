@@ -175,7 +175,9 @@ Never without his explicit yes: spending money or buying anything, publishing on
   - s76 adds 8 lab runs: kitchen, dining room, home office, porch, pool, bathroom (lab only), the living room at 480 px, and a wide-angle shot. Read the results through `/api/lab/manifest` once they finish.
     - Round 1 was done by 16:05. Six runs were good. The kitchen lost its pendant light, and the pool got facade art and lost its chairs (`docs/GROWTH_EXPERIMENTS.md`).
     - s77 adds room-specific prompt lines and round 2 (6 runs). Read it the same way: touch `requests/002-lab.txt` on the media-bridge branch, fetch the branch on the device, build contact sheets there and stage them.
-    - If round 2 is clean, add "bathroom" to ROOM_TYPES and the form help.
+    - ~~If round 2 is clean, add "bathroom" to ROOM_TYPES and the form help.~~
+    - Round 2 is done. Bathroom joined the form in s78, and round 3 checks the second kitchen's spotlights and the no-new-rails rule.
+    - Do not use kitchen 2 (pexels-7061337) round 2 in marketing: its spotlights are missing.
   - For each room: keep it, give it its own prompt line (kitchen: stools and counter decor; bathroom: towels, plants, a stool; pool or patio: loungers, an umbrella, planters), or take it out of the form.
   - Then build the upload check (too small, dark or blurry → warning before payment) and automatic light correction, and add a free redo to the terms.
   - Add-ons (E11 item removal, E12 day-to-dusk, enhancement) come after their own lab tests; prices are the owner's call.

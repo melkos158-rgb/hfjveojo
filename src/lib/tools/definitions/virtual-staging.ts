@@ -15,7 +15,7 @@ import { LABELED_VARIANT, LABEL_TEXT, disclosureLine, ensurePublicToken, labelSt
  * + 2 labeled copies (disclosure pack); one JSON note for the order.
  */
 
-export const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "patio or outdoor"] as const;
+export const ROOM_TYPES = ["living room", "bedroom", "dining room", "home office", "kitchen", "bathroom", "patio or outdoor"] as const;
 export const STYLES = ["modern", "scandinavian", "farmhouse", "mid-century", "luxury", "coastal"] as const;
 export type StagingRoomType = (typeof ROOM_TYPES)[number];
 export type StagingStyle = (typeof STYLES)[number];
@@ -84,16 +84,17 @@ const DEFAULT_ADD =
 /**
  * Room-specific lines, from the lab test of 3 Oct 2026 (src/content/lab-requests.ts). With the shared prompt, a kitchen
  * lost its pendant light, a pool got wall art on the facade and its chairs removed, and a home office furnished the
- * room seen through the doorway. Rooms without an entry (living room, bedroom, dining room) keep the shared prompt
- * unchanged.
+ * room seen through the doorway. Round 2 kept the pendant, but a second kitchen still lost its recessed spotlights and
+ * one bathroom version added a towel rail, hence the counting line and the no-new-rails rule. Rooms without an entry
+ * (living room, bedroom, dining room) keep the shared prompt unchanged.
  */
 const ROOM_GUIDES: Record<string, { add?: string; keep: string }> = {
   kitchen: {
     add: "Add ONLY freestanding, movable items that suit a kitchen: bar stools at an island or counter if there is one, a small dining table with chairs only where there is clear open floor for it, and a little counter decor (a bowl of fruit, a cutting board, a small plant). Keep the counters mostly clear.",
-    keep: "Every existing light stays exactly as photographed, including pendant lights, spotlights and the range hood, and so do the cabinets, countertops, appliances, sink, faucet, backsplash, radiators and boiler.",
+    keep: "Count the ceiling lights in the photo and keep every one of them exactly where it is, including small recessed spotlights and pendant lights; the range hood, cabinets, countertops, appliances, sink, faucet, backsplash, radiators and boiler also stay exactly as photographed.",
   },
   bathroom: {
-    add: "Add ONLY small, movable bathroom accessories: folded or hanging towels, a bath mat, a bath tray, a small plant, a soap dispenser and a candle or vase on the vanity, a small stool if there is room, and wall art on empty wall space. No other furniture.",
+    add: "Add ONLY small, movable bathroom accessories: towels folded on the vanity, the bathtub edge or a stool, or hung on rails and hooks that are already there; a bath mat, a bath tray, a small plant, a soap dispenser and a candle or vase on the vanity, a small stool if there is room, and wall art on empty wall space. No other furniture, and no new rails, hooks, shelves or mirrors.",
     keep: "Every existing fixture stays exactly as photographed: mirrors, wall lights, ceiling lights and spotlights, the vanity, sink, faucets, bathtub, shower, toilet, tiles and towel rails.",
   },
   "patio or outdoor": {

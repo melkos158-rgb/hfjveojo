@@ -9,9 +9,9 @@ import type { StagingRoomType, StagingStyle } from "@/lib/tools/definitions/virt
  * media bridge at /api/lab/manifest.
  *
  * The lab also tests rooms before they are offered: a LabOnlyRoomType goes into the same prompt as a customer's room
- * type, but the order form never shows it.
+ * type, but the order form never shows it. (Bathroom started here and joined the form on 3 Oct; none is pending now.)
  */
-export type LabOnlyRoomType = "bathroom";
+export type LabOnlyRoomType = never;
 
 export type LabRequest = {
   /** Stable id ([a-z0-9-]): used in file names and in the manifest. */
@@ -107,7 +107,7 @@ export const LAB_REQUESTS: readonly LabRequest[] = [
     credit: "Pexels photo 8134750, Pexels licence",
   },
   {
-    // Lab only: bathrooms are not offered to customers.
+    // Bathrooms were lab-only until round 2 (offered from 3 Oct).
     id: "pexels-7045910",
     imageUrl: pexels(7045910),
     roomType: "bathroom",
@@ -177,5 +177,21 @@ export const LAB_REQUESTS: readonly LabRequest[] = [
     roomType: "home office",
     styles: ["modern"],
     credit: "Pexels photo 3935327, Pexels licence",
+  },
+  // Round 3 (3 Oct): the second kitchen lost its recessed spotlights in round 2, and one bathroom version added a towel
+  // rail. Same photos with the counting line and the no-new-rails rule.
+  {
+    id: "pexels-7061337-r3",
+    imageUrl: pexels(7061337),
+    roomType: "kitchen",
+    styles: ["scandinavian"],
+    credit: "Pexels photo 7061337, Pexels licence",
+  },
+  {
+    id: "pexels-7045910-r3",
+    imageUrl: pexels(7045910),
+    roomType: "bathroom",
+    styles: ["modern"],
+    credit: "Pexels photo 7045910, Pexels licence",
   },
 ];

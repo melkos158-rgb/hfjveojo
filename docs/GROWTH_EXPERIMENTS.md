@@ -45,6 +45,13 @@ None yet.
 
 ## Log
 
+- 2026-10-03 17:55 UTC — **Room-type test, round 2 results; bathroom joins the order form (s78).**
+  - Fixed: the first kitchen kept its pendant light, and the framing stayed close to the source. The pool got no facade art. The office left the next room alone in one version; the other added one plant there.
+  - Bathrooms: 4 of 4 versions are accessories only (towels, a mat, a tray, plants, art), with the spotlights and ring light kept. One version added a towel rail and a ring, so s78 adds "no new rails, hooks, shelves or mirrors".
+  - Still wrong:
+    - A second kitchen (stretch ceiling) **lost its recessed spotlights in both versions**. s78 adds a line that asks the model to count the ceiling lights and keep each one.
+    - The pool's loose items (two folding chairs, a float) were replaced by the staged set. Accepted: the promise is about the architecture.
+  - s78 adds "bathroom" to the form and to the rooms guide. Round 3 has 2 runs (the same kitchen and bathroom); those are the day's last lab runs (16 a day). If the kitchen still drops small ceiling lights, the next step is protecting the ceiling region (mask or composite), because the prompt alone doesn't hold it.
 - 2026-10-03 16:15 UTC — **Room-type test, round 1 results** (8 runs done by 16:05; contact sheet sent to the owner).
   - Good, matching the promise: dining room, home office, covered porch, bathroom (towels, plants and decor only), the wide-angle living room, and the living room from a 480 px photo. The 480 px source still gave a clean 1536 × 1024 result, so low resolution alone doesn't ruin a photo.
   - Problems:

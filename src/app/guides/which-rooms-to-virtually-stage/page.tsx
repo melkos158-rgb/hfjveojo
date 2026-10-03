@@ -132,7 +132,7 @@ export default function WhichRoomsGuide() {
           important room. Stage it last, or as a home office, which tells buyers what the extra room is good for.
         </li>
         <li>
-          <strong>Bathrooms.</strong> There is little furniture to add; clean, bright photos do more than a staged towel.
+          <strong>Bathrooms.</strong> There is little furniture to add, so bathroom staging adds accessories only: towels, a bath mat, a plant and a little decor. A clean, bright photo still does most of the work.
         </li>
         <li>
           <strong>Rooms that aren&apos;t empty.</strong> Virtual staging adds furniture to empty rooms. Leftover furniture and
@@ -163,7 +163,7 @@ export default function WhichRoomsGuide() {
       <h2>Staging several rooms with ORVIONIS</h2>
       <p>
         <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> takes up to ten room photos per order: $15 per
-        photo, $12 each from five photos, $99 for ten. You set the room type of each photo (living room, bedroom, dining room, home office, kitchen, patio), pick one of
+        photo, $12 each from five photos, $99 for ten. You set the room type of each photo (living room, bedroom, dining room, home office, kitchen, bathroom, patio), pick one of
         six styles for the whole order, and get two staged versions of every photo in about two minutes per photo — walls,
         floors and windows stay as photographed. Every order includes labeled copies for the MLS disclosure, and your first
         photo is free.
