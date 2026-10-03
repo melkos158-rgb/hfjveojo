@@ -315,6 +315,10 @@ If a platform doesn't allow a profile link yet, the end card of every video show
 - Put a one-line hook before the hashtags: a caption made only of hashtags gives the platform nothing to read for search.
 - Saved in the vault (`ORVIONIS – рішення`).
 
+**Sound effects for editing (owner, 3 Oct):** 127 effects in `Downloads\audio_efect_pack` (the owner's user folder) on the owner's PC, for the operator to use in videos.
+- Downloads is not a connected folder. Ask for access to that folder only when a video needs it.
+- Before a published video uses any of these effects, look for a licence file in the pack. Until one turns up, keep using the synthesized SFX.
+
 **TikTok short link: orvionis.com/tt** (from 30 Sep, `next.config.ts` → `SHORT_LINKS`). TikTok gives a clickable bio link only from 1,000 followers or to a registered business account, so the TikTok bio and captions show `orvionis.com/tt`. It redirects (307) to the TikTok-tagged link above, so a visitor who types it counts as `tiktok` instead of `direct`. In TikTok captions, write "orvionis.com/tt" instead of "Link in bio".
 
 **Accounts, set up on 30 Sep** (the operator typed and uploaded in the owner's Chrome; the owner pressed every final Save, Publish and Confirm):

@@ -171,6 +171,11 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## NEXT TASKS (ordered by expected business impact)
 
+- **(3 Oct, owner's question) Room types and photo quality.**
+  - s76 adds 8 lab runs: kitchen, dining room, home office, porch, pool, bathroom (lab only), the living room at 480 px, and a wide-angle shot. Read the results through `/api/lab/manifest` once they finish.
+  - For each room: keep it, give it its own prompt line (kitchen: stools and counter decor; bathroom: towels, plants, a stool; pool or patio: loungers, an umbrella, planters), or take it out of the form.
+  - Then build the upload check (too small, dark or blurry → warning before payment) and automatic light correction, and add a free redo to the terms.
+  - Add-ons (E11 item removal, E12 day-to-dusk, enhancement) come after their own lab tests; prices are the owner's call.
 0. **Growth plan to 25 Dec** (Claude Doc, written 30 Sep at the owner's request "be the general manager"): https://claude.ai/code/artifact/ac7e298f-577b-4ac7-99c5-e1925542db06. Phases with gates: fix the sale (1–14 Oct: E14 first screen, photo packs $60/5 and $99/10, one free full-resolution photo for an email, follow-up emails) → gate 1, the first paid order → new services (twilight +$5, declutter/restage +$10/$20, photographer wholesale $9) → gate 2, 10 paid orders or AOV ≥ $35 → scale only channels whose cost per order is below the margin. Each feature and channel has a cost, a metric and a stop rule. Higgsfield $49 only after a 14-day free before/after video test (≥ 1,000 views on a video or ≥ 20 site visits).
 1. Owner: one real $9 order (live card form, receipt, delivery, `/admin/analytics` revenue with the actual Stripe fee); operator reviews the order, the fee and the logs right after.
 2. Owner + operator: first outreach batch — vacant listings (`re-ig-dm-staging`) and new listings (`re-ig-dm-9`); operator prepares 20 target profiles/day with personalised lines if the owner wants.

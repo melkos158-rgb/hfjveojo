@@ -45,6 +45,17 @@ None yet.
 
 ## Log
 
+- 2026-10-03 14:20 UTC — **Product check: room types and bad photos** (the owner's questions: «ми зробили тільки вітальні … якшо погана фотка то тоже буде погано генерувати?», plus paid photo enhancement).
+  - Finding: the order form offers six room types, but the lab had only run living rooms (3) and bedrooms (2). Kitchen, dining room, home office and patio had never been run. Bathrooms and pools aren't offered.
+  - The prompt is shared by every room ("seating or a bed, tables, a rug"), which doesn't fit kitchens or bathrooms. Nothing checks the uploaded photo beyond turning and resizing it.
+  - Action: 8 lab runs added (s76), one style each: kitchen, dining room, home office, covered porch, backyard pool, and a bathroom (lab-only room type). Two quality tests: the same living room at 480 px, and a wide-angle shot.
+  - Next, after the results: room-specific prompt lines and hiding any room type that fails. Then an upload check (too small, dark or blurry → a warning before payment), automatic light correction, and a free redo.
+  - Paid add-ons (enhancement, item removal = E11, day-to-dusk = E12) only after their own lab tests, at prices the owner sets.
+  - Competitor prices quoted to the owner (shhots.ai comparison, Aug 2026): BoxBrownie enhancement $2, day-to-dusk $5, item removal $5–10, staging $30; Styldod enhancement from $1.50, day-to-dusk from $4, removal from $8.
+- 2026-10-03 13:45 UTC — **E13: Fiverr seller profile now sells staging, not 3D modeling** (owner: «профіль поправ», twice).
+  - The tagline, About and skills were changed and verified on the public profile (details in `docs/FIVERR_EXPERIMENT.md`). Virtual staging now leads the skills.
+  - A portfolio sample on the stock room was published after the owner's yes (13:55 UTC). It is clearly labeled as a sample. Its cost of $45 is the gig's Premium price, chosen by the owner, and the description says so.
+  - Watch: gig impressions and clicks over the next 7 days. The owner reads the dashboard.
 - 2026-10-03 13:05 UTC — **midday check-in.**
   - **E19:** `/try` is live (s74 `e850703`) and the tracker's reply template uses it. The batch 1 threads have no replies after 21 hours (read with the owner's go-ahead: «дивись в переписки»); batch 2 goes out at 16–18 Warsaw.
   - **E15:** TikTok v8 769 views, the same ≈ 770 plateau as v1, v2 and v5. Each new video gets one push of ≈ 770 views and nothing after it, so reach comes from posting new videos, not from waiting on old ones. A new post went up at 12:53 UTC. Standard hashtags set by the owner (`docs/OUTREACH.md`).

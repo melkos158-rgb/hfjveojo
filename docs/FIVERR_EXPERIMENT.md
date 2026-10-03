@@ -15,10 +15,24 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
   - `orvionis_fiverr_gig_six_styles.jpg`, a new first gallery image at 1280×769: the empty stock room and its six real staged results.
   - The owner uploads both in Gig → Edit → Gallery and saves. The operator does not edit the gig.
   - 3 Oct 13:00 UTC: the video was re-rendered without the brand name. The photo chip now reads "Virtually staged" instead of "Virtually staged by ORVIONIS", so the gig carries nothing that points buyers off Fiverr; the end card keeps only the mark. Same file name, 6.5 MB.
-- **Seller profile still says "3D Modeler"** (screenshots from the owner, 3 Oct): title "3D Modeler · Blender Custom Models by Reference", a 3D About text, profile strength 7/12, no portfolio. Buyers see this card next to the staging gig.
-  - Drafted for the owner's yes: title "Virtual Staging & 3D", subtitle "Empty listing photos staged in 6 styles, 2 versions each", and an About of 490 characters that discloses AI assistance and the human check, as the gig does.
-  - Portfolio: "One empty room, six staging styles" (`/mnt/user-data/outputs/fiverr-portfolio/`), labeled as a sample on a free stock photo.
-  - No certifications (nothing to claim). The buyer profile (65 %) doesn't affect selling.
+- **Seller profile fixed 3 Oct** at the owner's explicit request («профіль поправ», twice). Before, it said "3D Modeler · Blender Custom Models by Reference", had a 3D About text, profile strength 7/12 and no portfolio. Buyers see this card next to the staging gig.
+  - Title (tagline): "Real Estate Virtual Staging in 6 Styles, 2 Versions per Photo". Fiverr rejects "|" in the tagline, which is why the owner's own save failed.
+  - About (490 characters): six styles, two versions, walls, windows, floors and light unchanged, AI-assisted with a check before delivery, and the Blender background in one sentence.
+  - Skills: Virtual staging is new and first, then Interior design 3D modeling, 3D rendering and Blender. Hand modeling was removed. All are Intermediate. Fiverr shows skills in the order they were added, so the 3D ones were deleted and re-added after Virtual staging.
+  - All three were verified on the public profile at 13:40 UTC. The operator saved them after the owner asked.
+  - **Portfolio project "One empty room, six staging styles" is published** (owner's «так», 3 Oct ≈ 13:55 UTC). Portfolio page: 1 project, status Active.
+    - 5 images: a 4:3 collage cover, the empty room, then modern, farmhouse and coastal.
+    - Industry Real Estate + Residential Real Estate, 1–7 days, started Oct 2026. Category Architecture & Interior Design. Linked to the staging gig (Fiverr doesn't show that link to buyers).
+    - Fiverr requires a project cost. The owner chose $45, the gig's Premium price for six stagings. The description ends with: "There was no client, so the cost shown is what six stagings cost on my gig (Premium package)."
+    - The description says it is a sample on a free stock photo (Pexels 3958955, Curtis Adams), AI-assisted and unretouched.
+    - Operator note: in a hidden tab, one image upload stalled without `filerrAttachmentId`, and Continue silently did nothing. Deleting that image and uploading it again fixed it. When a Fiverr form step won't advance, read the react-hook-form errors instead of clicking again.
+  - Work experience was added at the owner's yes: "Virtual Staging Specialist · Self-Employed / Freelancer · Self-employed · Sep 2026 – Present", with a short staging description.
+    - The owner had approved "Founder, ORVIONIS". Fiverr requires a website for a new company, though, and the profile never links off Fiverr, so the existing company entry was used and the description leaves out the brand.
+  - **Seller profile strength: 9/12** (3 Oct ≈ 14:05 UTC). The missing items are an intro video, education and certifications, and only the owner can supply real ones. No certifications exist to claim.
+  - Client (buyer) profile at **100 %** (owner: «треба 100»). It doesn't affect selling.
+    - Overview: purpose "Primary job or business", industry Real Estate, and a short text. Fiverr allows only letters, commas, periods and hyphens there, so the text has no "3D", "!" or apostrophes.
+    - Preferred hours: Mon–Sun, 10:00–22:00 Europe/Warsaw. The operator picked these after the owner said «сам думай».
+    - About your business: ORVIONIS, Owner / CEO, just me, service provider, launch stage. Fiverr shows this block only to the owner, and no website was entered.
 
 ## ORDER VERIFICATION RULES (owner, permanent)
 
@@ -166,5 +180,6 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 1. Once a day at the 11:03 UTC check-in: **Manage Orders only** (the only order truth). The inbox (27–28 Sep) and the seller dashboard (29 Sep) both showed Fiverr's human check for the operator; the owner reads them. If the check shows anywhere, stop and leave it for the owner.
 2. For any new inbox message, apply ORDER VERIFICATION RULES first. Replies to real buyers are drafted and sent only with the owner's approval.
 3. After 14 days live or 300 impressions: review pricing hypothesis H1.
+4. When a real order is delivered, ask the buyer's permission before adding it to the portfolio. Until then, the stock-photo sample is the only project.
 ## TIMESTAMP
-2026-10-01 23:16 UTC
+2026-10-03 14:10 UTC

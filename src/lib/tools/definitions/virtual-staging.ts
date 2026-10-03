@@ -78,7 +78,8 @@ export async function encodeForDelivery(png: Buffer): Promise<{ data: Buffer; mi
   }
 }
 
-export function stagingPrompt(i: { roomType: Room["roomType"]; style: VirtualStagingIntake["style"]; notes: string }): string {
+/** roomType is a string so the lab can try a room the order form does not offer yet (src/content/lab-requests.ts). */
+export function stagingPrompt(i: { roomType: Room["roomType"] | (string & {}); style: VirtualStagingIntake["style"]; notes: string }): string {
   return [
     `Virtually stage this empty ${i.roomType} in a ${i.style} style for a real-estate listing photo.`,
     "Add ONLY freestanding, movable furniture and decor that suits the room: seating or a bed, tables, a rug, cushions, plants, wall art on the existing walls, and floor or table lamps.",
