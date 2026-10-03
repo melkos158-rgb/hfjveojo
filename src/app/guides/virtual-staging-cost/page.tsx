@@ -176,7 +176,8 @@ export default function VirtualStagingCostGuide() {
       <h2>Our price</h2>
       <p>
         <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> is $15 per photo, $12 each from five photos and $99
-        for ten, up to ten rooms per order, with two staged versions of each photo in about two minutes and six styles. Walls, floors and windows stay as photographed; if
+        for ten, up to ten rooms per order, with two staged versions of each photo in about two minutes and{" "}
+        <Link href="/guides/virtual-staging-styles">six styles</Link>. Walls, floors and windows stay as photographed; if
         the room&apos;s structure was changed or the result is unusable, one redo is included, otherwise a refund. Every order
         comes with a disclosure pack (labeled copies and a link to the original). Your first photo is free (one per person), and
         you can also see a free watermarked preview of your own photo before you pay.

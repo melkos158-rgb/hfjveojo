@@ -9,12 +9,15 @@ const securityHeaders = [
 ];
 
 /**
- * Short links for places where a link can't be clicked: the TikTok bio (no clickable link below 1,000 followers) and
- * video end cards. A visit through one arrives with campaign tags, so `/admin/analytics` shows its channel instead of
+ * Short links for places where a link can't be clicked or a long one looks wrong: the TikTok bio (no clickable link
+ * below 1,000 followers), video end cards, and personal DMs (a URL full of tracking tags reads as spam in a one-to-one
+ * message). A visit through one arrives with campaign tags, so `/admin/analytics` shows its channel instead of
  * `direct`. Temporary (307) redirects, so a target can change later without browsers caching the old one.
+ * `/try` is only for the personal Instagram DMs to agents (E19); use another short link for any other channel.
  */
 export const SHORT_LINKS: { source: string; destination: string }[] = [
   { source: "/tt", destination: "/tools/virtual-staging?utm_source=tiktok&utm_medium=social&utm_campaign=video-test" },
+  { source: "/try", destination: "/tools/virtual-staging?exp=e4-virtual-staging&utm_source=instagram_dm&utm_campaign=realtor-dm" },
 ];
 
 const nextConfig: NextConfig = {

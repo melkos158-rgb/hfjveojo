@@ -45,6 +45,10 @@ None yet.
 
 ## Log
 
+- 2026-10-03 07:15 UTC — **morning check-in, owner's computer offline.** Health and analytics could not be read (no Chrome; `/api` is closed to WebFetch by robots.txt). The public styles guide loaded.
+  - The tracker has no status changes overnight.
+  - **E19:** `/try` short link built and tested locally (307 → staging page with the DM tags and the experiment key); it ships as s74 when the computer is back. A tailored follow-up for the builder lead is ready for 5 Oct.
+  - **E10:** the styles guide now gets links from three related guides.
 - 2026-10-02 23:45 UTC — **overnight work, chosen by the operator** (the owner: "сам думай").
   - State at 23:10 UTC: the owner posted `video-v8` on TikTok at 19:53 UTC (373 views by 23:06), on YouTube Shorts and on Instagram (4 posts). The second SoCal Professionals post is awaiting admin review.
   - **E19:** the tracker's tabs now follow each agent's send day.

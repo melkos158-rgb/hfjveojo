@@ -110,6 +110,20 @@ describe("seo: short links for places without a clickable link", () => {
     }
   });
 
+  it("sends /try (and /TRY) to the staging page tagged as the realtor DMs, with the experiment key", async () => {
+    const redirects = await nextConfig.redirects!();
+    for (const source of ["/try", "/TRY"]) {
+      const r = redirects.find((x) => x.source === source);
+      expect(r, source).toBeDefined();
+      expect(r!.permanent).toBe(false);
+      const url = new URL(r!.destination, APP);
+      expect(url.pathname).toBe("/tools/virtual-staging");
+      expect(url.searchParams.get("exp")).toBe("e4-virtual-staging");
+      expect(url.searchParams.get("utm_source")).toBe("instagram_dm");
+      expect(url.searchParams.get("utm_campaign")).toBe("realtor-dm");
+    }
+  });
+
   it("never shadows a real page", async () => {
     const { existsSync } = await import("node:fs");
     const redirects = await nextConfig.redirects!();

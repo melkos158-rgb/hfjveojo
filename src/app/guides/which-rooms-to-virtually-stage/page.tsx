@@ -146,7 +146,10 @@ export default function WhichRoomsGuide() {
 
       <h2>Keep the listing consistent</h2>
       <ul>
-        <li>Use one style for the whole listing, so the rooms look like one home rather than a catalog.</li>
+        <li>
+          Use one style for the whole listing, so the rooms look like one home rather than a catalog. Not sure which one? See{" "}
+          <Link href="/guides/virtual-staging-styles">the six styles on one room</Link>.
+        </li>
         <li>Put the staged living room first in the photo order — it is the room buyers&apos; agents rank highest.</li>
         <li>
           Disclose the staging. Most MLSs require it, and in California AB 723 also requires access to the original photo —

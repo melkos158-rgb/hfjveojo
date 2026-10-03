@@ -13,6 +13,8 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 ## Daily routine (45–60 minutes)
 
 **From 2 Oct (E19): the Realtor DM Tracker** (private claude.ai artifact, link in the operator's chat) holds the day's batch: 10 agents with one written message each, copy buttons, status, the 3-day follow-up and reply templates. The operator finds and writes, the owner sends from @orvionis_ and marks the status; check-ins read the statuses and add the next batch.
+- **Short link for DMs: `orvionis.com/try`** (s74). It is a 307 redirect to the staging page with `exp=e4-virtual-staging&utm_source=instagram_dm&utm_campaign=realtor-dm`, so replies carry a short, clean link and keep the tags. Use it only in these DMs. The tracker's "yes" template switches to it once s74 is live and the redirect is checked in production; until then it keeps the long link.
+- Lesley (builder lead): a follow-up for 5 Oct, if there is no word from Crestview, is in her tracker note (EN + UA). It asks whether she minds us messaging the builder ourselves.
 - Since 3 Oct each agent has a send day (Warsaw date). «Сьогодні» shows who to write today, «Наступні» the later days. A batch held for the E19 check is marked «Чекає перевірки перших 20» and stays out of «Сьогодні» until the operator releases it.
 - **Batch 3** (prepared 2–3 Oct overnight, held): 20 agents in new markets: Atlanta 4, Houston 3, Orlando 4, Austin 2, Nashville 5, Denver 2. They were picked first for vacant-home work: probate and estate specialists, a builder's new-construction agent, high-volume listing agents, team leads.
   - Days: 10 on 4 Oct, 10 on 5 Oct. They are released only after the E19 check on the first 20.
