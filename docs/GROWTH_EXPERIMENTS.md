@@ -45,6 +45,12 @@ None yet.
 
 ## Log
 
+- 2026-10-03 18:30 UTC — **Room-type test, round 3: the kitchen keeps its spotlights.**
+  - Kitchen 2 (pexels-7061337, stretch ceiling, Scandinavian) with the s78 "count the ceiling lights" line: **both versions keep the recessed spotlights where they were**. Version 2 keeps all four. Version 1 keeps the three it shows; it is shifted up by about 4 % of the frame, so the fourth light falls outside the picture rather than being removed.
+  - The rest matches the kitchen line: bar stools at the peninsula, a small round or oval table with chairs on the open floor, a fruit bowl, a cutting board and a plant on the counter, and a small plant on the niche shelf. Cabinets, hood, appliances and the fridge are unchanged.
+  - Decision: no ceiling mask or composite step for now; the prompt line holds. Kitchen 2 round 3 can be used in marketing; round 2 still can't.
+  - The bathroom run (pexels-7045910-r3, the no-new-rails rule) didn't start today. The lab may spend 35 % of the $5 daily AI budget, and 15 runs (≈ $1.65) plus one more (≈ $0.11) would go past it, so the job loop skips it until the spend resets at 00:00 UTC. In practice the lab gets 15 runs a day, not 16 (2 Oct also stopped at 15). Read it at the 4 Oct morning check-in.
+- 2026-10-03 18:05 UTC — **E15: `video-v10` "not just living rooms"** (18.8 s, for 4 Oct, the owner's request). Six rooms from the room-type test (kitchen, dining room, bathroom, porch, backyard pool, home office), each shown empty and then staged. It is the first video cut with the owner's editing library (Pixabay music, whooshes, camera clicks, a riser, light leaks; no memes). Files and captions are in `docs/OUTREACH.md`. Measure against v8 and v9: views, comments and tagged visits.
 - 2026-10-03 17:55 UTC — **Room-type test, round 2 results; bathroom joins the order form (s78).**
   - Fixed: the first kitchen kept its pendant light, and the framing stayed close to the source. The pool got no facade art. The office left the next room alone in one version; the other added one plant there.
   - Bathrooms: 4 of 4 versions are accessories only (towels, a mat, a tray, plants, art), with the spotlights and ring light kept. One version added a towel rail and a ring, so s78 adds "no new rails, hooks, shelves or mirrors".

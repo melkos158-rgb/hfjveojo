@@ -431,6 +431,19 @@ UA: Вгадай стиль: 4 порожні кімнати, обставлен
 - TikTok: the TikTok cut, "orvionis.com/tt" instead of "Link in bio.", AI-generated content label on. YouTube: "yes" to altered or synthetic content.
 - Reply to score comments ("4/4, nice eye") — replies keep the video in circulation.
 
+`video-v10` (not just living rooms, 18.8 s, made 3 Oct for 4 Oct, at the owner's request after the room-type test): six lab rooms from the 3 Oct test, each shown empty and then staged with a wipe.
+- Rooms: kitchen (round 2, pendant kept), dining room, bathroom (coastal), porch, backyard with pool (round 2), home office (round 2).
+- Kitchen 2 (spotlights missing) is not used.
+- Hook "NOT JUST LIVING ROOMS. / EVERY ROOM."; ends on "First photo free" plus the URL, with a six-tile grid of the staged rooms.
+- The first video cut with the owner's editing library (Pixabay licence): track `03_Muzyka/05_Upbeat_Vlog/upbeat-591314.mp3` (its last 18.8 s, so it ends on its own), whooshes, camera shutters, a riser, an impact and a pop from `01_Zvuky_SFX`, and two lens-flare overlays from `02_Videoefekty/01_Light_Leaks` (screen-blended). -13.9 LUFS, peak -2.4 dBFS.
+- Files in `ORVIONIS_VIDEO_REFERENCES/videos/`: `orvionis_v10_every_room.mp4`, the TikTok cut `orvionis_v10_every_room_tiktok.mp4` (orvionis.com/tt), and `orvionis_v10_cover.png`. Source: `reels/v10/reel-orv-v10-src.tgz`.
+> Not just living rooms. Kitchens, bathrooms, porches and backyards, staged on the same photo. First photo free at orvionis.com
+> #virtualstaging #realestate #realtor #orvionis #listingphotos
+
+UA: Не тільки вітальні. Кухні, ванні, веранди й двори, застейджені на тому самому фото. Перше фото безкоштовно на orvionis.com
+
+- TikTok: the same hook ending in "First photo free, link in bio.", all six standard hashtags plus `#beforeandafter`, AI-generated content label on. YouTube: the five above (they start with the three Shorts shows), and "yes" to altered or synthetic content.
+
 More before/after sets now come from the marketing lab: add free-licence empty-room photos to `src/content/lab-requests.ts` (append only), deploy, and production stages them within its budget share; the media bridge (branch `media-bridge`) fetches the results. Already staged on 2 Oct: four more rooms (a white bedroom, a living room with a stone fireplace, one with green walls and a vaulted ceiling, a portrait bedroom), 2–3 styles each, for the next videos (e.g. "guess the real photo").
 
 ## What to say when they ask
