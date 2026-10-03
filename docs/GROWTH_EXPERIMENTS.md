@@ -45,6 +45,11 @@ None yet.
 
 ## Log
 
+- 2026-10-03 13:05 UTC — **midday check-in.**
+  - **E19:** `/try` is live (s74 `e850703`) and the tracker's reply template uses it. The batch 1 threads have no replies after 21 hours (read with the owner's go-ahead: «дивись в переписки»); batch 2 goes out at 16–18 Warsaw.
+  - **E15:** TikTok v8 769 views, the same ≈ 770 plateau as v1, v2 and v5. Each new video gets one push of ≈ 770 views and nothing after it, so reach comes from posting new videos, not from waiting on old ones. A new post went up at 12:53 UTC. Standard hashtags set by the owner (`docs/OUTREACH.md`).
+  - **E13:** Manage Orders 0. The Fiverr video was re-cut without the brand name; seller profile texts are waiting for the owner's yes.
+  - Site: free tool uses 4 → 9 since last evening, no intake.
 - 2026-10-03 07:15 UTC — **morning check-in, owner's computer offline.** Health and analytics could not be read (no Chrome; `/api` is closed to WebFetch by robots.txt). The public styles guide loaded.
   - The tracker has no status changes overnight.
   - **E19:** `/try` short link built and tested locally (307 → staging page with the DM tags and the experiment key); it ships as s74 when the computer is back. A tailored follow-up for the builder lead is ready for 5 Oct.

@@ -13,7 +13,10 @@ Rules: personal, short, honest about being new, one ask, no fake numbers, no tes
 ## Daily routine (45–60 minutes)
 
 **From 2 Oct (E19): the Realtor DM Tracker** (private claude.ai artifact, link in the operator's chat) holds the day's batch: 10 agents with one written message each, copy buttons, status, the 3-day follow-up and reply templates. The operator finds and writes, the owner sends from @orvionis_ and marks the status; check-ins read the statuses and add the next batch.
-- **Short link for DMs: `orvionis.com/try`** (s74). It is a 307 redirect to the staging page with `exp=e4-virtual-staging&utm_source=instagram_dm&utm_campaign=realtor-dm`, so replies carry a short, clean link and keep the tags. Use it only in these DMs. The tracker's "yes" template switches to it once s74 is live and the redirect is checked in production; until then it keeps the long link.
+- **Short link for DMs: `orvionis.com/try`** (s74). It is a 307 redirect to the staging page with `exp=e4-virtual-staging&utm_source=instagram_dm&utm_campaign=realtor-dm`, so replies carry a short, clean link and keep the tags. Use it only in these DMs.
+  - Live since s74 (`e850703`, deployed 3 Oct ≈ 12:33 UTC) and checked in production.
+  - The tracker's "yes" template has used it since ≈ 12:40 UTC.
+  - The operator's check at ≈ 12:35 UTC does not show as `instagram_dm`: attribution is first-touch for 90 days, and the owner's browser already had an earlier first touch. A new visitor (an agent) arriving through `/try` is credited to `instagram_dm`.
 - Lesley (builder lead): a follow-up for 5 Oct, if there is no word from Crestview, is in her tracker note (EN + UA). It asks whether she minds us messaging the builder ourselves.
 - Since 3 Oct each agent has a send day (Warsaw date). «Сьогодні» shows who to write today, «Наступні» the later days. A batch held for the E19 check is marked «Чекає перевірки перших 20» and stays out of «Сьогодні» until the operator releases it.
 - **Batch 3** (prepared 2–3 Oct overnight, held): 20 agents in new markets: Atlanta 4, Houston 3, Orlando 4, Austin 2, Nashville 5, Denver 2. They were picked first for vacant-home work: probate and estate specialists, a builder's new-construction agent, high-volume listing agents, team leads.
@@ -304,6 +307,13 @@ Post one a day, the same file on TikTok, Reels and Shorts, around 16:00–18:00 
 - YouTube: `https://orvionis.com/tools/virtual-staging?utm_source=youtube&utm_medium=social&utm_campaign=video-test`
 
 If a platform doesn't allow a profile link yet, the end card of every video shows orvionis.com.
+
+**Standard hashtags (owner's choice, 3 Oct):** `#orvionis #virtualstaging #realestate #realtor #listingphotos #realestatemarketing`.
+- Instagram has allowed at most 5 hashtags per post or Reel since December 2025. So Reels get five of these; the operator suggests dropping `#realestatemarketing`.
+- On TikTok, add one or two topic tags per video (`#interiordesign`, `#beforeandafter`, `#newconstruction`, `#california`, `#homestaging`).
+- YouTube Shorts shows the first three hashtags above the title, so start with `#virtualstaging #realestate #realtor`.
+- Put a one-line hook before the hashtags: a caption made only of hashtags gives the platform nothing to read for search.
+- Saved in the vault (`ORVIONIS – рішення`).
 
 **TikTok short link: orvionis.com/tt** (from 30 Sep, `next.config.ts` → `SHORT_LINKS`). TikTok gives a clickable bio link only from 1,000 followers or to a registered business account, so the TikTok bio and captions show `orvionis.com/tt`. It redirects (307) to the TikTok-tagged link above, so a visitor who types it counts as `tiktok` instead of `direct`. In TikTok captions, write "orvionis.com/tt" instead of "Link in bio".
 

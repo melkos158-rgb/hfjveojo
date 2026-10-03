@@ -14,6 +14,11 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
   - `orvionis_v8_fiverr_gig.mp4`, the gig video: 16:9, 16 s, 6.5 MB, under Fiverr's 75 s / 50 MB limits. It has no URL, no price and no off-platform ask; the only brand text is the ORVIONIS mark and the "Virtually staged by ORVIONIS" chip.
   - `orvionis_fiverr_gig_six_styles.jpg`, a new first gallery image at 1280×769: the empty stock room and its six real staged results.
   - The owner uploads both in Gig → Edit → Gallery and saves. The operator does not edit the gig.
+  - 3 Oct 13:00 UTC: the video was re-rendered without the brand name. The photo chip now reads "Virtually staged" instead of "Virtually staged by ORVIONIS", so the gig carries nothing that points buyers off Fiverr; the end card keeps only the mark. Same file name, 6.5 MB.
+- **Seller profile still says "3D Modeler"** (screenshots from the owner, 3 Oct): title "3D Modeler · Blender Custom Models by Reference", a 3D About text, profile strength 7/12, no portfolio. Buyers see this card next to the staging gig.
+  - Drafted for the owner's yes: title "Virtual Staging & 3D", subtitle "Empty listing photos staged in 6 styles, 2 versions each", and an About of 490 characters that discloses AI assistance and the human check, as the gig does.
+  - Portfolio: "One empty room, six staging styles" (`/mnt/user-data/outputs/fiverr-portfolio/`), labeled as a sample on a free stock photo.
+  - No certifications (nothing to claim). The buyer profile (65 %) doesn't affect selling.
 
 ## ORDER VERIFICATION RULES (owner, permanent)
 
@@ -149,6 +154,7 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
+2026-10-03 12:58 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). One page view; no human check. The owner was active on Fiverr himself (profile editing).
 2026-10-02 12:58 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). One page view; the bell shows a notification dot, left for the owner.
 2026-10-01 23:16 UTC (the 11:03 check was missed while the session was idle, so it ran at night): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). One page view, no other Fiverr page opened. The bell shows a notification dot, left for the owner.
 2026-09-30 12:35 UTC (the owner was back online): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred).

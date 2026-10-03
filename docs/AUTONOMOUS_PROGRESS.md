@@ -183,8 +183,11 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
+- Last verified: 2026-10-03 12:55 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-9ac98fe99412-14` (s74 `e850703`, CI and Railway green, `/try` redirect checked in production).
+  - `/admin/analytics` (30 days): 590 / 113, funnel 3 → 7 → 0, 0 paid, AI $2.07, free tool uses 9, free first photos 0, delivered / review / failed 0 / 0 / 0.
+  - Fiverr Manage Orders 0.
 - 2026-10-03 06:55 UTC (morning check-in): the owner's computer and Chrome were offline (Saturday morning). So `/api/health` and `/admin/analytics` could not be read; `/api` is closed to WebFetch by our own robots.txt. A WebFetch of `/guides/virtual-staging-styles` returned the page with all six styles, so the site was serving. Next full check at midday.
-- Last verified: 2026-10-02 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-5aa9f6a937ef-14` ticking (1,520 ticks).
+- Earlier: 2026-10-02 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-5aa9f6a937ef-14` ticking (1,520 ticks).
   - `/admin/analytics` (30 days): 579 / 103, funnel 3 → 7 → 0, 0 paid, free first photos 0, delivered / review / failed 0 / 0 / 0.
   - AI $2.06. It was $0.41 at 12:58; the +$1.65 is the marketing lab, matching its cost-log estimate.
   - s71 `abcb14d` CI and Railway green.
