@@ -78,12 +78,41 @@ export async function encodeForDelivery(png: Buffer): Promise<{ data: Buffer; mi
   }
 }
 
+const DEFAULT_ADD =
+  "Add ONLY freestanding, movable furniture and decor that suits the room: seating or a bed, tables, a rug, cushions, plants, wall art on the existing walls, and floor or table lamps.";
+
+/**
+ * Room-specific lines, from the lab test of 3 Oct 2026 (src/content/lab-requests.ts). With the shared prompt, a kitchen
+ * lost its pendant light, a pool got wall art on the facade and its chairs removed, and a home office furnished the
+ * room seen through the doorway. Rooms without an entry (living room, bedroom, dining room) keep the shared prompt
+ * unchanged.
+ */
+const ROOM_GUIDES: Record<string, { add?: string; keep: string }> = {
+  kitchen: {
+    add: "Add ONLY freestanding, movable items that suit a kitchen: bar stools at an island or counter if there is one, a small dining table with chairs only where there is clear open floor for it, and a little counter decor (a bowl of fruit, a cutting board, a small plant). Keep the counters mostly clear.",
+    keep: "Every existing light stays exactly as photographed, including pendant lights, spotlights and the range hood, and so do the cabinets, countertops, appliances, sink, faucet, backsplash, radiators and boiler.",
+  },
+  bathroom: {
+    add: "Add ONLY small, movable bathroom accessories: folded or hanging towels, a bath mat, a bath tray, a small plant, a soap dispenser and a candle or vase on the vanity, a small stool if there is room, and wall art on empty wall space. No other furniture.",
+    keep: "Every existing fixture stays exactly as photographed: mirrors, wall lights, ceiling lights and spotlights, the vanity, sink, faucets, bathtub, shower, toilet, tiles and towel rails.",
+  },
+  "patio or outdoor": {
+    add: "Add ONLY outdoor furniture and decor: outdoor sofas or lounge chairs, sun loungers by a pool, an outdoor dining set, a parasol, an outdoor rug, cushions, planters and lanterns. No wall art and no indoor lamps outside.",
+    keep: "The building, roof, pergola, outdoor lights, railings, decking, paving, lawn, existing plants, sky and any pool (its water, edge and steps) stay exactly as photographed, and nothing already in the photo is removed.",
+  },
+  "home office": {
+    keep: "Stage only the room in front of the camera; rooms seen through doorways or openings stay exactly as photographed.",
+  },
+};
+
 /** roomType is a string so the lab can try a room the order form does not offer yet (src/content/lab-requests.ts). */
 export function stagingPrompt(i: { roomType: Room["roomType"] | (string & {}); style: VirtualStagingIntake["style"]; notes: string }): string {
+  const guide = Object.hasOwn(ROOM_GUIDES, i.roomType) ? ROOM_GUIDES[i.roomType] : undefined;
   return [
     `Virtually stage this empty ${i.roomType} in a ${i.style} style for a real-estate listing photo.`,
-    "Add ONLY freestanding, movable furniture and decor that suits the room: seating or a bed, tables, a rug, cushions, plants, wall art on the existing walls, and floor or table lamps.",
+    guide?.add ?? DEFAULT_ADD,
     "Do NOT add, remove or change anything attached to the building: no ceiling lights, chandeliers, pendant lights or ceiling fans (keep the existing ceiling fixture exactly as it is); no built-in shelving, niches, cabinetry, fireplaces, mouldings, wall panels, wallpaper or paint colour changes.",
+    guide?.keep ?? "",
     "Walls, floor, ceiling, windows and their grids, doors, door hardware, trim, outlets and vents stay exactly as photographed, and so do the camera position, lens and framing — do not crop, zoom, reframe or change the aspect ratio.",
     "Match the existing daylight direction and colour temperature with consistent shadows and reflections. Photorealistic, no people, no pets, no text, no watermarks, no logos.",
     i.notes ? `Customer notes: ${i.notes}` : "",

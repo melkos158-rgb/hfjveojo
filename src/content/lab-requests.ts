@@ -131,4 +131,51 @@ export const LAB_REQUESTS: readonly LabRequest[] = [
     styles: ["modern"],
     credit: "Pexels photo 8146336, Pexels licence",
   },
+  // Round 2 (3 Oct, after the room-specific prompt lines): the same photos where round 1 went wrong, plus a second
+  // kitchen and a second bathroom.
+  {
+    // Round 1 removed the pendant light.
+    id: "pexels-8146322-r2",
+    imageUrl: pexels(8146322),
+    roomType: "kitchen",
+    styles: ["modern"],
+    credit: "Pexels photo 8146322, Pexels licence",
+  },
+  {
+    id: "pexels-7061337",
+    imageUrl: pexels(7061337),
+    roomType: "kitchen",
+    styles: ["scandinavian"],
+    credit: "Pexels photo 7061337, Pexels licence",
+  },
+  {
+    id: "pexels-7045910-r2",
+    imageUrl: pexels(7045910),
+    roomType: "bathroom",
+    styles: ["modern"],
+    credit: "Pexels photo 7045910, Pexels licence",
+  },
+  {
+    id: "pexels-7031878",
+    imageUrl: pexels(7031878),
+    roomType: "bathroom",
+    styles: ["coastal"],
+    credit: "Pexels photo 7031878, Pexels licence",
+  },
+  {
+    // Round 1 hung wall art on the facade and removed the chairs by the pool.
+    id: "pexels-8134750-r2",
+    imageUrl: pexels(8134750),
+    roomType: "patio or outdoor",
+    styles: ["modern"],
+    credit: "Pexels photo 8134750, Pexels licence",
+  },
+  {
+    // Round 1 also furnished the room seen through the doorway.
+    id: "pexels-3935327-r2",
+    imageUrl: pexels(3935327),
+    roomType: "home office",
+    styles: ["modern"],
+    credit: "Pexels photo 3935327, Pexels licence",
+  },
 ];

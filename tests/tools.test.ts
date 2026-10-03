@@ -156,6 +156,32 @@ describe("tool registry", () => {
     expect(stagingPrompt({ roomType: "bedroom", style: "modern", notes: "" })).not.toContain("Customer notes");
   });
 
+  it("virtual staging prompt adds room-specific lines where the lab test of 3 Oct needed them", async () => {
+    const { stagingPrompt } = await import("@/lib/tools/definitions/virtual-staging");
+    const kitchen = stagingPrompt({ roomType: "kitchen", style: "modern", notes: "" });
+    expect(kitchen).toContain("bar stools");
+    expect(kitchen).toContain("pendant lights, spotlights and the range hood");
+    expect(kitchen).not.toContain("seating or a bed");
+    const bathroom = stagingPrompt({ roomType: "bathroom", style: "modern", notes: "" });
+    expect(bathroom).toContain("towels");
+    expect(bathroom).toContain("No other furniture");
+    const outdoor = stagingPrompt({ roomType: "patio or outdoor", style: "coastal", notes: "" });
+    expect(outdoor).toContain("No wall art and no indoor lamps outside");
+    expect(outdoor).toContain("nothing already in the photo is removed");
+    expect(stagingPrompt({ roomType: "home office", style: "modern", notes: "" })).toContain("rooms seen through doorways");
+    // the shared rules stay in every room's prompt
+    for (const p of [kitchen, bathroom, outdoor]) {
+      expect(p).toMatch(/no built-in shelving/);
+      expect(p).toMatch(/do not crop, zoom, reframe/);
+      expect(p).toContain("no people");
+    }
+    // rooms without a guide keep the shared prompt, with no empty gaps where a guide line would go
+    const living = stagingPrompt({ roomType: "living room", style: "modern", notes: "" });
+    expect(living).toContain("seating or a bed");
+    expect(living).not.toMatch(/bar stools|towels|outdoor/);
+    expect(living).not.toContain("  ");
+  });
+
   it("image edits keep the photo's proportions on models that allow any size", async () => {
     const { editSizeFor, wantsInputFidelity, supportsArbitrarySize } = await import("@/lib/ai/image-size");
     expect(supportsArbitrarySize("gpt-image-2")).toBe(true);

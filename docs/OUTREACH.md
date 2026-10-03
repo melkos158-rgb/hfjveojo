@@ -315,9 +315,15 @@ If a platform doesn't allow a profile link yet, the end card of every video show
 - Put a one-line hook before the hashtags: a caption made only of hashtags gives the platform nothing to read for search.
 - Saved in the vault (`ORVIONIS – рішення`).
 
-**Sound effects for editing (owner, 3 Oct):** 127 effects in `Downloads\audio_efect_pack` (the owner's user folder) on the owner's PC, for the operator to use in videos.
-- Downloads is not a connected folder. Ask for access to that folder only when a video needs it.
-- Before a published video uses any of these effects, look for a licence file in the pack. Until one turns up, keep using the synthesized SFX.
+**Editing library (owner, 3 Oct):** `C:\Мої проекти\Для монтажу` on the owner's PC, about 2 GB and 1,085 files. The vault note `Нотатки/Для монтажу – бібліотека` has the full category list.
+- `01_Zvuky_SFX`: 619 sound effects in 46 categories (whoosh, transition, impact, riser, pop, click, swipe, camera, ding and more).
+- `02_Videoefekty`: 256 overlays and transitions, mostly 720p (light leaks, film burn, glitch, particles, bokeh and more).
+- `03_Muzyka`: 96 stock tracks in 12 genres (lofi, upbeat vlog, corporate background, cinematic and more).
+- `04_Memy`: meme templates and green-screen clips.
+- The 127 effects the owner pointed to in `Downloads\audio_efect_pack` (and `Desktop\audio efect`) are the first 127 of `01_Zvuky_SFX`.
+- Licence: sounds, video effects and music come from Pixabay (Pixabay Content License). They may be used in commercial and monetized videos, need no credit, and may not be resold as files.
+- Never use the meme templates in ORVIONIS marketing: the rights to the original frames belong to others.
+- Not a connected folder: ask for access when a video needs it. Owner, 3 Oct: «пока не роби просто знай» — no editing work with it until asked.
 
 **TikTok short link: orvionis.com/tt** (from 30 Sep, `next.config.ts` → `SHORT_LINKS`). TikTok gives a clickable bio link only from 1,000 followers or to a registered business account, so the TikTok bio and captions show `orvionis.com/tt`. It redirects (307) to the TikTok-tagged link above, so a visitor who types it counts as `tiktok` instead of `direct`. In TikTok captions, write "orvionis.com/tt" instead of "Link in bio".
 

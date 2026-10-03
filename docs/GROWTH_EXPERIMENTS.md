@@ -45,6 +45,14 @@ None yet.
 
 ## Log
 
+- 2026-10-03 16:15 UTC — **Room-type test, round 1 results** (8 runs done by 16:05; contact sheet sent to the owner).
+  - Good, matching the promise: dining room, home office, covered porch, bathroom (towels, plants and decor only), the wide-angle living room, and the living room from a 480 px photo. The 480 px source still gave a clean 1536 × 1024 result, so low resolution alone doesn't ruin a photo.
+  - Problems:
+    - The kitchen got a dining set that fits, but **lost its pendant light**, which breaks the "fixtures untouched" promise.
+    - The pool **got wall art on the facade and lost the chairs and the float** that were in the photo.
+    - The home office also furnished the room seen through the doorway.
+  - Fix (s77): room-specific prompt lines for kitchen, bathroom, patio or outdoor, and home office. Living room, bedroom and dining room keep the shared prompt unchanged.
+  - Round 2, 6 runs: the same kitchen, pool, bathroom and office photos, plus a second kitchen and a second bathroom. Bathroom goes into the order form only if round 2 is clean.
 - 2026-10-03 14:20 UTC — **Product check: room types and bad photos** (the owner's questions: «ми зробили тільки вітальні … якшо погана фотка то тоже буде погано генерувати?», plus paid photo enhancement).
   - Finding: the order form offers six room types, but the lab had only run living rooms (3) and bedrooms (2). Kitchen, dining room, home office and patio had never been run. Bathrooms and pools aren't offered.
   - The prompt is shared by every room ("seating or a bed, tables, a rug"), which doesn't fit kitchens or bathrooms. Nothing checks the uploaded photo beyond turning and resizing it.
