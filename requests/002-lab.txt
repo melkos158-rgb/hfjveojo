@@ -5,3 +5,4 @@
 # run 3 14:07
 # run 4 16:06 room-type test
 # run 5 17:46 room-type round 2
+# run 6 18:16 room-type round 3
