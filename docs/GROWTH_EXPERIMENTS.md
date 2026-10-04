@@ -45,6 +45,7 @@ None yet.
 
 ## Log
 
+- 2026-10-04 07:10 UTC — **Room-type test, round 4: both bathrooms clean (4 of 4 versions).** s80 (`7812fd2`) deployed at ≈ 07:02 UTC, and both runs were done by 07:09. Peach bathroom (modern): folded towels on the vanity, a stool or the tub edge, a bath tray, plants, candles and framed art; the panel above the tub stays bare. Grey bathroom (coastal): folded towels, a stool, a bath tray, a bath mat and two framed prints; the ring light, the shower, the window, the radiator and the two existing hooks are as photographed. No version added a rail, ring, hook, shelf or mirror, so bathroom stays in the form. Lab spend today: 3 runs, ≈ $0.33.
 - 2026-10-04 07:00 UTC — **Room-type test, round 3 bathroom: a new towel bar; round 4 (s80).**
   - pexels-7045910-r3 (modern) ran after the budget reset at 00:00 UTC. Version 1 is clean: folded towels on the vanity, a towel over the bathtub edge, a bath tray, plants, a candle and framed art, with mirrors, wall lights, spotlights, vanity, toilet and tub as photographed. **Version 2 hung a new towel bar** with towels on the panel above the tub, so the "no new rails" line alone doesn't hold it.
   - Likely cause: the add line still offered towels "hung on rails and hooks that are already there". s80 drops that. Towels are only folded or draped on a surface, framed art is the only thing allowed on a wall, and the keep line names towel rails, towel rings, hooks, shelves and mirrors as things not to add.
