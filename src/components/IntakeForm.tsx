@@ -5,6 +5,8 @@ import type { IntakeField } from "@/lib/tools/types";
 import { trackClient } from "@/components/Analytics";
 import { gaEventThen, gaItem as toGaItem } from "@/lib/ga";
 import { nextVolumeTier, volumeTotalCents, type VolumeTier } from "@/lib/tools/volume";
+import { photoIssueText, type PhotoIssue } from "@/lib/photo-check";
+import { checkPhotoFile } from "@/lib/photo-check-browser";
 
 type Props = {
   toolSlug: string;
@@ -49,8 +51,11 @@ const FREE_NOTICES: Record<string, string> = {
 
 type ReadyPreview = { image: string; width?: number; height?: number; caption?: string };
 
-/** One photo of a "rooms" field: uploading until it has a fileId; roomType "" until the customer picks one. */
-type RoomItem = { id: string; fileId: string | null; roomType: string; url: string; name: string; sizeKb: number };
+/**
+ * One photo of a "rooms" field: uploading until it has a fileId; roomType "" until the customer picks one. `issues` are
+ * the upload check's warnings (small, dark, blurry: src/lib/photo-check.ts), with the photo's own size for the note.
+ */
+type RoomItem = { id: string; fileId: string | null; roomType: string; url: string; name: string; sizeKb: number; issues?: PhotoIssue[]; dims?: [number, number] };
 
 const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
 const money = (cents: number) => `$${(cents / 100).toFixed(2).replace(/\.00$/, "")}`;
@@ -90,6 +95,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   const [freeSent, setFreeSent] = useState<{ email: string; devLink?: string } | null>(null);
 
   const uploadedRooms = rooms.filter((r) => r.fileId);
+  const flaggedPhotos = rooms.filter((r) => r.issues?.length).length;
   const quantity = roomsField ? Math.max(1, uploadedRooms.length) : 1;
   const hasPhoto = roomsField ? uploadedRooms.length > 0 && Boolean(uploadedRooms[0].roomType) : imageKey ? Boolean(values[imageKey]) : false;
   const firstRoomFileId = uploadedRooms[0]?.fileId ?? null;
@@ -230,6 +236,13 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
         };
         roomsRef.current = [...roomsRef.current, item];
         setRooms(roomsRef.current);
+        // The upload check runs beside the upload and only ever adds a note; it never holds up or blocks the order.
+        void checkPhotoFile(file).then((res) => {
+          if (!res || res.issues.length === 0 || !roomsRef.current.some((r) => r.id === id)) return;
+          roomsRef.current = roomsRef.current.map((r) => (r.id === id ? { ...r, issues: res.issues, dims: [res.width, res.height] } : r));
+          setRooms(roomsRef.current);
+          trackClient("photo_warning", { tool: toolSlug, issues: res.issues.join(",") });
+        });
         try {
           const fileId = await sendUpload(file);
           roomsRef.current = roomsRef.current.map((r) => (r.id === id ? { ...r, fileId } : r));
@@ -429,6 +442,15 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
                           Remove
                         </button>
                       </div>
+                      {r.issues?.length ? (
+                        <div className="w-full space-y-1" data-photo-check>
+                          {r.issues.map((issue) => (
+                            <p key={issue} className="rounded-lg bg-amber-50 px-2 py-1 text-xs text-amber-800">
+                              {photoIssueText(issue, r.dims?.[0] ?? 0, r.dims?.[1] ?? 0)}
+                            </p>
+                          ))}
+                        </div>
+                      ) : null}
                     </li>
                   ))}
                 </ul>
@@ -562,6 +584,12 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       )}
 
       {extraFields}
+
+      {flaggedPhotos > 0 ? (
+        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          {flaggedPhotos === 1 ? "One photo may not stage well — see the note under it. You can replace it or go ahead." : `${flaggedPhotos} photos may not stage well — see the notes under them. You can replace them or go ahead.`}
+        </p>
+      ) : null}
 
       {error ? <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 

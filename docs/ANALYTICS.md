@@ -31,6 +31,8 @@
 | tool request / contact form sent | `generate_lead` | `form` |
 | first sign-in / sign-in | `sign_up` / `login` | `method` (email, google) |
 
+First-party only, not sent to GA: `photo_warning`, when the order form's upload check flags a photo (`tool`, and `issues` with any of small, dark, blurry; thresholds in `src/lib/photo-check.ts`). `/admin/analytics` counts these as "Photo warnings".
+
 Subscriptions do not exist yet (no `subscription_started`).
 
 ### One-time settings in GA (owner)

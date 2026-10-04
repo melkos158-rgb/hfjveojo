@@ -54,7 +54,7 @@ export default function PhotographingRoomsGuide() {
       <h2>Then stage it</h2>
       <p>
         Upload the photo to <Link href="/tools/virtual-staging">Virtual Staging</Link>, pick the room and one of{" "}
-        <Link href="/guides/virtual-staging-styles">six styles</Link>, and get two staged versions of that exact photo in about two minutes. Your first photo is free, then it's $15 a photo, with a disclosure pack for the MLS. Selling in California? Read the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>. Comparing prices?
+        <Link href="/guides/virtual-staging-styles">six styles</Link>, and get two staged versions of that exact photo in about two minutes. The form checks each photo as you add it and tells you if it looks small, dark or blurry, so you can swap it before you pay. Your first photo is free, then it's $15 a photo, with a disclosure pack for the MLS. Selling in California? Read the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>. Comparing prices?
         See <Link href="/guides/virtual-staging-cost">what virtual staging costs in 2026</Link>.
       </p>
       <p>

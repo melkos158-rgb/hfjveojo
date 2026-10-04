@@ -66,7 +66,7 @@ export const GUIDES: Guide[] = [
     title: "10 tips for room photos that stage well",
     description: "How to shoot empty rooms so virtual staging looks real: light, height, lens, angles and what to leave out.",
     audience: "Agents and listing photographers",
-    updated: "2026-10-02",
+    updated: "2026-10-04",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
 ];

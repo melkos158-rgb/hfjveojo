@@ -49,6 +49,8 @@ export type Kpis = {
   /** Free watermarked previews shown, and how many of those sessions went on to checkout. */
   previewsShown: number;
   previewSessionsToCheckout: number;
+  /** Photos the order form's upload check flagged as small, dark or blurry (src/lib/photo-check.ts). */
+  photoWarnings: number;
   /** Free first photos claimed (email confirmed) in the period, and how many of those people have also paid for an order. */
   freePhotosClaimed: number;
   freePhotoPayers: number;
@@ -64,7 +66,7 @@ export function estimateStripeFeesCents(orders: Array<{ amountCents: number }>):
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions, freeClaims] =
+  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions, freeClaims, photoWarnings] =
     await Promise.all([
       prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true, path: true } }),
       prisma.event.findMany({ where: { name: "intake_started", createdAt: range }, select: { props: true } }),
@@ -96,6 +98,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
       prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false }, select: { customerEmail: true } }),
+      prisma.event.count({ where: { name: "photo_warning", createdAt: range } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
   const previewSessionIds = new Set(previewEvents.map((e) => e.sessionId).filter(Boolean) as string[]);
@@ -201,6 +204,7 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     freeToolUses,
     previewsShown: previewEvents.length,
     previewSessionsToCheckout: [...previewSessionIds].filter((id) => checkoutSessionIds.has(id)).length,
+    photoWarnings,
     freePhotosClaimed: freeClaims.length,
     freePhotoPayers: await freePhotoPayers(freeClaims.map((o) => o.customerEmail)),
   };

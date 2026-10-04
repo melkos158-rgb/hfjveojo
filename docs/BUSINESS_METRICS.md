@@ -33,12 +33,12 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | Stripe fees | $0 | actual fee per payment (balance transaction) |
 | Marketplace fees (Fiverr 20 %) | $0 | |
 | **Net revenue** | **$0** | gross − refunds − Stripe − marketplace fees |
-| AI / API costs | $3.83 | `/admin/analytics`, 4 Oct 06:55 UTC: pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports, and the marketing lab (2 Oct +$1.65, 3 Oct room-type test +$1.65, 4 Oct one bathroom run +$0.11) |
-| **Gross profit** | **−$3.83** | net revenue − variable costs (AI) |
+| AI / API costs | $4.05 | `/admin/analytics`, 4 Oct 12:55 UTC: pipeline tests, 1 production staging preview, the daily and weekly AI CEO reports, and the marketing lab (2 Oct +$1.65, 3 Oct room-type test +$1.65, 4 Oct bathroom runs +$0.33) |
+| **Gross profit** | **−$4.05** | net revenue − variable costs (AI) |
 | Advertising spend | **€29.98** (29 Sep €11.69 + 30 Sep €10.50 + 1 Oct €7.79) | Google Ads E8, final: 23 clicks at €1.30 average, of the €30 campaign total prepaid by the owner. Campaign ended 1 Oct; evaluated 2 Oct 05:10 UTC (stop). |
 | Infrastructure | Railway Hobby plan | owner-paid; monthly amount → from the Railway invoice (not yet recorded) |
 | AI subscriptions (Claude, etc.) | owner-paid | amount to record from the owner's billing (not yet recorded) |
-| **Net profit** | **−$3.83 − €29.98 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
+| **Net profit** | **−$4.05 − €29.98 − fixed costs** | gross profit − ads − infrastructure − subscriptions (the ad spend comes out of the owner's €30 prepaid balance) |
 | **Cash available for reinvestment (business-generated)** | **$0** | all spending so far is owner-funded; nothing has been earned yet |
 
 ## Revenue and profit per channel
@@ -62,6 +62,12 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-02 | Marketing lab: OpenAI image edits (gpt-image-2 medium) on 5 free-licence stock photos of empty rooms, 15 style runs × 2 versions | the owner: "the videos all look alike, use other photos"; AI spend approved ("все шо треба то трать") | real ORVIONIS output on new rooms makes fresher videos that hold viewers longer than v4–v7 (all built on order #6) | `video-v8` and the next videos beat v4–v7 on views or comments within 7 days | views, comments, tagged visits, free first photos claimed | code guard: 35 % of the $5 daily AI budget, 16 lab calls a day | done 2 Oct 13:40–14:10 UTC: 15 runs, cost-log estimate **≈ $1.65** (11 cents a run). Evening check: `/admin/analytics` AI spend went from $0.41 (12:58 UTC) to $2.06 (18:55 UTC), +$1.65, as estimated. That figure comes from our own cost log; OpenAI's invoice isn't visible from here. Used in `video-v8`, `video-v9`, the style gallery and the styles guide |
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
+
+## Snapshot — 2026-10-04 12:55 UTC (midday check-in, last 30 days, `/admin/analytics`)
+
+- 602 / 125 page views and sessions (+1 / +1 since the morning; Sunday). By first touch: direct 509, the rest unchanged.
+- Funnel 3 → 7 → 0; $0 revenue; AI $4.05 (+$0.22, lab round 4); free tool uses 13; free first photos 0; delivered / review / failed 0 / 0 / 0.
+- Fiverr Manage Orders 0 in every status; inbox has nothing new. TikTok: v9 796 (stopped, like the others); v10 not posted yet.
 
 ## Snapshot — 2026-10-04 06:55 UTC (morning check-in, last 30 days, `/admin/analytics`)
 
