@@ -45,6 +45,10 @@ None yet.
 
 ## Log
 
+- 2026-10-04 07:00 UTC — **Room-type test, round 3 bathroom: a new towel bar; round 4 (s80).**
+  - pexels-7045910-r3 (modern) ran after the budget reset at 00:00 UTC. Version 1 is clean: folded towels on the vanity, a towel over the bathtub edge, a bath tray, plants, a candle and framed art, with mirrors, wall lights, spotlights, vanity, toilet and tub as photographed. **Version 2 hung a new towel bar** with towels on the panel above the tub, so the "no new rails" line alone doesn't hold it.
+  - Likely cause: the add line still offered towels "hung on rails and hooks that are already there". s80 drops that. Towels are only folded or draped on a surface, framed art is the only thing allowed on a wall, and the keep line names towel rails, towel rings, hooks, shelves and mirrors as things not to add.
+  - Round 4: both bathrooms again (pexels-7045910-r4 modern, pexels-7031878-r4 coastal), 2 runs ≈ $0.22. Bathroom stays in the form meanwhile: there are no bathroom orders yet, every order gets two versions, and one of the two was clean in round 3. If round 4 still adds a rail, take bathroom out of the form until a fix holds.
 - 2026-10-03 18:30 UTC — **Room-type test, round 3: the kitchen keeps its spotlights.**
   - Kitchen 2 (pexels-7061337, stretch ceiling, Scandinavian) with the s78 "count the ceiling lights" line: **both versions keep the recessed spotlights where they were**. Version 2 keeps all four. Version 1 keeps the three it shows; it is shifted up by about 4 % of the frame, so the fourth light falls outside the picture rather than being removed.
   - The rest matches the kitchen line: bar stools at the peninsula, a small round or oval table with chairs on the open floor, a fruit bowl, a cutting board and a plant on the counter, and a small plant on the niche shelf. Cabinets, hood, appliances and the fridge are unchanged.

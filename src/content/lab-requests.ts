@@ -194,4 +194,20 @@ export const LAB_REQUESTS: readonly LabRequest[] = [
     styles: ["modern"],
     credit: "Pexels photo 7045910, Pexels licence",
   },
+  // Round 4 (4 Oct): round 3 kept the kitchen's spotlights, but one bathroom version still hung a new towel bar. Both
+  // bathrooms again with towels only folded or draped and framed art as the only thing on a wall.
+  {
+    id: "pexels-7045910-r4",
+    imageUrl: pexels(7045910),
+    roomType: "bathroom",
+    styles: ["modern"],
+    credit: "Pexels photo 7045910, Pexels licence",
+  },
+  {
+    id: "pexels-7031878-r4",
+    imageUrl: pexels(7031878),
+    roomType: "bathroom",
+    styles: ["coastal"],
+    credit: "Pexels photo 7031878, Pexels licence",
+  },
 ];

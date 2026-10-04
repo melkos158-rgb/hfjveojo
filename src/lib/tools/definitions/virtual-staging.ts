@@ -85,8 +85,11 @@ const DEFAULT_ADD =
  * Room-specific lines, from the lab test of 3 Oct 2026 (src/content/lab-requests.ts). With the shared prompt, a kitchen
  * lost its pendant light, a pool got wall art on the facade and its chairs removed, and a home office furnished the
  * room seen through the doorway. Round 2 kept the pendant, but a second kitchen still lost its recessed spotlights and
- * one bathroom version added a towel rail, hence the counting line and the no-new-rails rule. Rooms without an entry
- * (living room, bedroom, dining room) keep the shared prompt unchanged.
+ * one bathroom version added a towel rail, hence the counting line and the no-new-rails rule. Round 3 kept the
+ * spotlights (3 Oct), but one of two bathroom versions (4 Oct) still hung a new towel bar. The add line had offered
+ * "towels hung on rails that are already there", so towels are now only folded or draped, and framed art is the only
+ * thing allowed on a wall.
+ * Rooms without an entry (living room, bedroom, dining room) keep the shared prompt unchanged.
  */
 const ROOM_GUIDES: Record<string, { add?: string; keep: string }> = {
   kitchen: {
@@ -94,8 +97,8 @@ const ROOM_GUIDES: Record<string, { add?: string; keep: string }> = {
     keep: "Count the ceiling lights in the photo and keep every one of them exactly where it is, including small recessed spotlights and pendant lights; the range hood, cabinets, countertops, appliances, sink, faucet, backsplash, radiators and boiler also stay exactly as photographed.",
   },
   bathroom: {
-    add: "Add ONLY small, movable bathroom accessories: towels folded on the vanity, the bathtub edge or a stool, or hung on rails and hooks that are already there; a bath mat, a bath tray, a small plant, a soap dispenser and a candle or vase on the vanity, a small stool if there is room, and wall art on empty wall space. No other furniture, and no new rails, hooks, shelves or mirrors.",
-    keep: "Every existing fixture stays exactly as photographed: mirrors, wall lights, ceiling lights and spotlights, the vanity, sink, faucets, bathtub, shower, toilet, tiles and towel rails.",
+    add: "Add ONLY small, movable bathroom accessories: folded towels on the vanity, on the bathtub edge or on a small stool, a bath mat, a bath tray, a small plant, a soap dispenser and a candle or vase on the vanity, a small stool if there is room, and framed art on empty wall space. No other furniture.",
+    keep: "Every existing fixture stays exactly as photographed: mirrors, wall lights, ceiling lights and spotlights, the vanity, sink, faucets, bathtub, shower, toilet, tiles and any towel rails. Framed art is the only thing that may go on a wall: do not add towel rails, towel rings, hooks, shelves or mirrors, and keep every towel folded or draped on a surface.",
   },
   "patio or outdoor": {
     add: "Add ONLY outdoor furniture and decor: outdoor sofas or lounge chairs, sun loungers by a pool, an outdoor dining set, a parasol, an outdoor rug, cushions, planters and lanterns. No wall art and no indoor lamps outside.",

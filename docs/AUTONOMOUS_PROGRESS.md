@@ -177,7 +177,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
     - s77 adds room-specific prompt lines and round 2 (6 runs). Read it the same way: touch `requests/002-lab.txt` on the media-bridge branch, fetch the branch on the device, build contact sheets there and stage them.
     - ~~If round 2 is clean, add "bathroom" to ROOM_TYPES and the form help.~~
     - Round 2 is done. Bathroom joined the form in s78, and round 3 checks the second kitchen's spotlights and the no-new-rails rule.
-    - Round 3 kitchen (18:18 UTC): the spotlights stayed in both versions, so no ceiling mask is needed for now. The round 3 bathroom (`pexels-7045910-r3`) runs after 00:00 UTC, because the lab's 35 % share of the $5 AI budget was used up by 15 runs. **4 Oct morning check-in: fetch it through the bridge (`# run 8`) and check that no rails, hooks, shelves or mirrors were added.**
+    - Round 3 kitchen (18:18 UTC): the spotlights stayed in both versions, so no ceiling mask is needed for now. The round 3 bathroom (`pexels-7045910-r3`) runs after 00:00 UTC, because the lab's 35 % share of the $5 AI budget was used up by 15 runs. 4 Oct 00:0x UTC: it ran, and version 2 hung a new towel bar (version 1 clean). s80 rewrites the bathroom lines (towels only folded or draped, framed art the only thing on a wall) and adds round 4 for both bathrooms. **Next check-in: read round 4 through the bridge (`# run 9`); if a version still adds a rail, take bathroom out of the form until a fix holds.**
     - Do not use kitchen 2 (pexels-7061337) round 2 in marketing: its spotlights are missing. Round 3 is fine to use.
   - For each room: keep it, give it its own prompt line (kitchen: stools and counter decor; bathroom: towels, plants, a stool; pool or patio: loungers, an umbrella, planters), or take it out of the form.
   - Then build the upload check (too small, dark or blurry → warning before payment) and automatic light correction, and add a free redo to the terms.
@@ -194,7 +194,9 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-03 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-8f3fb32001ab-14` (s78 `5699d77`, CI #119 and Railway green, "Bathroom" in the live order form).
+- Last verified: 2026-10-04 06:55 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-daf416310c93-14` (s79 `9ff0076`).
+  - `/admin/analytics` (30 days): 601 / 124, funnel 3 → 7 → 0, 0 paid, AI $3.83 (+$0.11: the round 3 bathroom lab run after midnight), free tool uses 13, free first photos 0, delivered / review / failed 0 / 0 / 0. No overnight orders.
+- Earlier: 2026-10-03 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-8f3fb32001ab-14` (s78 `5699d77`, CI #119 and Railway green, "Bathroom" in the live order form).
   - `/admin/analytics` (30 days): 593 / 116, funnel 3 → 7 → 0, 0 paid, AI $3.72 (+$1.65 from the room-type lab), free tool uses 10, free first photos 0, delivered / review / failed 0 / 0 / 0.
 - Earlier: 2026-10-03 12:55 UTC (midday check-in). `/api/health` ok, worker `web-9ac98fe99412-14` (s74 `e850703`); `/admin/analytics` 590 / 113, AI $2.07, free tool uses 9; Fiverr Manage Orders 0.
 - 2026-10-03 06:55 UTC (morning check-in): the owner's computer and Chrome were offline (Saturday morning). So `/api/health` and `/admin/analytics` could not be read; `/api` is closed to WebFetch by our own robots.txt. A WebFetch of `/guides/virtual-staging-styles` returned the page with all six styles, so the site was serving. Next full check at midday.
@@ -220,6 +222,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `9ff0076` (s79, docs, 2026-10-03 ≈ 19:00 UTC): CI #120 green; Railway deployed by 19:06 UTC (worker `web-daf416310c93-14`, health ok).
 - `5699d77` (s78, 2026-10-03 ≈ 17:55 UTC): bathroom in the order form and the rooms guide, round 3 lab requests. CI #119 green; Railway deployed (worker `web-8f3fb32001ab-14`, "Bathroom" on the live tool page). Earlier the same day: s77 `a474085` (room-specific prompt lines, round 2) and s76 `cc24719` (round 1 lab requests, docs), both CI green and deployed.
 - `abcb14d` (s71, 2026-10-02 ≈ 14:45 UTC): the style gallery on `/tools/virtual-staging` and the guide `/guides/virtual-staging-styles`. CI and Railway green; both pages checked in production. Earlier the same day: s69 `99ac14c` (the marketing lab) and s67 `22a9889`.
 - `70e12eb` (2026-10-01 23:16 UTC): free first photo, volume prices, real before/after first screen (E14/E17/E18), with migration `20261001000000_order_free_photo`. CI success at 23:17 UTC; Railway "Success - orvionis.com". Production checks are under DONE.
