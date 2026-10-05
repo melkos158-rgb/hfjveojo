@@ -63,6 +63,13 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
 
+## Snapshot — 2026-10-05 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
+
+- 617 / 140 page views and sessions (609 / 132 in the morning). By first touch: direct 523, `www.google.com` 26 (+1), the rest unchanged.
+- Funnel 3 → 7 → 0; $0 revenue; AI $4.07; free tool uses 14; photo warnings 0; free first photos 0; delivered / review / failed 0 / 0 / 0.
+- TikTok: v10 775 views in 6 h, the same ceiling as the five before it. E19 tracker unchanged. The SoCal collage is still in review.
+- Week plan 6–12 Oct with the E8b €20 ask: `docs/GROWTH_EXPERIMENTS.md`.
+
 ## Snapshot — 2026-10-05 12:55 UTC (midday check-in, last 30 days, `/admin/analytics` at 12:43)
 
 - 613 / 136 page views and sessions; funnel 3 → 7 → 0; $0 revenue; AI $4.07; free first photos 0; delivered / review / failed 0 / 0 / 0.

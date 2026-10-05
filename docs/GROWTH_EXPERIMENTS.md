@@ -45,6 +45,16 @@ None yet.
 
 ## Log
 
+- 2026-10-05 19:00 UTC — **Week plan 6–12 Oct (Monday plan, sent to the owner).** Goal: the first free-photo claims and the first paid order.
+  - Where we stand after 10 days live: $0 revenue, 0 paid orders, 0 free photos claimed. Spend is €29.98 on ads and $4.07 on AI. About 4–5 sessions a day, mostly direct. Six TikTok videos all stopped at 745–796 views, with 0 tagged visits (there is no clickable link). DMs: 10 sent, 1 human reply. Facebook: the collage post has been in admin review for 2 days.
+  - The bottleneck is the owner's time on sending. Batch 2 and the follow-ups have waited since 3 Oct, so the plan asks for about 15 minutes a day and moves the rest to the operator or to paid search.
+  - Plan and numbers:
+    1. **DMs (owner, ≈ 15 min a day):** the 9 follow-ups and Lesley's reminder (texts sent 5 Oct), and batch 2 (10) by Wednesday. Friday check against the E19 rule: ≥ 3 replies or ≥ 1 free photo after 20 sent → batch 3 (20, already written); 0 replies → the operator rewrites the opener.
+    2. **Check the free photo on himself (owner, 2 min):** one free photo with his own email, so the main conversion path has run in production with the real model before any paid traffic.
+    3. **Video (owner):** 2–3 posts (Tue, Thu, Sat) with the full caption: a hook plus the standard hashtags. Target: the first `tiktok` or `youtube` tagged visits (now 0 and 3).
+    4. **Site and SEO (operator):** one new page or strong upgrade a week, IndexNow, the daily checks. Target: 250 Search Console impressions in 28 days (181 now).
+    5. **E8b Google Ads, budget ask: €20** of the owner's €50 authorization. The owner tops up, the operator sets it up as designed in `docs/GOOGLE_ADS_EXPERIMENT.md`: exact match on agent intent, the consumer negatives, max CPC €1.50, 5 days, landing on the free first photo. Rule: ≥ 2 free photos claimed by `google` visitors → continue; 0 after ≥ 12 clicks → stop paid search. It starts only after item 2.
+  - Owner's "так" needed for: E8b (€20 top-up), the follow-ups and batch 2, the free-photo self-test, uploading the Fiverr video and image.
 - 2026-10-05 07:10 UTC — **Real results by room on `/guides/which-rooms-to-virtually-stage` (s84), and the weekly Search Console reading.**
   - New section "What each room looks like staged": the empty photo and the staged result side by side for five rooms from the 3 Oct lab test (kitchen, dining room, bathroom, covered porch, home office). Each comes with a one-line note on what was added and what stayed, read off the picture. The staged photos are unedited model output; the empty ones are cropped to the same frame. Photos are Pexels (free licence), credited by id. The backyard pool is left out because the model replaced two folding chairs and a float there, which breaks the promise.
   - Why: the guide is about which rooms to stage, but showed no staged room. Real pairs for kitchens and bathrooms answer the owner's 3 Oct question on the site itself. The page's sitemap date is now 5 Oct, so IndexNow sends it again at the next hourly run.
