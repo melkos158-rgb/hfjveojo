@@ -129,7 +129,7 @@ export default function WhichRoomsGuide() {
         </table>
       </div>
 
-      <h2>What each room looks like staged</h2>
+      <h2 id="real-results" className="scroll-mt-20">What each room looks like staged</h2>
       <p>
         Five rooms we ran through ORVIONIS in October 2026, using free-licence stock photos of empty rooms. Each staged
         photo is the model&apos;s output, unedited; the empty photo is cropped to the same frame. Tap a room to compare.

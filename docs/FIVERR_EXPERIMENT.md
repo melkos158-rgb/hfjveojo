@@ -6,7 +6,7 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
 
 **The gig is LIVE** (Active, published by the owner on 2026-09-26 ≈ 21:30 UTC+2).
 - Seller dashboard, last 30 days: 0 impressions, 0 clicks, 0 orders (26 Sep).
-- **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-09-27 11:05 UTC. Manage Orders is the only source of truth.
+- **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-10-05 12:56 UTC (and at the 4 Oct midday check). Manage Orders is the only source of truth. Inbox, 5 Oct: no new conversations since the 26 Sep phishing wave.
 - Inbox: not read on 27 Sep. Fiverr's "It needs a human touch" check appeared on `/inbox` even after a 35-second pause following Manage Orders. The operator never solves it, so the owner reads the inbox. With Manage Orders at 0, no message can be a real order.
 - Within an hour of going live, three phishing messages arrived. Two were reported and blocked; see SECURITY INCIDENTS.
 - **Impressions since 26 Sep are unknown.** The seller dashboard has been gated for the operator since 29 Sep, so the owner reads it; the number goes here.
@@ -182,4 +182,4 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. After 14 days live or 300 impressions: review pricing hypothesis H1.
 4. When a real order is delivered, ask the buyer's permission before adding it to the portfolio. Until then, the stock-photo sample is the only project.
 ## TIMESTAMP
-2026-10-03 14:10 UTC
+2026-10-05 12:56 UTC
