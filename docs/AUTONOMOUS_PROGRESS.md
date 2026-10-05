@@ -51,6 +51,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## DONE (verified in production unless noted)
 
+- 2026-10-05 (s84, Monday morning): **real results by room** on `/guides/which-rooms-to-virtually-stage`. Five before/after pairs from the 3 Oct lab test (kitchen, dining room, bathroom, covered porch, home office), each with a note on what was added and what stayed, as WebP at 1200 px (30–150 KB) with 240 px thumbnails. Data is in `src/content/room-examples.ts` and the component in `src/components/RoomGallery.tsx`; 186 tests. Checked in a local production build at 1280 and 390 px (no sideways scroll). Also that morning: the owner got the E19 follow-up texts (Lesley, batch 1) to send himself.
 - 2026-10-04 (s80–s82, Sunday check-ins): **room types closed and the upload check.**
   - s80 `7812fd2`: bathroom towels are only folded or draped, and framed art is the only thing allowed on a wall. Round 4 was clean in production (4 of 4 versions).
   - s82: the staging order form measures each photo in the browser and warns before payment when it is small, dark or blurry (`src/lib/photo-check.ts`). The warning never blocks the order. There is a summary above the button and a first-party `photo_warning` event, shown as "Photo warnings" on `/admin/analytics`. The staging FAQ and the photo-tips guide mention it.
@@ -198,7 +199,9 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-04 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-dffced64036d-14` (s82 `1c5fd9c`).
+- Last verified: 2026-10-05 06:55 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-ca6d8ce48a67-14` (s83 `ead0854`).
+  - `/admin/analytics` (30 days): 609 / 132, funnel 3 → 7 → 0, 0 paid, AI $4.07, photo warnings 0, free first photos 0, delivered / review / failed 0 / 0 / 0. No overnight orders.
+- Earlier: 2026-10-04 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-dffced64036d-14` (s82 `1c5fd9c`).
   - `/admin/analytics` (30 days): 607 / 130, funnel 3 → 7 → 0, 0 paid, AI $4.05, free tool uses 13, photo warnings 0, free first photos 0, delivered / review / failed 0 / 0 / 0.
 - Earlier: 2026-10-04 12:55 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-6c05a470ed7d-14` (s81 `0be604e`).
   - `/admin/analytics` (30 days): 602 / 125, funnel 3 → 7 → 0, 0 paid, AI $4.05 (+$0.22: lab round 4), free tool uses 13, free first photos 0, delivered / review / failed 0 / 0 / 0.

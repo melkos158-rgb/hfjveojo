@@ -34,7 +34,7 @@ export const GUIDES: Guide[] = [
     title: "Which rooms should you virtually stage?",
     description: "Buyers' agents rank the living room (37%), primary bedroom (34%) and kitchen (23%) as the rooms that matter most to stage (NAR 2025). A plan for one to six photos, and what to skip.",
     audience: "Real estate agents",
-    updated: "2026-10-02",
+    updated: "2026-10-05",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

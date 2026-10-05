@@ -204,6 +204,10 @@ Separate metric families, observational only:
   - First-party: `www.google.com` first-touch visits went from 20 to 25 overnight.
   - Indexing requested for `/guides/photography-pricing-guide-checklist` ("unknown to Google" before the request).
   - `/guides/which-rooms-to-virtually-stage` is still "unknown to Google", with yesterday's request pending.
+- **2026-10-05 07:00 UTC — Search Console, 28 days (5 Sep – 2 Oct):** 4 clicks, 181 impressions (89 the period before), CTR 2.2 %, average position 21.7.
+  - Top queries: "photography pricing calculator" 14, "virtual staging cost" 7, "wedding photography price calculator" 6, "ride lab" 4, "virtual staging pricing" 4, "real estate photography pricing calculator" 3, "virtual staging prices" 3, "how much does virtual staging cost" 3, "virtual staging price" 2, "cost of virtual staging" 2 (15 queries in all).
+  - Top pages: home 2 + 1 clicks (two rows), `/en/` 1 click; `/guides/virtual-staging-cost` 48 impressions at 56.8; `/free/photography-pricing-calculator` 25 at 26.6; `/guides/fair-housing-words-to-avoid` 22 at 5.1 (0 clicks); `/pl/` 14; `/guides/ab-723-virtual-staging` 4 at 5.8.
+  - Next: the fair-housing title and description once it has 50+ impressions; depth and links for the cost guide (position 57).
 - **2026-09-29 15:00 UTC — Search Console queries, 28 days (31 Aug – 27 Sep):** 2 clicks, 89 impressions, CTR 2.2%, average position 9.2.
   - Queries (impressions, position):
     - "photography pricing calculator" 6, 7.8;

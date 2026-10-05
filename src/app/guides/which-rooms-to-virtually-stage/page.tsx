@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { RoomGallery } from "@/components/RoomGallery";
+import { ROOM_EXAMPLES } from "@/content/room-examples";
 
 const SLUG = "which-rooms-to-virtually-stage";
 const TITLE = "Which rooms should you virtually stage?";
@@ -9,6 +11,8 @@ const SEO_TITLE = "Which rooms to stage first: what 2025 NAR data says";
 const DESCRIPTION =
   "Buyers' agents rank the living room (37%), the primary bedroom (34%) and the kitchen (23%) as the rooms that matter most to stage. A room-by-room plan for one to six photos, and what to skip.";
 const PUBLISHED = "2026-09-28";
+/** 5 Oct 2026: real before/after results by room from the 3 Oct lab test. */
+const MODIFIED = "2026-10-05";
 const OG_IMAGE = "/img/sample-virtual-staging-og.jpg";
 
 export const metadata: Metadata = {
@@ -50,7 +54,7 @@ export default function WhichRoomsGuide() {
     description: DESCRIPTION,
     image: `${site.url}${OG_IMAGE}`,
     datePublished: PUBLISHED,
-    dateModified: PUBLISHED,
+    dateModified: MODIFIED,
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -124,6 +128,21 @@ export default function WhichRoomsGuide() {
           </tbody>
         </table>
       </div>
+
+      <h2>What each room looks like staged</h2>
+      <p>
+        Five rooms we ran through ORVIONIS in October 2026, using free-licence stock photos of empty rooms. Each staged
+        photo is the model&apos;s output, unedited; the empty photo is cropped to the same frame. Tap a room to compare.
+      </p>
+      <RoomGallery rooms={ROOM_EXAMPLES} />
+      <p>
+        What gets added depends on the room. Kitchens get stools or a small table and a little counter decor, while the
+        cabinets, appliances and ceiling lights stay where they are. Bathrooms get accessories: towels, a mat, a tray and a
+        plant. In every room the walls, windows, doors and fixtures stay as photographed.
+      </p>
+      <p className="text-xs text-gray-500">
+        Empty-room photos: Pexels, free licence (photos {ROOM_EXAMPLES.map((r) => r.pexelsId).join(", ")}). Staged by ORVIONIS.
+      </p>
 
       <h2>Rooms to skip, or to handle differently</h2>
       <ul>
