@@ -18,6 +18,12 @@ export const STAGING_MAX_ROOMS = 10;
 /** No per-photo discount tiers since 2026-10-06: the Listing Pack replaced "$12 each from 5". */
 export const STAGING_VOLUME_TIERS: VolumeTier[] = [];
 export const STAGING_PACK: PackPrice = { cents: 4900, units: 5, extraUnitCents: 1000 };
+/**
+ * "Finish this listing" (same ruling): within 7 days of a free first photo, the free room counts as the first room of
+ * the pack, so up to 4 more rooms plus the MLS description are $39, then $10 a room (free room + 9 more = $89).
+ */
+export const STAGING_FINISH_PACK: PackPrice = { cents: 3900, units: 4, extraUnitCents: 1000 };
+export const STAGING_FINISH_DAYS = 7;
 /** The MLS description added to an order of 1-3 rooms (the Listing Pack includes it). */
 export const STAGING_DESCRIPTION_ADDON_CENTS = 700;
 /** The price in one line, for pages that quote it. */

@@ -16,11 +16,13 @@ import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
 import { HeroResult } from "@/components/HeroResult";
 import { freePhotoAvailability } from "@/lib/orders/free-photo";
 import { checkVoucher, DESCRIPTION_TOOL_SLUG } from "@/lib/orders/voucher";
+import { checkFinish, FINISH_TOOL_SLUG } from "@/lib/orders/finish";
+import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ slug: string }> };
-type PageProps = Params & { searchParams: Promise<{ free?: string; voucher?: string }> };
+type PageProps = Params & { searchParams: Promise<{ free?: string; voucher?: string; finish?: string }> };
 
 /** Reasons a visitor comes back from the free-photo email link without an order page (see /api/free/claim). */
 const FREE_NOTICES = new Set(["used", "expired", "soldout", "invalid", "error"]);
@@ -43,7 +45,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ToolPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { free: freeParam, voucher: voucherParam } = await searchParams;
+  const { free: freeParam, voucher: voucherParam, finish: finishParam } = await searchParams;
   const def = getToolBySlug(slug);
   if (!def) notFound();
   const item = (await liveCatalog()).find((c) => c.def.id === def.id);
@@ -63,6 +65,9 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
   // The MLS description included with a staging Listing Pack: the form takes the voucher instead of a payment.
   const voucherCheck = voucherParam && def.slug === DESCRIPTION_TOOL_SLUG ? await checkVoucher(voucherParam) : null;
   const voucher = voucherCheck ? { token: voucherParam as string, ok: voucherCheck.ok, problem: voucherCheck.ok ? null : voucherCheck.problem } : undefined;
+  // "Finish this listing" after a free photo: the finish price, the free photo's style, no second free photo.
+  const finishCheck = finishParam && def.slug === FINISH_TOOL_SLUG ? await checkFinish(finishParam) : null;
+  const finish = finishCheck ? { token: finishParam as string, ok: finishCheck.ok } : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -240,7 +245,7 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                 ctaLabel={l.ctaLabel}
                 priceLabel={priceText}
                 deliveryPromise={l.deliveryPromise}
-                initialEmail={session?.email ?? (voucherCheck?.ok ? voucherCheck.email : undefined)}
+                initialEmail={session?.email ?? (voucherCheck?.ok ? voucherCheck.email : finishCheck?.ok ? finishCheck.email : undefined)}
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
                 gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}
@@ -252,15 +257,17 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                         many: def.pricing.unit.many,
                         ctaMany: l.ctaLabelMany,
                         tiers: def.pricing.volume,
-                        pack: def.pricing.pack,
+                        pack: finishCheck?.ok ? STAGING_FINISH_PACK : def.pricing.pack,
                         packIncludes: def.pricing.packIncludes,
                         addon: def.pricing.addon,
                         max: def.intake.fields.find((f) => f.type === "rooms")?.max,
                       }
                     : undefined
                 }
-                freePhoto={def.freeFirstPhoto ? { available: freeOffer, notice: freeNotice } : undefined}
+                freePhoto={def.freeFirstPhoto ? { available: freeOffer && !finishCheck?.ok, notice: freeNotice } : undefined}
                 voucher={voucher}
+                finish={finish}
+                initialValues={finishCheck?.ok && finishCheck.style ? { style: finishCheck.style } : undefined}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

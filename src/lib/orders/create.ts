@@ -9,6 +9,8 @@ import { stripe } from "@/lib/stripe/client";
 import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
 import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
 import { packApplies, volumeTotalCents } from "@/lib/tools/volume";
+import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
+import { checkFinish, FINISH_TOOL_SLUG } from "@/lib/orders/finish";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
@@ -56,6 +58,8 @@ export type CreateOrderInput = {
   isTest?: boolean;
   /** The owner's/operator's own device: the checkout does not count as a visitor funnel event. */
   internal?: boolean;
+  /** "Finish this listing" link of a delivered free photo (src/lib/orders/finish.ts): the finish price applies. */
+  finish?: string | null;
 };
 
 /**
@@ -88,7 +92,13 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   // Volume and pack pricing (staging: $15 a room, the Listing Pack $49 for up to 5 rooms, $99 for 10), never more than a
   // larger order would cost.
   const maxUnits = Math.max(quantity, def.intake.fields.find((f) => f.type === "rooms")?.max ?? quantity);
-  const pack = def.pricing.pack ?? null;
+  // "Finish this listing": the free photo's room counts as the first room of the pack (checked again here).
+  const finish = input.finish && def.slug === FINISH_TOOL_SLUG ? await checkFinish(input.finish) : null;
+  if (finish && !finish.ok) {
+    throw new AppError("The $39 offer for this listing has ended (it runs 7 days after your free photo). Reload the page for the regular price.", 400, "finish_expired");
+  }
+  if (finish?.ok) intake.finishOf = finish.freeOrderId;
+  const pack = finish?.ok ? STAGING_FINISH_PACK : (def.pricing.pack ?? null);
   const unitsCents = volumeTotalCents(quantity, product.priceCents, def.pricing.volume, maxUnits, pack);
   const isPack = packApplies(quantity, product.priceCents, def.pricing.volume, maxUnits, pack);
   // The optional extra (staging: the $7 MLS description on 1-3 rooms) only where the pack doesn't already include it.
@@ -169,7 +179,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
             unit_amount: perUnitLine ? unitsCents / quantity : unitsCents,
             product_data: {
               name: isPack
-                ? `${product.name} — Listing Pack (${quantity} ${def.pricing.unit?.many ?? "units"} + ${def.pricing.packIncludes ?? "extras"})`
+                ? `${product.name} — ${finish?.ok ? "Finish this listing" : "Listing Pack"} (${quantity} ${def.pricing.unit?.many ?? "units"} + ${def.pricing.packIncludes ?? "extras"})`
                 : perUnitLine || quantity === 1
                   ? product.name
                   : `${product.name} (${quantity} ${def.pricing.unit?.many ?? "units"})`,
@@ -218,7 +228,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,
     experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: totalCents, quantity, mode, ...(pack ? { pack: isPack } : {}), ...(def.pricing.addon ? { addon: Boolean(addon) } : {}) },
+    props: { tool: def.id, amountCents: totalCents, quantity, mode, ...(pack ? { pack: isPack } : {}), ...(def.pricing.addon ? { addon: Boolean(addon) } : {}), ...(finish?.ok ? { finish: true } : {}) },
   });
   return { orderId: order.id, checkoutUrl: session.url };
 }

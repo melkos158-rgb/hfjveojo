@@ -56,6 +56,13 @@ type Props = {
    * it again). `ok` false: the link is used, unpaid or broken, and the form falls back to a normal paid order.
    */
   voucher?: { token: string; ok: boolean; problem: string | null };
+  /**
+   * "Finish this listing" after a free photo (the server checks the link again): `perUnit.pack` already carries the
+   * finish price. `ok` false: the 7 days are over and the regular prices apply.
+   */
+  finish?: { token: string; ok: boolean };
+  /** Starting values for fields (e.g. the free photo's style when finishing that listing). */
+  initialValues?: Record<string, string>;
 };
 
 const VOUCHER_PROBLEMS: Record<string, string> = {
@@ -93,8 +100,10 @@ function initialValue(f: IntakeField): string {
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto, voucher }: Props) {
-  const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, initialValue(f)])));
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto, voucher, finish, initialValues }: Props) {
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(fields.map((f) => [f.key, initialValues?.[f.key] && f.options?.some((o) => o.value === initialValues[f.key]) ? initialValues[f.key] : initialValue(f)])),
+  );
   const [email, setEmail] = useState(initialEmail ?? "");
   const [uploading, setUploading] = useState<string | null>(null);
   const [previews, setPreviews] = useState<Record<string, { url: string; name: string; sizeKb: number }>>({});
@@ -343,7 +352,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const res = await fetch(`/api/tools/${toolSlug}/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}), ...(voucherOk ? { voucher: voucher?.token } : {}) }),
+        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}), ...(voucherOk ? { voucher: voucher?.token } : {}), ...(finishOk ? { finish: finish?.token } : {}) }),
       });
       const data = (await res.json()) as { checkoutUrl?: string; message?: string };
       if (!res.ok || !data.checkoutUrl) throw new Error(data.message ?? "Could not start checkout");
@@ -378,6 +387,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       ? Array.from({ length: Math.max(0, unitsMax - quantity) }, (_, i) => quantity + i + 1).find((m) => packApplies(m, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack)) ?? null
       : null;
   const voucherOk = Boolean(voucher?.ok);
+  const finishOk = Boolean(finish?.ok);
   const buttonLabel = voucherOk
     ? "Write my description — included"
     : perUnit && quantity > 1 && perUnit.ctaMany
@@ -411,15 +421,22 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   return (
     <form onSubmit={submit} onFocus={onFocus} className="card space-y-5" id="order">
       <div>
-        <h2 className="text-xl font-bold">{heading ?? (voucherOk ? "Your MLS description — included" : freeHeading ? "Stage your first photo free" : "Start your order")}</h2>
+        <h2 className="text-xl font-bold">
+          {heading ?? (voucherOk ? "Your MLS description — included" : finishOk ? "Finish this listing" : freeHeading ? "Stage your first photo free" : "Start your order")}
+        </h2>
         <p className="mt-1 text-sm text-gray-600">
           {voucherOk
             ? `It comes with your staging order, so there's nothing to pay: enter the listing facts below. ${deliveryPromise}`
-            : freeHeading
+            : finishOk && perUnit?.pack
+              ? `Your free room counts as the first one: up to ${perUnit.pack.units} more rooms of the same listing${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} for ${money(perUnit.pack.cents)}, then ${money(perUnit.pack.extraUnitCents)} a room. The offer runs 7 days after your free photo. ${deliveryPromise}`
+              : freeHeading
               ? `Upload one room photo, leave your email and click the link we send — no card. After that, ${priceLabel} · ${deliveryPromise}`
               : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
         </p>
       </div>
+      {finish && !finish.ok ? (
+        <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">The finish-this-listing offer has ended (it runs 7 days after the free photo), so the regular prices below apply.</p>
+      ) : null}
       {voucher && !voucher.ok ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">{VOUCHER_PROBLEMS[voucher.problem ?? "invalid"] ?? VOUCHER_PROBLEMS.invalid}</p>
       ) : null}
@@ -526,7 +543,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
                 <div className="space-y-2" data-price-summary>
                   <p className="text-sm font-semibold">
                     {isPack
-                      ? `Listing Pack: ${uploadedRooms.length} ${perUnit.many}${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} = ${money(unitsTotal)}`
+                      ? `${finishOk ? "Finish this listing" : "Listing Pack"}: ${uploadedRooms.length} ${perUnit.many}${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} = ${money(unitsTotal)}`
                       : `${uploadedRooms.length} ${uploadedRooms.length === 1 ? perUnit.one : perUnit.many} = ${money(unitsTotal)}`}
                     {fullPrice !== null && unitsTotal < fullPrice ? <span className="font-normal text-green-600"> · you save {money(fullPrice - unitsTotal)}</span> : null}
                   </p>

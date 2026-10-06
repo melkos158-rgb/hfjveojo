@@ -17,6 +17,8 @@ import { photoInputsOf } from "@/lib/tools/photos";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { prisma } from "@/lib/db";
 import { VOUCHER_KEY_PREFIX, descriptionVoucherUrl, isFreePhotoOrder, isVoucherOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { finishEndsAt, finishUrl } from "@/lib/orders/finish";
+import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -66,6 +68,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
     ? await prisma.order.findUnique({ where: { freeKey: `${VOUCHER_KEY_PREFIX}${order.id}` }, select: { id: true, number: true, accessToken: true } })
     : null;
   const freePhoto = isFreePhotoOrder(order);
+  // "Finish this listing" for 7 days after a delivered free photo.
+  const finishLink = freePhoto && delivered && toolDef?.freeFirstPhoto ? finishUrl(order.id, order.deliveredAt) : null;
 
   return (
     <div className="container-x max-w-3xl py-12">
@@ -272,7 +276,20 @@ export default async function OrderPage({ params, searchParams }: Props) {
           {delivered ? (
             <>
               <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
-                {freePhoto && toolDef ? (
+                {finishLink && order.deliveredAt ? (
+                  <>
+                    <div>
+                      <h3 className="font-semibold">Finish this listing — {formatUsd(STAGING_FINISH_PACK.cents).replace(/\.00$/, "")}</h3>
+                      <p className="text-sm text-gray-600">
+                        Your free room counts as the first one: up to {STAGING_FINISH_PACK.units} more rooms of the same listing plus the MLS description for{" "}
+                        {formatUsd(STAGING_FINISH_PACK.cents).replace(/\.00$/, "")}, same two versions and disclosure pack. Until {finishEndsAt(order.deliveredAt).toISOString().slice(0, 10)}.
+                      </p>
+                    </div>
+                    <a href={finishLink} className="btn-primary">
+                      Finish this listing
+                    </a>
+                  </>
+                ) : freePhoto && toolDef ? (
                   <>
                     <div>
                       <h3 className="font-semibold">Stage the rest of the listing</h3>

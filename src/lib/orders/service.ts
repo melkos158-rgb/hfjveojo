@@ -12,6 +12,8 @@ import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
 import { linkify } from "@/lib/email/layout";
 import { formatUsd } from "@/lib/ai/pricing";
 import { descriptionVoucherUrl, isFreePhotoOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { finishUrl } from "@/lib/orders/finish";
+import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
   return appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
@@ -88,8 +90,10 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     ...(def
       ? [
           "",
-          isFreePhotoOrder(order)
-            ? `Stage the rest of the listing: ${def.pricing.pack ? `up to ${def.pricing.pack.units} rooms + ${def.pricing.packIncludes ?? "extras"} for ${formatUsd(def.pricing.pack.cents)}, or ` : ""}${formatUsd(def.pricing.priceCents)} a room — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`
+          isFreePhotoOrder(order) && def.freeFirstPhoto && def.pricing.pack
+            ? `Finish this listing: up to ${STAGING_FINISH_PACK.units} more rooms + ${def.pricing.packIncludes ?? "extras"} for ${formatUsd(STAGING_FINISH_PACK.cents)} (the offer runs 7 days) — ${finishUrl(order.id, order.deliveredAt ?? now) ?? `${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`}`
+            : isFreePhotoOrder(order)
+            ? `Stage the rest of the listing: ${formatUsd(def.pricing.priceCents)} a room — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`
             : `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`,
         ]
       : []),
