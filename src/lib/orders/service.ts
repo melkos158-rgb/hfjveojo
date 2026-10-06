@@ -11,7 +11,8 @@ import { outputsToDeliver } from "@/lib/orders/deliverables";
 import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
 import { linkify } from "@/lib/email/layout";
 import { formatUsd } from "@/lib/ai/pricing";
-import { descriptionVoucherUrl, isFreePhotoOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { descriptionVoucherUrl, isCreditOrder, isFreePhotoOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG, CREDITS_PER_PACK } from "@/lib/orders/credits";
 import { finishUrl } from "@/lib/orders/finish";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
@@ -77,8 +78,17 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
       : (def?.delivery.emailIntro ?? "Your order is ready.");
   // The Listing Pack (or the $7 add-on) includes the MLS description: a voucher link to write it.
   const voucher = !redo && orderHasVoucher(order) ? descriptionVoucherUrl(order.id) : null;
+  // Orders paid with Pro credits say what is left; the staging form shows the same balance once signed in.
+  const credit = isCreditOrder(order);
+  const balance = !redo && credit ? await creditBalance(order.customerEmail) : null;
+  const creditLine = balance
+    ? `Paid with Pro credits: ${order.quantity} room${order.quantity === 1 ? "" : "s"} used, ${balance.rooms} left${balance.validUntil && balance.rooms > 0 ? ` (valid until ${balance.validUntil.toISOString().slice(0, 10)})` : ""}.`
+    : null;
+  const app = env().NEXT_PUBLIC_APP_URL;
+  const stageWithCredits = `${app}/login?next=${encodeURIComponent(`/tools/${CREDIT_USE_TOOL_SLUG}#order`)}`;
   const lines = [
     intro,
+    ...(creditLine ? ["", creditLine] : []),
     ...(note ? ["", note] : []),
     "",
     `Order page: ${link}`,
@@ -86,15 +96,27 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     ...fileLinks,
     ...(voucher ? ["", `Your MLS listing description is included. Enter the listing facts here (about 2 minutes) and it's written for you: ${voucher}`] : []),
     "",
-    redo ? "Reply to this email if anything is still off." : "Reply to this email if anything is off — one revision round is included.",
+    redo
+      ? "Reply to this email if anything is still off."
+      : order.toolId === CREDIT_TOOL_SLUG
+        ? "Reply to this email with any question about your credits."
+        : "Reply to this email if anything is off — one revision round is included.",
     ...(def
       ? [
           "",
-          isFreePhotoOrder(order) && def.freeFirstPhoto && def.pricing.pack
+          order.toolId === CREDIT_TOOL_SLUG
+            ? `Stage your first photos (sign in with this email): ${stageWithCredits}`
+            : credit
+            ? `Next listing? Sign in and the staging form uses your credits: ${stageWithCredits}`
+            : isFreePhotoOrder(order) && def.freeFirstPhoto && def.pricing.pack
             ? `Finish this listing: up to ${STAGING_FINISH_PACK.units} more rooms + ${def.pricing.packIncludes ?? "extras"} for ${formatUsd(STAGING_FINISH_PACK.cents)} (the offer runs 7 days) — ${finishUrl(order.id, order.deliveredAt ?? now) ?? `${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`}`
             : isFreePhotoOrder(order)
             ? `Stage the rest of the listing: ${formatUsd(def.pricing.priceCents)} a room — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`
             : `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`,
+          // Paid staging orders: the prepaid option for people who stage every week (court ruling 2026-10-06, lever 3).
+          ...(!redo && !order.free && def.slug === CREDIT_USE_TOOL_SLUG
+            ? [`Stage every week? ${CREDITS_PER_PACK} rooms for ${formatUsd(getToolById(CREDIT_TOOL_SLUG)?.pricing.priceCents ?? 14900).replace(/\.00$/, "")} with Pro credits, no subscription: ${app}/tools/${CREDIT_TOOL_SLUG}`]
+            : []),
         ]
       : []),
   ];
@@ -115,6 +137,16 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
 export async function refundOrder(orderId: string, opts: { adminId: string; amountCents?: number; reason?: string }): Promise<void> {
   const order = await prisma.order.findUnique({ where: { id: orderId }, include: { payments: true } });
   if (!order) throw new AppError("Order not found", 404);
+  if (isCreditOrder(order)) {
+    // Paid with Pro credits: no money moved, so the refund puts the order's rooms back on the balance.
+    if (["REFUNDED", "CANCELED"].includes(order.status)) throw new AppError("This order's rooms are already back on the balance", 400, "nothing_to_refund");
+    await prisma.order.update({ where: { id: orderId }, data: { status: "REFUNDED" } });
+    await prisma.adminAction.create({
+      data: { adminId: opts.adminId, action: "return_credits", targetType: "order", targetId: orderId, details: { rooms: order.quantity, reason: opts.reason ?? null } },
+    });
+    await track("credits_returned", { orderId, props: { rooms: order.quantity } });
+    return;
+  }
   const payment = order.payments.find((p) => p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED");
   // Orders paid on a marketplace (Fiverr, Upwork…) are refunded there; here the refund is only recorded.
   const external = payment && !payment.stripePaymentIntentId ? ((payment.raw ?? {}) as { provider?: string }).provider : undefined;

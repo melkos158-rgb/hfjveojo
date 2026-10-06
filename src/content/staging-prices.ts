@@ -193,7 +193,7 @@ export const STAGING_PRICES: StagingPrice[] = [
     onePhotoNote: "2 versions of each photo, about 2 minutes",
     price: STAGING_PRICE_LINE,
     turnaround: "About 2 minutes",
-    notes: "Two versions of each photo; MLS description included from 4 rooms; one redo or a refund if the room's structure was changed; first photo free",
+    notes: "Two versions of each photo; MLS description included from 4 rooms; one redo or a refund if the room's structure was changed; first photo free; for photographers and teams, 25 prepaid rooms for $149 (Pro credits, valid 12 months)",
     listing: (n) => stagingListingCents(n) / 100,
     ours: true,
     sources: [{ label: "orvionis.com/tools/virtual-staging", href: "https://orvionis.com/tools/virtual-staging" }],

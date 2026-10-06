@@ -18,6 +18,7 @@ import { freePhotoAvailability } from "@/lib/orders/free-photo";
 import { checkVoucher, DESCRIPTION_TOOL_SLUG } from "@/lib/orders/voucher";
 import { checkFinish, FINISH_TOOL_SLUG } from "@/lib/orders/finish";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
+import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG } from "@/lib/orders/credits";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,9 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
   // "Finish this listing" after a free photo: the finish price, the free photo's style, no second free photo.
   const finishCheck = finishParam && def.slug === FINISH_TOOL_SLUG ? await checkFinish(finishParam) : null;
   const finish = finishCheck ? { token: finishParam as string, ok: finishCheck.ok } : undefined;
+  // Pro credits of the signed-in buyer: the staging form offers to use them instead of a checkout.
+  const creditsNow = session?.email && def.slug === CREDIT_USE_TOOL_SLUG ? await creditBalance(session.email) : null;
+  const credits = creditsNow && creditsNow.rooms > 0 ? { rooms: creditsNow.rooms, validUntil: creditsNow.validUntil?.toISOString().slice(0, 10) ?? null } : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -239,6 +243,7 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
         <div className="lg:col-span-2">
           <div className="lg:sticky lg:top-6">
             {item ? (
+              <>
               <IntakeForm
                 toolSlug={def.slug}
                 fields={def.intake.fields}
@@ -264,11 +269,21 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                       }
                     : undefined
                 }
-                freePhoto={def.freeFirstPhoto ? { available: freeOffer && !finishCheck?.ok, notice: freeNotice } : undefined}
+                freePhoto={def.freeFirstPhoto ? { available: freeOffer && !finishCheck?.ok && !credits, notice: freeNotice } : undefined}
                 voucher={voucher}
                 finish={finish}
+                credits={credits}
                 initialValues={finishCheck?.ok && finishCheck.style ? { style: finishCheck.style } : undefined}
               />
+              {def.slug === CREDIT_USE_TOOL_SLUG && !session ? (
+                <p className="mt-3 text-center text-xs text-gray-500">
+                  Have <a className="underline" href={`/tools/${CREDIT_TOOL_SLUG}`}>Pro credits</a>?{" "}
+                  <a className="font-semibold text-accent hover:underline" href={`/login?next=${encodeURIComponent(`/tools/${CREDIT_USE_TOOL_SLUG}#order`)}`}>
+                    Sign in to use them
+                  </a>
+                </p>
+              ) : null}
+              </>
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>
             )}

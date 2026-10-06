@@ -26,6 +26,9 @@ export default function TermsPage() {
       <p>
         Prices are shown before you pay and charged once, in the currency shown, through Stripe. An order is confirmed when Stripe reports the payment as successful; the confirmation email and your order page reflect that status. We may cancel and refund an order that we cannot fulfil.
       </p>
+      <p>
+        Pro credits are prepaid rooms of virtual staging. They belong to the email address that bought them, are used by signing in with that address, and are valid for 12 months from the purchase. They have no cash value; the Refund Policy says when unused credits are refunded.
+      </p>
       <h2>4. Your inputs</h2>
       <p>
         You confirm that you have the rights to the footage, images, text and other material you submit and that it does not infringe anyone&apos;s rights or applicable law. You keep ownership of your inputs and grant us the licence needed to produce and deliver your order. We do not use your inputs to train AI models.

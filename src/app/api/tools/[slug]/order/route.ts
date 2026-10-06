@@ -10,11 +10,12 @@ import { ATTRIBUTION_COOKIE, INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisit
 import { isAdmin } from "@/lib/auth/guards";
 import { AppError } from "@/lib/errors";
 
-const bodySchema = z.object({ email: z.string().min(3).max(200), intake: z.record(z.string(), z.unknown()), sandbox: z.boolean().optional(), voucher: z.string().max(2000).optional(), finish: z.string().max(2000).optional() });
+const bodySchema = z.object({ email: z.string().min(3).max(200), intake: z.record(z.string(), z.unknown()), sandbox: z.boolean().optional(), voucher: z.string().max(2000).optional(), finish: z.string().max(2000).optional(), useCredits: z.boolean().optional() });
 
 /**
  * Intake → PENDING order → Stripe Checkout URL. With a description voucher (the MLS description included in a staging
- * Listing Pack) the order is created paid for $0 and the "checkout" URL is its order page.
+ * Listing Pack) or with Pro credits (signed in as the buyer) the order is created paid for $0 and the "checkout" URL is
+ * its order page.
  */
 export async function POST(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   try {
@@ -38,6 +39,8 @@ export async function POST(req: Request, ctx: { params: Promise<{ slug: string }
       sessionId: store.get(SESSION_ID_COOKIE)?.value ?? null,
       internal: isInternalVisitor(store.get(INTERNAL_COOKIE)?.value, session?.role),
       finish: body.finish ?? null,
+      useCredits: body.useCredits === true,
+      sessionEmail: session?.email ?? null,
       ...(body.sandbox ? { mode: "test" as const, isTest: true } : {}),
     });
     return Response.json(result);

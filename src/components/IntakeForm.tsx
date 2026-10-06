@@ -63,6 +63,11 @@ type Props = {
   finish?: { token: string; ok: boolean };
   /** Starting values for fields (e.g. the free photo's style when finishing that listing). */
   initialValues?: Record<string, string>;
+  /**
+   * Pro credits of the signed-in buyer (src/lib/orders/credits.ts): a ticked-by-default box pays the order from the
+   * balance, no checkout. The server checks the balance and the signed-in email again.
+   */
+  credits?: { rooms: number; validUntil: string | null };
 };
 
 const VOUCHER_PROBLEMS: Record<string, string> = {
@@ -100,7 +105,7 @@ function initialValue(f: IntakeField): string {
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto, voucher, finish, initialValues }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto, voucher, finish, initialValues, credits }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(fields.map((f) => [f.key, initialValues?.[f.key] && f.options?.some((o) => o.value === initialValues[f.key]) ? initialValues[f.key] : initialValue(f)])),
   );
@@ -125,6 +130,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   // Which button submitted the form: the free first photo or the paid order.
   const intent = useRef<"free" | "paid">("paid");
   const [freeSent, setFreeSent] = useState<{ email: string; devLink?: string } | null>(null);
+  const [creditsChecked, setCreditsChecked] = useState(true);
 
   const uploadedRooms = rooms.filter((r) => r.fileId);
   const flaggedPhotos = rooms.filter((r) => r.issues?.length).length;
@@ -352,7 +358,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const res = await fetch(`/api/tools/${toolSlug}/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}), ...(voucherOk ? { voucher: voucher?.token } : {}), ...(finishOk ? { finish: finish?.token } : {}) }),
+        body: JSON.stringify({ email: creditsOn ? (initialEmail ?? email) : email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}), ...(voucherOk ? { voucher: voucher?.token } : {}), ...(finishOk && !creditsOn ? { finish: finish?.token } : {}), ...(creditsOn ? { useCredits: true } : {}) }),
       });
       const data = (await res.json()) as { checkoutUrl?: string; message?: string };
       if (!res.ok || !data.checkoutUrl) throw new Error(data.message ?? "Could not start checkout");
@@ -360,7 +366,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const go = () => {
         window.location.href = url;
       };
-      if (gaItem && !(adminSandbox && sandbox) && !voucherOk) {
+      if (gaItem && !(adminSandbox && sandbox) && !voucherOk && !creditsOn) {
         const item = { ...toGaItem({ slug: toolSlug, name: gaItem.name }, gaItem.priceCents), quantity };
         gaEventThen("begin_checkout", { currency: gaItem.currency.toUpperCase(), value: (total ?? gaItem.priceCents * quantity) / 100, items: [item] }, go);
       } else go();
@@ -387,10 +393,15 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       ? Array.from({ length: Math.max(0, unitsMax - quantity) }, (_, i) => quantity + i + 1).find((m) => packApplies(m, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack)) ?? null
       : null;
   const voucherOk = Boolean(voucher?.ok);
-  const finishOk = Boolean(finish?.ok);
+  // Pro credits pay for the rooms: no price, no add-on, no checkout.
+  const creditsOn = Boolean(credits && credits.rooms > 0 && creditsChecked && !voucherOk && !onSubmitIntake);
+  const creditsShort = creditsOn && credits ? Math.max(0, quantity - credits.rooms) : 0;
+  const finishOk = Boolean(finish?.ok) && !creditsOn;
   const buttonLabel = voucherOk
     ? "Write my description — included"
-    : perUnit && quantity > 1 && perUnit.ctaMany
+    : creditsOn && perUnit
+      ? `Stage ${quantity} ${quantity === 1 ? perUnit.one : perUnit.many} with Pro credits`
+      : perUnit && quantity > 1 && perUnit.ctaMany
       ? perUnit.ctaMany.replace("{n}", String(quantity)).replace("{total}", money(total ?? 0))
       : perUnit && addonOn && total !== null
         ? ctaLabel.replace(/\$[\d.,]+/, money(total))
@@ -422,11 +433,13 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
     <form onSubmit={submit} onFocus={onFocus} className="card space-y-5" id="order">
       <div>
         <h2 className="text-xl font-bold">
-          {heading ?? (voucherOk ? "Your MLS description — included" : finishOk ? "Finish this listing" : freeHeading ? "Stage your first photo free" : "Start your order")}
+          {heading ?? (voucherOk ? "Your MLS description — included" : creditsOn ? "Stage with your Pro credits" : finishOk ? "Finish this listing" : freeHeading ? "Stage your first photo free" : "Start your order")}
         </h2>
         <p className="mt-1 text-sm text-gray-600">
           {voucherOk
             ? `It comes with your staging order, so there's nothing to pay: enter the listing facts below. ${deliveryPromise}`
+            : creditsOn && credits
+            ? `${credits.rooms} room${credits.rooms === 1 ? "" : "s"} left on your Pro credits${credits.validUntil ? ` (valid until ${credits.validUntil})` : ""}. Each photo uses one room, no checkout. ${deliveryPromise}`
             : finishOk && perUnit?.pack
               ? `Your free room counts as the first one: up to ${perUnit.pack.units} more rooms of the same listing${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} for ${money(perUnit.pack.cents)}, then ${money(perUnit.pack.extraUnitCents)} a room. The offer runs 7 days after your free photo. ${deliveryPromise}`
               : freeHeading
@@ -434,6 +447,15 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
               : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
         </p>
       </div>
+      {credits && credits.rooms > 0 && !voucherOk && !onSubmitIntake ? (
+        <label className="flex items-start gap-2 rounded-lg border border-line bg-mist px-3 py-2 text-sm" data-credits>
+          <input type="checkbox" className="mt-1" checked={creditsChecked} onChange={(e) => setCreditsChecked(e.target.checked)} />
+          <span>
+            Use my Pro credits <strong className="text-fg">({credits.rooms} room{credits.rooms === 1 ? "" : "s"} left)</strong>
+            <span className="block text-xs text-gray-500">{creditsChecked ? "No checkout: each photo uses one room of your balance." : "This order goes to the secure checkout at the regular price."}</span>
+          </span>
+        </label>
+      ) : null}
       {finish && !finish.ok ? (
         <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">The finish-this-listing offer has ended (it runs 7 days after the free photo), so the regular prices below apply.</p>
       ) : null}
@@ -540,6 +562,19 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
                 <p className="text-xs text-gray-500">That's the maximum of {f.max ?? 6} photos for one order.</p>
               )}
               {perUnit && unitsTotal !== null && (uploadedRooms.length > 1 || (uploadedRooms.length === 1 && !freeMode)) ? (
+                creditsOn && credits ? (
+                  <div className="space-y-2" data-price-summary>
+                    <p className="text-sm font-semibold">
+                      {uploadedRooms.length} {uploadedRooms.length === 1 ? perUnit.one : perUnit.many} with Pro credits
+                      {creditsShort === 0 ? <span className="font-normal text-gray-600"> · {credits.rooms - uploadedRooms.length} left after this order</span> : null}
+                    </p>
+                    {creditsShort > 0 ? (
+                      <p className="text-sm text-red-700">
+                        Your credits cover {credits.rooms} {credits.rooms === 1 ? perUnit.one : perUnit.many}: remove {creditsShort} or untick “Use my Pro credits” to pay for this order.
+                      </p>
+                    ) : null}
+                  </div>
+                ) : (
                 <div className="space-y-2" data-price-summary>
                   <p className="text-sm font-semibold">
                     {isPack
@@ -573,6 +608,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
                     </label>
                   ) : null}
                 </div>
+                )
               ) : null}
             </div>
           ) : f.type === "image" ? (
@@ -658,9 +694,9 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       {onSubmitIntake ? null : (
         <div>
           <label className="field-label" htmlFor="f-email">
-            {freeMode ? "Your email (the link to your free photo goes here)" : "Your email (for the order page and delivery)"} <span className="text-red-500">*</span>
+            {freeMode ? "Your email (the link to your free photo goes here)" : creditsOn ? "Your email (signed in: the credits belong to it)" : "Your email (for the order page and delivery)"} <span className="text-red-500">*</span>
           </label>
-          <input id="f-email" type="email" required className="field-input" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input id="f-email" type="email" required className="field-input" placeholder="you@example.com" value={creditsOn ? (initialEmail ?? email) : email} readOnly={creditsOn} onChange={(e) => setEmail(e.target.value)} />
         </div>
       )}
 
@@ -693,8 +729,8 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
         </div>
       ) : (
         <>
-          <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null} onClick={() => (intent.current = "paid")}>
-            {submitting ? (onSubmitIntake ? "Creating the order…" : "Redirecting to secure checkout…") : (submitLabel ?? buttonLabel)}
+          <button type="submit" className="btn-primary w-full" disabled={submitting || uploading !== null || creditsShort > 0} onClick={() => (intent.current = "paid")}>
+            {submitting ? (onSubmitIntake || creditsOn ? "Creating the order…" : "Redirecting to secure checkout…") : (submitLabel ?? buttonLabel)}
           </button>
           {offerFree && roomsField && uploadedRooms.length > 1 ? (
             <p className="text-center text-xs text-gray-500">First time here? Keep just one photo in the form and it&rsquo;s free.</p>

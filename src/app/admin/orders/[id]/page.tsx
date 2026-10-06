@@ -9,6 +9,7 @@ import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, redoOrd
 import { deliveredOutputs } from "@/lib/orders/deliverables";
 import { photoInputsOf } from "@/lib/tools/photos";
 import type { ToolDefinition } from "@/lib/tools/types";
+import { isCreditOrder } from "@/lib/orders/voucher";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,8 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
   const aiCost = order.aiRequests.reduce((s, r) => s + r.costMicros, 0);
   const canDeliver = ["REVIEW", "PROCESSING", "FAILED", "PAID", "RETRYING"].includes(order.status);
   const canRefund = order.payments.some((p) => p.status === "SUCCEEDED" || p.status === "PARTIALLY_REFUNDED");
+  // Paid with Pro credits: "refund" = the order's rooms go back on the customer's balance.
+  const canReturnCredits = isCreditOrder(order) && !["REFUNDED", "CANCELED"].includes(order.status);
   const intake = order.intake as Record<string, unknown>;
   const photos = photoInputsOf(def as ToolDefinition<unknown> | undefined, order.intake);
   const photoIds = new Set(photos.map((p) => p.fileId));
@@ -260,6 +263,18 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               Refund now
             </button>
             <p className="text-xs text-gray-500">Money moves immediately. Refunds already issued: {order.refunds.filter((r) => r.status === "SUCCEEDED").map((r) => formatUsd(r.amountCents)).join(", ") || "none"}.</p>
+          </form>
+        ) : null}
+
+        {canReturnCredits ? (
+          <form action={refundOrderAction} className="card space-y-2">
+            <input type="hidden" name="orderId" value={order.id} />
+            <h3 className="font-bold">Return Pro credits</h3>
+            <input name="reason" className="field-input" placeholder="Reason (internal)" />
+            <button className="btn-danger w-full" type="submit">
+              Put {order.quantity} room{order.quantity === 1 ? "" : "s"} back on the balance
+            </button>
+            <p className="text-xs text-gray-500">No money moves: this order was paid with Pro credits. The order is marked refunded.</p>
           </form>
         ) : null}
 

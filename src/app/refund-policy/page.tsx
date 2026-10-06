@@ -22,7 +22,12 @@ export default function RefundPolicyPage() {
         <li>The deliverable does not match the description on the tool page and we cannot fix it in one revision round.</li>
         <li>We cancel your order for any reason.</li>
         <li>First order of a concierge tool (for example Listing Clips): if you are not satisfied after one revision, tell us within 7 days of delivery.</li>
+        <li>Pro credits you have not used: if no room of a credit pack has been used, tell us within 14 days of buying it.</li>
       </ul>
+      <h2>Orders paid with Pro credits</h2>
+      <p>
+        A virtual staging order paid with Pro credits follows the same rules as a paid order, with one difference: where a paid order would be refunded, the rooms of that order go back on your credit balance instead. Credits are valid for 12 months from the purchase; rooms not used by then expire, and used rooms are not refunded.
+      </p>
       <h2>Revision instead of refund</h2>
       <ul>
         <li>The deliverable matches the description but you would like changes — one revision round is included with every order.</li>

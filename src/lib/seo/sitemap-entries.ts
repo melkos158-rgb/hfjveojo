@@ -28,9 +28,15 @@ export const PAGE_UPDATED: Record<string, string> = {
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
   // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling)
   "/tools/virtual-staging": "2026-10-06T10:30:00Z",
-  "/pricing": "2026-10-06T10:30:00Z",
+  "/pricing": "2026-10-06T11:20:00Z",
   // 6 Oct 10:50 UTC: the one checkout reminder email is described
   "/privacy": "2026-10-06T10:50:00Z",
+  // 6 Oct 11:20 UTC: Pro credits (25 rooms for $149; court ruling, lever 3): the new page, /photographers rebuilt for
+  // real-estate photographers, the price list, and the credit rules in the terms and the refund policy
+  "/tools/pro-credits": "2026-10-06T11:20:00Z",
+  "/photographers": "2026-10-06T11:20:00Z",
+  "/terms": "2026-10-06T11:20:00Z",
+  "/refund-policy": "2026-10-06T11:20:00Z",
   // 2 Oct: the home page, /real-estate and /tools lead with the free first photo
   "": "2026-10-02",
   "/real-estate": "2026-10-02",

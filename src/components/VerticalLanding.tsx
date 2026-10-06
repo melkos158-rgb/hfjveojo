@@ -11,13 +11,17 @@ type Props = {
   sub: string;
   pains: string[];
   proofNote?: string;
-  /** Optional hero visual from /public (WebP, 1200×671). Rendered next to the headline on large screens. */
-  hero?: { src: string; alt: string };
+  /** Optional hero visual from /public (WebP, 1200×671 unless width/height say otherwise). Rendered next to the headline on large screens. */
+  hero?: { src: string; alt: string; width?: number; height?: number };
+  /** The tool the hero button orders and the list starts with (default: the catalog order), and that button's label. */
+  primary?: { slug: string; cta: string };
 };
 
 /** Shared layout for /real-estate, /photographers, ... — one brand, many verticals, zero custom code per vertical. */
-export async function VerticalLanding({ category, eyebrow, headline, sub, pains, proofNote, hero }: Props) {
-  const catalog = await liveCatalog(category);
+export async function VerticalLanding({ category, eyebrow, headline, sub, pains, proofNote, hero, primary }: Props) {
+  const all = await liveCatalog(category);
+  const lead = primary ? all.find((c) => c.def.slug === primary.slug) : undefined;
+  const catalog = lead ? [lead, ...all.filter((c) => c !== lead)] : all;
   const first = catalog[0];
   const info = categoryInfo(category);
   return (
@@ -31,7 +35,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
             <div className="mt-8 flex flex-wrap gap-3">
               {first ? (
                 <Link href={`/tools/${first.def.slug}`} className="btn-primary">
-                  Order {first.def.name} →
+                  {lead && primary ? primary.cta : `Order ${first.def.name} →`}
                 </Link>
               ) : null}
               <a href="#tools" className="btn-secondary">
@@ -41,7 +45,7 @@ export async function VerticalLanding({ category, eyebrow, headline, sub, pains,
           </div>
           {hero ? (
             <div className="glow relative overflow-hidden rounded-3xl border border-line bg-card">
-              <Image src={hero.src} alt={hero.alt} width={1200} height={671} priority unoptimized className="h-auto w-full" />
+              <Image src={hero.src} alt={hero.alt} width={hero.width ?? 1200} height={hero.height ?? 671} priority unoptimized className="h-auto w-full" />
             </div>
           ) : null}
         </div>

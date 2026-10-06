@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Pricing: $9 to $49 per result, no subscription",
   description:
-    "Every price on one page: virtual staging $15 per photo, $49 for a whole listing (up to 5 rooms + the MLS description), $99 for 10, first photo free; listing description $9, listing clips $49, photographer pricing guide $29. Paid once through Stripe, with delivery times and the refund policy.",
+    "Every price on one page: virtual staging $15 per photo, $49 for a whole listing (up to 5 rooms + the MLS description), $99 for 10, first photo free, or 25 rooms for $149 with Pro credits; listing description $9, listing clips $49, photographer pricing guide $29. Paid once through Stripe.",
   alternates: { canonical: "/pricing" },
 };
 
@@ -19,7 +19,9 @@ export default async function PricingPage() {
       <h1 className="text-3xl font-bold">Pricing</h1>
       <p className="mt-2 max-w-2xl text-gray-600">
         Every tool has a fixed price and a delivery promise. Virtual staging is $15 a photo, or $49 for a whole listing (up to 5
-        rooms plus the MLS description, then $10 a room), and your first photo is free (one per person). You pay when you order; you get a refund if we can&apos;t deliver what
+        rooms plus the MLS description, then $10 a room), and your first photo is free (one per person). Photographers and teams
+        who stage every week can prepay <Link className="underline" href="/tools/pro-credits">25 rooms for $149</Link> (Pro
+        credits, valid 12 months). You pay when you order; you get a refund if we can&apos;t deliver what
         the page promised (see the <Link className="underline" href="/refund-policy">refund policy</Link>). Monthly plans will
         be offered once enough customers ask for them — not before.
       </p>

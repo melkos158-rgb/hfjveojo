@@ -9,6 +9,8 @@ import { isLabeledOutput } from "@/lib/tools/disclosure";
 import { signedFileUrl } from "@/lib/storage";
 import { site } from "@/config/site";
 import { getToolById } from "@/lib/tools/registry";
+import { isCreditOrder, isVoucherOrder } from "@/lib/orders/voucher";
+import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG } from "@/lib/orders/credits";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "My orders", robots: { index: false } };
@@ -24,6 +26,9 @@ const tones: Record<string, string> = {
 const IN_PROGRESS = ["PAID", "PROCESSING", "RETRYING", "REVIEW", "FAILED"];
 const day = (d: Date | null | undefined) => (d ? d.toISOString().slice(0, 10) : "—");
 const time = (d: Date | null | undefined) => (d ? `${d.toISOString().slice(0, 16).replace("T", " ")} UTC` : "—");
+/** What an order cost: $0 orders say why (Pro credits, an included description, the free first photo). */
+const amount = (o: { amountCents: number; quantity: number; free: boolean; freeKey: string | null }) =>
+  isCreditOrder(o) ? `${o.quantity} Pro credit${o.quantity === 1 ? "" : "s"}` : isVoucherOrder(o) ? "included" : o.free ? "free" : formatUsd(o.amountCents);
 /** "3 photos" for per-unit tools. */
 const units = (o: { quantity: number; toolId: string }) => (o.quantity > 1 ? ` · ${o.quantity} ${getToolById(o.toolId)?.pricing.unit?.many ?? "items"}` : "");
 
@@ -45,6 +50,8 @@ export default async function DashboardPage() {
     take: 100,
   });
 
+  const credits = await creditBalance(user.email);
+  const boughtCredits = credits.rooms > 0 || orders.some((o) => o.toolId === CREDIT_TOOL_SLUG && o.paidAt);
   const link = (o: { id: string; accessToken: string }) => `/orders/${o.id}?t=${encodeURIComponent(o.accessToken)}`;
   const active = orders.filter((o) => IN_PROGRESS.includes(o.status));
   const delivered = orders.filter((o) => o.status === "COMPLETED");
@@ -87,6 +94,28 @@ export default async function DashboardPage() {
           <div className="mt-1 text-xl font-bold">{formatUsd(spent)}</div>
         </div>
       </div>
+
+      {boughtCredits ? (
+        <div className="card mt-4 flex flex-wrap items-center justify-between gap-3" data-credits>
+          <div>
+            <div className="font-semibold">
+              Pro credits: {credits.rooms} room{credits.rooms === 1 ? "" : "s"} left
+            </div>
+            <div className="text-xs text-gray-500">
+              {credits.rooms > 0 && credits.validUntil ? `Valid until ${day(credits.validUntil)} · ` : ""}used on Virtual Staging orders, one room per photo
+            </div>
+          </div>
+          {credits.rooms > 0 ? (
+            <Link href={`/tools/${CREDIT_USE_TOOL_SLUG}#order`} className="btn-primary px-4 py-2">
+              Stage photos
+            </Link>
+          ) : (
+            <Link href={`/tools/${CREDIT_TOOL_SLUG}`} className="btn-secondary px-4 py-2">
+              Get 25 more rooms
+            </Link>
+          )}
+        </div>
+      ) : null}
 
       {orders.length === 0 ? (
         <div className="card mt-8 text-sm text-gray-600">
@@ -138,7 +167,7 @@ export default async function DashboardPage() {
                         #{o.number} · {o.tool.name}
                       </div>
                       <div className="mt-1 text-xs text-gray-500">
-                        Delivered {day(lastDeliveredAt(o.outputs) ?? o.deliveredAt)} · {formatUsd(o.amountCents)}
+                        Delivered {day(lastDeliveredAt(o.outputs) ?? o.deliveredAt)} · {amount(o)}
                         {units(o)} · files kept 90 days
                       </div>
                     </div>
@@ -175,7 +204,7 @@ export default async function DashboardPage() {
             {refunded.map((o) => (
               <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 border-b border-line py-2">
                 <span>
-                  #{o.number} · {o.tool.name} · {formatUsd(o.amountCents)}
+                  #{o.number} · {o.tool.name} · {amount(o)}
                 </span>
                 <Link href={link(o)} className="text-accent hover:underline">
                   Details
@@ -194,7 +223,7 @@ export default async function DashboardPage() {
             {unpaid.map((o) => (
               <li key={o.id} className="flex flex-wrap items-center justify-between gap-2 border-b border-line py-2">
                 <span>
-                  {day(o.createdAt)} · {o.tool.name} · {formatUsd(o.amountCents)}
+                  {day(o.createdAt)} · {o.tool.name} · {amount(o)}
                 </span>
                 <Link href={`/tools/${o.tool.slug}#order`} className="text-accent hover:underline">
                   Start again

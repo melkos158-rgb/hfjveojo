@@ -17,7 +17,7 @@ export const site = {
     vatNote: "VERIFY VAT / OSS obligations for digital services sold to EU consumers",
     /** Safeguards for providers outside the EEA (DPAs / Standard Contractual Clauses / Data Privacy Framework): the owner confirms per provider. */
     transfersNote: "VERIFY the safeguard used for each provider outside the EEA (data processing agreement with Standard Contractual Clauses or EU–US Data Privacy Framework)",
-    lastUpdated: "2026-09-26",
+    lastUpdated: "2026-10-06",
     /** The privacy policy changes more often (free photo 1 Oct, checkout reminder 6 Oct). */
     privacyUpdated: "2026-10-06",
   },
@@ -28,6 +28,6 @@ export const site = {
   },
   verticals: [
     { slug: "real-estate", name: "Real estate", blurb: "Listing clips, captions and marketing copy for agents." },
-    { slug: "photographers", name: "Photographers", blurb: "Pricing guides and client documents in your brand." },
+    { slug: "photographers", name: "Photographers", blurb: "Virtual staging credits for your shoots, and pricing guides in your brand." },
   ],
 } as const;

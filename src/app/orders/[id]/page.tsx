@@ -16,7 +16,10 @@ import { disclosureLine, ensurePublicToken, isLabeledOutput, originalPhotoUrl } 
 import { photoInputsOf } from "@/lib/tools/photos";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { prisma } from "@/lib/db";
-import { VOUCHER_KEY_PREFIX, descriptionVoucherUrl, isFreePhotoOrder, isVoucherOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { VOUCHER_KEY_PREFIX, descriptionVoucherUrl, isCreditOrder, isFreePhotoOrder, isVoucherOrder, orderHasVoucher } from "@/lib/orders/voucher";
+import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG } from "@/lib/orders/credits";
+import { getSession } from "@/lib/auth/session";
+import { normalizeEmail } from "@/lib/auth/magic";
 import { finishEndsAt, finishUrl } from "@/lib/orders/finish";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
@@ -70,6 +73,11 @@ export default async function OrderPage({ params, searchParams }: Props) {
   const freePhoto = isFreePhotoOrder(order);
   // "Finish this listing" for 7 days after a delivered free photo.
   const finishLink = freePhoto && delivered && toolDef?.freeFirstPhoto ? finishUrl(order.id, order.deliveredAt) : null;
+  // A paid Pro credits purchase: the balance and how to use it (sign in with the buying email).
+  const creditPack = order.toolId === CREDIT_TOOL_SLUG && !order.free && order.paidAt && !["REFUNDED", "CANCELED"].includes(order.status) ? await creditBalance(order.customerEmail) : null;
+  const session = creditPack ? await getSession() : null;
+  const signedInAsBuyer = Boolean(session?.email && normalizeEmail(session.email) === normalizeEmail(order.customerEmail));
+  const stageHref = `/tools/${CREDIT_USE_TOOL_SLUG}#order`;
 
   return (
     <div className="container-x max-w-3xl py-12">
@@ -99,7 +107,15 @@ export default async function OrderPage({ params, searchParams }: Props) {
         </div>
         <div>
           <div className="text-gray-500">Amount</div>
-          <div className="font-medium">{isVoucherOrder(order) ? "Included with your staging order" : order.free ? "Free — your first photo" : formatUsd(order.amountCents)}</div>
+          <div className="font-medium">
+            {isVoucherOrder(order)
+              ? "Included with your staging order"
+              : isCreditOrder(order)
+                ? `Paid with Pro credits (${order.quantity} room${order.quantity === 1 ? "" : "s"})`
+                : order.free
+                  ? "Free — your first photo"
+                  : formatUsd(order.amountCents)}
+          </div>
         </div>
         <div>
           <div className="text-gray-500">{delivered ? "Delivered" : "Expected by"}</div>
@@ -126,6 +142,25 @@ export default async function OrderPage({ params, searchParams }: Props) {
           {order.quantity > 1 && toolDef?.pricing.unit ? `Working on your ${order.quantity} ${toolDef.pricing.unit.many}` : "Working on your order"}
           {toolDef ? ` — ${toolDef.io.processingTime.charAt(0).toLowerCase()}${toolDef.io.processingTime.slice(1)}` : ""}. This page updates by itself, and we email you when it&rsquo;s ready.
         </p>
+      ) : null}
+
+      {creditPack ? (
+        <div className="card mt-6 flex flex-wrap items-center justify-between gap-3" data-credits>
+          <div>
+            <h3 className="font-semibold">
+              Your Pro credits: {creditPack.rooms} room{creditPack.rooms === 1 ? "" : "s"} left
+            </h3>
+            <p className="text-sm text-gray-600">
+              {creditPack.validUntil ? `Valid until ${creditPack.validUntil.toISOString().slice(0, 10)}. ` : ""}
+              {signedInAsBuyer ? "Open Virtual Staging and keep “Use my Pro credits” ticked." : `Sign in with ${order.customerEmail}, open Virtual Staging and keep “Use my Pro credits” ticked.`}
+            </p>
+          </div>
+          {creditPack.rooms > 0 ? (
+            <a href={signedInAsBuyer ? stageHref : `/login?next=${encodeURIComponent(stageHref)}`} className="btn-primary">
+              {signedInAsBuyer ? "Stage photos" : "Sign in and stage photos"}
+            </a>
+          ) : null}
+        </div>
       ) : null}
 
       {voucherOpen ? (

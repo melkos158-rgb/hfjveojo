@@ -49,7 +49,7 @@ export async function GET(): Promise<Response> {
     "## Optional",
     "",
     `- [Real estate agents](${url("/real-estate")}): the real-estate tools on one page.`,
-    `- [Photographers](${url("/photographers")}): the pricing guide tool for photographers.`,
+    `- [Photographers](${url("/photographers")}): Pro credits for real-estate photographers and teams (25 rooms of virtual staging for $149) and the pricing guide tool.`,
     `- [Contact](${url("/contact")}): questions, and requests for results we don't offer yet (${site.supportEmail}).`,
     "",
   ];

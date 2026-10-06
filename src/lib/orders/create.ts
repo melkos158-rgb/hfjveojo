@@ -11,6 +11,7 @@ import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
 import { packApplies, volumeTotalCents } from "@/lib/tools/volume";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 import { checkFinish, FINISH_TOOL_SLUG } from "@/lib/orders/finish";
+import { CREDIT_KEY_PREFIX, CREDIT_USE_TOOL_SLUG, creditBalance } from "@/lib/orders/credits";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
@@ -60,6 +61,9 @@ export type CreateOrderInput = {
   internal?: boolean;
   /** "Finish this listing" link of a delivered free photo (src/lib/orders/finish.ts): the finish price applies. */
   finish?: string | null;
+  /** Pay with Pro credits (src/lib/orders/credits.ts): the signed-in user's email must be the order email. */
+  useCredits?: boolean;
+  sessionEmail?: string | null;
 };
 
 /**
@@ -122,6 +126,9 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       if (!ok) throw new AppError("The uploaded photo could not be found — please upload it again.", 400, "upload_missing");
     }
   }
+
+  // Pro credits: a staging order paid from the signed-in buyer's balance, no checkout.
+  if (input.useCredits) return redeemWithCredits({ input, def, product, email, intake, quantity, fileIds });
 
   // Experiment attribution (first-touch stored with the order)
   const experiment = input.attribution?.exp
@@ -332,4 +339,75 @@ export async function resumeCheckout(orderId: string, token: string | null | und
   });
   await track("checkout_resumed", { orderId: order.id, props: { tool: def.id, amountCents: order.amountCents } });
   return { url: session.url as string, kind: "checkout" };
+}
+
+/**
+ * A staging order paid with Pro credits: created paid for $0 (`free`, freeKey "credit:…") and queued at once. The
+ * balance check and the order are one transaction under a per-email advisory lock, so two orders sent at the same time
+ * cannot spend the same rooms.
+ */
+async function redeemWithCredits(a: {
+  input: CreateOrderInput;
+  def: NonNullable<ReturnType<typeof getToolBySlug>>;
+  product: { id: string; currency: string };
+  email: string;
+  intake: Record<string, unknown>;
+  quantity: number;
+  fileIds: string[];
+}): Promise<{ orderId: string; checkoutUrl: string }> {
+  const { input, def, product, email, intake, quantity, fileIds } = a;
+  if (def.slug !== CREDIT_USE_TOOL_SLUG) throw new AppError("Pro credits are for virtual staging orders.", 400, "credits_tool");
+  if (!input.sessionEmail || normalizeEmail(input.sessionEmail) !== email) {
+    throw new AppError("Sign in with the email that bought the credits to use them.", 403, "credits_sign_in");
+  }
+  // Credits pay for rooms only: no add-on, no voucher, no finish-this-listing price on these orders.
+  if (def.pricing.addon) intake[def.pricing.addon.key] = false;
+  delete intake.extraIncluded;
+  delete intake.finishOf;
+  const now = new Date();
+  const order = await prisma.$transaction(async (tx) => {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${`credits:${email}`}))`;
+    const balance = await creditBalance(email, now, tx);
+    if (balance.rooms < quantity) {
+      throw new AppError(
+        balance.rooms === 0
+          ? "There are no Pro credits left on this account. Untick “Use my Pro credits” to pay for this order."
+          : `Your Pro credits cover ${balance.rooms} room${balance.rooms === 1 ? "" : "s"}: remove some photos or untick “Use my Pro credits” to pay.`,
+        409,
+        "credits_short",
+      );
+    }
+    return tx.order.create({
+      data: {
+        isTest: Boolean(input.isTest),
+        publicToken: def.disclosurePack ? randomToken(12) : undefined,
+        userId: input.userId ?? undefined,
+        customerEmail: email,
+        toolId: def.id,
+        toolVersion: def.version,
+        productId: product.id,
+        status: "PAID",
+        paidAt: now,
+        free: true,
+        freeKey: `${CREDIT_KEY_PREFIX}${randomToken(12)}`,
+        intake: { ...intake, paidWithCredits: true } as object,
+        amountCents: 0,
+        quantity,
+        currency: product.currency,
+        accessToken: randomToken(24),
+        attribution: (input.attribution as object) ?? undefined,
+        dueAt: new Date(now.getTime() + def.sla.deliveryHours * 3600 * 1000),
+      },
+    });
+  });
+  if (fileIds.length > 0) {
+    await prisma.file.updateMany({
+      where: { id: { in: fileIds } },
+      data: { orderId: order.id, expiresAt: new Date(Date.now() + env().FILE_RETENTION_DAYS_OUTPUT * 24 * 3600 * 1000) },
+    });
+  }
+  await track("credits_redeemed", { orderId: order.id, userId: input.userId ?? undefined, props: { tool: def.id, rooms: quantity } });
+  const { enqueue } = await import("@/lib/jobs/queue");
+  await enqueue("fulfill_order", { orderId: order.id }, { orderId: order.id });
+  return { orderId: order.id, checkoutUrl: appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`) };
 }

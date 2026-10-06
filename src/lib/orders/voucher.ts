@@ -7,6 +7,7 @@ import { getToolBySlug } from "@/lib/tools/registry";
 import { randomToken, signPayload, verifyPayload } from "@/lib/security/tokens";
 import { normalizeEmail, upsertUserByEmail } from "@/lib/auth/magic";
 import { track } from "@/lib/analytics/events";
+import { CREDIT_KEY_PREFIX } from "@/lib/orders/credit-rules";
 
 /**
  * The MLS description that comes with a virtual staging order: included in the Listing Pack (4+ rooms) and sold as a
@@ -41,10 +42,18 @@ export function isVoucherOrder(order: { free: boolean; freeKey: string | null })
   return order.free && (order.freeKey ?? "").startsWith(VOUCHER_KEY_PREFIX);
 }
 
-/** A claimed or pending free first photo (the free orders that are not voucher orders). */
-export function isFreePhotoOrder(order: { free: boolean; freeKey: string | null }): boolean {
-  return order.free && !isVoucherOrder(order);
+/** A staging order paid with Pro credits (src/lib/orders/credits.ts): $0 here, the money came with the credits. */
+export function isCreditOrder(order: { free: boolean; freeKey: string | null }): boolean {
+  return order.free && (order.freeKey ?? "").startsWith(CREDIT_KEY_PREFIX);
 }
+
+/** A claimed or pending free first photo (the free orders that are neither voucher nor credit orders). */
+export function isFreePhotoOrder(order: { free: boolean; freeKey: string | null }): boolean {
+  return order.free && !isVoucherOrder(order) && !isCreditOrder(order);
+}
+
+/** The $0 orders that are not free first photos, for queries: `NOT: NOT_FREE_PHOTO_KEYS` keeps only free photos. */
+export const NOT_FREE_PHOTO_KEYS = [{ freeKey: { startsWith: VOUCHER_KEY_PREFIX } }, { freeKey: { startsWith: CREDIT_KEY_PREFIX } }];
 
 export function voucherToken(orderId: string): string {
   return signPayload({ o: orderId, k: "desc" }, VOUCHER_TTL_SECONDS);

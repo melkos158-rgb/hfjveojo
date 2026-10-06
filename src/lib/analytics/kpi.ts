@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { isOwnHost, publicHost, sourceOf } from "@/lib/analytics/attribution";
 import { microsToCents } from "@/lib/ai/pricing";
+import { NOT_FREE_PHOTO_KEYS } from "@/lib/orders/voucher";
 
 export type Kpis = {
   from: Date;
@@ -97,8 +98,8 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
-      // Free first photos only: a description included with a Listing Pack is also a $0 order (freeKey "desc:…").
-      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: { freeKey: { startsWith: "desc:" } } }, select: { customerEmail: true } }),
+      // Free first photos only: an included description and an order paid with Pro credits are also $0 orders.
+      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: NOT_FREE_PHOTO_KEYS }, select: { customerEmail: true } }),
       prisma.event.count({ where: { name: "photo_warning", createdAt: range } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
