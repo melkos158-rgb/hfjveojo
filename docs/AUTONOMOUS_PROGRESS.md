@@ -233,7 +233,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-06 ≈ 08:50 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-6bde7c4a7a34-14` (s86 `681b6c4`, CI #127 green).
+- Last verified: 2026-10-06 ≈ 11:35 UTC (after s91). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-fe1f6735a639-14` (s91 `44f3059`, CI #132 green). Pro credits live; no orders yet.
+- Earlier: 2026-10-06 ≈ 08:50 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-6bde7c4a7a34-14` (s86 `681b6c4`, CI #127 green).
   - `/admin/analytics` (30 days): 626 / 149 (+9 / +9 overnight, all direct), funnel 3 → 7 → 0, 0 paid, AI $4.08 (+$0.01, the daily report), free tool uses 15, photo warnings 0, free first photos 0, delivered / review / failed 0 / 0 / 0. No overnight orders.
   - The Chrome extension was disconnected at the start of the run, so `/api/health` was read in the built-in browser (orvionis.com allowed there on 6 Oct). `/admin` needs a sign-in in that browser, which the operator doesn't do; the admin numbers were read in Chrome once it reconnected.
 - Earlier: 2026-10-05 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-6a959511e285-14` (s85 `4c91240`).
@@ -276,6 +277,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `44f3059` (s91, 2026-10-06 ≈ 11:24 UTC): Pro credits + `/photographers` for real-estate photographers. CI #132 green (209 tests); Railway deployed by 11:27 UTC (worker `web-fe1f6735a639-14`, health ok). Live: `/tools/pro-credits` (title, hero "Get 25 rooms — $149", form, the monthly-plan comparison), `/photographers` (new headline and button, prices from the cost guide), `/pricing`, `/terms` and `/refund-policy` with the credit rules and 2026-10-06, the staging page's "Sign in to use them", `llms.txt`, the new OG card, sitemap lastmod 11:20 UTC for the changed pages. The product is in the live catalog (the form shows). Read in the built-in browser: Chrome hung on orvionis.com pages this time (document never idle, even on `/api/health`), while GitHub loaded fine there.
+- `86e8530` (s90, 2026-10-06 ≈ 10:55 UTC): resume an unpaid order + one reminder email. CI #131 green (202 tests); Railway deployed (worker `web-826dfc57e15b-14`, health ok).
 - `3339ce6` (s89, 2026-10-06 ≈ 10:42 UTC): "Finish this listing $39". CI #130 green (198 tests); Railway deployed by 10:45 UTC (worker `web-7734cbf0079a-14`, health ok). Live: a broken finish link shows "The finish-this-listing offer has ended", the free-photo heading and "$15 per photo · whole listing $49". A real finish link needs a delivered free photo, and production has none yet; the full flow was checked in a local production build.
 - `273a003` (s88, 2026-10-06 ≈ 10:35 UTC): the Listing Pack. CI #129 green (196 tests); Railway deployed by 10:38 UTC (worker `web-6d781969f425-14`); the tool page shows the pack price, help line and FAQ, with no "$12".
 - `8f8f6ca` (s87, 2026-10-06 ≈ 09:13 UTC): the cost guide compares nine companies; calculator prices re-checked. CI #128 green (191 tests); Railway deployed by 09:18 UTC (worker `web-d3bafa1e5365-14`, health ok). Live: the new title, all nine H2 sections, Article (dateModified 2026-10-06) and FAQPage data, the 10-bar chart and the calculator link; the calculator shows "cheapest of these" and cites virtualstaging.com/pricing. Search Console "Request indexing" was not sent: the inspect deep link returns 404, and typing into Search Console isn't done while the owner is using his Chrome. The sitemap date (6 Oct) and IndexNow cover the recrawl.

@@ -110,7 +110,27 @@ async function main() {
     update: {},
   });
 
-  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide, e3-listing-description, e4-virtual-staging");
+  await prisma.experiment.upsert({
+    where: { key: "e20-pro-credits" },
+    create: {
+      key: "e20-pro-credits",
+      name: "E20 — Pro credits ($149 for 25 staging rooms)",
+      hypothesis:
+        "Real-estate photographers, teams and coordinators who stage every week but in uneven volumes prepay 25 rooms for $149 (about $5.96 a room, unbranded files, valid 12 months) instead of paying per listing or for a monthly plan (court of agents, 2026-10-06, session 2, lever 3).",
+      targetCustomer: "US real-estate photographers who don't deliver through Aryeo; teams and coordinators with several vacant listings a month",
+      offer: "25 rooms of virtual staging, two versions each, no logo on the files, used by signing in with the buying email; $149 once",
+      channel: "instagram_dm + delivery_email + site",
+      priceCents: 14900,
+      status: "RUNNING",
+      startAt: new Date(),
+      successCriteria: "≥1 Pro purchase by 2026-12-24 (≥2 by 2026-11-30 is strong), with ≥10 rooms of the first pack used within 30 days",
+      failureCriteria: "0 purchases after 40+ photographer touches → rethink the offer (a smaller pack, e.g. 10 rooms)",
+      expected: { orders: 1, revenueCents: 14900, costCents: 300 },
+    },
+    update: {},
+  });
+
+  console.log("experiments: e1-listing-clips, e2-photo-pricing-guide, e3-listing-description, e4-virtual-staging, e20-pro-credits");
 }
 
 main()

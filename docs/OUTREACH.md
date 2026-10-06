@@ -162,6 +162,16 @@ Agents with a vacant listing: I'll stage one of your room photos for free. Uploa
 
 ✍️ Nothing to personalise. Only in groups whose rules allow services (Southern California Real Estate and Services does); in the others answer questions with `re-fb-group-reply`. One post per group, and answer every comment.
 
+### re-photo-ig-dm-credits — real-estate photographer (not on Aryeo), Pro credits (from 6 Oct, court session 2)
+
+📤 EN — готове до відправки:
+Hey [name], saw your [street or neighborhood] shoot, the [specific shot, e.g. twilight exterior] is a good one. Quick question: do your agents ever ask for virtual staging? I built a stager that does a room in about two minutes, two versions each, no logo on the files, so you can offer it as your own add-on. 25 rooms are $149 (about $6 a room), no subscription. Before/after: orvionis.com/photographers. First room's free if you want to try it on one of your photos.
+
+🇺🇦 UA — переклад для контролю:
+Привіт, [name], бачив твою зйомку на [street or neighborhood], кадр [specific shot, наприклад, вечірній фасад] вдалий. Коротке питання: твої агенти колись просять віртуальний стейджинг? Я зробив стейджер, який робить кімнату приблизно за дві хвилини, по дві версії, без логотипа на файлах, тож ти можеш пропонувати це як свою додаткову послугу. 25 кімнат — $149 (приблизно $6 за кімнату), без підписки. До/після: orvionis.com/photographers. Перша кімната безкоштовна, якщо хочеш спробувати на одному зі своїх фото.
+
+✍️ [name], [street or neighborhood], [specific shot] from a real recent post. Only photographers who don't deliver through Aryeo (Zillow gives Aryeo users AI staging at no extra cost). Link with `?utm_source=instagram_dm&exp=e20-pro-credits`. The 25 % photographer share of the daily send pack uses this one.
+
 ### photo-ig-dm-1 — photographer, first contact
 
 📤 EN: Hey [name], your [type, e.g. beach elopement] set from [month] is lovely. I built a small tool that writes and designs a branded pricing guide PDF from your real packages — about five minutes of questions, $29, no subscription. It's new and I'm looking for the first photographers to try it and tell me what's missing. Want the link?

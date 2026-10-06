@@ -69,6 +69,14 @@ export const outreachTemplates: OutreachTemplate[] = [
     personalize: "Nothing, but read the group rules first; post the link only where allowed.",
   },
   {
+    key: "re-photo-ig-dm-credits",
+    channel: "Instagram DM → real-estate photographer (not on Aryeo) who posted a recent listing shoot",
+    when: "First contact for the photographer share of the daily send pack (court session 2: 25 %). Pro credits are the offer; the free first room is the low-risk test.",
+    en: `Hey [name], saw your [street or neighborhood] shoot, the [specific shot, e.g. twilight exterior] is a good one. Quick question: do your agents ever ask for virtual staging? I built a stager that does a room in about two minutes, two versions each, no logo on the files, so you can offer it as your own add-on. 25 rooms are $149 (about $6 a room), no subscription. Before/after: orvionis.com/photographers. First room's free if you want to try it on one of your photos.`,
+    ua: `Привіт, [name], бачив твою зйомку на [street or neighborhood], кадр [specific shot, наприклад, вечірній фасад] вдалий. Коротке питання: твої агенти колись просять віртуальний стейджинг? Я зробив стейджер, який робить кімнату приблизно за дві хвилини, по дві версії, без логотипа на файлах, тож ти можеш пропонувати це як свою додаткову послугу. 25 кімнат — $149 (приблизно $6 за кімнату), без підписки. До/після: orvionis.com/photographers. Перша кімната безкоштовна, якщо хочеш спробувати на одному зі своїх фото.`,
+    personalize: "[name], [street or neighborhood], [specific shot] from a real recent post. Only photographers who don't deliver through Aryeo (Zillow gives Aryeo users AI staging at no extra cost). Link with ?utm_source=instagram_dm&exp=e20-pro-credits.",
+  },
+  {
     key: "photo-ig-dm-1",
     channel: "Instagram DM / Facebook group DM → wedding or portrait photographer",
     when: "First contact after engaging with their work.",
