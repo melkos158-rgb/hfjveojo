@@ -131,20 +131,40 @@ describe("multi-room virtual staging", () => {
     expect(original?.photos).toEqual(rooms.map((r, i) => ({ fileId: r.photoFileId, label: `Room ${i + 1} · ${r.roomType}` })));
   });
 
-  it("prices larger orders with the volume tiers on the server: 5 photos $60, 9 or 10 photos $99", async () => {
+  it("prices the Listing Pack on the server: 4-5 rooms $49, 9 rooms $89, 10 rooms $99, MLS description included", async () => {
     const roomsOf = async (n: number) =>
       (await materializeTestIntake({ rooms: Array.from({ length: n }, () => ({ photoFileId: PHOTO, roomType: "bedroom" })), style: "modern", notes: "" })).rooms;
-    for (const [n, total, unit] of [
-      [5, 6000, 1200],
-      [9, 9900, 1100],
-      [10, 9900, 990],
+    for (const [n, total] of [
+      [4, 4900],
+      [5, 4900],
+      [9, 8900],
+      [10, 9900],
     ] as const) {
       const rooms = await roomsOf(n);
-      const { orderId } = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: `vol${n}@example.com`, intakeRaw: { rooms: JSON.stringify(rooms), style: "modern" } });
+      // a ticked add-on is ignored on a pack: the description is already included
+      const { orderId } = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: `vol${n}@example.com`, intakeRaw: { rooms: JSON.stringify(rooms), style: "modern", addDescription: "1" } });
       const order = await prisma.order.findUniqueOrThrow({ where: { id: orderId } });
       expect([order.amountCents, order.quantity]).toEqual([total, n]);
-      expect(sessions.at(-1)?.line_items).toMatchObject([{ quantity: n, price_data: { unit_amount: unit } }]);
+      expect(order.intake).toMatchObject({ extraIncluded: true, addDescription: false });
+      expect(sessions.at(-1)?.line_items).toHaveLength(1);
+      expect(sessions.at(-1)?.line_items).toMatchObject([{ quantity: 1, price_data: { unit_amount: total } }]);
     }
+  });
+
+  it("adds the $7 MLS description to 1-3 rooms only when ticked, as its own line", async () => {
+    const rooms = (await materializeTestIntake({ rooms: [{ photoFileId: PHOTO, roomType: "living room" }, { photoFileId: PHOTO, roomType: "bedroom" }], style: "modern", notes: "" })).rooms;
+    const withDesc = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: "addon@example.com", intakeRaw: { rooms: JSON.stringify(rooms), style: "modern", addDescription: "1" } });
+    const a = await prisma.order.findUniqueOrThrow({ where: { id: withDesc.orderId } });
+    expect(a.amountCents).toBe(3000 + 700);
+    expect(a.intake).toMatchObject({ extraIncluded: true, addDescription: true });
+    expect(sessions.at(-1)?.line_items).toMatchObject([{ quantity: 2, price_data: { unit_amount: 1500 } }, { quantity: 1, price_data: { unit_amount: 700 } }]);
+
+    const rooms2 = (await materializeTestIntake({ rooms: [{ photoFileId: PHOTO, roomType: "living room" }, { photoFileId: PHOTO, roomType: "bedroom" }], style: "modern", notes: "" })).rooms;
+    const without = await createOrderWithCheckout({ toolSlug: "virtual-staging", email: "noaddon@example.com", intakeRaw: { rooms: JSON.stringify(rooms2), style: "modern" } });
+    const b = await prisma.order.findUniqueOrThrow({ where: { id: without.orderId } });
+    expect(b.amountCents).toBe(3000);
+    expect((b.intake as Record<string, unknown>).extraIncluded).toBeUndefined();
+    expect(sessions.at(-1)?.line_items).toHaveLength(1);
   });
 
   it("waits out the image API's per-minute limit instead of failing a multi-room order", async () => {

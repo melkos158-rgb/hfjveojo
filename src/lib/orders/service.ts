@@ -11,6 +11,7 @@ import { outputsToDeliver } from "@/lib/orders/deliverables";
 import { abandonRuns, liveRunOf } from "@/lib/orders/runs";
 import { linkify } from "@/lib/email/layout";
 import { formatUsd } from "@/lib/ai/pricing";
+import { descriptionVoucherUrl, isFreePhotoOrder, orderHasVoucher } from "@/lib/orders/voucher";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
   return appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`);
@@ -69,9 +70,11 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
   const brand = env().NEXT_PUBLIC_BRAND_NAME;
   const intro = redo
     ? "Here is the new version of your order. It replaces the earlier files on your order page."
-    : order.free
+    : isFreePhotoOrder(order)
       ? "Here is your free staged photo: two versions of your room at full resolution, plus copies labeled “Virtually staged” for the MLS."
       : (def?.delivery.emailIntro ?? "Your order is ready.");
+  // The Listing Pack (or the $7 add-on) includes the MLS description: a voucher link to write it.
+  const voucher = !redo && orderHasVoucher(order) ? descriptionVoucherUrl(order.id) : null;
   const lines = [
     intro,
     ...(note ? ["", note] : []),
@@ -79,17 +82,23 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     `Order page: ${link}`,
     ...(opts.deliveryLink ? [`Files: ${opts.deliveryLink}`] : []),
     ...fileLinks,
+    ...(voucher ? ["", `Your MLS listing description is included. Enter the listing facts here (about 2 minutes) and it's written for you: ${voucher}`] : []),
     "",
     redo ? "Reply to this email if anything is still off." : "Reply to this email if anything is off — one revision round is included.",
     ...(def
-      ? ["", order.free ? `Stage the rest of the listing: ${formatUsd(def.pricing.priceCents)} per photo — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}` : `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`]
+      ? [
+          "",
+          isFreePhotoOrder(order)
+            ? `Stage the rest of the listing: ${def.pricing.pack ? `up to ${def.pricing.pack.units} rooms + ${def.pricing.packIncludes ?? "extras"} for ${formatUsd(def.pricing.pack.cents)}, or ` : ""}${formatUsd(def.pricing.priceCents)} a room — ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug}`
+            : `Next one? ${env().NEXT_PUBLIC_APP_URL}/tools/${def.slug} — same price, same speed.`,
+        ]
       : []),
   ];
   await sendEmail({
     to: order.customerEmail,
     subject: redo
       ? `Your redo is ready — ${brand} order #${order.number}`
-      : order.free
+      : isFreePhotoOrder(order)
         ? "Your free staged photo is ready"
         : (def?.delivery.emailSubject ?? `Your ${brand} order #${order.number} is ready`),
     text: lines.join("\n"),

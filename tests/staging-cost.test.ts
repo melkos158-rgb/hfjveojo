@@ -5,7 +5,7 @@ describe("virtual staging cost calculator", () => {
   it("prices a typical listing per photo and picks the smallest plan that fits", () => {
     const r = compareStagingCost(5, 1);
     expect(r.photosPerMonth).toBe(5);
-    expect(r.perPhoto.map((o) => o.perListing)).toEqual([60, 120, 150]); // ORVIONIS: $12 each from 5 photos
+    expect(r.perPhoto.map((o) => o.perListing)).toEqual([49, 120, 150]); // ORVIONIS: the $49 Listing Pack
     expect(r.subscription?.plan.name).toBe("Basic");
     expect(r.subscription?.unusedPerMonth).toBe(1);
     expect(r.physicalPerMonth).toBe(NAR_MEDIAN_STAGING_SERVICE);
@@ -13,8 +13,8 @@ describe("virtual staging cost calculator", () => {
 
   it("keeps a one-off listing on pay-per-photo when a yearly plan costs more up front", () => {
     const r = compareStagingCost(5, 1);
-    expect(r.oneOff).toEqual({ key: "orvionis", name: PER_PHOTO_OPTIONS[0].name, cost: 60 });
-    // repeated every month, the Basic plan at $16/mo (yearly billing) is cheaper than $60
+    expect(r.oneOff).toEqual({ key: "orvionis", name: PER_PHOTO_OPTIONS[0].name, cost: 49 });
+    // repeated every month, the Basic plan at $16/mo (yearly billing) is cheaper than $49
     expect(r.everyMonth.key).toBe("subscription");
     expect(r.everyMonth.cost).toBe(16);
   });
@@ -41,11 +41,11 @@ describe("virtual staging cost calculator", () => {
     expect(sorted).toEqual(PER_PHOTO_OPTIONS);
   });
 
-  it("prices ORVIONIS with its volume tiers, in orders of up to 10 photos", () => {
+  it("prices ORVIONIS with the Listing Pack, in orders of up to 10 photos", () => {
     const orv = (photos: number) => compareStagingCost(photos, 1).perPhoto[0].perListing;
-    expect([orv(1), orv(4), orv(5), orv(8), orv(9), orv(10)]).toEqual([15, 60, 60, 96, 99, 99]);
+    expect([orv(1), orv(3), orv(4), orv(5), orv(8), orv(9), orv(10)]).toEqual([15, 45, 49, 49, 79, 89, 99]);
     expect(orv(12)).toBe(99 + 30); // a second order of 2 photos
-    expect(orv(15)).toBe(99 + 60);
-    expect(compareStagingCost(5, 3).perPhoto[0].perMonth).toBe(180); // one order per listing
+    expect(orv(15)).toBe(99 + 49);
+    expect(compareStagingCost(5, 3).perPhoto[0].perMonth).toBe(147); // one order per listing
   });
 });

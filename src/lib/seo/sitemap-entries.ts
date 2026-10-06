@@ -22,12 +22,13 @@ export const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
 export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
   "/tools/photographer-pricing-guide": "2026-09-29",
-  // 6 Oct: prices re-checked (VirtualStaging.com pricing page, monthly vs yearly AI plans)
-  "/free/virtual-staging-cost-calculator": "2026-10-06",
+  // 6 Oct: prices re-checked (VirtualStaging.com pricing page, monthly vs yearly AI plans); 10:30 UTC: the Listing Pack
+  "/free/virtual-staging-cost-calculator": "2026-10-06T10:30:00Z",
   "/free": "2026-09-29T15:00:00Z",
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
-  "/tools/virtual-staging": "2026-10-01T23:16:00Z",
-  "/pricing": "2026-10-01T23:16:00Z",
+  // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling)
+  "/tools/virtual-staging": "2026-10-06T10:30:00Z",
+  "/pricing": "2026-10-06T10:30:00Z",
   "/privacy": "2026-10-01T23:16:00Z",
   // 2 Oct: the home page, /real-estate and /tools lead with the free first photo
   "": "2026-10-02",

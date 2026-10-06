@@ -15,6 +15,8 @@ import { deliveredOutputs, lastDeliveredAt } from "@/lib/orders/deliverables";
 import { disclosureLine, ensurePublicToken, isLabeledOutput, originalPhotoUrl } from "@/lib/tools/disclosure";
 import { photoInputsOf } from "@/lib/tools/photos";
 import type { ToolDefinition } from "@/lib/tools/types";
+import { prisma } from "@/lib/db";
+import { VOUCHER_KEY_PREFIX, descriptionVoucherUrl, isFreePhotoOrder, isVoucherOrder, orderHasVoucher } from "@/lib/orders/voucher";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -58,6 +60,12 @@ export default async function OrderPage({ params, searchParams }: Props) {
       ? befores.map((b, idx) => ({ n: idx + 1, before: b, images: images.filter((o) => (meta(o).room ?? 1) === idx + 1), labeled: labeled.filter((o) => (meta(o).room ?? 1) === idx + 1) }))
       : [{ n: 1, before: befores[0], images, labeled }];
   const multiRoom = rooms.length > 1;
+  // The MLS description included with a Listing Pack (or the $7 add-on): a link to write it, or the order it became.
+  const voucherOpen = orderHasVoucher(order) && !order.free && !["PENDING", "CANCELED", "REFUNDED"].includes(order.status);
+  const voucherUsed = voucherOpen
+    ? await prisma.order.findUnique({ where: { freeKey: `${VOUCHER_KEY_PREFIX}${order.id}` }, select: { id: true, number: true, accessToken: true } })
+    : null;
+  const freePhoto = isFreePhotoOrder(order);
 
   return (
     <div className="container-x max-w-3xl py-12">
@@ -87,7 +95,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
         </div>
         <div>
           <div className="text-gray-500">Amount</div>
-          <div className="font-medium">{order.free ? "Free — your first photo" : formatUsd(order.amountCents)}</div>
+          <div className="font-medium">{isVoucherOrder(order) ? "Included with your staging order" : order.free ? "Free — your first photo" : formatUsd(order.amountCents)}</div>
         </div>
         <div>
           <div className="text-gray-500">{delivered ? "Delivered" : "Expected by"}</div>
@@ -114,6 +122,32 @@ export default async function OrderPage({ params, searchParams }: Props) {
           {order.quantity > 1 && toolDef?.pricing.unit ? `Working on your ${order.quantity} ${toolDef.pricing.unit.many}` : "Working on your order"}
           {toolDef ? ` — ${toolDef.io.processingTime.charAt(0).toLowerCase()}${toolDef.io.processingTime.slice(1)}` : ""}. This page updates by itself, and we email you when it&rsquo;s ready.
         </p>
+      ) : null}
+
+      {voucherOpen ? (
+        <div className="card mt-6 flex flex-wrap items-center justify-between gap-3" data-voucher>
+          {voucherUsed ? (
+            <>
+              <div>
+                <h3 className="font-semibold">Your MLS description</h3>
+                <p className="text-sm text-gray-600">Written — it&rsquo;s on its own order page, and we emailed it to you.</p>
+              </div>
+              <Link href={`/orders/${voucherUsed.id}?t=${encodeURIComponent(voucherUsed.accessToken)}`} className="btn-secondary">
+                Open order #{voucherUsed.number}
+              </Link>
+            </>
+          ) : (
+            <>
+              <div>
+                <h3 className="font-semibold">Your MLS listing description is included</h3>
+                <p className="text-sm text-gray-600">Enter the listing facts (about 2 minutes) and get an MLS-ready description, a short version and social captions, checked for fair-housing wording.</p>
+              </div>
+              <a href={descriptionVoucherUrl(order.id)} className="btn-primary">
+                Write my MLS description
+              </a>
+            </>
+          )}
+        </div>
       ) : null}
 
       {redoInProgress ? (
@@ -238,12 +272,14 @@ export default async function OrderPage({ params, searchParams }: Props) {
           {delivered ? (
             <>
               <div className="card mt-6 flex flex-wrap items-center justify-between gap-3">
-                {order.free && toolDef ? (
+                {freePhoto && toolDef ? (
                   <>
                     <div>
                       <h3 className="font-semibold">Stage the rest of the listing</h3>
                       <p className="text-sm text-gray-600">
-                        {formatUsd(toolDef.pricing.priceCents)} per photo, up to {toolDef.intake.fields.find((f) => f.type === "rooms")?.max ?? 6} rooms in one order, same two versions and disclosure pack.
+                        {toolDef.pricing.pack
+                          ? `The whole listing — up to ${toolDef.pricing.pack.units} rooms plus ${toolDef.pricing.packIncludes ?? "extras"} — for ${formatUsd(toolDef.pricing.pack.cents)}, or ${formatUsd(toolDef.pricing.priceCents)} a room. Same two versions and disclosure pack.`
+                          : `${formatUsd(toolDef.pricing.priceCents)} per photo, up to ${toolDef.intake.fields.find((f) => f.type === "rooms")?.max ?? 6} rooms in one order, same two versions and disclosure pack.`}
                       </p>
                     </div>
                     <Link href={`/tools/${order.tool.slug}#order`} className="btn-primary">

@@ -15,11 +15,12 @@ import { GaViewItem } from "@/components/GaEvents";
 import { checkoutMode, secretKeyFor } from "@/lib/stripe/mode";
 import { HeroResult } from "@/components/HeroResult";
 import { freePhotoAvailability } from "@/lib/orders/free-photo";
+import { checkVoucher, DESCRIPTION_TOOL_SLUG } from "@/lib/orders/voucher";
 
 export const dynamic = "force-dynamic";
 
 type Params = { params: Promise<{ slug: string }> };
-type PageProps = Params & { searchParams: Promise<{ free?: string }> };
+type PageProps = Params & { searchParams: Promise<{ free?: string; voucher?: string }> };
 
 /** Reasons a visitor comes back from the free-photo email link without an order page (see /api/free/claim). */
 const FREE_NOTICES = new Set(["used", "expired", "soldout", "invalid", "error"]);
@@ -42,19 +43,26 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function ToolPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { free: freeParam } = await searchParams;
+  const { free: freeParam, voucher: voucherParam } = await searchParams;
   const def = getToolBySlug(slug);
   if (!def) notFound();
   const item = (await liveCatalog()).find((c) => c.def.id === def.id);
   const session = await getSession();
   const price = item?.priceCents ?? def.pricing.priceCents;
   // Tools priced per unit (virtual staging: per photo) say so everywhere the price is shown.
-  const priceText = def.quantity && def.pricing.unit ? `${formatUsd(price)} per ${def.pricing.unit.one}` : `${formatUsd(price)} one-time`;
+  const usd = (cents: number) => formatUsd(cents).replace(/\.00$/, "");
+  const priceText =
+    def.quantity && def.pricing.unit
+      ? `${usd(price)} per ${def.pricing.unit.one}${def.pricing.pack ? ` · whole listing ${usd(def.pricing.pack.cents)}` : ""}`
+      : `${formatUsd(price)} one-time`;
   const l = def.landing;
   const visual = categoryVisual(def.category);
   // Free first photo: offered only while today's free photos and their share of the AI budget last.
   const freeOffer = Boolean(item && def.freeFirstPhoto && (await freePhotoAvailability()).available);
   const freeNotice = freeParam && FREE_NOTICES.has(freeParam) ? freeParam : null;
+  // The MLS description included with a staging Listing Pack: the form takes the voucher instead of a payment.
+  const voucherCheck = voucherParam && def.slug === DESCRIPTION_TOOL_SLUG ? await checkVoucher(voucherParam) : null;
+  const voucher = voucherCheck ? { token: voucherParam as string, ok: voucherCheck.ok, problem: voucherCheck.ok ? null : voucherCheck.problem } : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -232,7 +240,7 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                 ctaLabel={l.ctaLabel}
                 priceLabel={priceText}
                 deliveryPromise={l.deliveryPromise}
-                initialEmail={session?.email}
+                initialEmail={session?.email ?? (voucherCheck?.ok ? voucherCheck.email : undefined)}
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
                 gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}
@@ -244,11 +252,15 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                         many: def.pricing.unit.many,
                         ctaMany: l.ctaLabelMany,
                         tiers: def.pricing.volume,
+                        pack: def.pricing.pack,
+                        packIncludes: def.pricing.packIncludes,
+                        addon: def.pricing.addon,
                         max: def.intake.fields.find((f) => f.type === "rooms")?.max,
                       }
                     : undefined
                 }
                 freePhoto={def.freeFirstPhoto ? { available: freeOffer, notice: freeNotice } : undefined}
+                voucher={voucher}
               />
             ) : (
               <div className="card text-sm text-gray-600">This tool is paused right now. Check back soon or <a className="underline" href="/contact">contact us</a>.</div>

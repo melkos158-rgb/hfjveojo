@@ -64,7 +64,8 @@ describe("seo: /llms.txt is built from the live catalog and the guide list", () 
     expect(new Set(GUIDES.map((g) => g.slug)).size).toBe(GUIDES.length);
     for (const g of GUIDES) {
       expect(existsSync(path.join(process.cwd(), "src/app/guides", g.slug, "page.tsx")), g.slug).toBe(true);
-      expect(g.updated, g.slug).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      // a day, or a UTC time when something else already moved the content version that day (as PAGE_UPDATED)
+      expect(g.updated, g.slug).toMatch(/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}Z)?$/);
       if (g.tool) expect(slugs.has(g.tool.slug), `${g.slug} → ${g.tool.slug}`).toBe(true);
     }
   });

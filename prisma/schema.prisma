@@ -189,7 +189,7 @@ model Order {
   publicToken             String?     @unique
   /** Free first photo (virtual staging): no payment; created PENDING and claimed from the link emailed to the customer. Excluded from revenue and paid-order counts. */
   free                    Boolean     @default(false)
-  /** Normalised email of a claimed free photo (see freeKeyOf) — unique, so each person gets one. */
+  /** Unique key of a one-time free order: the normalised email of a claimed free photo (see freeKeyOf), so each person gets one, or "desc:<order id>" for the MLS description included with a staging Listing Pack (src/lib/orders/voucher.ts). */
   freeKey                 String?     @unique
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt

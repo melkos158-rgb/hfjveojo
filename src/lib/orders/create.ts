@@ -8,7 +8,7 @@ import { randomToken } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
 import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
 import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
-import { volumeTotalCents } from "@/lib/tools/volume";
+import { packApplies, volumeTotalCents } from "@/lib/tools/volume";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { track, type Attribution } from "@/lib/analytics/events";
 import { normalizeEmail } from "@/lib/auth/magic";
@@ -85,11 +85,20 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
   const fileIds = [...new Set(photoInputsOf(def as ToolDefinition<unknown>, intake).map((p) => p.fileId))];
   // Units charged (e.g. rooms): the total is always computed here, never taken from the client.
   const quantity = quantityOf(def as ToolDefinition<unknown>, intake);
-  // Volume pricing (e.g. 5 photos $60, 10 for $99), never more than a larger order would cost.
-  const maxUnits = def.intake.fields.find((f) => f.type === "rooms")?.max ?? quantity;
-  const totalCents = volumeTotalCents(quantity, product.priceCents, def.pricing.volume, Math.max(quantity, maxUnits));
-  // Stripe shows "n × unit price" when the total divides evenly (it does for every current tier), else one line.
-  const perUnitLine = totalCents % quantity === 0;
+  // Volume and pack pricing (staging: $15 a room, the Listing Pack $49 for up to 5 rooms, $99 for 10), never more than a
+  // larger order would cost.
+  const maxUnits = Math.max(quantity, def.intake.fields.find((f) => f.type === "rooms")?.max ?? quantity);
+  const pack = def.pricing.pack ?? null;
+  const unitsCents = volumeTotalCents(quantity, product.priceCents, def.pricing.volume, maxUnits, pack);
+  const isPack = packApplies(quantity, product.priceCents, def.pricing.volume, maxUnits, pack);
+  // The optional extra (staging: the $7 MLS description on 1-3 rooms) only where the pack doesn't already include it.
+  const addon = def.pricing.addon && !isPack && intake[def.pricing.addon.key] === true ? def.pricing.addon : null;
+  const totalCents = unitsCents + (addon?.cents ?? 0);
+  // The pack's extra or the add-on is delivered as a voucher (src/lib/orders/voucher.ts); the order remembers it.
+  if (def.pricing.addon) intake[def.pricing.addon.key] = Boolean(addon);
+  if (isPack || addon) intake.extraIncluded = true;
+  // Stripe shows "n × unit price" when the units are priced per unit, one "pack" line otherwise, plus the add-on.
+  const perUnitLine = !isPack && unitsCents % quantity === 0;
   if (fileIds.length > 0) {
     const files = await prisma.file.findMany({
       where: { id: { in: fileIds } },
@@ -157,13 +166,29 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
           quantity: perUnitLine ? quantity : 1,
           price_data: {
             currency: product.currency || env().STRIPE_CURRENCY,
-            unit_amount: perUnitLine ? totalCents / quantity : totalCents,
+            unit_amount: perUnitLine ? unitsCents / quantity : unitsCents,
             product_data: {
-              name: perUnitLine || quantity === 1 ? product.name : `${product.name} (${quantity} ${def.pricing.unit?.many ?? "units"})`,
+              name: isPack
+                ? `${product.name} — Listing Pack (${quantity} ${def.pricing.unit?.many ?? "units"} + ${def.pricing.packIncludes ?? "extras"})`
+                : perUnitLine || quantity === 1
+                  ? product.name
+                  : `${product.name} (${quantity} ${def.pricing.unit?.many ?? "units"})`,
               description: def.tagline.slice(0, 200),
             },
           },
         },
+        ...(addon
+          ? [
+              {
+                quantity: 1,
+                price_data: {
+                  currency: product.currency || env().STRIPE_CURRENCY,
+                  unit_amount: addon.cents,
+                  product_data: { name: addon.label, description: "Delivered with your order: a link to write the description for this listing." },
+                },
+              },
+            ]
+          : []),
       ],
       metadata: { orderId: order.id, toolId: def.id, sku: product.sku },
       payment_intent_data: {
@@ -193,7 +218,7 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     sessionId: input.sessionId ?? undefined,
     userId: input.userId ?? undefined,
     experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: totalCents, quantity, mode },
+    props: { tool: def.id, amountCents: totalCents, quantity, mode, ...(pack ? { pack: isPack } : {}), ...(def.pricing.addon ? { addon: Boolean(addon) } : {}) },
   });
   return { orderId: order.id, checkoutUrl: session.url };
 }

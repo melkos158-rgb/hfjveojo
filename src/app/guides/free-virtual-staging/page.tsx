@@ -24,7 +24,7 @@ const OFFERS: Array<{ name: string; free: string; terms: string; after: string }
     name: "ORVIONIS (ours)",
     free: "Your first photo: the full result, two staged versions, no watermark",
     terms: "One per person, started by a link in a confirmation email; daily limit; no card",
-    after: "$15 per photo, $12 each from 5 photos, $99 for 10",
+    after: "$15 per photo, or $49 for a whole listing (up to 5 rooms + the MLS description), $99 for 10",
   },
   {
     name: "Apply Design",
@@ -158,8 +158,9 @@ export default function FreeVirtualStagingGuide() {
         <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> stages your first photo free: upload one photo of
         an empty room, leave your email and click the link we send. You get the same order a customer pays for: two staged
         versions of that photo at full resolution, without a watermark, and the disclosure pack (labeled copies and a page with
-        the original). It is one photo per person, with a daily limit. After that it&apos;s $15 a photo, $12 each from five
-        photos and $99 for ten, in about two minutes per photo, with no subscription.
+        the original). It is one photo per person, with a daily limit. After that it&apos;s $15 a photo, or $49 for the
+        whole listing (up to five rooms plus the MLS description), $99 for ten, in about two minutes per photo, with no
+        subscription.
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">

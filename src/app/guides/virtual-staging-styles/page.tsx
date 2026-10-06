@@ -141,7 +141,7 @@ export default function StylesGuide() {
       <p>
         Yes, as separate orders. With <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> you pick one style
         for the whole order and get two staged versions of every photo, in about two minutes per photo, for $15 a photo
-        ($12 each from five, $99 for ten). For a second style of the same room, place another order. Your first photo is
+        ($49 for a whole listing of up to five rooms, $99 for ten). For a second style of the same room, place another order. Your first photo is
         free, so you can try a style on your own room before paying.
       </p>
       <p>

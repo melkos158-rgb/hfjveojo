@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { IntakeField } from "@/lib/tools/types";
 import { trackClient } from "@/components/Analytics";
 import { gaEventThen, gaItem as toGaItem } from "@/lib/ga";
-import { nextVolumeTier, volumeTotalCents, type VolumeTier } from "@/lib/tools/volume";
+import { nextVolumeTier, packApplies, volumeTotalCents, type PackPrice, type VolumeTier } from "@/lib/tools/volume";
 import { photoIssueText, type PhotoIssue } from "@/lib/photo-check";
 import { checkPhotoFile } from "@/lib/photo-check-browser";
 
@@ -25,7 +25,19 @@ type Props = {
    * Tools priced per unit (a "rooms" field: one unit per photo). Display only — the server prices the order with the
    * same volume tiers (src/lib/tools/volume.ts). `ctaMany` may use {n} and {total}.
    */
-  perUnit?: { unitCents: number; one: string; many: string; ctaMany?: string; tiers?: VolumeTier[]; max?: number };
+  perUnit?: {
+    unitCents: number;
+    one: string;
+    many: string;
+    ctaMany?: string;
+    tiers?: VolumeTier[];
+    max?: number;
+    /** The Listing Pack (virtual staging): applies whenever it is cheaper than the unit price, and includes `packIncludes`. */
+    pack?: PackPrice;
+    packIncludes?: string;
+    /** An optional extra on orders the pack doesn't cover (staging: the MLS description, $7), a checkbox under the photos. */
+    addon?: { key: string; cents: number; label: string };
+  };
   /**
    * Admin use (orders paid on a marketplace): submit the validated intake to this callback instead of starting a
    * Stripe checkout. The email field and the terms line are hidden; `extraFields` renders above the button.
@@ -39,6 +51,17 @@ type Props = {
    * why the visitor came back from the emailed link (used / expired / soldout / invalid / error), shown above the form.
    */
   freePhoto?: { available: boolean; notice?: string | null };
+  /**
+   * The MLS description included with a staging Listing Pack: the order is free with this voucher (the server checks
+   * it again). `ok` false: the link is used, unpaid or broken, and the form falls back to a normal paid order.
+   */
+  voucher?: { token: string; ok: boolean; problem: string | null };
+};
+
+const VOUCHER_PROBLEMS: Record<string, string> = {
+  used: "The description included with that staging order has already been written — it's on its own order page and in your email.",
+  unpaid: "The staging order behind this link isn't paid yet, so its description isn't included.",
+  invalid: "This description link didn't work. Open it again from your staging order's email or order page.",
 };
 
 const FREE_NOTICES: Record<string, string> = {
@@ -70,7 +93,7 @@ function initialValue(f: IntakeField): string {
  * Renders any tool's intake from its field definitions and hands off to Stripe Checkout.
  * Price is displayed only — the server prices the order from the Product table.
  */
-export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto }: Props) {
+export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPromise, initialEmail, preview, adminSandbox, gaItem, perUnit, onSubmitIntake, extraFields, heading, submitLabel, freePhoto, voucher }: Props) {
   const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(fields.map((f) => [f.key, initialValue(f)])));
   const [email, setEmail] = useState(initialEmail ?? "");
   const [uploading, setUploading] = useState<string | null>(null);
@@ -320,7 +343,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const res = await fetch(`/api/tools/${toolSlug}/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}) }),
+        body: JSON.stringify({ email, intake: values, ...(adminSandbox && sandbox ? { sandbox: true } : {}), ...(voucherOk ? { voucher: voucher?.token } : {}) }),
       });
       const data = (await res.json()) as { checkoutUrl?: string; message?: string };
       if (!res.ok || !data.checkoutUrl) throw new Error(data.message ?? "Could not start checkout");
@@ -328,7 +351,7 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
       const go = () => {
         window.location.href = url;
       };
-      if (gaItem && !(adminSandbox && sandbox)) {
+      if (gaItem && !(adminSandbox && sandbox) && !voucherOk) {
         const item = { ...toGaItem({ slug: toolSlug, name: gaItem.name }, gaItem.priceCents), quantity };
         gaEventThen("begin_checkout", { currency: gaItem.currency.toUpperCase(), value: (total ?? gaItem.priceCents * quantity) / 100, items: [item] }, go);
       } else go();
@@ -339,13 +362,29 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   };
 
   const unitsMax = Math.max(quantity, perUnit?.max ?? quantity);
-  const total = perUnit ? volumeTotalCents(quantity, perUnit.unitCents, perUnit.tiers, unitsMax) : null;
+  // Same functions as the server (src/lib/orders/create.ts): per-unit price or the pack, plus the optional add-on.
+  const unitsTotal = perUnit ? volumeTotalCents(quantity, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack) : null;
+  const isPack = perUnit ? packApplies(quantity, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack) : false;
+  const addon = perUnit?.addon && !isPack ? perUnit.addon : null;
+  const addonOn = Boolean(addon && values[addon.key] === "1");
+  const total = unitsTotal !== null ? unitsTotal + (addonOn && addon ? addon.cents : 0) : null;
   const fullPrice = perUnit ? perUnit.unitCents * quantity : null;
   const nextTier = perUnit ? nextVolumeTier(quantity, perUnit.tiers, unitsMax) : null;
-  // e.g. 9 photos already cost what 10 cost: the 10th is free.
-  const nextUnitFree = perUnit && quantity < unitsMax ? volumeTotalCents(quantity + 1, perUnit.unitCents, perUnit.tiers, unitsMax) === total : false;
-  const buttonLabel =
-    perUnit && quantity > 1 && perUnit.ctaMany ? perUnit.ctaMany.replace("{n}", String(quantity)).replace("{total}", money(total ?? 0)) : ctaLabel;
+  // e.g. 4 photos already cost what 5 cost: the 5th is free.
+  const nextUnitFree = perUnit && quantity < unitsMax ? volumeTotalCents(quantity + 1, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack) === unitsTotal : false;
+  // The smallest order that becomes the pack, for "add 1 more and the whole listing is $49".
+  const packFrom =
+    perUnit?.pack && !isPack
+      ? Array.from({ length: Math.max(0, unitsMax - quantity) }, (_, i) => quantity + i + 1).find((m) => packApplies(m, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack)) ?? null
+      : null;
+  const voucherOk = Boolean(voucher?.ok);
+  const buttonLabel = voucherOk
+    ? "Write my description — included"
+    : perUnit && quantity > 1 && perUnit.ctaMany
+      ? perUnit.ctaMany.replace("{n}", String(quantity)).replace("{total}", money(total ?? 0))
+      : perUnit && addonOn && total !== null
+        ? ctaLabel.replace(/\$[\d.,]+/, money(total))
+        : ctaLabel;
 
   if (freeSent) {
     return (
@@ -372,13 +411,18 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
   return (
     <form onSubmit={submit} onFocus={onFocus} className="card space-y-5" id="order">
       <div>
-        <h2 className="text-xl font-bold">{heading ?? (freeHeading ? "Stage your first photo free" : "Start your order")}</h2>
+        <h2 className="text-xl font-bold">{heading ?? (voucherOk ? "Your MLS description — included" : freeHeading ? "Stage your first photo free" : "Start your order")}</h2>
         <p className="mt-1 text-sm text-gray-600">
-          {freeHeading
-            ? `Upload one room photo, leave your email and click the link we send — no card. After that, ${priceLabel} · ${deliveryPromise}`
-            : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
+          {voucherOk
+            ? `It comes with your staging order, so there's nothing to pay: enter the listing facts below. ${deliveryPromise}`
+            : freeHeading
+              ? `Upload one room photo, leave your email and click the link we send — no card. After that, ${priceLabel} · ${deliveryPromise}`
+              : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
         </p>
       </div>
+      {voucher && !voucher.ok ? (
+        <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">{VOUCHER_PROBLEMS[voucher.problem ?? "invalid"] ?? VOUCHER_PROBLEMS.invalid}</p>
+      ) : null}
       {notice ? <p className="rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">{notice}</p> : null}
 
       {fields.map((f) => (
@@ -478,18 +522,38 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
               ) : (
                 <p className="text-xs text-gray-500">That's the maximum of {f.max ?? 6} photos for one order.</p>
               )}
-              {perUnit && uploadedRooms.length > 1 && total !== null ? (
-                <div className="space-y-1">
+              {perUnit && unitsTotal !== null && (uploadedRooms.length > 1 || (uploadedRooms.length === 1 && !freeMode)) ? (
+                <div className="space-y-2" data-price-summary>
                   <p className="text-sm font-semibold">
-                    {uploadedRooms.length} {perUnit.many} = {money(total)}
-                    {fullPrice !== null && total < fullPrice ? <span className="font-normal text-green-600"> · you save {money(fullPrice - total)}</span> : null}
+                    {isPack
+                      ? `Listing Pack: ${uploadedRooms.length} ${perUnit.many}${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} = ${money(unitsTotal)}`
+                      : `${uploadedRooms.length} ${uploadedRooms.length === 1 ? perUnit.one : perUnit.many} = ${money(unitsTotal)}`}
+                    {fullPrice !== null && unitsTotal < fullPrice ? <span className="font-normal text-green-600"> · you save {money(fullPrice - unitsTotal)}</span> : null}
                   </p>
                   {nextUnitFree ? (
                     <p className="text-xs text-gray-500">One more {perUnit.one} costs nothing extra — add it.</p>
+                  ) : isPack && perUnit.pack && uploadedRooms.length > perUnit.pack.units ? (
+                    <p className="text-xs text-gray-500">
+                      {money(perUnit.pack.cents)} for the first {perUnit.pack.units}, then {money(perUnit.pack.extraUnitCents)} a {perUnit.one}.
+                    </p>
+                  ) : packFrom !== null && perUnit.pack ? (
+                    <p className="text-xs text-gray-500">
+                      Add {packFrom - uploadedRooms.length} more and the whole listing — up to {perUnit.pack.units} {perUnit.many}
+                      {perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} — is {money(volumeTotalCents(packFrom, perUnit.unitCents, perUnit.tiers, unitsMax, perUnit.pack))}.
+                    </p>
                   ) : nextTier ? (
                     <p className="text-xs text-gray-500">
                       Add {nextTier.from - uploadedRooms.length} more and every {perUnit.one} is {money(nextTier.unitCents)}.
                     </p>
+                  ) : null}
+                  {addon ? (
+                    <label className="flex items-start gap-2 rounded-lg border border-line px-3 py-2 text-sm" data-addon>
+                      <input type="checkbox" className="mt-1" checked={addonOn} onChange={(e) => set(addon.key, e.target.checked ? "1" : "")} />
+                      <span>
+                        Add the {addon.label} for this listing <strong className="text-fg">+{money(addon.cents)}</strong>
+                        <span className="block text-xs text-gray-500">You get a link with your photos: enter the listing facts there and it&rsquo;s written in about a minute.</span>
+                      </span>
+                    </label>
                   ) : null}
                 </div>
               ) : null}

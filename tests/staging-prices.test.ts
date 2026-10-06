@@ -37,7 +37,7 @@ describe("virtual staging cost guide: prices at nine companies", () => {
     expect([applyDesignCoinsCost(1.5), applyDesignCoinsCost(6), applyDesignCoinsCost(9), applyDesignCoinsCost(20)]).toEqual([15, 60, 80, 140]);
     expect([virtualStagingAiMonth(4), virtualStagingAiMonth(6), virtualStagingAiMonth(7), virtualStagingAiMonth(150)]).toEqual([25, 25, 35, 139]);
     const at = (key: string) => STAGING_PRICES.find((p) => p.key === key)!;
-    expect([at("orvionis").listing(4), at("orvionis").listing(6)]).toEqual([60, 72]);
+    expect([at("orvionis").listing(4), at("orvionis").listing(6)]).toEqual([49, 59]);
     expect([at("styldod").listing(6), at("styldod").listing(8)]).toEqual([138, 128]);
     expect(at("photoup").listing(4)).toBe(18);
   });
@@ -61,7 +61,7 @@ describe("virtual staging cost guide: prices at nine companies", () => {
 
   it("dates the guide by the day the prices were checked", () => {
     const guide = GUIDES.find((g) => g.slug === "virtual-staging-cost")!;
-    expect(guide.updated).toBe("2026-10-06");
+    expect(guide.updated).toMatch(/^2026-10-06/);
     expect(guide.description).toContain(PRICES_CHECKED);
     expect(page).toContain("FAQPage");
     expect(page).toContain("/free/virtual-staging-cost-calculator");

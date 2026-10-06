@@ -97,7 +97,8 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
-      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false }, select: { customerEmail: true } }),
+      // Free first photos only: a description included with a Listing Pack is also a $0 order (freeKey "desc:…").
+      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: { freeKey: { startsWith: "desc:" } } }, select: { customerEmail: true } }),
       prisma.event.count({ where: { name: "photo_warning", createdAt: range } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));

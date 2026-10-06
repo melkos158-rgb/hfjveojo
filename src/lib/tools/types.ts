@@ -1,4 +1,4 @@
-import type { VolumeTier } from "@/lib/tools/volume";
+import type { PackPrice, VolumeTier } from "@/lib/tools/volume";
 import type { z } from "zod";
 import type { Fulfillment, ToolStatus, OutputType } from "@prisma/client";
 import type { AiCall, AiCallContext, ImageEditCall } from "@/lib/ai";
@@ -44,6 +44,15 @@ export type ToolPricing = {
   unit?: { one: string; many: string };
   /** Lower unit prices for larger orders (src/lib/tools/volume.ts); the base unit price is the product's price. */
   volume?: VolumeTier[];
+  /** A package price that applies whenever it is cheaper than the unit price (virtual staging: the Listing Pack). */
+  pack?: PackPrice;
+  /** What the pack includes beyond the units, e.g. "the MLS listing description" (delivered as a voucher). */
+  packIncludes?: string;
+  /**
+   * An optional extra for orders the pack doesn't cover, chosen with a checkbox whose intake key is `key` (virtual
+   * staging: the MLS description for $7 on 1-3 rooms). It is granted the same way as the pack's extra.
+   */
+  addon?: { key: string; cents: number; label: string };
 };
 
 /** One block of a sample deliverable as shown on the tool page. */

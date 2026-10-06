@@ -89,7 +89,8 @@ export type FreePhotoAvailability = { available: boolean; reason?: "off" | "sold
 export async function freePhotoAvailability(): Promise<FreePhotoAvailability> {
   const e = env();
   if (e.FREE_PHOTOS_PER_DAY <= 0) return { available: false, reason: "off" };
-  const claimedToday = await prisma.order.count({ where: { free: true, paidAt: { gte: startOfUtcDay() } } });
+  // Free first photos only: included descriptions (freeKey "desc:…", src/lib/orders/voucher.ts) don't use the daily allowance.
+  const claimedToday = await prisma.order.count({ where: { free: true, paidAt: { gte: startOfUtcDay() }, NOT: { freeKey: { startsWith: "desc:" } } } });
   if (claimedToday >= e.FREE_PHOTOS_PER_DAY) return { available: false, reason: "sold_out" };
   if (e.AI_DAILY_BUDGET_CENTS > 0 && (await todaysSpendMicros()) >= e.AI_DAILY_BUDGET_CENTS * 10_000 * FREE_PHOTO_BUDGET_SHARE) {
     return { available: false, reason: "sold_out" };

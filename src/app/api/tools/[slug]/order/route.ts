@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { createOrderWithCheckout } from "@/lib/orders/create";
+import { DESCRIPTION_TOOL_SLUG, redeemDescriptionVoucher } from "@/lib/orders/voucher";
 import { errorResponse } from "@/lib/errors";
 import { readJsonBody } from "@/lib/security/http";
 import { rateLimit, ipHash } from "@/lib/security/ratelimit";
@@ -9,9 +10,12 @@ import { ATTRIBUTION_COOKIE, INTERNAL_COOKIE, SESSION_ID_COOKIE, isInternalVisit
 import { isAdmin } from "@/lib/auth/guards";
 import { AppError } from "@/lib/errors";
 
-const bodySchema = z.object({ email: z.string().min(3).max(200), intake: z.record(z.string(), z.unknown()), sandbox: z.boolean().optional() });
+const bodySchema = z.object({ email: z.string().min(3).max(200), intake: z.record(z.string(), z.unknown()), sandbox: z.boolean().optional(), voucher: z.string().max(2000).optional() });
 
-/** Intake → PENDING order → Stripe Checkout URL. */
+/**
+ * Intake → PENDING order → Stripe Checkout URL. With a description voucher (the MLS description included in a staging
+ * Listing Pack) the order is created paid for $0 and the "checkout" URL is its order page.
+ */
 export async function POST(req: Request, ctx: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await ctx.params;
@@ -21,6 +25,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ slug: string }
     const session = await getSession();
     // Admins can take a real sandbox checkout (test card, no money) through the live site to test the whole flow.
     if (body.sandbox && !isAdmin(session)) throw new AppError("Sandbox checkout is for admins only", 403, "forbidden");
+    if (body.voucher) {
+      if (slug !== DESCRIPTION_TOOL_SLUG) throw new AppError("This link is for the listing description", 400, "voucher_invalid");
+      return Response.json(await redeemDescriptionVoucher({ token: body.voucher, email: body.email, intakeRaw: body.intake, userId: session?.id ?? null }));
+    }
     const result = await createOrderWithCheckout({
       toolSlug: slug,
       email: body.email,

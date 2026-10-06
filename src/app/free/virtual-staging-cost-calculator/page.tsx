@@ -30,11 +30,11 @@ const bigPlan = SUBSCRIPTION_PLANS[SUBSCRIPTION_PLANS.length - 1];
 const FAQ = [
   {
     q: "How much does virtual staging cost per photo?",
-    a: `Human editors charge $24 (VirtualStaging.com) to $30 (BoxBrownie) per photo. ORVIONIS charges ${money(cheapest.perPhoto)} per photo, $12 each from 5 photos and $99 for 10, with two versions of each. AI subscriptions such as Virtual Staging AI run ${money(smallPlan.perMonth)} a month for ${smallPlan.photosPerMonth} photos up to ${money(bigPlan.perMonth)} for ${bigPlan.photosPerMonth}, with yearly billing. Prices checked ${STAGING_PRICES_CHECKED}.`,
+    a: `Human editors charge $24 (VirtualStaging.com) to $30 (BoxBrownie) per photo. ORVIONIS charges ${money(cheapest.perPhoto)} per photo, or $49 for a whole listing (up to 5 rooms plus the MLS description) and $99 for 10, with two versions of each photo. AI subscriptions such as Virtual Staging AI run ${money(smallPlan.perMonth)} a month for ${smallPlan.photosPerMonth} photos up to ${money(bigPlan.perMonth)} for ${bigPlan.photosPerMonth}, with yearly billing. Prices checked ${STAGING_PRICES_CHECKED}.`,
   },
   {
     q: "How much does it cost to virtually stage a whole listing?",
-    a: `A typical vacant listing needs four to six staged photos. Five photos cost ${money(typical.perPhoto[0].perListing)} with ORVIONIS ($12 each from five), ${money(typical.perPhoto[1].perListing)} at $24 and ${money(typical.perPhoto[2].perListing)} at $30 per photo. For scale, NAR's 2025 Profile of Home Staging puts the median cost of a staging service (real furniture) at ${money(NAR_MEDIAN_STAGING_SERVICE)} per home.`,
+    a: `A typical vacant listing needs four to six staged photos. Five photos cost ${money(typical.perPhoto[0].perListing)} with ORVIONIS (the whole-listing price, MLS description included), ${money(typical.perPhoto[1].perListing)} at $24 and ${money(typical.perPhoto[2].perListing)} at $30 per photo. For scale, NAR's 2025 Profile of Home Staging puts the median cost of a staging service (real furniture) at ${money(NAR_MEDIAN_STAGING_SERVICE)} per home.`,
   },
   {
     q: "Is an AI subscription cheaper than paying per photo?",

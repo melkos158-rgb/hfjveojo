@@ -182,7 +182,7 @@ export default function WhichRoomsGuide() {
       <h2>Staging several rooms with ORVIONIS</h2>
       <p>
         <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> takes up to ten room photos per order: $15 per
-        photo, $12 each from five photos, $99 for ten. You set the room type of each photo (living room, bedroom, dining room, home office, kitchen, bathroom, patio), pick one of
+        photo, or $49 for the whole listing (up to five rooms plus the MLS description), $99 for ten. You set the room type of each photo (living room, bedroom, dining room, home office, kitchen, bathroom, patio), pick one of
         six styles for the whole order, and get two staged versions of every photo in about two minutes per photo — walls,
         floors and windows stay as photographed. Every order includes labeled copies for the MLS disclosure, and your first
         photo is free.

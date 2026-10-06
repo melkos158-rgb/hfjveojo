@@ -2,6 +2,7 @@
  * Every published guide — the /guides hub, the sitemap and the footer read this list, so a new guide is one entry here
  * plus its page under src/app/guides/<slug>/page.tsx.
  */
+/** `updated`: the day the guide last changed (YYYY-MM-DD), or a UTC time (YYYY-MM-DDTHH:MM:SSZ) when the content version already moved that day, so IndexNow sends it again (src/lib/seo/sitemap-entries.ts). Never later than the deploy. */
 export type Guide = { slug: string; title: string; description: string; audience: string; updated: string; tool?: { slug: string; label: string } };
 
 export const GUIDES: Guide[] = [
@@ -10,7 +11,7 @@ export const GUIDES: Guide[] = [
     title: "Virtual staging styles: one room in six looks",
     description: "Modern, Scandinavian, farmhouse, mid-century, luxury or coastal? The same empty living room staged in all six, what defines each style, and which listings each one suits.",
     audience: "Real estate agents",
-    updated: "2026-10-02",
+    updated: "2026-10-06T10:30:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -18,7 +19,7 @@ export const GUIDES: Guide[] = [
     title: "Free virtual staging: what you actually get for free in 2026",
     description: "Which services let you stage a photo free (a first image, a few AI designs, a free upload), the catches to check, and what a whole listing costs after. Checked October 2, 2026.",
     audience: "Real estate agents",
-    updated: "2026-10-02",
+    updated: "2026-10-06T10:30:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -34,7 +35,7 @@ export const GUIDES: Guide[] = [
     title: "Which rooms should you virtually stage?",
     description: "Buyers' agents rank the living room (37%), primary bedroom (34%) and kitchen (23%) as the rooms that matter most to stage (NAR 2025). A plan for one to six photos, and what to skip.",
     audience: "Real estate agents",
-    updated: "2026-10-05",
+    updated: "2026-10-06T10:30:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -42,7 +43,7 @@ export const GUIDES: Guide[] = [
     title: "How much does virtual staging cost in 2026?",
     description: "Design services charge $23–$37 for one photo, AI about $4.50–$15 or a monthly plan. Nine companies' prices checked October 6, 2026, what a whole listing costs, and NAR data on staging.",
     audience: "Real estate agents",
-    updated: "2026-10-06",
+    updated: "2026-10-06T10:30:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
