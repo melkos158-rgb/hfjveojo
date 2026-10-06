@@ -26,8 +26,9 @@ export const PAGE_UPDATED: Record<string, string> = {
   "/free/virtual-staging-cost-calculator": "2026-10-06T10:30:00Z",
   "/free": "2026-09-29T15:00:00Z",
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
-  // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling)
-  "/tools/virtual-staging": "2026-10-06T10:30:00Z",
+  // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling); 11:45 UTC: the Pro
+  // credits FAQ and the "Have Pro credits? Sign in" line
+  "/tools/virtual-staging": "2026-10-06T11:45:00Z",
   "/pricing": "2026-10-06T11:20:00Z",
   // 6 Oct 10:50 UTC: the one checkout reminder email is described
   "/privacy": "2026-10-06T10:50:00Z",

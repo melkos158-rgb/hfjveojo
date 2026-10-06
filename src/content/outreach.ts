@@ -77,6 +77,22 @@ export const outreachTemplates: OutreachTemplate[] = [
     personalize: "[name], [street or neighborhood], [specific shot] from a real recent post. Only photographers who don't deliver through Aryeo (Zillow gives Aryeo users AI staging at no extra cost). Link with ?utm_source=instagram_dm&exp=e20-pro-credits.",
   },
   {
+    key: "re-team-dm-credits",
+    channel: "Instagram DM → lead of a small team or brokerage with 5+ active listings",
+    when: "The team share of the daily send pack (court session 2: 15 %). Several vacant listings at once make the prepaid pack the natural offer.",
+    en: `Hey [name], [team name] has [N] listings up right now, nice run. Quick one: when some of them are vacant, I can stage the empty rooms in about two minutes a photo, two versions each. For teams there's a prepaid pack: 25 rooms for $149 (about $6 a room), shared by whoever signs in with your team's email. No subscription. Before/after: orvionis.com/tools/pro-credits. First room's free if you want to test it on one listing.`,
+    ua: `Привіт, [name], у [team name] зараз [N] активних оголошень, гарний темп. Коротко: коли деякі з них порожні, я можу застейджити порожні кімнати приблизно за дві хвилини на фото, по дві версії. Для команд є передоплачений пакет: 25 кімнат за $149 (приблизно $6 за кімнату), спільний для всіх, хто входить із робочою поштою команди. Без підписки. До/після: orvionis.com/tools/pro-credits. Перша кімната безкоштовна, якщо хочеш спробувати на одному оголошенні.`,
+    personalize: "[name], [team name], [N] = the active listings you counted on their own page or profile (5 or more). Link with ?utm_source=instagram_dm&exp=e20-pro-credits.",
+  },
+  {
+    key: "re-builder-dm-staging",
+    channel: "Instagram DM → small builder or new-construction sales agent with finished spec homes photographed empty",
+    when: "The builder share of the daily send pack (court session 2: 10 %). Only where the listing photos show empty rooms.",
+    en: `Hey [name], the [community or street] homes look sharp. Quick question: are any of the finished specs listed empty? I stage room photos in about two minutes each, same walls, floors and windows, just furniture added, so buyers see them lived-in without staging every home. First room's free; a whole home is $49 (up to 5 rooms plus the MLS description), or 25 rooms for $149 across your homes. Before/after: orvionis.com/tools/virtual-staging#example`,
+    ua: `Привіт, [name], будинки в [community or street] виглядають класно. Коротке питання: чи є серед готових будинків такі, що виставлені порожніми? Я стейджу фото кімнат приблизно за дві хвилини кожне, ті самі стіни, підлога й вікна, лише додані меблі, тож покупці бачать їх обжитими без стейджингу кожного будинку. Перша кімната безкоштовна; цілий будинок — $49 (до 5 кімнат плюс опис для MLS), або 25 кімнат за $149 на всі ваші будинки. До/після: orvionis.com/tools/virtual-staging#example`,
+    personalize: "[name], [community or street] from their own recent post or listing. Only builders whose listing photos show empty rooms (furnished models need nothing). Link with ?utm_source=instagram_dm&exp=e4-virtual-staging.",
+  },
+  {
     key: "photo-ig-dm-1",
     channel: "Instagram DM / Facebook group DM → wedding or portrait photographer",
     when: "First contact after engaging with their work.",

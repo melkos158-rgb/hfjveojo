@@ -246,7 +246,9 @@ export default function VirtualStagingCostGuide() {
         <Link href="/guides/virtual-staging-styles">six styles</Link>. Walls, floors and windows stay as photographed; if
         the room&apos;s structure was changed or the result is unusable, one redo is included, otherwise a refund. Every order
         comes with a disclosure pack (labeled copies and a link to the original). Your first photo is free (one per person), and
-        you can also see a free watermarked preview of your own photo before you pay.
+        you can also see a free watermarked preview of your own photo before you pay. Photographers and teams who stage every
+        week can prepay <Link href="/tools/pro-credits">25 rooms for $149</Link> (about $5.96 a room, valid 12 months, no logo
+        on the files).
       </p>
       <p>
         <Link href="/tools/virtual-staging#order" className="btn-primary no-underline">
