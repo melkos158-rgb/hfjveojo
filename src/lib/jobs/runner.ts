@@ -53,6 +53,12 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           where: { status: "PENDING", free: true, createdAt: { lt: new Date(Date.now() - FREE_CLAIM_TTL_SECONDS * 1000) } },
           data: { status: "CANCELED", errorMessage: "free photo: the emailed link was not clicked in time" },
         });
+        // One reminder email for checkouts left about 2 hours ago (src/lib/orders/reminders.ts).
+        const { sendCheckoutReminders } = await import("@/lib/orders/reminders");
+        const reminders = await sendCheckoutReminders().catch((err: Error) => {
+          log.warn("jobs.reminders_failed", { error: err.message });
+          return 0;
+        });
         // Stripe fees that were not settled yet when the payment was recorded.
         const { syncMissingPaymentFees } = await import("@/lib/stripe/fees");
         const fees = await syncMissingPaymentFees().catch((err: Error) => {
@@ -65,7 +71,7 @@ export async function runJob(jobId: string, workerId: string): Promise<void> {
           log.warn("jobs.indexnow_failed", { error: err.message });
           return { skipped: "error" };
         });
-        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, unclaimedFree: unclaimedFree.count, fees, indexnow });
+        log.info("jobs.maintenance", { files, rateLimitRows: rl, legacyIp, stale, abandoned: abandoned.count, unclaimedFree: unclaimedFree.count, reminders, fees, indexnow });
         break;
       }
       default:

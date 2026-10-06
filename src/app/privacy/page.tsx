@@ -26,7 +26,7 @@ export default function PrivacyPage() {
   return (
     <div className="container-x max-w-3xl py-12 prose-basic">
       <h1>Privacy Policy</h1>
-      <p>Last updated: {site.legal.lastUpdated}</p>
+      <p>Last updated: {site.legal.privacyUpdated}</p>
       <LegalNotice />
 
       <h2>Controller</h2>
@@ -43,7 +43,8 @@ export default function PrivacyPage() {
           (performance of the contract). Each order has a private link to its status and files; we email it to you.
           For a free first photo we email you a confirmation link first; the photo is staged only after you click it,
           and we keep a normalised form of your email address so that each person gets one free photo. An unconfirmed
-          request is kept like any other upload.
+          request is kept like any other upload. If you leave the checkout without paying, we email you once, about two
+          hours later, with a link to finish the same order; there are no further reminders.
         </li>
         <li>
           <strong>Payments</strong> — you pay on Stripe&apos;s checkout page. Your full card number and security code go to

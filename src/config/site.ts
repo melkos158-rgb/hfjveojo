@@ -18,6 +18,8 @@ export const site = {
     /** Safeguards for providers outside the EEA (DPAs / Standard Contractual Clauses / Data Privacy Framework): the owner confirms per provider. */
     transfersNote: "VERIFY the safeguard used for each provider outside the EEA (data processing agreement with Standard Contractual Clauses or EU–US Data Privacy Framework)",
     lastUpdated: "2026-09-26",
+    /** The privacy policy changes more often (free photo 1 Oct, checkout reminder 6 Oct). */
+    privacyUpdated: "2026-10-06",
   },
   social: {
     instagram: "",

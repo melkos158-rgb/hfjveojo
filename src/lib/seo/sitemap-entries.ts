@@ -29,7 +29,8 @@ export const PAGE_UPDATED: Record<string, string> = {
   // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling)
   "/tools/virtual-staging": "2026-10-06T10:30:00Z",
   "/pricing": "2026-10-06T10:30:00Z",
-  "/privacy": "2026-10-01T23:16:00Z",
+  // 6 Oct 10:50 UTC: the one checkout reminder email is described
+  "/privacy": "2026-10-06T10:50:00Z",
   // 2 Oct: the home page, /real-estate and /tools lead with the free first photo
   "": "2026-10-02",
   "/real-estate": "2026-10-02",

@@ -4,7 +4,7 @@ import { AppError, RateLimitedError, reportError } from "@/lib/errors";
 import { rateLimit } from "@/lib/security/ratelimit";
 import { log } from "@/lib/logger";
 import { getToolBySlug } from "@/lib/tools/registry";
-import { randomToken } from "@/lib/security/tokens";
+import { randomToken, safeEqual } from "@/lib/security/tokens";
 import { stripe } from "@/lib/stripe/client";
 import { checkoutMode, isTestOrder, type StripeMode } from "@/lib/stripe/mode";
 import { photoInputsOf, quantityOf } from "@/lib/tools/photos";
@@ -163,9 +163,57 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
     });
   }
 
-  const successUrl = appUrl(`/checkout/success?order=${order.id}&t=${encodeURIComponent(order.accessToken)}`);
-  const cancelUrl = appUrl(`/checkout/cancel?order=${order.id}&tool=${def.slug}`);
+  const session = await openCheckoutSession(client, {
+    order: { id: order.id, number: order.number, accessToken: order.accessToken },
+    def,
+    product,
+    email,
+    mode,
+    lines: { quantity, unitsCents, perUnitLine, isPack, addon, finish: Boolean(finish?.ok) },
+    idempotencyKey: `checkout_${order.id}`,
+  });
+  if (!input.internal) await track("checkout_started", {
+    orderId: order.id,
+    sessionId: input.sessionId ?? undefined,
+    userId: input.userId ?? undefined,
+    experimentId: experiment?.id,
+    props: { tool: def.id, amountCents: totalCents, quantity, mode, ...(pack ? { pack: isPack } : {}), ...(def.pricing.addon ? { addon: Boolean(addon) } : {}), ...(finish?.ok ? { finish: true } : {}) },
+  });
+  return { orderId: order.id, checkoutUrl: session.url as string };
+}
 
+type CheckoutLines = {
+  quantity: number;
+  unitsCents: number;
+  perUnitLine: boolean;
+  isPack: boolean;
+  addon: { key: string; cents: number; label: string } | null;
+  finish: boolean;
+};
+
+/**
+ * One Stripe Checkout session for an order, priced by `lines` (computed when the order was created, never from the
+ * client). The session's own livemode is recorded: only events of the same mode may ever change the order's payment
+ * state. Used by createOrderWithCheckout and resumeCheckout.
+ */
+async function openCheckoutSession(
+  client: ReturnType<typeof stripe>,
+  args: {
+    order: { id: string; number: number; accessToken: string };
+    def: ToolDefinition<unknown> | NonNullable<ReturnType<typeof getToolBySlug>>;
+    product: { name: string; currency: string; sku: string };
+    email: string;
+    mode: StripeMode;
+    lines: CheckoutLines;
+    idempotencyKey: string;
+  },
+) {
+  const { order, def, product, email, mode, lines } = args;
+  const currency = product.currency || env().STRIPE_CURRENCY;
+  const many = def.pricing.unit?.many ?? "units";
+  const successUrl = appUrl(`/checkout/success?order=${order.id}&t=${encodeURIComponent(order.accessToken)}`);
+  // The cancel page offers to resume this order (src/app/api/orders/[id]/resume), so it carries the private token.
+  const cancelUrl = appUrl(`/checkout/cancel?order=${order.id}&tool=${def.slug}&t=${encodeURIComponent(order.accessToken)}`);
   const session = await client.checkout.sessions.create(
     {
       mode: "payment",
@@ -173,28 +221,28 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       customer_email: email,
       line_items: [
         {
-          quantity: perUnitLine ? quantity : 1,
+          quantity: lines.perUnitLine ? lines.quantity : 1,
           price_data: {
-            currency: product.currency || env().STRIPE_CURRENCY,
-            unit_amount: perUnitLine ? unitsCents / quantity : unitsCents,
+            currency,
+            unit_amount: lines.perUnitLine ? lines.unitsCents / lines.quantity : lines.unitsCents,
             product_data: {
-              name: isPack
-                ? `${product.name} — ${finish?.ok ? "Finish this listing" : "Listing Pack"} (${quantity} ${def.pricing.unit?.many ?? "units"} + ${def.pricing.packIncludes ?? "extras"})`
-                : perUnitLine || quantity === 1
+              name: lines.isPack
+                ? `${product.name} — ${lines.finish ? "Finish this listing" : "Listing Pack"} (${lines.quantity} ${many} + ${def.pricing.packIncludes ?? "extras"})`
+                : lines.perUnitLine || lines.quantity === 1
                   ? product.name
-                  : `${product.name} (${quantity} ${def.pricing.unit?.many ?? "units"})`,
+                  : `${product.name} (${lines.quantity} ${many})`,
               description: def.tagline.slice(0, 200),
             },
           },
         },
-        ...(addon
+        ...(lines.addon
           ? [
               {
                 quantity: 1,
                 price_data: {
-                  currency: product.currency || env().STRIPE_CURRENCY,
-                  unit_amount: addon.cents,
-                  product_data: { name: addon.label, description: "Delivered with your order: a link to write the description for this listing." },
+                  currency,
+                  unit_amount: lines.addon.cents,
+                  product_data: { name: lines.addon.label, description: "Delivered with your order: a link to write the description for this listing." },
                 },
               },
             ]
@@ -213,22 +261,75 @@ export async function createOrderWithCheckout(input: CreateOrderInput): Promise<
       allow_promotion_codes: true,
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
     },
-    { idempotencyKey: `checkout_${order.id}` },
+    { idempotencyKey: args.idempotencyKey },
   );
   if (!session.url) throw new AppError("Stripe did not return a checkout URL", 502, "stripe_no_url");
-
-  // The session's own livemode is recorded: only events of the same mode may ever change this order's payment state.
   const livemode = session.livemode === true;
   if (livemode !== (mode === "live")) {
     throw new AppError(`Stripe returned a ${livemode ? "live" : "test"} session for a ${mode} checkout — check the ${mode} key`, 500, "stripe_mode_mismatch");
   }
   await prisma.order.update({ where: { id: order.id }, data: { stripeCheckoutSessionId: session.id, livemode } });
-  if (!input.internal) await track("checkout_started", {
-    orderId: order.id,
-    sessionId: input.sessionId ?? undefined,
-    userId: input.userId ?? undefined,
-    experimentId: experiment?.id,
-    props: { tool: def.id, amountCents: totalCents, quantity, mode, ...(pack ? { pack: isPack } : {}), ...(def.pricing.addon ? { addon: Boolean(addon) } : {}), ...(finish?.ok ? { finish: true } : {}) },
+  return session;
+}
+
+/** How long an unpaid order can be picked up again from the cancel page or the reminder email. */
+export const RESUME_HOURS = 24;
+/** A checkout session lives 30 minutes; a new one is only opened once the old one can no longer be paid. */
+const SESSION_MINUTES = 31;
+
+export type ResumeOutcome = { url: string; kind: "checkout" | "order" | "form" };
+
+/**
+ * Re-open checkout for an unpaid order: the same order, photos and price, in a new Stripe session. Only once the first
+ * session has expired (so nobody can pay twice) and within RESUME_HOURS of the order; a paid order goes to its page,
+ * anything else back to the order form.
+ */
+export async function resumeCheckout(orderId: string, token: string | null | undefined): Promise<ResumeOutcome> {
+  const order = await prisma.order.findUnique({ where: { id: orderId }, include: { product: true, tool: true } });
+  if (!order || !token || !safeEqual(order.accessToken, token)) return { url: appUrl("/tools"), kind: "form" };
+  const def = getToolBySlug(order.tool.slug);
+  const formUrl = appUrl(`/tools/${order.tool.slug}#order`);
+  if (!["PENDING", "CANCELED"].includes(order.status)) return { url: appUrl(`/orders/${order.id}?t=${encodeURIComponent(order.accessToken)}`), kind: "order" };
+  const ageMs = Date.now() - order.createdAt.getTime();
+  // Back from Stripe a moment ago: the first session is still open, so the customer simply goes back to it.
+  if (order.status === "PENDING" && order.stripeCheckoutSessionId && order.livemode !== null && ageMs <= SESSION_MINUTES * 60_000) {
+    try {
+      const open = await checkoutClient(order.livemode ? "live" : "test").checkout.sessions.retrieve(order.stripeCheckoutSessionId);
+      if (open.status === "open" && open.url) return { url: open.url, kind: "checkout" };
+    } catch (err) {
+      log.warn("orders.resume_retrieve_failed", { orderId: order.id, error: (err as Error).message });
+    }
+    return { url: formUrl, kind: "form" };
+  }
+  const expiredSession = order.status === "CANCELED" && order.errorMessage === "checkout.session.expired";
+  const stalePending = order.status === "PENDING" && !order.checkoutCompletedAt && ageMs > SESSION_MINUTES * 60_000;
+  if (!def || order.free || ageMs > RESUME_HOURS * 3600_000 || !(expiredSession || stalePending) || order.livemode === null) return { url: formUrl, kind: "form" };
+
+  const mode: StripeMode = order.livemode ? "live" : "test";
+  const client = checkoutClient(mode);
+  // Belt and braces: make sure the earlier session can't be paid any more (it normally expired already).
+  if (order.stripeCheckoutSessionId) {
+    try {
+      await client.checkout.sessions.expire(order.stripeCheckoutSessionId);
+    } catch {
+      // already expired or completed: nothing to do
+    }
+  }
+  const intake = (order.intake ?? {}) as Record<string, unknown>;
+  const addon = def.pricing.addon && intake[def.pricing.addon.key] === true ? def.pricing.addon : null;
+  const unitsCents = order.amountCents - (addon?.cents ?? 0);
+  const isPack = intake.extraIncluded === true && !addon;
+  const lines: CheckoutLines = { quantity: order.quantity, unitsCents, perUnitLine: !isPack && unitsCents % order.quantity === 0, isPack, addon, finish: typeof intake.finishOf === "string" };
+  await prisma.order.update({ where: { id: order.id }, data: { status: "PENDING", errorMessage: null } });
+  const session = await openCheckoutSession(client, {
+    order: { id: order.id, number: order.number, accessToken: order.accessToken },
+    def,
+    product: order.product,
+    email: order.customerEmail,
+    mode,
+    lines,
+    idempotencyKey: `checkout_${order.id}_resume_${Math.floor(Date.now() / 60_000)}`,
   });
-  return { orderId: order.id, checkoutUrl: session.url };
+  await track("checkout_resumed", { orderId: order.id, props: { tool: def.id, amountCents: order.amountCents } });
+  return { url: session.url as string, kind: "checkout" };
 }
