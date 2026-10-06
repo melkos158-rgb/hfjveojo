@@ -233,7 +233,10 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-06 ≈ 11:35 UTC (after s91). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-fe1f6735a639-14` (s91 `44f3059`, CI #132 green). Pro credits live; no orders yet.
+- Last verified: 2026-10-06 ≈ 12:57 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-f46d33abcba1-14` (s93 `892b61b`, CI #134 green), 399 ticks.
+  - `/admin/analytics` (30 days): 633 / 152, funnel 3 → 7 → 0, 0 paid, AI $4.08, free tool uses 17, free first photos 0, delivered / review / failed 0 / 0 / 0. IndexNow 12:00 UTC: 8 URLs accepted (the s91–s93 pages). Fiverr: 0 orders in every status, inbox unchanged. TikTok and YouTube unchanged. E19 tracker: nothing sent since 2 Oct (9 sent + 1 replied).
+  - Chrome on the owner's computer was slow on background-tab pages this time (pages finished loading only after a screenshot brought the tab to the front, and JS with timers timed out); `/api/health` was read in the built-in browser.
+- Earlier: 2026-10-06 ≈ 11:52 UTC (after s93). `/api/health` ok, worker `web-f46d33abcba1-14`. Pro credits live since s91; no orders yet.
 - Earlier: 2026-10-06 ≈ 08:50 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-6bde7c4a7a34-14` (s86 `681b6c4`, CI #127 green).
   - `/admin/analytics` (30 days): 626 / 149 (+9 / +9 overnight, all direct), funnel 3 → 7 → 0, 0 paid, AI $4.08 (+$0.01, the daily report), free tool uses 15, photo warnings 0, free first photos 0, delivered / review / failed 0 / 0 / 0. No overnight orders.
   - The Chrome extension was disconnected at the start of the run, so `/api/health` was read in the built-in browser (orvionis.com allowed there on 6 Oct). `/admin` needs a sign-in in that browser, which the operator doesn't do; the admin numbers were read in Chrome once it reconnected.
@@ -277,6 +280,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `892b61b` (s93, 2026-10-06 ≈ 11:47 UTC): the bulk-price FAQ on the staging page, the cost guide's Pro credits link, team and builder DM templates. CI #134 green; Railway deployed by 11:50 UTC (worker `web-f46d33abcba1-14`); the FAQ "I stage every week. Is there a bulk price?" is on the live page.
+- `486aea3` (s92, 2026-10-06 ≈ 11:37 UTC): the photographer Pro credits DM template and the E20 experiment row. CI #133 green; Railway deployed by 11:40 UTC (worker `web-07692e1014b4-14`).
 - `44f3059` (s91, 2026-10-06 ≈ 11:24 UTC): Pro credits + `/photographers` for real-estate photographers. CI #132 green (209 tests); Railway deployed by 11:27 UTC (worker `web-fe1f6735a639-14`, health ok). Live: `/tools/pro-credits` (title, hero "Get 25 rooms — $149", form, the monthly-plan comparison), `/photographers` (new headline and button, prices from the cost guide), `/pricing`, `/terms` and `/refund-policy` with the credit rules and 2026-10-06, the staging page's "Sign in to use them", `llms.txt`, the new OG card, sitemap lastmod 11:20 UTC for the changed pages. The product is in the live catalog (the form shows). Read in the built-in browser: Chrome hung on orvionis.com pages this time (document never idle, even on `/api/health`), while GitHub loaded fine there.
 - `86e8530` (s90, 2026-10-06 ≈ 10:55 UTC): resume an unpaid order + one reminder email. CI #131 green (202 tests); Railway deployed (worker `web-826dfc57e15b-14`, health ok).
 - `3339ce6` (s89, 2026-10-06 ≈ 10:42 UTC): "Finish this listing $39". CI #130 green (198 tests); Railway deployed by 10:45 UTC (worker `web-7734cbf0079a-14`, health ok). Live: a broken finish link shows "The finish-this-listing offer has ended", the free-photo heading and "$15 per photo · whole listing $49". A real finish link needs a delivered free photo, and production has none yet; the full flow was checked in a local production build.
