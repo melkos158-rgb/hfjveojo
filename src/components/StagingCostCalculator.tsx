@@ -67,7 +67,7 @@ export function StagingCostCalculator() {
           <div className="rounded-xl border border-line p-4">
             <div className="text-xs text-gray-500">One-off listing ({r.photosPerListing} photos)</div>
             <div className="mt-1 text-2xl font-extrabold tracking-tight text-fg">{money(r.oneOff.cost)}</div>
-            <div className="mt-1 text-sm text-gray-600">cheapest: {r.oneOff.name}</div>
+            <div className="mt-1 text-sm text-gray-600">cheapest of these: {r.oneOff.name}</div>
           </div>
           <div className="rounded-xl border border-line p-4">
             <div className="text-xs text-gray-500">Every month ({r.photosPerMonth} photos)</div>
@@ -75,7 +75,7 @@ export function StagingCostCalculator() {
               {money(r.everyMonth.cost)}
               <span className="text-sm font-normal text-gray-500"> / month</span>
             </div>
-            <div className="mt-1 text-sm text-gray-600">cheapest: {r.everyMonth.name}</div>
+            <div className="mt-1 text-sm text-gray-600">cheapest of these: {r.everyMonth.name}</div>
           </div>
         </div>
 

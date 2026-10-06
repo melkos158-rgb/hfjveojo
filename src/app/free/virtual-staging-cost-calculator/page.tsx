@@ -9,7 +9,7 @@ const PATH = "/free/virtual-staging-cost-calculator";
 export const metadata: Metadata = {
   title: "Virtual staging cost calculator: price per listing (2026)",
   description:
-    "What virtual staging costs for your listings: human editors at $24–$30 a photo, AI plans from $16/month, pay-per-photo AI at $15. Prices checked Sep 29, 2026.",
+    "What virtual staging costs for your listings: editors at $24–$30 a photo, AI plans from $16/month (yearly), pay-per-photo AI at $15. Prices checked Oct 6, 2026.",
   keywords: ["virtual staging cost calculator", "virtual staging pricing", "virtual staging cost", "how much does virtual staging cost", "virtual staging price per photo"],
   alternates: { canonical: PATH },
   openGraph: {
@@ -47,10 +47,10 @@ const FAQ = [
 ];
 
 const SOURCES = [
-  { text: "BoxBrownie pricing: virtual staging US$30 per image (checked September 29, 2026)", href: "https://www.boxbrownie.com/pricing", label: "boxbrownie.com/pricing" },
+  { text: "BoxBrownie pricing: virtual staging US$30 per image (checked October 6, 2026)", href: "https://www.boxbrownie.com/pricing", label: "boxbrownie.com/pricing" },
   { text: "BoxBrownie virtual staging: under 48 hours, free changes within 2 months", href: "https://www.boxbrownie.com/virtual-staging", label: "boxbrownie.com/virtual-staging" },
-  { text: "VirtualStaging.com, “How Much Does Virtual Staging Cost?” (updated March 2, 2026): $24 per image, 8–24 hours", href: "https://virtualstaging.com/blog/virtual-staging-cost-ultimate-guide/", label: "virtualstaging.com" },
-  { text: "Virtual Staging AI plans with yearly billing: Basic $16/mo (6 photos, $192 a year) to Enterprise $79/mo (150 photos) (checked September 29, 2026)", href: "https://www.virtualstagingai.app/prices", label: "virtualstagingai.app/prices" },
+  { text: "VirtualStaging.com pricing: $24 per image ($19.20 with their bulk discount), 24-hour ETA, 4–8-hour rush (checked October 6, 2026)", href: "https://virtualstaging.com/pricing", label: "virtualstaging.com/pricing" },
+  { text: "Virtual Staging AI plans with yearly billing: Basic $16/mo (6 photos, $192 a year) to Enterprise $79/mo (150 photos); billed monthly, the same plans are $25 to $139 a month (checked October 6, 2026)", href: "https://www.virtualstagingai.app/prices", label: "virtualstagingai.app/prices" },
   { text: "NAR 2025 Profile of Home Staging: median $1,500 when a staging service staged the home", href: "https://www.nar.realtor/infographics/2025-profile-of-home-staging-snapshot", label: "nar.realtor" },
 ];
 

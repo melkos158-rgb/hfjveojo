@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { stagingListingCents } from "@/config/staging-pricing";
 import { site } from "@/config/site";
+import { EXTRAS, GROUP_LABEL, PRICES_CHECKED, PRICES_CHECKED_ISO, STAGING_PRICES, priceRanges, usd, type PriceGroup } from "@/content/staging-prices";
 
 const SLUG = "virtual-staging-cost";
 const TITLE = "How much does virtual staging cost in 2026?";
-/** Search-result title: the answer's shape up front (searchers compare per-photo prices). */
-const SEO_TITLE = "Virtual staging cost in 2026: real prices per photo";
-const DESCRIPTION =
-  "Human-edited virtual staging costs $24–$30 per photo; AI plans run $16–$79 a month. Real prices checked in September 2026, what a whole listing costs, and NAR data on what staging does for a sale.";
-const CHECKED = "September 26, 2026";
+/** Search-result title: the answer's shape up front (searchers compare per-photo prices across companies). */
+const SEO_TITLE = "Virtual staging cost in 2026: prices per photo at 9 companies";
+const R = priceRanges();
+const range = ([a, b]: readonly [number, number], round = false) => `${usd(round ? Math.round(a) : a)}–${usd(round ? Math.round(b) : b)}`;
+const DESCRIPTION = `Virtual staging costs ${range(R.designerOnePhoto)} a photo from a design service and about ${range(R.aiPerPhoto)} with AI, or a monthly plan. Nine companies' prices checked ${PRICES_CHECKED}.`;
 const OG_IMAGE = "/img/sample-virtual-staging-og.jpg";
 
 export const metadata: Metadata = {
@@ -19,43 +19,32 @@ export const metadata: Metadata = {
   openGraph: { type: "article", title: `${SEO_TITLE} | ${site.name}`, description: DESCRIPTION, url: `${site.url}/guides/${SLUG}`, images: [{ url: OG_IMAGE, width: 540, height: 630 }] },
 };
 
-/** Prices as published by each provider on the day we checked (see Sources). */
-const MODELS: Array<{ model: string; example: string; price: string; time: string; bestFor: string }> = [
-  {
-    model: "Human editor, per photo",
-    example: "BoxBrownie",
-    price: "US$30 per photo (free changes within 2 months)",
-    time: "Under 48 hours (their figure)",
-    bestFor: "Complex edits, a designer's eye, no rush",
-  },
-  {
-    model: "Human editor, per photo",
-    example: "VirtualStaging.com",
-    price: "$24 per photo",
-    time: "8–24 hours (their figure)",
-    bestFor: "Same, a little faster and cheaper",
-  },
-  {
-    model: "AI subscription",
-    example: "Virtual Staging AI",
-    price: "$16/month for 6 photos up to $79/month for 150 (≈ $2.67 down to $0.53 per photo)",
-    time: "Minutes",
-    bestFor: "Teams staging dozens of photos every month",
-  },
-  {
-    model: "AI per photo, no subscription",
-    example: "ORVIONIS",
-    price: "$15 per photo, $12 each from 5 (2 versions of each); first photo free",
-    time: "About 2 minutes per photo",
-    bestFor: "An agent with a listing now and then; try it on your own photo first, free",
-  },
-];
+const GROUPS: PriceGroup[] = ["designer", "per-photo", "subscription"];
+const ONE_PHOTO = [...STAGING_PRICES].sort((a, b) => a.onePhoto - b.onePhoto || Number(!!a.ours) - Number(!!b.ours));
+const MAX_ONE_PHOTO = Math.max(...STAGING_PRICES.map((p) => p.onePhoto));
+const LISTINGS = [...STAGING_PRICES].sort((a, b) => a.listing(4) - b.listing(4) || a.listing(6) - b.listing(6));
 
-const LISTING_COST: Array<{ label: string; perPhoto: number | null; note?: string; cost?: (rooms: number) => number }> = [
-  { label: "Human editor at US$30", perPhoto: 30 },
-  { label: "Human editor at $24", perPhoto: 24 },
-  { label: "ORVIONIS ($15, or $12 each from 5 photos)", perPhoto: 15, cost: (rooms) => stagingListingCents(rooms) / 100 },
-  { label: "AI subscription", perPhoto: null, note: "$16–19 for the month if the listing fits the plan (6 or 20 photos)" },
+const FAQ: Array<{ q: string; a: string }> = [
+  {
+    q: "How much does virtual staging cost per photo?",
+    a: `${range(R.designerOnePhoto)} for a single photo from the five design services we checked on ${PRICES_CHECKED}, and ${range(R.designerBulk)} a photo on bigger orders. AI services charge about ${range(R.aiPerPhoto)} a photo, and an AI subscription starts at $25 a month for 6 photos ($16 a month if you pay for the year up front).`,
+  },
+  {
+    q: "How much does it cost to virtually stage a whole house?",
+    a: `Most vacant listings need four to six staged photos. At the prices we checked that is about ${range(R.otherListing, true)} with an AI service or a do-it-yourself editor, and ${range(R.designerListing, true)} with a design service.`,
+  },
+  {
+    q: "Is virtual staging cheaper than traditional staging?",
+    a: `For the listing photos, by far. The median cost of using a staging service was $1,500 in NAR's 2025 Profile of Home Staging, against ${usd(Math.round(R.otherListing[0]))}–${usd(Math.round(R.designerListing[1]))} to stage four to six photos virtually. Physical staging also furnishes the home for showings, which virtual staging doesn't.`,
+  },
+  {
+    q: "Why do prices range from under $5 to $37 a photo?",
+    a: "Mostly who does the work and how fast. A designer or editor stages each photo by hand in one to two days; AI does it in seconds or minutes. Then compare what the price includes: how many versions you get, whether revisions are free, and whether clearing leftover furniture costs extra.",
+  },
+  {
+    q: "Do I have to disclose virtually staged photos?",
+    a: "Usually, yes. Most MLSs require virtually staged photos to be labeled, and in California AB 723 has required a disclosure next to the photo and access to the original since January 1, 2026. Check your MLS rules before you upload.",
+  },
 ];
 
 /** Buyer-intent pricing guide (E10 SEO): every number is sourced and dated; our own offer is described like the others. */
@@ -67,84 +56,158 @@ export default function VirtualStagingCostGuide() {
     description: DESCRIPTION,
     image: `${site.url}${OG_IMAGE}`,
     datePublished: "2026-09-26",
-    dateModified: "2026-09-28",
+    dateModified: PRICES_CHECKED_ISO,
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
   };
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  };
+  // One line per company in Sources ("Apply Design (DIY)" and "(One-click)" share a page).
+  const sources = STAGING_PRICES.filter((p) => !p.ours)
+    .map((p) => ({ key: p.key, name: p.company.replace(/ \(.*\)$/, ""), sources: p.sources }))
+    .filter((p, i, all) => all.findIndex((q) => q.name === p.name) === i);
   return (
     <div className="container-x max-w-3xl py-12 prose-basic">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
       <p className="eyebrow">Guide · Virtual staging</p>
       <h1 className="mt-3">{TITLE}</h1>
       <p>
-        <strong>Short answer:</strong> human-edited virtual staging costs about <strong>$24–$30 per photo</strong> and takes
-        from several hours to a few days. AI tools are sold either as a <strong>monthly subscription</strong> ($16–$79 a month,
-        under $3 per photo if you use every credit) or <strong>per photo</strong> without a subscription. A typical vacant
-        listing needs 4–6 staged rooms, so a whole listing costs from under $20 (one month of an AI subscription) to about
-        $180 (six photos from a human editor) — against a median of $1,500 when a staging service furnishes the home for real
-        (NAR). Prices below were checked on {CHECKED}.
+        <strong>Short answer:</strong> a design service charges <strong>{range(R.designerOnePhoto)} for one photo</strong>{" "}
+        ({range(R.designerBulk)} a photo on bigger orders) and takes one to two days. AI costs about{" "}
+        <strong>{range(R.aiPerPhoto)} a photo</strong> when you pay per photo, or <strong>$25–$139 a month</strong> as a
+        subscription ($16–$79 a month if you pay for the year up front). A vacant listing usually needs four to six staged
+        photos, so a whole listing costs about <strong>{range(R.otherListing, true)}</strong> with AI and{" "}
+        <strong>{range(R.designerListing, true)}</strong> with a design service, against a median of $1,500 when a staging
+        service furnishes the home for real (NAR). These are the prices nine companies published on {PRICES_CHECKED}. We run
+        one of them, ORVIONIS, and list ours the same way as the others.
       </p>
 
-      <h2>The four ways virtual staging is priced</h2>
+      <h2>One photo, today: what it costs</h2>
+      <p>If one empty room is all you need staged right now, this is what you pay at each company, cheapest first.</p>
+      <ol className="not-prose my-5 space-y-3" aria-label="Price of one staged photo by company">
+        {ONE_PHOTO.map((p) => (
+          <li key={p.key}>
+            <div className="flex items-baseline justify-between gap-3 text-sm">
+              <span className={p.ours ? "font-semibold text-accent" : "text-fg"}>{p.company}</span>
+              <span className="font-semibold whitespace-nowrap text-fg">
+                {p.onePhotoFrom ? "from " : ""}
+                {usd(p.onePhoto)}
+              </span>
+            </div>
+            <div className="mt-1 h-2 rounded-full bg-card-2" aria-hidden="true">
+              <div className={`h-2 rounded-full ${p.ours ? "bg-accent" : "bg-gray-400"}`} style={{ width: `${Math.max(3, (p.onePhoto / MAX_ONE_PHOTO) * 100)}%` }} />
+            </div>
+            <div className="mt-0.5 text-xs text-gray-500">{p.onePhotoNote}</div>
+          </li>
+        ))}
+      </ol>
+
+      <h2>Prices at nine companies</h2>
+      <p>
+        Four ways to buy it: a design service per photo, AI per photo, a do-it-yourself editor where you place the furniture,
+        or an AI subscription. Checked on {PRICES_CHECKED}, in US dollars, as each company publishes it.
+      </p>
       <div className="not-prose overflow-x-auto">
-        <table className="w-full text-left text-sm">
+        <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
             <tr>
-              <th className="py-2 pr-3">Model</th>
-              <th className="py-2 pr-3">Example</th>
+              <th className="py-2 pr-3">Company</th>
               <th className="py-2 pr-3">Price</th>
               <th className="py-2 pr-3">Turnaround</th>
-              <th className="py-2">Best for</th>
+              <th className="py-2">Included / notes</th>
             </tr>
           </thead>
-          <tbody>
-            {MODELS.map((m) => (
-              <tr key={m.example} className="border-t border-line align-top">
-                <td className="py-2 pr-3">{m.model}</td>
-                <td className="py-2 pr-3">{m.example}</td>
-                <td className="py-2 pr-3">{m.price}</td>
-                <td className="py-2 pr-3">{m.time}</td>
-                <td className="py-2">{m.bestFor}</td>
+          {GROUPS.map((g) => (
+            <tbody key={g}>
+              <tr className="border-t border-line">
+                <th colSpan={4} scope="colgroup" className="pt-4 pb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  {GROUP_LABEL[g]}
+                </th>
               </tr>
-            ))}
-          </tbody>
+              {STAGING_PRICES.filter((p) => p.group === g).map((p) => (
+                <tr key={p.key} className="border-t border-line align-top">
+                  <td className={`py-2 pr-3 font-semibold ${p.ours ? "text-accent" : "text-fg"}`}>{p.company}</td>
+                  <td className="py-2 pr-3">{p.price}</td>
+                  <td className="py-2 pr-3">{p.turnaround}</td>
+                  <td className="py-2">{p.notes}</td>
+                </tr>
+              ))}
+            </tbody>
+          ))}
         </table>
       </div>
 
       <h2>What a whole listing costs</h2>
       <p>
-        Most vacant listings need the living room, the main bedroom and one or two more rooms staged — four to six photos (see{" "}
-        <Link href="/guides/which-rooms-to-virtually-stage">which rooms to stage first</Link>).
+        Most vacant listings need the living room, the main bedroom and one to three more rooms staged: four to six photos
+        (see <Link href="/guides/which-rooms-to-virtually-stage">which rooms to stage first</Link>). Totals use each
+        company&apos;s volume price where it has one, and leave out free first images.
       </p>
       <div className="not-prose overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr>
-              <th className="py-2 pr-3">Option</th>
-              <th className="py-2 pr-3">4 rooms</th>
-              <th className="py-2">6 rooms</th>
+              <th className="py-2 pr-3">Company</th>
+              <th className="py-2 pr-3">4 photos</th>
+              <th className="py-2">6 photos</th>
             </tr>
           </thead>
           <tbody>
-            {LISTING_COST.map((r) => (
-              <tr key={r.label} className="border-t border-line">
-                <td className="py-2 pr-3">{r.label}</td>
-                {r.perPhoto === null ? (
-                  <td className="py-2" colSpan={2}>
-                    {r.note}
-                  </td>
-                ) : (
-                  <>
-                    <td className="py-2 pr-3">${r.cost ? r.cost(4) : r.perPhoto * 4}</td>
-                    <td className="py-2">${r.cost ? r.cost(6) : r.perPhoto * 6}</td>
-                  </>
-                )}
+            {LISTINGS.map((p) => (
+              <tr key={p.key} className="border-t border-line align-top">
+                <td className="py-2 pr-3">
+                  <span className={p.ours ? "font-semibold text-accent" : "text-fg"}>{p.company}</span>
+                  {p.listingNote && <div className="text-xs text-gray-500">{p.listingNote}</div>}
+                </td>
+                <td className="py-2 pr-3 whitespace-nowrap">
+                  {p.onePhotoFrom ? "from " : ""}
+                  {usd(p.listing(4))}
+                </td>
+                <td className="py-2 whitespace-nowrap">
+                  {p.onePhotoFrom ? "from " : ""}
+                  {usd(p.listing(6))}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <p className="mt-4">
+        Want the number for your own listings? The free{" "}
+        <Link href="/free/virtual-staging-cost-calculator">virtual staging cost calculator</Link> takes your photos per
+        listing and listings per month and compares paying per photo with a subscription.
+      </p>
+
+      <h2>Extras that change the bill</h2>
+      <div className="not-prose overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr>
+              <th className="py-2 pr-3">Extra</th>
+              <th className="py-2">Published prices</th>
+            </tr>
+          </thead>
+          <tbody>
+            {EXTRAS.map((e) => (
+              <tr key={e.extra} className="border-t border-line align-top">
+                <td className="py-2 pr-3 font-semibold text-fg">{e.extra}</td>
+                <td className="py-2">{e.prices}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ul className="mt-4">
+        <li><strong>Versions and revisions.</strong> Check how many versions of each photo you get and what a redo costs.</li>
+        <li><strong>Subscriptions.</strong> The per-photo price of a plan is only low if you use its credits every month, and the cheapest monthly price usually means paying for the year up front.</li>
+        <li><strong>Disclosure.</strong> Most MLSs, and California&apos;s AB 723, require staged photos to be disclosed; labeled copies save you time (see the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>).</li>
+        <li><strong>The photo you start with.</strong> A dark, tilted or fisheye photo stages badly at any price (see <Link href="/guides/photographing-rooms-for-virtual-staging">10 photo tips</Link>).</li>
+      </ul>
 
       <h2>Virtual vs. physical staging</h2>
       <p>
@@ -152,25 +215,28 @@ export default function VirtualStagingCostGuide() {
         service was <strong>$1,500</strong>, and <strong>$500</strong> when the sellers&apos; agent staged the home
         themselves. The same survey found that 83% of buyers&apos; agents say staging makes it easier for a buyer to picture
         the property as a future home, 49% of sellers&apos; agents saw staging reduce time on market, and 29% reported a 1–10%
-        increase in offer value. Those figures are for staging in general, not only virtual staging — but they explain why
-        agents stage at all, and virtual staging gets the online photos for a fraction of the price.
+        increase in offer value. Those figures are for staging in general, not only virtual staging, but they explain why
+        agents stage at all; virtual staging gets the online photos for a fraction of the price.
       </p>
-
-      <h2>What changes the price</h2>
-      <ul>
-        <li><strong>Turnaround.</strong> Human editing takes hours to days; AI takes minutes.</li>
-        <li><strong>Versions and revisions.</strong> Check how many versions of each photo you get and what a redo costs.</li>
-        <li><strong>Clean-up first.</strong> Removing leftover furniture is usually extra — BoxBrownie lists item removal at US$5 for one or two small items and US$10 standard.</li>
-        <li><strong>Subscriptions.</strong> The per-photo price of a plan is only low if you use its credits every month.</li>
-        <li><strong>Disclosure.</strong> Most MLSs, and California&apos;s AB 723, require staged photos to be disclosed — labeled copies save you time (see the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>).</li>
-        <li><strong>The photo you start with.</strong> A dark, tilted or fisheye photo stages badly at any price (see <Link href="/guides/photographing-rooms-for-virtual-staging">10 photo tips</Link>).</li>
-      </ul>
 
       <h2>How to choose</h2>
       <ul>
-        <li>Staging dozens of photos every month? An AI subscription is the cheapest per photo.</li>
-        <li>Need a designer to style a difficult room, or several changes at once? A human editing service.</li>
-        <li>A listing now and then, and you want it today? Pay per photo — and try it on your own photo first (see <Link href="/guides/free-virtual-staging">what&apos;s free in virtual staging</Link>).</li>
+        <li>
+          <strong>One listing now and then, and you want it today:</strong> pay per photo with AI, about{" "}
+          {range(R.aiPerPhoto)} a photo in minutes. Several let you try a photo free first (see{" "}
+          <Link href="/guides/free-virtual-staging">what&apos;s free in virtual staging</Link>).
+        </li>
+        <li>
+          <strong>A difficult room, or you want a designer&apos;s eye:</strong> a design service, {range(R.designerOnePhoto)}{" "}
+          for one photo and one to two days. Styldod and Padstyler cut their price by about a third from 8 photos.
+        </li>
+        <li>
+          <strong>You stage every month:</strong> a subscription is the cheapest per photo, as long as you use the credits.
+        </li>
+        <li>
+          <strong>Happy to arrange the furniture yourself:</strong> a do-it-yourself editor, such as Apply Design&apos;s at
+          $7–$10 a photo.
+        </li>
       </ul>
 
       <h2>Our price</h2>
@@ -188,24 +254,34 @@ export default function VirtualStagingCostGuide() {
         </Link>
       </p>
 
+      <h2>Questions agents ask</h2>
+      {FAQ.map((f) => (
+        <div key={f.q}>
+          <h3>{f.q}</h3>
+          <p>{f.a}</p>
+        </div>
+      ))}
+
       <h2>Sources</h2>
-      <p className="text-sm">Checked on {CHECKED}. Prices change; follow the links for the current figures.</p>
+      <p className="text-sm">
+        Every price was read on the company&apos;s own page on {PRICES_CHECKED}. Prices change; follow the links for the current
+        figures.
+      </p>
       <ul className="text-sm">
-        <li>
-          BoxBrownie pricing (virtual staging US$30; item removal US$5 / US$10):{" "}
-          <a href="https://www.boxbrownie.com/pricing" rel="nofollow noopener" target="_blank">boxbrownie.com/pricing</a>
-          ; turnaround &ldquo;under 48 hours&rdquo; and free changes within 2 months:{" "}
-          <a href="https://www.boxbrownie.com/virtual-staging" rel="nofollow noopener" target="_blank">boxbrownie.com/virtual-staging</a>
-        </li>
-        <li>
-          VirtualStaging.com, &ldquo;How Much Does Virtual Staging Cost?&rdquo; (updated March 2, 2026; $24 per image, 8–24 hours;
-          48–72 hours elsewhere):{" "}
-          <a href="https://virtualstaging.com/blog/virtual-staging-cost-ultimate-guide/" rel="nofollow noopener" target="_blank">virtualstaging.com</a>
-        </li>
-        <li>
-          Virtual Staging AI plans ($16 / 6 photos to $79 / 150 photos a month):{" "}
-          <a href="https://www.virtualstagingai.app/prices" rel="nofollow noopener" target="_blank">virtualstagingai.app/prices</a>
-        </li>
+        {sources.map((p) => (
+          <li key={p.key}>
+            {p.name}:{" "}
+            {p.sources.map((s, i) => (
+              <span key={s.href}>
+                {i > 0 && "; "}
+                <a href={s.href} rel="nofollow noopener" target="_blank">
+                  {s.label}
+                </a>
+              </span>
+            ))}
+          </li>
+        ))}
+        <li>Extras: the same pages.</li>
         <li>
           NAR 2025 Profile of Home Staging — snapshot (83% of buyers&apos; agents):{" "}
           <a href="https://www.nar.realtor/infographics/2025-profile-of-home-staging-snapshot" rel="nofollow noopener" target="_blank">nar.realtor</a>

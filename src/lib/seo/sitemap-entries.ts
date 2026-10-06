@@ -22,7 +22,8 @@ export const CONTENT_UPDATED = new Date("2026-09-27T00:00:00Z");
 export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
   "/tools/photographer-pricing-guide": "2026-09-29",
-  "/free/virtual-staging-cost-calculator": "2026-10-01T23:16:00Z",
+  // 6 Oct: prices re-checked (VirtualStaging.com pricing page, monthly vs yearly AI plans)
+  "/free/virtual-staging-cost-calculator": "2026-10-06",
   "/free": "2026-09-29T15:00:00Z",
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
   "/tools/virtual-staging": "2026-10-01T23:16:00Z",

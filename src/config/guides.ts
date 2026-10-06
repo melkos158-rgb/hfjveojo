@@ -40,9 +40,9 @@ export const GUIDES: Guide[] = [
   {
     slug: "virtual-staging-cost",
     title: "How much does virtual staging cost in 2026?",
-    description: "Human editors charge $24–$30 per photo; AI plans run $16–$79 a month. What a whole listing costs — real prices checked in September 2026, plus NAR data on staging.",
+    description: "Design services charge $23–$37 for one photo, AI about $4.50–$15 or a monthly plan. Nine companies' prices checked October 6, 2026, what a whole listing costs, and NAR data on staging.",
     audience: "Real estate agents",
-    updated: "2026-10-02",
+    updated: "2026-10-06",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

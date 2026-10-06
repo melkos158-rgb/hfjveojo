@@ -2,7 +2,7 @@
  * Virtual staging cost comparison for the free calculator (pure, tested). Every price is as published by the provider on
  * the day it was checked; the page lists the sources. Update the date and the numbers together.
  */
-export const STAGING_PRICES_CHECKED = "September 29, 2026";
+export const STAGING_PRICES_CHECKED = "October 6, 2026";
 
 import { STAGING_PRICE_LINE, STAGING_UNIT_CENTS, stagingListingCents } from "@/config/staging-pricing";
 
@@ -28,7 +28,7 @@ export const PER_PHOTO_OPTIONS: PerPhotoOption[] = [
     perListingFor: (photos) => stagingListingCents(photos) / 100,
     priceNote: STAGING_PRICE_LINE,
   },
-  { key: "virtualstaging-com", name: "VirtualStaging.com (human editor)", perPhoto: 24, note: "8–24 hours" },
+  { key: "virtualstaging-com", name: "VirtualStaging.com (human editor)", perPhoto: 24, note: "24 hours, 4–8-hour rush available" },
   { key: "boxbrownie", name: "BoxBrownie (human editor)", perPhoto: 30, note: "Under 48 hours, free changes within 2 months" },
 ];
 

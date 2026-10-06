@@ -45,6 +45,15 @@ None yet.
 
 ## Log
 
+- 2026-10-06 09:50 UTC — **E10: the cost guide compares nine companies (s87).** The week plan's operator SEO item.
+  - Why this page: it collects the staging-cost queries (21 of 181 Search Console impressions in the 28 days to 2 Oct) but sits at position 56.8. The old page compared three providers, one of them on a March blog post. Pages that rank for these queries list many providers' real prices.
+  - What changed:
+    - Every price was read on the company's own page on 6 Oct. Five design services, three pay-per-photo options (PhotoUp AI, Apply Design DIY and One-click, ours) and Virtual Staging AI.
+    - New sections: one photo today (a chart, cheapest first), totals for 4 and 6 photos at each company's volume prices, extras (rush, removal, renovation, 360°) and five FAQs with FAQPage data. The page links to the calculator.
+    - The ranges in the short answer, the meta description and the FAQ are computed from the table.
+  - Correction: Virtual Staging AI's $16–$79 a month are yearly-billed prices ($192–$948 up front); billed monthly the plans are $25–$139. The old guide gave "$16–$79 a month" as if it were month to month. The calculator already said "with yearly billing".
+  - Where we stand in the comparison: at one photo, ours ($15) ties Apply Design One-click and costs more than PhotoUp's AI (from $4.50) and Apply Design DIY ($10). Design services charge $23–$37. The guide says so plainly.
+  - Measure: Search Console impressions and position for `/guides/virtual-staging-cost` at the weekly reading on 12 Oct and at 28 days (baseline 48 impressions at 56.8). Success: position under 30 or 100+ impressions in 28 days. If neither happens by 3 Nov, the next lever is links from other sites (today 7 of our own pages and the /guides hub link to it), not more text.
 - 2026-10-05 19:00 UTC — **Week plan 6–12 Oct (Monday plan, sent to the owner).** Goal: the first free-photo claims and the first paid order.
   - Where we stand after 10 days live: $0 revenue, 0 paid orders, 0 free photos claimed. Spend is €29.98 on ads and $4.07 on AI. About 4–5 sessions a day, mostly direct. Six TikTok videos all stopped at 745–796 views, with 0 tagged visits (there is no clickable link). DMs: 10 sent, 1 human reply. Facebook: the collage post has been in admin review for 2 days.
   - The bottleneck is the owner's time on sending. Batch 2 and the follow-ups have waited since 3 Oct, so the plan asks for about 15 minutes a day and moves the rest to the operator or to paid search.

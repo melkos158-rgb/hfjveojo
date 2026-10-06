@@ -250,6 +250,7 @@ The auto-mode safety check blocks the operator from editing the live campaign ("
 
 ## LOG
 
+- 2026-10-05 ≈ 19:10 UTC (the owner asked to check, read-only): nothing is running. The campaigns table, account ORVIONIS (894-518-6662), still shows E8 alone, ended 26 Sep – 1 Oct: 248 impressions, 23 clicks, CTR 9.27 %, €29.98, 0 conversions, €0.00 a day. There has been no spend since 1 Oct. The billing summary didn't load in the hidden window (an ad-blocker notice), so the balance wasn't read; by our records a few cents of the €30 prepaid are left. E8b would need the owner's €20 top-up.
 - 2026-10-02 05:10 UTC (final evaluation, read-only): numbers unchanged; search terms read; conclusion and the E8b proposal in STATUS. Owner report sent with the morning report.
 - 2026-10-01 ≈ 23:05 UTC (release reminder, read-only): **E8 ended.** The campaigns table reads "Завершено" (ended). Final: 248 impressions, 23 clicks, €29.98, 0 conversions. The sale-fix release can ship now.
 - 2026-09-30 ≈ 23:05 UTC (the owner: "так шо далі делаєм кажи або роби", read as a yes to the offer "напиши «впиши»"): the operator typed the 7 proposed negatives (rearrange, rearranging, arrangement, redecorate, redecorating, "my room", "my living room") into E8's add panel with campaign E8 picked, and asked the owner to press "Зберегти". Not saved by the operator.
