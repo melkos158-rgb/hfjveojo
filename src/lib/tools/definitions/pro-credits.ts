@@ -58,13 +58,13 @@ export const proCreditsTool: ToolDefinition<ProCreditsIntake> = {
       `25 rooms (photos), each with two staged versions — $${perRoom} a room instead of $15`,
       `No monthly fee and no credits lost at the end of a month: they last ${CREDIT_MONTHS} months from purchase`,
       "The staged photos carry no ORVIONIS mark, so you can deliver them to your agents under your own name",
-      "Every room also comes with “Virtually staged” labeled copies for the MLS and an optional page with the original photo (on orvionis.com)",
+      "Every room also comes with “Virtually staged” labeled copies for ads and social and an optional page with the original photo (on orvionis.com)",
       "Sign in with the email you bought with: the staging order form shows your balance and a “Use my Pro credits” box",
     ],
     howItWorks: [
       { title: "1. Buy the 25 rooms", text: "One payment of $149 through Stripe, with the email you'll use to order." },
       { title: "2. Sign in and order", text: "Sign in with that email, upload the room photos on the virtual staging page and keep “Use my Pro credits” ticked." },
-      { title: "3. Deliver", text: "About two minutes per photo later you have two staged versions of each room, plus the labeled copies for the MLS." },
+      { title: "3. Deliver", text: "About two minutes per photo later you have two staged versions of each room, plus labeled copies for ads and social." },
     ],
     faq: [
       {

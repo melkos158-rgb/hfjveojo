@@ -23,18 +23,18 @@ export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
   "/tools/photographer-pricing-guide": "2026-09-29",
   // 6 Oct: prices re-checked (VirtualStaging.com pricing page, monthly vs yearly AI plans); 10:30 UTC: the Listing Pack
-  "/free/virtual-staging-cost-calculator": "2026-10-06T10:30:00Z",
+  "/free/virtual-staging-cost-calculator": "2026-10-08T07:40:00Z",
   "/free": "2026-09-29T15:00:00Z",
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
   // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling); 11:45 UTC: the Pro
   // credits FAQ and the "Have Pro credits? Sign in" line
-  "/tools/virtual-staging": "2026-10-06T11:45:00Z",
+  "/tools/virtual-staging": "2026-10-08T07:40:00Z",
   "/pricing": "2026-10-06T11:20:00Z",
   // 6 Oct 10:50 UTC: the one checkout reminder email is described
   "/privacy": "2026-10-08T07:20:00Z",
   // 6 Oct 11:20 UTC: Pro credits (25 rooms for $149; court ruling, lever 3): the new page, /photographers rebuilt for
   // real-estate photographers, the price list, and the credit rules in the terms and the refund policy
-  "/tools/pro-credits": "2026-10-06T11:20:00Z",
+  "/tools/pro-credits": "2026-10-08T07:40:00Z",
   "/photographers": "2026-10-06T11:20:00Z",
   "/terms": "2026-10-06T11:20:00Z",
   "/refund-policy": "2026-10-06T11:20:00Z",

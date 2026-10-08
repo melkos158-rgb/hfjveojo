@@ -130,7 +130,7 @@ export function StagingCostCalculator() {
         <div className="mt-6 rounded-xl border border-accent/40 bg-accent/10 p-4">
           <div className="font-semibold text-fg">See it on your own photo before you pay</div>
           <p className="mt-1 text-sm text-gray-600">
-            ORVIONIS stages up to ten rooms per order: {STAGING_PRICE_LINE}, two versions of each, with labeled copies for the MLS disclosure. Your first photo is free (one per person).
+            ORVIONIS stages up to ten rooms per order: {STAGING_PRICE_LINE}, two versions of each, with a disclosure pack (labeled copies and a link to the original). Your first photo is free (one per person).
           </p>
           <div className="mt-3">
             <Link href="/tools/virtual-staging" className="btn-primary" onClick={() => trackClient("cta_click", { from: "staging-cost-calculator" })}>

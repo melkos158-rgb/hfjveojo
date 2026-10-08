@@ -218,7 +218,7 @@ export async function requestFreePhoto(input: FreePhotoRequest): Promise<{ order
     "Click this link to confirm your email, and we'll stage your photo right away (about 2 minutes):",
     url,
     "",
-    "You get two staged versions of your room as full-resolution JPGs, plus copies labeled “Virtually staged” for the MLS. The link works for 7 days.",
+    "You get two staged versions of your room as full-resolution JPGs, plus copies labeled “Virtually staged” for ads and social. The link works for 7 days.",
     "",
     "One free photo per person. After that, it's $15 per photo.",
     "",

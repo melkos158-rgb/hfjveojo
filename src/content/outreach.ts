@@ -104,8 +104,8 @@ export const outreachTemplates: OutreachTemplate[] = [
     key: "re-preview-link",
     channel: "Instagram DM → the same agent, once their prospect preview is ready",
     when: "Right after Admin → Orders → + Prospect preview shows the page (the \"Preview for … is ready\" email has this text with the link filled in).",
-    en: `Here's your room staged: [link] Two versions, plus copies labeled for the MLS. If you like it, the rest of the listing is $39 this week (4 more rooms + the description).`,
-    ua: `Ось твоя кімната зі стейджингом: [link] Дві версії, плюс копії з позначкою для MLS. Якщо сподобається, решта оголошення — $39 цього тижня (ще 4 кімнати + опис).`,
+    en: `Here's your room staged: [link] Two versions, plus labeled copies for ads and social. If you like it, the rest of the listing is $39 this week (4 more rooms + the description).`,
+    ua: `Ось твоя кімната зі стейджингом: [link] Дві версії, плюс копії з позначкою для реклами й соцмереж. Якщо сподобається, решта оголошення — $39 цього тижня (ще 4 кімнати + опис).`,
     personalize: "[link]: the private page from the admin preview list (or the email). Follow up in 48 hours if they go quiet (court: every free-photo user within 48 h).",
   },
   {

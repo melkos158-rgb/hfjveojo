@@ -205,10 +205,10 @@ Great! Send me a photo of one empty room (or tell me which listing photo I can u
 ### re-preview-link — the same agent, once their preview is ready
 
 📤 EN — готове до відправки:
-Here's your room staged: [link] Two versions, plus copies labeled for the MLS. If you like it, the rest of the listing is $39 this week (4 more rooms + the description).
+Here's your room staged: [link] Two versions, plus labeled copies for ads and social. If you like it, the rest of the listing is $39 this week (4 more rooms + the description).
 
 🇺🇦 UA — переклад для контролю:
-Ось твоя кімната зі стейджингом: [link] Дві версії, плюс копії з позначкою для MLS. Якщо сподобається, решта оголошення — $39 цього тижня (ще 4 кімнати + опис).
+Ось твоя кімната зі стейджингом: [link] Дві версії, плюс копії з позначкою для реклами й соцмереж. Якщо сподобається, решта оголошення — $39 цього тижня (ще 4 кімнати + опис).
 
 ✍️ [link] — приватна сторінка зі списку на `/admin/orders/preview` (лист «Preview for … is ready» містить цей текст уже з посиланням). Якщо за 48 годин тиша — одне коротке нагадування (суд: кожному, хто отримав безкоштовне фото, — протягом 48 год).
 
@@ -500,4 +500,5 @@ More before/after sets now come from the marketing lab: add free-licence empty-r
 
 - "Can I see examples?" → send the sample link for that tool (`/tools/<slug>#example`): the listing-description sample is the full deliverable, the pricing-guide sample is the real PDF. For clips, until a paid set exists: "the first clip is free — send the link and you'll have it tomorrow"; after: a delivered set with the customer's permission.
 - "Do you use my footage anywhere?" → "No. Your footage is only used for your clips and deleted after 30 days" (matches the Privacy Policy retention setting).
+- "Is this allowed on our MLS?" (Florida, Stellar MLS) → "Yes, Stellar allows it. Put “Virtually staged” in each staged photo's description, tick the virtually staged box, and start the remarks with “One or more photo(s) was virtually staged.” Our files come clean, with no text on the photo, which is what Stellar wants. Checklist: orvionis.com/guides/stellar-mls-virtual-staging" (UA у трекері). Not for pre-construction or under-construction listings (Stellar Article 4.4). Never say labeled copies go on the MLS: Stellar bans words on photos; labeled copies are for ads and social.
 - "Why not Fiverr?" → "Same price range, but the brief is structured, captions and fair-housing check are included, and you deal with one person who answers."

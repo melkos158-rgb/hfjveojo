@@ -81,7 +81,7 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
   const intro = redo
     ? "Here is the new version of your order. It replaces the earlier files on your order page."
     : isFreePhotoOrder(order)
-      ? "Here is your free staged photo: two versions of your room at full resolution, plus copies labeled “Virtually staged” for the MLS."
+      ? "Here is your free staged photo: two versions of your room at full resolution, plus copies labeled “Virtually staged” for ads and social."
       : (def?.delivery.emailIntro ?? "Your order is ready.");
   // The Listing Pack (or the $7 add-on) includes the MLS description: a voucher link to write it.
   const voucher = !redo && orderHasVoucher(order) ? descriptionVoucherUrl(order.id) : null;
@@ -153,10 +153,10 @@ async function sendProspectPreviewReady(order: { customerEmail: string; attribut
     `On that page they can finish the listing: up to ${STAGING_FINISH_PACK.units} more rooms plus the MLS description for ${price}, until ${until}.`,
     "",
     "Reply to paste (EN):",
-    `Here's your room staged: ${link} Two versions, plus copies labeled for the MLS. If you like it, the rest of the listing is ${price} this week (${STAGING_FINISH_PACK.units} more rooms + the description).`,
+    `Here's your room staged: ${link} Two versions, plus labeled copies for ads and social. If you like it, the rest of the listing is ${price} this week (${STAGING_FINISH_PACK.units} more rooms + the description).`,
     "",
     "UA (для перевірки, не надсилати):",
-    `Ось твоя кімната зі стейджингом: ${link} Дві версії, плюс копії з позначкою для MLS. Якщо сподобається, решта оголошення — ${price} цього тижня (ще ${STAGING_FINISH_PACK.units} кімнати + опис).`,
+    `Ось твоя кімната зі стейджингом: ${link} Дві версії, плюс копії з позначкою для реклами й соцмереж. Якщо сподобається, решта оголошення — ${price} цього тижня (ще ${STAGING_FINISH_PACK.units} кімнати + опис).`,
   ];
   await sendEmail({ to: order.customerEmail, subject: `Preview for ${who} is ready`, text: lines.join("\n"), html: `<p>${lines.map(linkify).join("<br/>")}</p>` });
 }

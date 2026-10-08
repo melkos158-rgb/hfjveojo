@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const FAQ = [
   { q: "Does AB 723 apply to virtual staging?", a: "Yes. The law covers images altered with photo-editing software or AI to add, remove or change elements such as furniture, fixtures, flooring, walls or landscaping — virtually staged photos are the most common case." },
   { q: "When did AB 723 take effect?", a: "January 1, 2026. It applies to advertising and promotional materials for selling real property by brokers, salespersons and people acting on their behalf." },
-  { q: "Do I have to show the original photo?", a: "Buyers must be able to see it. On a website you control, show the unaltered version with the altered one (or link to it); elsewhere, give a link, URL or QR code to a publicly accessible page with the original. Most MLSs also want the original uploaded right after the staged photo." },
+  { q: "Do I have to show the original photo?", a: "Buyers must be able to see it. On a website you control, show the unaltered version with the altered one (or link to it); elsewhere, give a link, URL or QR code to a publicly accessible page with the original. Some MLSs also want it in the listing itself: CRMLS asks for the original immediately before or after the altered photo, with the altered one labeled in the photo description." },
   { q: "Are lighting or color edits covered?", a: "No. Lighting, sharpening, white balance, color correction, angle, straightening, cropping and exposure adjustments that don't change what the property looks like are excluded." },
 ];
 
@@ -33,7 +33,7 @@ export default function Ab723GuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-09-26",
-    dateModified: "2026-09-26",
+    dateModified: "2026-10-08",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/ab-723-virtual-staging`,
@@ -44,7 +44,7 @@ export default function Ab723GuidePage() {
     <div className="container-x max-w-3xl py-12 prose-basic">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
-      <p className="eyebrow">Guide · California · updated September 2026</p>
+      <p className="eyebrow">Guide · California · updated October 2026</p>
       <h1 className="mt-3">AB 723 and virtual staging: what California agents must do</h1>
       <p>
         Since <strong>January 1, 2026</strong>, California&apos;s AB 723 requires real estate licensees who advertise digitally altered photos — virtually staged ones included — to say so next to the image and to give buyers access to the original. Here is what that means in practice, what MLSs ask for, and a checklist you can run for every listing.
@@ -71,7 +71,7 @@ export default function Ab723GuidePage() {
         <li><strong>SDMLS</strong>: altered images must be clearly disclosed and paired with the unaltered original, across all MLS displays and downstream IDX, VOW and syndication feeds.</li>
         <li><strong>Bay East</strong>: label altered photos &ldquo;altered&rdquo;, &ldquo;digitally altered&rdquo; or &ldquo;AI altered&rdquo; with the Label option, upload the original and show it immediately after the altered image.</li>
       </ul>
-      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos.</p>
+      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules can be the opposite: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks.</p>
 
       <h2>The checklist</h2>
       <ol>

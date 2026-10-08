@@ -137,7 +137,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
       {prospectPreview && showFiles ? (
         <p className="mt-6 rounded-lg bg-accent-soft px-4 py-3 text-sm text-gray-700" data-prospect-intro>
           We staged this room from your photo as a free preview: two versions at full resolution, no watermark, plus copies labeled
-          &ldquo;Virtually staged&rdquo; for the MLS.
+          &ldquo;Virtually staged&rdquo; for ads and social.
           {finishLink && order.deliveredAt ? (
             <>
               {" "}
@@ -313,7 +313,11 @@ export default async function OrderPage({ params, searchParams }: Props) {
                 </div>
               </div>
               <p className="mt-3 text-xs text-gray-500">
-                On the MLS, follow your board&apos;s labeling (usually &ldquo;virtually staged&rdquo; or &ldquo;digitally altered&rdquo;, with the original uploaded right after the staged photo). This helps you comply; it is not legal advice. <Link className="underline" href="/guides/ab-723-virtual-staging">The AB 723 checklist</Link>.
+                On the MLS, upload the unlabeled versions and follow your board&apos;s rules. Stellar MLS (Florida), for example, allows no words on
+                photos: write &ldquo;Virtually staged&rdquo; in the photo description, tick the virtually staged box and start the public remarks with
+                &ldquo;One or more photo(s) was virtually staged.&rdquo; This helps you comply; it is not legal advice. Checklists:{" "}
+                <Link className="underline" href="/guides/stellar-mls-virtual-staging">Stellar MLS</Link>,{" "}
+                <Link className="underline" href="/guides/ab-723-virtual-staging">California AB 723</Link>.
               </p>
             </div>
           ) : null}

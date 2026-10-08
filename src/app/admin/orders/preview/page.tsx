@@ -25,7 +25,7 @@ export default async function ProspectPreviewsPage() {
         <h1 className="text-2xl font-bold">Prospect previews</h1>
         <p className="text-sm text-gray-600">
           When an agent answers your message and says yes, stage one room of their listing here and send them the page. They see their own room in two
-          versions, the labeled copies for the MLS, and &ldquo;Finish this listing&rdquo; ($39 for up to 4 more rooms plus the MLS description, for 7 days).
+          versions, the labeled copies, and &ldquo;Finish this listing&rdquo; ($39 for up to 4 more rooms plus the MLS description, for 7 days).
         </p>
         <ol className="list-decimal space-y-1 pl-5 text-sm text-gray-600">
           <li>Save the photo they sent (or the listing photo they told you to use).</li>

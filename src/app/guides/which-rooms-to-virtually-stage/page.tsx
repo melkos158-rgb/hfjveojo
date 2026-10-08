@@ -12,7 +12,7 @@ const DESCRIPTION =
   "Buyers' agents rank the living room (37%), the primary bedroom (34%) and the kitchen (23%) as the rooms that matter most to stage. A room-by-room plan for one to six photos, and what to skip.";
 const PUBLISHED = "2026-09-28";
 /** 5 Oct 2026: real before/after results by room from the 3 Oct lab test. */
-const MODIFIED = "2026-10-05";
+const MODIFIED = "2026-10-08";
 const OG_IMAGE = "/img/sample-virtual-staging-og.jpg";
 
 export const metadata: Metadata = {
@@ -184,7 +184,7 @@ export default function WhichRoomsGuide() {
         <Link href="/tools/virtual-staging">ORVIONIS Virtual Staging</Link> takes up to ten room photos per order: $15 per
         photo, or $49 for the whole listing (up to five rooms plus the MLS description), $99 for ten. You set the room type of each photo (living room, bedroom, dining room, home office, kitchen, bathroom, patio), pick one of
         six styles for the whole order, and get two staged versions of every photo in about two minutes per photo — walls,
-        floors and windows stay as photographed. Every order includes labeled copies for the MLS disclosure, and your first
+        floors and windows stay as photographed. Every order includes a disclosure pack (labeled copies and a link to the original), and your first
         photo is free.
       </p>
       <p>
