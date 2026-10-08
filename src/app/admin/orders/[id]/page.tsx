@@ -301,7 +301,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
               ) : null}
             </div>
           ))}
-          {order.payments.length === 0 ? <p>No payment recorded (webhook not received yet).</p> : null}
+          {order.payments.length === 0 ? <p>{order.free ? "A $0 order (free photo, prospect preview, included description or Pro credits): no payment expected." : "No payment recorded (webhook not received yet)."}</p> : null}
           <h3 className="mt-3 font-bold text-ink">Jobs</h3>
           {order.jobs.map((j) => (
             <div key={j.id} className="mt-1">

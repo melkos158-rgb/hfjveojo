@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { isOwnHost, publicHost, sourceOf } from "@/lib/analytics/attribution";
 import { microsToCents } from "@/lib/ai/pricing";
+import { adminEmails } from "@/lib/env";
 import { NOT_FREE_PHOTO_KEYS } from "@/lib/orders/voucher";
 import { PROSPECT_KEY_PREFIX } from "@/lib/orders/prospect-rules";
 import { finishOrdersOf } from "@/lib/orders/prospect";
@@ -54,7 +55,7 @@ export type Kpis = {
   previewSessionsToCheckout: number;
   /** Photos the order form's upload check flagged as small, dark or blurry (src/lib/photo-check.ts). */
   photoWarnings: number;
-  /** Free first photos claimed (email confirmed) in the period, and how many of those people have also paid for an order. */
+  /** Free first photos claimed (email confirmed) in the period, without the admins' own tests, and how many of those people have also paid for an order. */
   freePhotosClaimed: number;
   freePhotoPayers: number;
   /** Prospect previews made in the period (court lever 2), and the paid orders that finished their listings. */
@@ -104,7 +105,8 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
       // Free first photos only: an included description, an order paid with Pro credits and a prospect preview are also $0 orders.
-      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: NOT_FREE_PHOTO_KEYS }, select: { customerEmail: true } }),
+      // The admins' own free photos (the owner's self-test) are not customer claims either.
+      prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: NOT_FREE_PHOTO_KEYS, customerEmail: { notIn: adminEmails() } }, select: { customerEmail: true } }),
       prisma.event.count({ where: { name: "photo_warning", createdAt: range } }),
       prisma.order.findMany({ where: { free: true, freeKey: { startsWith: PROSPECT_KEY_PREFIX }, createdAt: range, isTest: false }, select: { id: true } }),
     ]);
