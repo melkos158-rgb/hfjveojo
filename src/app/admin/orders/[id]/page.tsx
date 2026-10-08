@@ -5,6 +5,7 @@ import { StatusBadge, fmtDate } from "@/components/admin/Kpi";
 import { formatUsd, microsToCents } from "@/lib/ai/pricing";
 import { signedFileUrl } from "@/lib/storage";
 import { orderUrl } from "@/lib/orders/service";
+import { isProspectPreview, prospectOf } from "@/lib/orders/prospect-rules";
 import { closeTestOrderAction, deliverOrderAction, markQcApprovedAction, redoOrderAction, refundOrderAction, retryOrderAction, saveOrderNotesAction } from "@/app/admin/actions";
 import { deliveredOutputs } from "@/lib/orders/deliverables";
 import { photoInputsOf } from "@/lib/tools/photos";
@@ -50,6 +51,7 @@ export default async function AdminOrderDetail({ params }: { params: Promise<{ i
             <h1 className="text-2xl font-bold">
               Order #{order.number} · {order.tool.name}
               {order.isTest ? <span className="badge ml-2 bg-amber-50 text-amber-700">TEST</span> : null}
+              {isProspectPreview(order) ? <span className="badge ml-2 bg-accent-soft text-ink">Preview for {prospectOf(order) ?? "a prospect"}</span> : null}
               <span className={`badge ml-2 ${order.livemode ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-700"}`}>{order.livemode ? "Stripe LIVE" : "Stripe sandbox"}</span>
             </h1>
             <p className="text-sm text-gray-600">

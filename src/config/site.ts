@@ -19,7 +19,7 @@ export const site = {
     transfersNote: "VERIFY the safeguard used for each provider outside the EEA (data processing agreement with Standard Contractual Clauses or EU–US Data Privacy Framework)",
     lastUpdated: "2026-10-06",
     /** The privacy policy changes more often (free photo 1 Oct, checkout reminder 6 Oct). */
-    privacyUpdated: "2026-10-06",
+    privacyUpdated: "2026-10-08",
   },
   social: {
     instagram: "",

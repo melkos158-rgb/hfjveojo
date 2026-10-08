@@ -250,7 +250,7 @@ export default async function ToolPage({ params, searchParams }: PageProps) {
                 ctaLabel={l.ctaLabel}
                 priceLabel={priceText}
                 deliveryPromise={l.deliveryPromise}
-                initialEmail={session?.email ?? (voucherCheck?.ok ? voucherCheck.email : finishCheck?.ok ? finishCheck.email : undefined)}
+                initialEmail={session?.email ?? (voucherCheck?.ok ? voucherCheck.email : finishCheck?.ok ? (finishCheck.email ?? undefined) : undefined)}
                 preview={def.preview ? { label: def.preview.label } : undefined}
                 adminSandbox={isAdmin(session) && checkoutMode() === "live" && Boolean(secretKeyFor("test"))}
                 gaItem={{ name: def.name, priceCents: price, currency: item?.currency ?? def.pricing.currency }}

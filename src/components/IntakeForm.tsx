@@ -444,6 +444,8 @@ export function IntakeForm({ toolSlug, fields, ctaLabel, priceLabel, deliveryPro
               ? `Your free room counts as the first one: up to ${perUnit.pack.units} more rooms of the same listing${perUnit.packIncludes ? ` + ${perUnit.packIncludes}` : ""} for ${money(perUnit.pack.cents)}, then ${money(perUnit.pack.extraUnitCents)} a room. The offer runs 7 days after your free photo. ${deliveryPromise}`
               : freeHeading
               ? `Upload one room photo, leave your email and click the link we send — no card. After that, ${priceLabel} · ${deliveryPromise}`
+              : onSubmitIntake
+              ? `${priceLabel} · ${deliveryPromise}`
               : `${priceLabel} · ${deliveryPromise} · Secure payment via Stripe on the next step.`}
         </p>
       </div>

@@ -22,6 +22,7 @@ import { getSession } from "@/lib/auth/session";
 import { normalizeEmail } from "@/lib/auth/magic";
 import { finishEndsAt, finishUrl } from "@/lib/orders/finish";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
+import { isProspectPreview } from "@/lib/orders/prospect-rules";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Your order", robots: { index: false, follow: false } };
@@ -71,8 +72,10 @@ export default async function OrderPage({ params, searchParams }: Props) {
     ? await prisma.order.findUnique({ where: { freeKey: `${VOUCHER_KEY_PREFIX}${order.id}` }, select: { id: true, number: true, accessToken: true } })
     : null;
   const freePhoto = isFreePhotoOrder(order);
-  // "Finish this listing" for 7 days after a delivered free photo.
-  const finishLink = freePhoto && delivered && toolDef?.freeFirstPhoto ? finishUrl(order.id, order.deliveredAt) : null;
+  // A room staged for a prospect after they agreed (court lever 2): the same page, worded as their preview.
+  const prospectPreview = isProspectPreview(order);
+  // "Finish this listing" for 7 days after a delivered free photo or prospect preview.
+  const finishLink = (freePhoto || prospectPreview) && delivered && toolDef?.freeFirstPhoto ? finishUrl(order.id, order.deliveredAt) : null;
   // A paid Pro credits purchase: the balance and how to use it (sign in with the buying email).
   const creditPack = order.toolId === CREDIT_TOOL_SLUG && !order.free && order.paidAt && !["REFUNDED", "CANCELED"].includes(order.status) ? await creditBalance(order.customerEmail) : null;
   const session = creditPack ? await getSession() : null;
@@ -94,8 +97,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
       ) : null}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="eyebrow">Order #{order.number}</p>
-          <h1 className="mt-1 text-2xl font-bold">{order.tool.name}</h1>
+          <p className="eyebrow">{prospectPreview ? "A free preview for you" : `Order #${order.number}`}</p>
+          <h1 className="mt-1 text-2xl font-bold">{prospectPreview ? "Your room, virtually staged" : order.tool.name}</h1>
         </div>
         <span className={`badge ${tones[st.tone]}`}>{st.label}</span>
       </div>
@@ -112,7 +115,9 @@ export default async function OrderPage({ params, searchParams }: Props) {
               ? "Included with your staging order"
               : isCreditOrder(order)
                 ? `Paid with Pro credits (${order.quantity} room${order.quantity === 1 ? "" : "s"})`
-                : order.free
+                : prospectPreview
+                  ? "Free — a preview of your room"
+                  : order.free
                   ? "Free — your first photo"
                   : formatUsd(order.amountCents)}
           </div>
@@ -127,6 +132,23 @@ export default async function OrderPage({ params, searchParams }: Props) {
         <div className="mt-6">
           <CopyLink url={`${site.url}/orders/${order.id}?t=${encodeURIComponent(t)}`} label={showFiles ? "Your files stay here for 90 days — keep this link" : "Your private order link"} />
         </div>
+      ) : null}
+
+      {prospectPreview && showFiles ? (
+        <p className="mt-6 rounded-lg bg-accent-soft px-4 py-3 text-sm text-gray-700" data-prospect-intro>
+          We staged this room from your photo as a free preview: two versions at full resolution, no watermark, plus copies labeled
+          &ldquo;Virtually staged&rdquo; for the MLS.
+          {finishLink && order.deliveredAt ? (
+            <>
+              {" "}
+              Want the rest of the listing?{" "}
+              <a href={finishLink} className="font-semibold underline">
+                Finish it for {formatUsd(STAGING_FINISH_PACK.cents).replace(/\.00$/, "")}
+              </a>{" "}
+              (up to {STAGING_FINISH_PACK.units} more rooms plus the MLS description, until {finishEndsAt(order.deliveredAt).toISOString().slice(0, 10)}).
+            </>
+          ) : null}
+        </p>
       ) : null}
 
       {order.status === "PENDING" ? (
@@ -266,7 +288,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
                 Virtually staged photos must be labeled, and buyers must be able to see the original. Use the labeled copies in ads and on social, put the line below next to the photo, and link or print the original.
               </p>
               <div className="mt-4 grid gap-4 sm:grid-cols-[1fr_auto]">
-                <div className="space-y-3">
+                {/* min-w-0: the long links truncate inside the grid instead of pushing the page wider than a phone. */}
+                <div className="min-w-0 space-y-3">
                   <CopyLink url={originalPhotoUrl(publicToken)} label="Public page with the original photo" hint="Anyone with this link can see the unaltered photo — that is the point. It stays live while your files are kept (90 days)." />
                   <CopyLink url={disclosureLine(publicToken)} label="Line to put next to the staged photo" hint={null} wrap />
                   {labeled.length ? (
@@ -324,7 +347,7 @@ export default async function OrderPage({ params, searchParams }: Props) {
                       Finish this listing
                     </a>
                   </>
-                ) : freePhoto && toolDef ? (
+                ) : (freePhoto || prospectPreview) && toolDef ? (
                   <>
                     <div>
                       <h3 className="font-semibold">Stage the rest of the listing</h3>

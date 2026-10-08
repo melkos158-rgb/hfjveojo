@@ -192,6 +192,26 @@ Hey [name], the [community or street] homes look sharp. Quick question: are any 
 
 ✍️ [name], [community or street] from their own recent post or listing. Only builders whose listing photos show empty rooms (furnished models need nothing). Link with `?utm_source=instagram_dm&exp=e4-virtual-staging`. The 10 % builder share of the daily send pack.
 
+### re-reply-yes-preview — an agent answered yes (or asked to see it) (from 8 Oct, court session 2, lever 2)
+
+📤 EN — готове до відправки:
+Great! Send me a photo of one empty room (or tell me which listing photo I can use) and I'll send you a private link with it staged today. Or, if you'd rather try it yourself: orvionis.com/tools/virtual-staging, the first photo's free.
+
+🇺🇦 UA — переклад для контролю:
+Чудово! Надішли мені фото однієї порожньої кімнати (або скажи, яке фото з оголошення можна взяти), і я сьогодні надішлю тобі приватне посилання з уже застейдженою кімнатою. Або, якщо хочеш спробувати сам: orvionis.com/tools/virtual-staging, перше фото безкоштовне.
+
+✍️ Нічого. Коли прийде фото: Admin → Orders → «+ Prospect preview» (одна кімната, їхній нік) — сторінка, яку вони отримають, відкриється сама й заповниться приблизно за 2 хвилини; її адресу надіслати шаблоном нижче. Тільки з їхньої згоди: фото, яке вони надіслали, або фото з оголошення, яке вони дозволили взяти.
+
+### re-preview-link — the same agent, once their preview is ready
+
+📤 EN — готове до відправки:
+Here's your room staged: [link] Two versions, plus copies labeled for the MLS. If you like it, the rest of the listing is $39 this week (4 more rooms + the description).
+
+🇺🇦 UA — переклад для контролю:
+Ось твоя кімната зі стейджингом: [link] Дві версії, плюс копії з позначкою для MLS. Якщо сподобається, решта оголошення — $39 цього тижня (ще 4 кімнати + опис).
+
+✍️ [link] — приватна сторінка зі списку на `/admin/orders/preview` (лист «Preview for … is ready» містить цей текст уже з посиланням). Якщо за 48 годин тиша — одне коротке нагадування (суд: кожному, хто отримав безкоштовне фото, — протягом 48 год).
+
 ### photo-ig-dm-1 — photographer, first contact
 
 📤 EN: Hey [name], your [type, e.g. beach elopement] set from [month] is lovely. I built a small tool that writes and designs a branded pricing guide PDF from your real packages — about five minutes of questions, $29, no subscription. It's new and I'm looking for the first photographers to try it and tell me what's missing. Want the link?

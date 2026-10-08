@@ -21,9 +21,14 @@ export default async function AdminOrders({ searchParams }: { searchParams: Prom
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">Orders</h1>
-        <Link href="/admin/orders/new" className="btn-secondary px-4 py-2 text-sm">
-          + External order (Fiverr, Upwork, direct)
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/admin/orders/preview" className="btn-secondary px-4 py-2 text-sm">
+            + Prospect preview
+          </Link>
+          <Link href="/admin/orders/new" className="btn-secondary px-4 py-2 text-sm">
+            + External order (Fiverr, Upwork, direct)
+          </Link>
+        </div>
       </div>
       <form className="mt-4 flex flex-wrap gap-2 text-sm">
         <select name="status" defaultValue={status ?? ""} className="field-input w-auto">

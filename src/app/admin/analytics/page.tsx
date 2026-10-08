@@ -45,6 +45,7 @@ export default async function AdminAnalytics({ searchParams }: { searchParams: P
         <Kpi label="Free staging previews" value={`${k.previewsShown}`} sub={`${k.previewSessionsToCheckout} of those sessions went to checkout`} />
         <Kpi label="Photo warnings" value={`${k.photoWarnings}`} sub="photos the order form flagged as small, dark or blurry" />
         <Kpi label="Free first photos" value={`${k.freePhotosClaimed}`} sub={`claimed (email confirmed) · ${k.freePhotoPayers} of those people paid later`} />
+        <Kpi label="Prospect previews" value={`${k.prospectPreviews}`} sub={`a prospect's own room, after their yes · ${k.prospectPreviewsFinished} finished the listing (paid)`} />
         <Kpi label="Visit → paid" value={`${(k.conversionVisitToPaid * 100).toFixed(2)}%`} />
         <Kpi label="Checkout → paid" value={`${(k.conversionCheckoutToPaid * 100).toFixed(1)}%`} />
         <Kpi label="Delivered / review / failed" value={`${k.ordersDelivered} / ${k.ordersInReview} / ${k.ordersFailed}`} />

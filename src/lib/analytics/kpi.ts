@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import { isOwnHost, publicHost, sourceOf } from "@/lib/analytics/attribution";
 import { microsToCents } from "@/lib/ai/pricing";
 import { NOT_FREE_PHOTO_KEYS } from "@/lib/orders/voucher";
+import { PROSPECT_KEY_PREFIX } from "@/lib/orders/prospect-rules";
+import { finishOrdersOf } from "@/lib/orders/prospect";
 
 export type Kpis = {
   from: Date;
@@ -55,6 +57,9 @@ export type Kpis = {
   /** Free first photos claimed (email confirmed) in the period, and how many of those people have also paid for an order. */
   freePhotosClaimed: number;
   freePhotoPayers: number;
+  /** Prospect previews made in the period (court lever 2), and the paid orders that finished their listings. */
+  prospectPreviews: number;
+  prospectPreviewsFinished: number;
 };
 
 export const STRIPE_FEE_PCT = 0.029;
@@ -67,7 +72,7 @@ export function estimateStripeFeesCents(orders: Array<{ amountCents: number }>):
 export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
   const range = { gte: from, lt: to };
 
-  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions, freeClaims, photoWarnings] =
+  const [pageViews, intakeEvents, checkoutEvents, paidOrders, delivered, refunded, inReview, failed, aiAgg, channelCosts, feedbackAgg, tools, freeToolUses, previewEvents, checkoutSessions, freeClaims, photoWarnings, prospectPreviews] =
     await Promise.all([
       prisma.event.findMany({ where: { name: "page_view", createdAt: range }, select: { sessionId: true, utm: true, path: true } }),
       prisma.event.findMany({ where: { name: "intake_started", createdAt: range }, select: { props: true } }),
@@ -98,9 +103,10 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
       prisma.event.count({ where: { name: "free_tool_used", createdAt: range } }),
       prisma.event.findMany({ where: { name: "preview_ready", createdAt: range }, select: { sessionId: true, props: true } }),
       prisma.event.findMany({ where: { name: "checkout_started", createdAt: range, sessionId: { not: null } }, select: { sessionId: true } }),
-      // Free first photos only: an included description and an order paid with Pro credits are also $0 orders.
+      // Free first photos only: an included description, an order paid with Pro credits and a prospect preview are also $0 orders.
       prisma.order.findMany({ where: { free: true, paidAt: range, isTest: false, NOT: NOT_FREE_PHOTO_KEYS }, select: { customerEmail: true } }),
       prisma.event.count({ where: { name: "photo_warning", createdAt: range } }),
+      prisma.order.findMany({ where: { free: true, freeKey: { startsWith: PROSPECT_KEY_PREFIX }, createdAt: range, isTest: false }, select: { id: true } }),
     ]);
   const checkoutSessionIds = new Set(checkoutSessions.map((e) => e.sessionId));
   const previewSessionIds = new Set(previewEvents.map((e) => e.sessionId).filter(Boolean) as string[]);
@@ -209,6 +215,8 @@ export async function computeKpis(from: Date, to: Date): Promise<Kpis> {
     photoWarnings,
     freePhotosClaimed: freeClaims.length,
     freePhotoPayers: await freePhotoPayers(freeClaims.map((o) => o.customerEmail)),
+    prospectPreviews: prospectPreviews.length,
+    prospectPreviewsFinished: [...(await finishOrdersOf(prospectPreviews.map((p) => p.id))).values()].reduce((a, b) => a + b, 0),
   };
 }
 

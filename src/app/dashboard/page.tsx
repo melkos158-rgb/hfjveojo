@@ -10,6 +10,7 @@ import { signedFileUrl } from "@/lib/storage";
 import { site } from "@/config/site";
 import { getToolById } from "@/lib/tools/registry";
 import { isCreditOrder, isVoucherOrder } from "@/lib/orders/voucher";
+import { NOT_PROSPECT_PREVIEW } from "@/lib/orders/prospect-rules";
 import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG } from "@/lib/orders/credits";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +41,8 @@ const units = (o: { quantity: number; toolId: string }) => (o.quantity > 1 ? ` Â
 export default async function DashboardPage() {
   const user = await requireUserPage("/dashboard");
   const orders = await prisma.order.findMany({
-    where: { OR: [{ userId: user.id }, { customerEmail: user.email }], isTest: false },
+    // Prospect previews carry the admin's email but belong to the prospect: not on the admin's own dashboard.
+    where: { isTest: false, AND: [{ OR: [{ userId: user.id }, { customerEmail: user.email }] }, NOT_PROSPECT_PREVIEW] },
     include: {
       tool: true,
       outputs: { select: { id: true, type: true, title: true, fileId: true, content: true, deliveredAt: true, createdAt: true, toolRunId: true } },

@@ -207,7 +207,9 @@ describe("indexnow: hourly maintenance step", () => {
 
 describe("indexnow: only what changed after an accepted submission", () => {
   it("sends the URLs newer than the last accepted version, without the retired pages", async () => {
-    const older = new Date(contentVersion().getTime() - 24 * 3600_000);
+    // The last accepted version: an hour before the /guides hub last changed (any page edited later is sent too).
+    const guidesAt = sitemapEntries(APP).find((e) => e.url === `${APP}/guides`)?.lastModified as Date;
+    const older = new Date(Math.min(contentVersion().getTime() - 24 * 3600_000, guidesAt.getTime() - 3600_000));
     const db = fakeDb({ version: older.toISOString(), status: 202, ok: true, at: "2026-09-27T12:00:00.000Z", count: 37 });
     const f = fakeFetch();
     const expected = sitemapEntries(APP)

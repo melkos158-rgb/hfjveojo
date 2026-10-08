@@ -82,6 +82,13 @@ export default function PrivacyPage() {
           type there is not sent to us.
         </li>
         <li>
+          <strong>Previews you agree to in a conversation</strong> — if you answer one of our messages and agree to a free
+          preview, we stage one room from the photo you send us (or a photo of your listing that you tell us to use) the
+          same way as an order, and put the result on a private page whose link we send you in that conversation. With it
+          we keep the name or handle you wrote to us from, not an email address. The photos are kept like order files (see
+          Retention).
+        </li>
+        <li>
           <strong>Marketplace orders</strong> — if you order one of our services on a marketplace such as Fiverr, we receive
           the photos and instructions you send there and process them in the same way. The marketplace&apos;s own privacy
           policy covers your account and payment there.
@@ -91,7 +98,7 @@ export default function PrivacyPage() {
       <h2>AI processing</h2>
       <p>
         We use OpenAI to create deliverables. We send it the answers in your order form, the photos you upload for virtual
-        staging (rotated and resized first) and the generated text for an automated quality check. If you ask for a free
+        staging or send us for a preview (rotated and resized first) and the generated text for an automated quality check. If you ask for a free
         staging preview, your photo is sent to OpenAI before you pay; the watermarked preview comes back to your browser
         and is not stored. Once a day we also send OpenAI aggregate business numbers together with up to five recent
         unanswered feedback messages (shortened) to write an internal summary. We do not send your email address or payment

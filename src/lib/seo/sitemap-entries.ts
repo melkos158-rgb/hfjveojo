@@ -31,7 +31,7 @@ export const PAGE_UPDATED: Record<string, string> = {
   "/tools/virtual-staging": "2026-10-06T11:45:00Z",
   "/pricing": "2026-10-06T11:20:00Z",
   // 6 Oct 10:50 UTC: the one checkout reminder email is described
-  "/privacy": "2026-10-06T10:50:00Z",
+  "/privacy": "2026-10-08T07:20:00Z",
   // 6 Oct 11:20 UTC: Pro credits (25 rooms for $149; court ruling, lever 3): the new page, /photographers rebuilt for
   // real-estate photographers, the price list, and the credit rules in the terms and the refund policy
   "/tools/pro-credits": "2026-10-06T11:20:00Z",

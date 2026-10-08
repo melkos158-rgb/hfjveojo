@@ -13,7 +13,8 @@ import { linkify } from "@/lib/email/layout";
 import { formatUsd } from "@/lib/ai/pricing";
 import { descriptionVoucherUrl, isCreditOrder, isFreePhotoOrder, orderHasVoucher } from "@/lib/orders/voucher";
 import { creditBalance, CREDIT_TOOL_SLUG, CREDIT_USE_TOOL_SLUG, CREDITS_PER_PACK } from "@/lib/orders/credits";
-import { finishUrl } from "@/lib/orders/finish";
+import { finishEndsAt, finishUrl } from "@/lib/orders/finish";
+import { isProspectPreview, prospectOf } from "@/lib/orders/prospect-rules";
 import { STAGING_FINISH_PACK } from "@/config/staging-pricing";
 
 export function orderUrl(order: { id: string; accessToken: string }): string {
@@ -71,6 +72,12 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
   const fileLinks = toDeliver.filter((o) => o.fileId).map((o) => `${o.title}: ${signedFileUrl(o.fileId as string)}`);
   const link = orderUrl(order);
   const brand = env().NEXT_PUBLIC_BRAND_NAME;
+  if (!redo && isProspectPreview(order)) {
+    // A prospect preview (court lever 2) goes to the admin who made it, with the link to send in the conversation.
+    await sendProspectPreviewReady(order, link, order.deliveredAt ?? now);
+    await track("order_delivered", { orderId, props: { tool: order.toolId, by: opts.by, prospect: 1 } });
+    return;
+  }
   const intro = redo
     ? "Here is the new version of your order. It replaces the earlier files on your order page."
     : isFreePhotoOrder(order)
@@ -131,6 +138,27 @@ export async function deliverOrder(orderId: string, opts: { by: "system" | "admi
     html: `<p>${lines.map(linkify).join("<br/>")}</p>`,
   });
   await track(redo ? "order_redelivered" : "order_delivered", { orderId, props: { tool: order.toolId, by: opts.by } });
+}
+
+/** "Preview ready" to the admin: the private link and the reply to paste into the chat (EN to send, UA to check). */
+async function sendProspectPreviewReady(order: { customerEmail: string; attribution: unknown }, link: string, deliveredAt: Date): Promise<void> {
+  const who = prospectOf(order) ?? "the prospect";
+  const until = finishEndsAt(deliveredAt).toISOString().slice(0, 10);
+  const price = formatUsd(STAGING_FINISH_PACK.cents).replace(/\.00$/, "");
+  const lines = [
+    `The preview for ${who} is ready: their room in two versions, copies labeled "Virtually staged" and the page with the original photo.`,
+    "",
+    `Private link to send: ${link}`,
+    "",
+    `On that page they can finish the listing: up to ${STAGING_FINISH_PACK.units} more rooms plus the MLS description for ${price}, until ${until}.`,
+    "",
+    "Reply to paste (EN):",
+    `Here's your room staged: ${link} Two versions, plus copies labeled for the MLS. If you like it, the rest of the listing is ${price} this week (${STAGING_FINISH_PACK.units} more rooms + the description).`,
+    "",
+    "UA (для перевірки, не надсилати):",
+    `Ось твоя кімната зі стейджингом: ${link} Дві версії, плюс копії з позначкою для MLS. Якщо сподобається, решта оголошення — ${price} цього тижня (ще ${STAGING_FINISH_PACK.units} кімнати + опис).`,
+  ];
+  await sendEmail({ to: order.customerEmail, subject: `Preview for ${who} is ready`, text: lines.join("\n"), html: `<p>${lines.map(linkify).join("<br/>")}</p>` });
 }
 
 /** Refund via Stripe (server-side) and record it. Requires an admin actor — high-impact action. */
