@@ -6,7 +6,7 @@ Read this first when resuming. Then continue from **NEXT EXACT ACTION**.
 
 **The gig is LIVE** (Active, published by the owner on 2026-09-26 ≈ 21:30 UTC+2).
 - Seller dashboard, last 30 days: 0 impressions, 0 clicks, 0 orders (26 Sep).
-- **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-10-08 12:56 UTC (and at the earlier midday checks). Manage Orders is the only source of truth. Inbox, 5 Oct: no new conversations since the 26 Sep phishing wave.
+- **Manage Orders: 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred), verified again 2026-10-09 12:57 UTC (and at the earlier midday checks). Manage Orders is the only source of truth. Inbox, 5 Oct: no new conversations since the 26 Sep phishing wave.
 - Inbox: not read on 27 Sep. Fiverr's "It needs a human touch" check appeared on `/inbox` even after a 35-second pause following Manage Orders. The operator never solves it, so the owner reads the inbox. With Manage Orders at 0, no message can be a real order.
 - Within an hour of going live, three phishing messages arrived. Two were reported and blocked; see SECURITY INCIDENTS.
 - **Impressions since 26 Sep are unknown.** The seller dashboard has been gated for the operator since 29 Sep, so the owner reads it; the number goes here.
@@ -168,6 +168,8 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
+2026-10-09 12:57 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). After a 40-second pause the inbox opened without a human check: the same 6 conversations, the newest 2 weeks old; nothing opened. The extension may no longer read page text on fiverr.com ("Permission denied"), so both pages were checked by screenshot.
+
 2026-10-08 12:56 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). After a 40-second pause the inbox opened without a human check: 6 conversations, the newest 2 weeks old (the 26 Sep phishing wave), nothing new.
 2026-10-03 12:58 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). One page view; no human check. The owner was active on Fiverr himself (profile editing).
 2026-10-02 12:58 UTC (midday check-in): **Manage Orders shows 0 in every status** (Priority, Active, Incomplete, Late, Delivered, Completed, Cancelled, Starred). One page view; the bell shows a notification dot, left for the owner.
