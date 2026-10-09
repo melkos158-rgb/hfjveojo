@@ -253,7 +253,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-09 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 654 / 171, 0 paid. Stripe payouts now enabled (`/admin/system`). Fiverr 0 orders. Nothing marked sent today yet.
+- Last verified: 2026-10-09 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2b2e2447f68a-14` (s107 `f4226b7`, CI #148 green). `/admin/analytics` 655 / 172, 0 paid. No sends confirmed today (20 touches in all). Check-ins of 10 and 11 Oct exist.
+- Earlier: 2026-10-09 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 654 / 171, 0 paid. Stripe payouts now enabled (`/admin/system`). Fiverr 0 orders. Nothing marked sent today yet.
 - Earlier: 2026-10-09 ≈ 07:33 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 649 / 166, 0 paid, no overnight orders. Today's pack filled to 10 (4 new cards: Moises Morales, The Brescia Group, SR Collective, Easy Home Holding). Check-ins of 10 Oct exist.
 - Earlier: 2026-10-08 ≈ 18:56 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-adc632884252-14` (s102 `c490c04`, CI #143 green). `/admin/analytics` 647 / 165, 0 paid, AI $4.21. **The owner sent 11 messages (20 touches in all) and passed the free-photo self-test** (order #8, delivered within a minute, QC passed). Check-ins of 10 Oct scheduled (`trig_011ZatGL12TqevY2Bu3dd19b`, `trig_0194diPo7rt1qso4HAa1QK7S`, `trig_01RMaj2fACt6XPsung9vguTJ`).
 - Earlier: 2026-10-08 ≈ 12:57 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-cdfea3c1f8f8-14` (s101 `3ea662c`, CI #142 green). `/admin/analytics` 642 / 161, 0 paid, free first photos 0, prospect previews 0. Fiverr: 0 orders, inbox unchanged. Tracker: nothing sent today. Search Console's URL inspection did not load from the operator's tab (two 404s and a page that never settled), so Google finds the Stellar guide through the sitemap; IndexNow sent it and the 7 other changed pages to Bing & co. at 08:00 UTC (8 URLs, HTTP 200 accepted).
@@ -310,6 +311,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `f4226b7` (s107, 2026-10-09 ≈ 13:27 UTC): the photographers' pricing guide. CI #148 green; Railway deployed by ≈ 13:31 UTC (worker `web-2b2e2447f68a-14`). Live: the guide 200, listed on `/guides`, sitemap lastmod 13:15 UTC; the Pro credits FAQ quotes the data. Tracker v10 adds the photographer margin answer.
 - `e0dd28b` (s106, docs, 2026-10-09 ≈ 12:59 UTC): midday check-in, Stripe payouts enabled. CI #147 green; Railway deployed by ≈ 13:03 UTC (worker `web-6265de15bac2-14`).
 - `c61a1c9` (s105, 2026-10-09 ≈ 07:23 UTC): the ARMLS guide. CI #146 green (213 tests); Railway deployed by ≈ 07:26 UTC (worker `web-16efa0eefa8b-14`, health ok). Live: `/guides/armls-virtual-staging` 200; sitemap lastmod 07:15 UTC for it, `/guides` and `/tools/virtual-staging`, whose disclosure FAQ names ARMLS.
 - `dc2bfcb` (s104, docs, 2026-10-09 ≈ 07:05 UTC): morning check-in. CI #145 green; Railway deployed by 07:09 UTC (worker `web-736a007dd0c6-14`).
