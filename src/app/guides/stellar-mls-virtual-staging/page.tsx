@@ -172,7 +172,8 @@ export default function StellarMlsGuidePage() {
       </p>
       <p>
         Listing in California too? <Link href="/guides/ab-723-virtual-staging">AB 723</Link> works differently there: the label goes on or next to the image, and buyers need access to
-        the original.
+        the original. In Arizona, <Link href="/guides/armls-virtual-staging">ARMLS</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark on the photo and the original next
+        to it.
       </p>
 
       <h2>Questions</h2>

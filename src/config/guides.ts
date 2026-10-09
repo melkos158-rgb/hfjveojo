@@ -59,7 +59,7 @@ export const GUIDES: Guide[] = [
     title: "AB 723 and virtual staging: the California checklist",
     description: "What California's AB 723 requires for virtually staged listing photos since January 1, 2026 — and a 7-step checklist.",
     audience: "California agents",
-    updated: "2026-10-08T07:40:00Z",
+    updated: "2026-10-09T07:15:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -67,7 +67,15 @@ export const GUIDES: Guide[] = [
     title: "Virtual staging on Stellar MLS: the Central Florida rules",
     description: "How Stellar MLS wants virtually staged photos disclosed (description, checkbox, remarks), what you may not change, and a 7-step checklist.",
     audience: "Florida agents (Stellar MLS)",
-    updated: "2026-10-08T07:40:00Z",
+    updated: "2026-10-09T07:15:00Z",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
+    slug: "armls-virtual-staging",
+    title: "Virtual staging on ARMLS: the Digitally Altered watermark rule",
+    description: "How ARMLS wants staged photos disclosed since May 28, 2026: the Flexmls Digitally Altered watermark, the original next to it, the $200 fines from December, a checklist.",
+    audience: "Arizona agents (ARMLS)",
+    updated: "2026-10-09T07:15:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

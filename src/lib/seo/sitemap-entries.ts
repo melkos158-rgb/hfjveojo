@@ -28,7 +28,8 @@ export const PAGE_UPDATED: Record<string, string> = {
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
   // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling); 11:45 UTC: the Pro
   // credits FAQ and the "Have Pro credits? Sign in" line
-  "/tools/virtual-staging": "2026-10-08T07:40:00Z",
+  // 9 Oct 07:15 UTC: the disclosure FAQ names ARMLS (Arizona) next to Stellar
+  "/tools/virtual-staging": "2026-10-09T07:15:00Z",
   "/pricing": "2026-10-06T11:20:00Z",
   // 6 Oct 10:50 UTC: the one checkout reminder email is described
   "/privacy": "2026-10-08T07:20:00Z",
