@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { ToolDefinition } from "@/lib/tools/types";
 import { CREDIT_MONTHS, CREDITS_PER_PACK } from "@/lib/orders/credit-rules";
+import { photographerPriceStats, usd } from "@/content/photographer-staging-prices";
 
 /**
  * PRO CREDITS — 25 rooms of virtual staging paid once (court of agents, 2026-10-06, session 2, lever 3: "a
@@ -21,6 +22,9 @@ export type ProCreditsIntake = z.infer<typeof intakeSchema>;
 
 const PRICE_CENTS = 14900;
 const perRoom = (PRICE_CENTS / 100 / CREDITS_PER_PACK).toFixed(2);
+/** What agents pay photographers for one staged photo (src/content/photographer-staging-prices.ts). */
+const resale = photographerPriceStats();
+const keep = (price: number) => Math.round(price - Number(perRoom));
 
 export const proCreditsTool: ToolDefinition<ProCreditsIntake> = {
   id: "pro-credits",
@@ -73,7 +77,7 @@ export const proCreditsTool: ToolDefinition<ProCreditsIntake> = {
       },
       {
         q: "What does reselling look like?",
-        a: `Each room costs you about $${perRoom}. For example, if you charge your agents $15 a staged photo you keep about $9 a room; at $25 about $19. You set your own price; the files have no ORVIONIS branding.`,
+        a: `Each room costs you about $${perRoom}. On the ${resale.count} photographers' price lists in our guide, agents pay ${usd(resale.low)}–${usd(resale.high)} for a staged photo, median ${usd(resale.median)}: at $25 you keep about $${keep(25)} a room, at ${usd(resale.median)} about $${keep(resale.median)}. You set your own price; the files have no ORVIONIS branding.`,
       },
       {
         q: "How does it compare with a monthly AI staging plan?",

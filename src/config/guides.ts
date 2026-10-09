@@ -79,6 +79,14 @@ export const GUIDES: Guide[] = [
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
+    slug: "virtual-staging-pricing-for-photographers",
+    title: "What real estate photographers charge for virtual staging",
+    description: "Twelve photographers' own price lists, checked October 9, 2026: $19.80–$75 for a staged photo, median $35. What it costs you, how to price it, and how to deliver it compliant.",
+    audience: "Real estate photographers",
+    updated: "2026-10-09T13:15:00Z",
+    tool: { slug: "pro-credits", label: "Pro credits — 25 rooms for $149" },
+  },
+  {
     slug: "photographing-rooms-for-virtual-staging",
     title: "10 tips for room photos that stage well",
     description: "How to shoot empty rooms so virtual staging looks real: light, height, lens, angles and what to leave out.",

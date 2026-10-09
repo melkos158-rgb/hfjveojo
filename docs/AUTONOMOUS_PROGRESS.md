@@ -51,6 +51,9 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## DONE (verified in production unless noted)
 
+- 2026-10-09 (s107): **guide for real estate photographers: what they charge for virtual staging** (`/guides/virtual-staging-pricing-for-photographers`; photographers are 25% of the court's outreach split).
+  - 12 photographers' own price pages read on 9 Oct (10 in Florida, Texas and Arizona; every price re-checked by the operator): $19.80–$75 a staged photo, median $35, middle half $25–$45; packs of 4–5 common; cheapest shoots $139–$199 on 8 of the sites. Data in `src/content/photographer-staging-prices.ts` (stats computed, not typed).
+  - What it costs them (editors $23–$37 from the cost guide's data vs Pro credits $5.96), a margin table, how to price it, how to deliver it compliant (clean MLS version, labeled copy, the original; Stellar / ARMLS / AB 723 links), Pro credits, FAQ with JSON-LD. The Pro credits reselling FAQ now quotes the same data (at $35, about $29 a room).
 - 2026-10-09 (s105): **ARMLS guide for Arizona agents** (Arizona joins outreach on 20 Oct, court session 2).
   - ARMLS updated Rule 8.23 on 28 May 2026 (checked at armls.com/digitally-altered-media): a photo is digitally altered when software or AI adds, removes or significantly changes content; each one needs the Flexmls "Digitally Altered" watermark, added in Flexmls, and the original directly before or after it; one watermark per photo, only ARMLS's; fines abated June–November 2026, $200 per violation from December 2026.
   - New guide `/guides/armls-virtual-staging`: definition and edge cases, the two requirements, ARMLS's own may / may-not examples, Arizona's advertising rule R4-28-502 (accurate claims, no "misleading or ambiguous impressions", AI included, broker responsible), timeline and fines, a 7-step checklist, how ORVIONIS fits (upload the clean version and add the Flexmls watermark; never the labeled copies), FAQ with JSON-LD, sources.
@@ -307,6 +310,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `e0dd28b` (s106, docs, 2026-10-09 ≈ 12:59 UTC): midday check-in, Stripe payouts enabled. CI #147 green; Railway deployed by ≈ 13:03 UTC (worker `web-6265de15bac2-14`).
 - `c61a1c9` (s105, 2026-10-09 ≈ 07:23 UTC): the ARMLS guide. CI #146 green (213 tests); Railway deployed by ≈ 07:26 UTC (worker `web-16efa0eefa8b-14`, health ok). Live: `/guides/armls-virtual-staging` 200; sitemap lastmod 07:15 UTC for it, `/guides` and `/tools/virtual-staging`, whose disclosure FAQ names ARMLS.
 - `dc2bfcb` (s104, docs, 2026-10-09 ≈ 07:05 UTC): morning check-in. CI #145 green; Railway deployed by 07:09 UTC (worker `web-736a007dd0c6-14`).
 - `c490c04` (s102, docs, 2026-10-08 ≈ 13:03 UTC): midday check-in. CI #143 green; Railway deployed by 13:06 UTC (worker `web-adc632884252-14`, health ok).
