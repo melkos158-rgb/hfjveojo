@@ -255,7 +255,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-10 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-d6c81f95041b-14` (s109 `a9d169c`, CI #150 green). `/admin/analytics` 659 / 176, 0 paid. Fiverr 0 orders. No sends since 8 Oct.
+- Last verified: 2026-10-10 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-e559683405e3-14` (s110 `e1fd3c8`, CI #151 green). `/admin/analytics` 659 / 176, 0 paid. No sends since 8 Oct. Check-ins of 11 and 12 Oct exist (12 Oct: Search Console in the morning, the week plan in the evening).
+- Earlier: 2026-10-10 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-d6c81f95041b-14` (s109 `a9d169c`, CI #150 green). `/admin/analytics` 659 / 176, 0 paid. Fiverr 0 orders. No sends since 8 Oct.
 - Earlier: 2026-10-10 ≈ 06:58 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-84306a5e39f9-14` (s108 `6f6348e`, CI #149 green). `/admin/analytics` 656 / 173, 0 paid, nothing overnight. No sends since 8 Oct; "Today" stays at 10. Check-ins of 11 Oct exist.
 - Earlier: 2026-10-09 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2b2e2447f68a-14` (s107 `f4226b7`, CI #148 green). `/admin/analytics` 655 / 172, 0 paid. No sends confirmed today (20 touches in all). Check-ins of 10 and 11 Oct exist.
 - Earlier: 2026-10-09 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 654 / 171, 0 paid. Stripe payouts now enabled (`/admin/system`). Fiverr 0 orders. Nothing marked sent today yet.
@@ -315,6 +316,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `e1fd3c8` (s110, 2026-10-10 ≈ 13:08 UTC): the disclaimer guide. CI #151 green; Railway deployed by ≈ 13:12 UTC (worker `web-e559683405e3-14`). The page was checked in a local production build (390 px, JSON-LD Article + FAQ); the browser tab froze before the live read; at the evening run the live page loaded with its title.
 - `a9d169c` (s109, 2026-10-10 ≈ 07:01 UTC): morning check-in; `/photographers` links the pricing guide. CI #150 green; Railway deployed by ≈ 07:05 UTC (worker `web-d6c81f95041b-14`). The link was checked in a local production build; live check at midday.
 - `6f6348e` (s108, docs, 2026-10-09 ≈ 18:56 UTC): evening check-in, the photographer margin answer. CI #149 green; Railway deployed by ≈ 19:00 UTC (worker `web-84306a5e39f9-14`).
 - `f4226b7` (s107, 2026-10-09 ≈ 13:27 UTC): the photographers' pricing guide. CI #148 green; Railway deployed by ≈ 13:31 UTC (worker `web-2b2e2447f68a-14`). Live: the guide 200, listed on `/guides`, sitemap lastmod 13:15 UTC; the Pro credits FAQ quotes the data. Tracker v10 adds the photographer margin answer.
