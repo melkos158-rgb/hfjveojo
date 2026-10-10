@@ -180,7 +180,7 @@ export default function ArmlsGuidePage() {
       <p>
         Listing elsewhere? <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> wants no words or watermark on the photo at all, only a description,
         a checkbox and a line in the remarks, and in California <Link href="/guides/ab-723-virtual-staging">AB 723</Link> puts the label on or next to the image and requires access to
-        the original.
+        the original. The wording for each place is in our <Link href="/guides/virtual-staging-disclaimer">virtual staging disclaimer examples</Link>.
       </p>
 
       <h2>Questions</h2>

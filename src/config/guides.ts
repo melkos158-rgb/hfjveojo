@@ -71,11 +71,19 @@ export const GUIDES: Guide[] = [
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
+    slug: "virtual-staging-disclaimer",
+    title: "Virtual staging disclaimer: what to write and where",
+    description: "Copy-ready disclosure wording for the photo, the MLS caption, the remarks, ads and social, and what Stellar MLS, ARMLS, CRMLS, SABOR and California's AB 723 each require.",
+    audience: "Real estate agents",
+    updated: "2026-10-10T13:00:00Z",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
     slug: "armls-virtual-staging",
     title: "Virtual staging on ARMLS: the Digitally Altered watermark rule",
     description: "How ARMLS wants staged photos disclosed since May 28, 2026: the Flexmls Digitally Altered watermark, the original next to it, the $200 fines from December, a checklist.",
     audience: "Arizona agents (ARMLS)",
-    updated: "2026-10-09T07:15:00Z",
+    updated: "2026-10-10T13:00:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

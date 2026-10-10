@@ -319,7 +319,8 @@ export default async function OrderPage({ params, searchParams }: Props) {
                 photo and the original directly before or after it. This helps you comply; it is not legal advice. Checklists:{" "}
                 <Link className="underline" href="/guides/stellar-mls-virtual-staging">Stellar MLS</Link>,{" "}
                 <Link className="underline" href="/guides/armls-virtual-staging">ARMLS</Link>,{" "}
-                <Link className="underline" href="/guides/ab-723-virtual-staging">California AB 723</Link>.
+                <Link className="underline" href="/guides/ab-723-virtual-staging">California AB 723</Link>; wording for each place:{" "}
+                <Link className="underline" href="/guides/virtual-staging-disclaimer">disclaimer examples</Link>.
               </p>
             </div>
           ) : null}
