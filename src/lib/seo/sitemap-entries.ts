@@ -37,7 +37,8 @@ export const PAGE_UPDATED: Record<string, string> = {
   // real-estate photographers, the price list, and the credit rules in the terms and the refund policy
   // 9 Oct 13:15 UTC: the reselling FAQ quotes what photographers charge (new photographers' pricing guide)
   "/tools/pro-credits": "2026-10-09T13:15:00Z",
-  "/photographers": "2026-10-06T11:20:00Z",
+  // 10 Oct 07:00 UTC: links the photographers' virtual staging pricing guide
+  "/photographers": "2026-10-10T07:00:00Z",
   "/terms": "2026-10-06T11:20:00Z",
   "/refund-policy": "2026-10-06T11:20:00Z",
   // 2 Oct: the home page, /real-estate and /tools lead with the free first photo

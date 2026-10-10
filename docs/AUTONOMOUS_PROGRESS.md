@@ -51,6 +51,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## DONE (verified in production unless noted)
 
+- 2026-10-10 (s109, small): `/photographers` links the photographers' virtual staging pricing guide (the category's "Free" list), so the landing page for photographers points to the margin numbers.
 - 2026-10-09 (s107): **guide for real estate photographers: what they charge for virtual staging** (`/guides/virtual-staging-pricing-for-photographers`; photographers are 25% of the court's outreach split).
   - 12 photographers' own price pages read on 9 Oct (10 in Florida, Texas and Arizona; every price re-checked by the operator): $19.80–$75 a staged photo, median $35, middle half $25–$45; packs of 4–5 common; cheapest shoots $139–$199 on 8 of the sites. Data in `src/content/photographer-staging-prices.ts` (stats computed, not typed).
   - What it costs them (editors $23–$37 from the cost guide's data vs Pro credits $5.96), a margin table, how to price it, how to deliver it compliant (clean MLS version, labeled copy, the original; Stellar / ARMLS / AB 723 links), Pro credits, FAQ with JSON-LD. The Pro credits reselling FAQ now quotes the same data (at $35, about $29 a room).
@@ -253,7 +254,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-09 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2b2e2447f68a-14` (s107 `f4226b7`, CI #148 green). `/admin/analytics` 655 / 172, 0 paid. No sends confirmed today (20 touches in all). Check-ins of 10 and 11 Oct exist.
+- Last verified: 2026-10-10 ≈ 06:58 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-84306a5e39f9-14` (s108 `6f6348e`, CI #149 green). `/admin/analytics` 656 / 173, 0 paid, nothing overnight. No sends since 8 Oct; "Today" stays at 10. Check-ins of 11 Oct exist.
+- Earlier: 2026-10-09 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2b2e2447f68a-14` (s107 `f4226b7`, CI #148 green). `/admin/analytics` 655 / 172, 0 paid. No sends confirmed today (20 touches in all). Check-ins of 10 and 11 Oct exist.
 - Earlier: 2026-10-09 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 654 / 171, 0 paid. Stripe payouts now enabled (`/admin/system`). Fiverr 0 orders. Nothing marked sent today yet.
 - Earlier: 2026-10-09 ≈ 07:33 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-16efa0eefa8b-14` (s105 `c61a1c9`, CI #146 green). `/admin/analytics` 649 / 166, 0 paid, no overnight orders. Today's pack filled to 10 (4 new cards: Moises Morales, The Brescia Group, SR Collective, Easy Home Holding). Check-ins of 10 Oct exist.
 - Earlier: 2026-10-08 ≈ 18:56 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-adc632884252-14` (s102 `c490c04`, CI #143 green). `/admin/analytics` 647 / 165, 0 paid, AI $4.21. **The owner sent 11 messages (20 touches in all) and passed the free-photo self-test** (order #8, delivered within a minute, QC passed). Check-ins of 10 Oct scheduled (`trig_011ZatGL12TqevY2Bu3dd19b`, `trig_0194diPo7rt1qso4HAa1QK7S`, `trig_01RMaj2fACt6XPsung9vguTJ`).
@@ -311,6 +313,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `6f6348e` (s108, docs, 2026-10-09 ≈ 18:56 UTC): evening check-in, the photographer margin answer. CI #149 green; Railway deployed by ≈ 19:00 UTC (worker `web-84306a5e39f9-14`).
 - `f4226b7` (s107, 2026-10-09 ≈ 13:27 UTC): the photographers' pricing guide. CI #148 green; Railway deployed by ≈ 13:31 UTC (worker `web-2b2e2447f68a-14`). Live: the guide 200, listed on `/guides`, sitemap lastmod 13:15 UTC; the Pro credits FAQ quotes the data. Tracker v10 adds the photographer margin answer.
 - `e0dd28b` (s106, docs, 2026-10-09 ≈ 12:59 UTC): midday check-in, Stripe payouts enabled. CI #147 green; Railway deployed by ≈ 13:03 UTC (worker `web-6265de15bac2-14`).
 - `c61a1c9` (s105, 2026-10-09 ≈ 07:23 UTC): the ARMLS guide. CI #146 green (213 tests); Railway deployed by ≈ 07:26 UTC (worker `web-16efa0eefa8b-14`, health ok). Live: `/guides/armls-virtual-staging` 200; sitemap lastmod 07:15 UTC for it, `/guides` and `/tools/virtual-staging`, whose disclosure FAQ names ARMLS.

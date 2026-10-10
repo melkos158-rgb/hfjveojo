@@ -39,7 +39,10 @@ export const CATEGORIES: CategoryInfo[] = [
     title: "Photographers",
     live: ["Empty rooms from your shoots → staged photos, 25 for $149 (Pro credits)", "Packages + prices → branded pricing guide (PDF)"],
     planned: ["Your process → client welcome guide", "Business facts → branded documents", "Raw content → social posts"],
-    free: [{ label: "Pricing calculator — what to charge per job and per hour from your income goal, costs and real hours", href: "/free/photography-pricing-calculator" }],
+    free: [
+      { label: "Pricing calculator — what to charge per job and per hour from your income goal, costs and real hours", href: "/free/photography-pricing-calculator" },
+      { label: "What real estate photographers charge for virtual staging — 12 price lists, the median and your margin", href: "/guides/virtual-staging-pricing-for-photographers" },
+    ],
     cta: "See photographer tools",
   },
   {
