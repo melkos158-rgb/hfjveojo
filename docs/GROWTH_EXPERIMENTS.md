@@ -46,6 +46,7 @@ None yet.
 
 ## Log
 
+- 2026-10-11 18:55 UTC — **E19 day 7, evening.** Still 20 touches; the court's 50 by 20 Oct now needs more than 3 a day. Fiverr's midday look is blocked by the extension's site setting (asked the owner). Check-ins of 13 Oct scheduled; tomorrow (Monday) brings the Search Console reading and the week plan.
 - 2026-10-11 06:58 UTC — **E19 day 7: nothing sent since 8 Oct.** No overnight orders. The `/guides` hub now groups the guides by topic (s112), so the four disclosure pages sit together under one heading for crawlers and readers.
 - 2026-10-10 18:55 UTC — **E19 day 6, evening: still nothing sent since 8 Oct.** 20 touches; the court's 50 by 20 Oct needs 3 a day from tomorrow. Two days of zero-owner-minute work shipped instead: four guides in three days (ARMLS, photographers' pricing, disclaimer; Stellar on 8 Oct) and the tracker answers. Check-ins of 12 Oct scheduled: Search Console reading in the morning, the week plan for 13–19 Oct in the evening.
 - 2026-10-10 13:10 UTC — **SEO (s110): `/guides/virtual-staging-disclaimer`.** "Virtual staging disclaimer" is what agents type when they are about to list staged photos; vendor blogs rank for it with generic advice. Ours gives the exact line per place and per board (Stellar, ARMLS, CRMLS, Bay East, SABOR, AB 723) and links the three board guides, so the four disclosure pages reinforce each other. Measure from late October in Search Console (disclaimer / disclosure queries) and the guide → `/tools/virtual-staging` visits.
