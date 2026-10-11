@@ -51,6 +51,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## DONE (verified in production unless noted)
 
+- 2026-10-11 (s112, small): the `/guides` hub groups the 12 guides into three sections (Disclosure and MLS rules; Costs and pricing; Staging that looks real) from a `topic` on each guide in `src/config/guides.ts`, each section led by its main guide (the disclaimer guide first); a new meta description names the rules guides. A guide without a known topic still shows under "More guides".
 - 2026-10-10 (s110): **guide `/guides/virtual-staging-disclaimer`** — copy-ready disclosure wording per place (the photo, the MLS caption, the remarks, a California site or flyer, social and ads) with the rule behind each, built only from rules already checked (Stellar MLS, ARMLS, CRMLS re-checked today, Bay East, SABOR) plus NAEBA's March 2026 summary of NAR Article 12; our own suggested lines are marked as such. The order page's MLS note and the ARMLS guide link it.
 - 2026-10-10 (s109, small): `/photographers` links the photographers' virtual staging pricing guide (the category's "Free" list), so the landing page for photographers points to the margin numbers.
 - 2026-10-09 (s107): **guide for real estate photographers: what they charge for virtual staging** (`/guides/virtual-staging-pricing-for-photographers`; photographers are 25% of the court's outreach split).
@@ -255,7 +256,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-10 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-e559683405e3-14` (s110 `e1fd3c8`, CI #151 green). `/admin/analytics` 659 / 176, 0 paid. No sends since 8 Oct. Check-ins of 11 and 12 Oct exist (12 Oct: Search Console in the morning, the week plan in the evening).
+- Last verified: 2026-10-11 ≈ 06:58 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-f6bd5c93101d-14` (s111 `e1038bf`, CI #152 green). `/admin/analytics` 659 / 176, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 12 Oct exist.
+- Earlier: 2026-10-10 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-e559683405e3-14` (s110 `e1fd3c8`, CI #151 green). `/admin/analytics` 659 / 176, 0 paid. No sends since 8 Oct. Check-ins of 11 and 12 Oct exist (12 Oct: Search Console in the morning, the week plan in the evening).
 - Earlier: 2026-10-10 ≈ 12:58 UTC (midday check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-d6c81f95041b-14` (s109 `a9d169c`, CI #150 green). `/admin/analytics` 659 / 176, 0 paid. Fiverr 0 orders. No sends since 8 Oct.
 - Earlier: 2026-10-10 ≈ 06:58 UTC (morning check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-84306a5e39f9-14` (s108 `6f6348e`, CI #149 green). `/admin/analytics` 656 / 173, 0 paid, nothing overnight. No sends since 8 Oct; "Today" stays at 10. Check-ins of 11 Oct exist.
 - Earlier: 2026-10-09 ≈ 18:55 UTC (evening check-in). `/api/health` ok, db up, jobs 0 / 0 / 0, worker `web-2b2e2447f68a-14` (s107 `f4226b7`, CI #148 green). `/admin/analytics` 655 / 172, 0 paid. No sends confirmed today (20 touches in all). Check-ins of 10 and 11 Oct exist.
@@ -316,6 +318,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `e1038bf` (s111, docs, 2026-10-10 ≈ 18:55 UTC): evening check-in. CI #152 green; Railway deployed by ≈ 19:00 UTC (worker `web-f6bd5c93101d-14`).
 - `e1fd3c8` (s110, 2026-10-10 ≈ 13:08 UTC): the disclaimer guide. CI #151 green; Railway deployed by ≈ 13:12 UTC (worker `web-e559683405e3-14`). The page was checked in a local production build (390 px, JSON-LD Article + FAQ); the browser tab froze before the live read; at the evening run the live page loaded with its title.
 - `a9d169c` (s109, 2026-10-10 ≈ 07:01 UTC): morning check-in; `/photographers` links the pricing guide. CI #150 green; Railway deployed by ≈ 07:05 UTC (worker `web-d6c81f95041b-14`). The link was checked in a local production build; live check at midday.
 - `6f6348e` (s108, docs, 2026-10-09 ≈ 18:56 UTC): evening check-in, the photographer margin answer. CI #149 green; Railway deployed by ≈ 19:00 UTC (worker `web-84306a5e39f9-14`).
