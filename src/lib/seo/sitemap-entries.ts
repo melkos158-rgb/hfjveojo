@@ -23,7 +23,7 @@ export const PAGE_UPDATED: Record<string, string> = {
   "/free/photography-pricing-calculator": "2026-09-28T12:45:00Z",
   "/tools/photographer-pricing-guide": "2026-09-29",
   // 6 Oct: prices re-checked (VirtualStaging.com pricing page, monthly vs yearly AI plans); 10:30 UTC: the Listing Pack
-  "/free/virtual-staging-cost-calculator": "2026-10-08T07:40:00Z",
+  "/free/virtual-staging-cost-calculator": "2026-10-12T13:05:00Z",
   "/free": "2026-09-29T15:00:00Z",
   // 1 Oct 23:16 UTC (70e12eb): free first photo, volume prices, real before/after first screen
   // 6 Oct 10:30 UTC: the Listing Pack ($49 for up to 5 rooms + the MLS description; court ruling); 11:45 UTC: the Pro

@@ -9,7 +9,7 @@ export default function Image() {
   return ogCard({
     eyebrow: "Free tool for real estate agents",
     title: "What virtual staging costs for your listing.",
-    subtitle: "Human editors, AI subscriptions and pay-per-photo AI side by side, from published prices.",
+    subtitle: "Nine companies side by side: design services, pay-per-photo AI and a subscription, from published prices.",
     image: "img/hero-real-estate.jpg",
     badge: "Free · no sign-up",
   });

@@ -12,7 +12,7 @@ export const FREE_TOOLS: FreeTool[] = [
   {
     href: "/free/virtual-staging-cost-calculator",
     title: "Virtual staging cost calculator",
-    description: "Photos per listing and listings per month → what human editors, AI subscriptions and pay-per-photo AI cost you, from published prices.",
+    description: "Photos per listing and listings per month → what nine companies charge you: design services, pay-per-photo AI and an AI subscription, from published prices.",
     audience: "Real estate",
     category: "real-estate",
   },

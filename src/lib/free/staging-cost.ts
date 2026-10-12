@@ -1,45 +1,48 @@
 /**
- * Virtual staging cost comparison for the free calculator (pure, tested). Every price is as published by the provider on
- * the day it was checked; the page lists the sources. Update the date and the numbers together.
+ * Virtual staging cost comparison for the free calculator (pure, tested). It prices the visitor's listings at the same
+ * nine companies as the cost guide, read from one table (src/content/staging-prices.ts), so the calculator and the guide
+ * can't disagree. Update prices there, with the date, and only from a page opened that day.
  */
-export const STAGING_PRICES_CHECKED = "October 6, 2026";
+import { PRICES_CHECKED, STAGING_PRICES, VSAI_PLANS, type PriceGroup, type VsaiPlan } from "@/content/staging-prices";
 
-import { STAGING_PRICE_LINE, STAGING_UNIT_CENTS, stagingListingCents } from "@/config/staging-pricing";
+export const STAGING_PRICES_CHECKED = PRICES_CHECKED;
 
 export type PerPhotoOption = {
   key: string;
   name: string;
-  /** Base price per photo, in dollars. */
-  perPhoto: number;
-  note: string;
-  /** Volume pricing: the price of one listing's photos, in dollars (default perPhoto × photos). */
-  perListingFor?: (photos: number) => number;
-  /** How the price is quoted when it isn't flat, e.g. "$15 per photo, $12 each from 5 photos, $99 for 10". */
-  priceNote?: string;
+  group: Exclude<PriceGroup, "subscription">;
+  /** The price as the company publishes it, in one line. */
+  priceLine: string;
+  turnaround: string;
+  /** What `photos` photos of one listing cost, in dollars, bought the cheapest published way. */
+  perListingFor: (photos: number) => number;
+  /** The published price is a minimum (PhotoUp: "3+ credits" a photo). */
+  from?: boolean;
+  ours?: boolean;
 };
 
-/** Pay-per-photo options, cheapest first. */
-export const PER_PHOTO_OPTIONS: PerPhotoOption[] = [
-  {
-    key: "orvionis",
-    name: "ORVIONIS (AI, 2 versions of each photo)",
-    perPhoto: STAGING_UNIT_CENTS / 100,
-    note: "About 2 minutes per photo, no subscription",
-    perListingFor: (photos) => stagingListingCents(photos) / 100,
-    priceNote: STAGING_PRICE_LINE,
-  },
-  { key: "virtualstaging-com", name: "VirtualStaging.com (human editor)", perPhoto: 24, note: "24 hours, 4–8-hour rush available" },
-  { key: "boxbrownie", name: "BoxBrownie (human editor)", perPhoto: 30, note: "Under 48 hours, free changes within 2 months" },
-];
+/** Design services and pay-per-photo options, in the guide's order (the calculator sorts them for the visitor's numbers). */
+export const PER_PHOTO_OPTIONS: PerPhotoOption[] = STAGING_PRICES.flatMap((p) =>
+  p.group === "subscription"
+    ? []
+    : [
+        {
+          key: p.key,
+          name: p.company,
+          group: p.group,
+          priceLine: p.price,
+          turnaround: p.turnaround,
+          perListingFor: p.listing,
+          ...(p.onePhotoFrom ? { from: true } : {}),
+          ...(p.ours ? { ours: true } : {}),
+        },
+      ],
+);
 
-/** Virtual Staging AI plans as listed with yearly billing ("$16/mo with yearly billing, billed as $192 yearly"). */
-export type Plan = { name: string; perMonth: number; photosPerMonth: number; billedYearly: number };
-export const SUBSCRIPTION_PLANS: Plan[] = [
-  { name: "Basic", perMonth: 16, photosPerMonth: 6, billedYearly: 192 },
-  { name: "Standard", perMonth: 19, photosPerMonth: 20, billedYearly: 228 },
-  { name: "Professional", perMonth: 39, photosPerMonth: 60, billedYearly: 468 },
-  { name: "Enterprise", perMonth: 79, photosPerMonth: 150, billedYearly: 948 },
-];
+/** Virtual Staging AI, the subscription in the table. */
+export const SUBSCRIPTION_NAME = STAGING_PRICES.find((p) => p.group === "subscription")?.company ?? "Virtual Staging AI";
+export type Plan = VsaiPlan & { billedYearly: number };
+export const SUBSCRIPTION_PLANS: Plan[] = VSAI_PLANS.map((p) => ({ ...p, billedYearly: p.yearlyPerMonth * 12 }));
 
 /** NAR 2025 Profile of Home Staging: median cost when a staging service staged the home (physical furniture). */
 export const NAR_MEDIAN_STAGING_SERVICE = 1500;
@@ -47,20 +50,29 @@ export const NAR_MEDIAN_STAGING_SERVICE = 1500;
 export const LIMITS = { photos: { min: 1, max: 30 }, listings: { min: 1, max: 30 } } as const;
 
 const clampInt = (n: number, min: number, max: number) => (Number.isFinite(n) ? Math.min(max, Math.max(min, Math.round(n))) : min);
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+export type OptionCost = PerPhotoOption & { perListing: number; perMonth: number };
+export type Cheapest = { key: string; name: string; cost: number; from?: boolean; detail?: string };
 
 export type StagingCostResult = {
   photosPerListing: number;
   listingsPerMonth: number;
   photosPerMonth: number;
-  perPhoto: Array<PerPhotoOption & { perListing: number; perMonth: number }>;
+  /** Every design service and pay-per-photo option, cheapest per listing first (ties keep the guide's order). */
+  perPhoto: OptionCost[];
+  /** ORVIONIS for the same numbers. */
+  ours: OptionCost;
+  /** One month of the smallest plan that covers one listing, billed month to month (cancel any time). */
+  subscriptionOneOff: { plan: Plan; cost: number };
   /** The smallest plan that covers the monthly volume, or null when the volume is above the largest plan. */
-  subscription: { plan: Plan; perMonth: number; billedYearly: number; perPhoto: number; unusedPerMonth: number } | null;
+  subscription: { plan: Plan; monthly: number; yearlyPerMonth: number; billedYearly: number; perPhotoYearly: number; unusedPerMonth: number } | null;
   /** Physical staging for comparison: NAR median per home × listings. */
   physicalPerMonth: number;
-  /** Cheapest way to stage one listing if it is a one-off (a yearly plan is paid in full up front). */
-  oneOff: { key: string; name: string; cost: number };
-  /** Cheapest way if this volume repeats every month (plans compared at their monthly price with yearly billing). */
-  everyMonth: { key: string; name: string; cost: number };
+  /** The cheapest way to stage one listing if it is a one-off. */
+  oneOff: Cheapest;
+  /** The cheapest way if this volume repeats every month (a plan at its yearly-billing price, paid up front). */
+  everyMonth: Cheapest;
 };
 
 export function compareStagingCost(photosPerListing: number, listingsPerMonth: number): StagingCostResult {
@@ -68,25 +80,55 @@ export function compareStagingCost(photosPerListing: number, listingsPerMonth: n
   const l = clampInt(listingsPerMonth, LIMITS.listings.min, LIMITS.listings.max);
   const photosPerMonth = p * l;
   const perPhoto = PER_PHOTO_OPTIONS.map((o) => {
-    const perListing = o.perListingFor ? o.perListingFor(p) : o.perPhoto * p;
-    return { ...o, perListing, perMonth: perListing * l };
-  });
-  const plan = SUBSCRIPTION_PLANS.find((x) => x.photosPerMonth >= photosPerMonth);
+    const perListing = round2(o.perListingFor(p));
+    return { ...o, perListing, perMonth: round2(perListing * l) };
+  }).sort((a, b) => a.perListing - b.perListing);
+  const ours = perPhoto.find((o) => o.ours) ?? perPhoto[0];
+
+  const smallest = (photos: number) => SUBSCRIPTION_PLANS.find((x) => x.photosPerMonth >= photos);
+  const oneOffPlan = smallest(p) ?? SUBSCRIPTION_PLANS[SUBSCRIPTION_PLANS.length - 1];
+  const subscriptionOneOff = { plan: oneOffPlan, cost: oneOffPlan.monthly };
+  const plan = smallest(photosPerMonth);
   const subscription = plan
-    ? { plan, perMonth: plan.perMonth, billedYearly: plan.billedYearly, perPhoto: plan.perMonth / photosPerMonth, unusedPerMonth: plan.photosPerMonth - photosPerMonth }
+    ? {
+        plan,
+        monthly: plan.monthly,
+        yearlyPerMonth: plan.yearlyPerMonth,
+        billedYearly: plan.billedYearly,
+        perPhotoYearly: plan.yearlyPerMonth / photosPerMonth,
+        unusedPerMonth: plan.photosPerMonth - photosPerMonth,
+      }
     : null;
 
   const cheapestPerPhoto = perPhoto[0];
-  // A one-off listing: a plan only helps if its whole yearly bill is below the per-photo cost of that one listing.
-  const oneOffPlan = SUBSCRIPTION_PLANS.find((x) => x.photosPerMonth >= p);
-  const oneOff =
-    oneOffPlan && oneOffPlan.billedYearly < cheapestPerPhoto.perListing
-      ? { key: "subscription", name: `Virtual Staging AI ${oneOffPlan.name} (billed yearly)`, cost: oneOffPlan.billedYearly }
-      : { key: cheapestPerPhoto.key, name: cheapestPerPhoto.name, cost: cheapestPerPhoto.perListing };
-  const everyMonth =
-    subscription && subscription.perMonth < cheapestPerPhoto.perMonth
-      ? { key: "subscription", name: `Virtual Staging AI ${subscription.plan.name} (yearly billing)`, cost: subscription.perMonth }
-      : { key: cheapestPerPhoto.key, name: cheapestPerPhoto.name, cost: cheapestPerPhoto.perMonth };
+  const asCheapest = (o: OptionCost, cost: number): Cheapest => ({ key: o.key, name: o.name, cost, ...(o.from ? { from: true } : {}) });
+  // A one-off listing: one month of a plan, billed month to month, against paying per photo.
+  const oneOff: Cheapest =
+    subscriptionOneOff.cost < cheapestPerPhoto.perListing
+      ? { key: "subscription", name: `${SUBSCRIPTION_NAME} ${oneOffPlan.name}, one month`, cost: subscriptionOneOff.cost, detail: "billed monthly, cancel any time" }
+      : asCheapest(cheapestPerPhoto, cheapestPerPhoto.perListing);
+  // The same volume every month: the plan's yearly-billing price (paid up front) against paying per photo. Every
+  // listing costs the same here, so the cheapest per listing is also the cheapest per month.
+  const everyMonth: Cheapest =
+    subscription && subscription.yearlyPerMonth < cheapestPerPhoto.perMonth
+      ? {
+          key: "subscription",
+          name: `${SUBSCRIPTION_NAME} ${subscription.plan.name}`,
+          cost: subscription.yearlyPerMonth,
+          detail: `billed yearly: $${subscription.billedYearly.toLocaleString("en-US")} up front`,
+        }
+      : asCheapest(cheapestPerPhoto, cheapestPerPhoto.perMonth);
 
-  return { photosPerListing: p, listingsPerMonth: l, photosPerMonth, perPhoto, subscription, physicalPerMonth: NAR_MEDIAN_STAGING_SERVICE * l, oneOff, everyMonth };
+  return {
+    photosPerListing: p,
+    listingsPerMonth: l,
+    photosPerMonth,
+    perPhoto,
+    ours,
+    subscriptionOneOff,
+    subscription,
+    physicalPerMonth: NAR_MEDIAN_STAGING_SERVICE * l,
+    oneOff,
+    everyMonth,
+  };
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { priceRanges, usd } from "@/content/staging-prices";
+
+const ranges = priceRanges();
 
 const SLUG = "free-virtual-staging";
 const TITLE = "Free virtual staging: what you actually get for free in 2026";
@@ -146,8 +149,9 @@ export default function FreeVirtualStagingGuide() {
 
       <h2>When free stops being enough</h2>
       <p>
-        One free photo covers one room. For a whole listing, compare what four to six photos cost: a human editor at $24–$30
-        a photo, an AI plan for the month, or pay per photo with no subscription. The{" "}
+        One free photo covers one room. For a whole listing, compare what four to six photos cost: a design service at{" "}
+        {usd(ranges.designerOnePhoto[0])}–{usd(ranges.designerOnePhoto[1])} a photo, an AI plan for the month, or pay-per-photo AI from{" "}
+        {usd(ranges.aiPerPhoto[0])} with no subscription. The{" "}
         <Link href="/guides/virtual-staging-cost">virtual staging cost guide</Link> has the prices, and the{" "}
         <Link href="/free/virtual-staging-cost-calculator">free cost calculator</Link> works it out for your number of
         listings.

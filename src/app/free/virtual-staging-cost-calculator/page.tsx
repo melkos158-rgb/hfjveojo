@@ -1,57 +1,72 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
+import { STAGING_PRICE_LINE } from "@/config/staging-pricing";
 import { StagingCostCalculator } from "@/components/StagingCostCalculator";
-import { compareStagingCost, NAR_MEDIAN_STAGING_SERVICE, PER_PHOTO_OPTIONS, STAGING_PRICES_CHECKED, SUBSCRIPTION_PLANS } from "@/lib/free/staging-cost";
+import { priceRanges, STAGING_PRICES, usd } from "@/content/staging-prices";
+import { compareStagingCost, NAR_MEDIAN_STAGING_SERVICE, STAGING_PRICES_CHECKED, SUBSCRIPTION_NAME, SUBSCRIPTION_PLANS } from "@/lib/free/staging-cost";
 
 const PATH = "/free/virtual-staging-cost-calculator";
 
+const ranges = priceRanges();
+const smallPlan = SUBSCRIPTION_PLANS[0];
+const bigPlan = SUBSCRIPTION_PLANS[SUBSCRIPTION_PLANS.length - 1];
+const typical = compareStagingCost(5, 1);
+const at = (key: string) => STAGING_PRICES.find((p) => p.key === key)!;
+/** "PhotoUp (AI)" → "PhotoUp", "ORVIONIS (ours)" → "ORVIONIS", "Apply Design (One-click)" → "Apply Design One-click". */
+const shortName = (company: string) => company.replace(/ \((ours|AI)\)$/, "").replace(/ \(([^)]+)\)$/, " $1");
+const joinNames = (names: string[]) => (names.length > 1 ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}` : names[0]);
+/** Pay-per-photo AI rows (not the do-it-yourself editor) at the low and high end of the one-photo range. */
+const aiRows = STAGING_PRICES.filter((p) => p.group === "per-photo" && p.key !== "applydesign-diy");
+const aiCheapestRows = aiRows.filter((p) => p.onePhoto === ranges.aiPerPhoto[0]);
+const aiCheapest = aiCheapestRows.length === 1 ? `${shortName(aiCheapestRows[0].company)}: ${aiCheapestRows[0].onePhotoNote}` : joinNames(aiCheapestRows.map((p) => shortName(p.company)));
+const aiPriciest = joinNames(aiRows.filter((p) => p.onePhoto === ranges.aiPerPhoto[1]).map((p) => shortName(p.company)));
+const designers5 = typical.perPhoto.filter((o) => o.group === "designer").map((o) => o.perListing);
+const perPhoto5 = typical.perPhoto.filter((o) => o.group === "per-photo" && !o.ours);
+
+const DESCRIPTION = `Price a listing at nine virtual staging companies: design services ${usd(ranges.designerOnePhoto[0])}–${usd(ranges.designerOnePhoto[1])} a photo, pay-per-photo AI from ${usd(ranges.aiPerPhoto[0])}, plans from ${usd(smallPlan.monthly)} a month. Checked ${STAGING_PRICES_CHECKED.replace("October", "Oct")}.`;
+
 export const metadata: Metadata = {
-  title: "Virtual staging cost calculator: price per listing (2026)",
-  description:
-    "What virtual staging costs for your listings: editors at $24–$30 a photo, AI plans from $16/month (yearly), pay-per-photo AI at $15. Prices checked Oct 6, 2026.",
+  title: "Virtual staging cost calculator: 9 companies compared (2026)",
+  description: DESCRIPTION,
   keywords: ["virtual staging cost calculator", "virtual staging pricing", "virtual staging cost", "how much does virtual staging cost", "virtual staging price per photo"],
   alternates: { canonical: PATH },
   openGraph: {
     type: "website",
     title: `Virtual staging cost calculator | ${site.name}`,
-    description: "Price your listing: pay-per-photo human editors, AI subscriptions and pay-per-photo AI side by side, from published prices.",
+    description: "Price your listing at nine companies: design services, pay-per-photo AI and an AI subscription side by side, from published prices.",
     url: `${site.url}${PATH}`,
   },
 };
 
-const money = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-const typical = compareStagingCost(5, 1);
-const cheapest = PER_PHOTO_OPTIONS[0];
-const priciest = PER_PHOTO_OPTIONS[PER_PHOTO_OPTIONS.length - 1];
-const smallPlan = SUBSCRIPTION_PLANS[0];
-const bigPlan = SUBSCRIPTION_PLANS[SUBSCRIPTION_PLANS.length - 1];
-
 const FAQ = [
   {
     q: "How much does virtual staging cost per photo?",
-    a: `Human editors charge $24 (VirtualStaging.com) to $30 (BoxBrownie) per photo. ORVIONIS charges ${money(cheapest.perPhoto)} per photo, or $49 for a whole listing (up to 5 rooms plus the MLS description) and $99 for 10, with two versions of each photo. AI subscriptions such as Virtual Staging AI run ${money(smallPlan.perMonth)} a month for ${smallPlan.photosPerMonth} photos up to ${money(bigPlan.perMonth)} for ${bigPlan.photosPerMonth}, with yearly billing. Prices checked ${STAGING_PRICES_CHECKED}.`,
+    a: `Design services, where an editor or designer stages each photo, charge ${usd(ranges.designerOnePhoto[0])}–${usd(ranges.designerOnePhoto[1])} for one photo and ${usd(ranges.designerBulk[0])}–${usd(ranges.designerBulk[1])} each on bigger orders. Pay-per-photo AI costs from ${usd(ranges.aiPerPhoto[0])} (${aiCheapest}) to ${usd(ranges.aiPerPhoto[1])} (${aiPriciest}); Apply Design's do-it-yourself editor is ${usd(at("applydesign-diy").onePhoto)} a photo. ORVIONIS is ${STAGING_PRICE_LINE}, with two versions of each photo. Prices checked ${STAGING_PRICES_CHECKED}.`,
   },
   {
     q: "How much does it cost to virtually stage a whole listing?",
-    a: `A typical vacant listing needs four to six staged photos. Five photos cost ${money(typical.perPhoto[0].perListing)} with ORVIONIS (the whole-listing price, MLS description included), ${money(typical.perPhoto[1].perListing)} at $24 and ${money(typical.perPhoto[2].perListing)} at $30 per photo. For scale, NAR's 2025 Profile of Home Staging puts the median cost of a staging service (real furniture) at ${money(NAR_MEDIAN_STAGING_SERVICE)} per home.`,
+    a: `A typical vacant listing needs four to six staged photos. For five, the design services charge ${usd(Math.min(...designers5))}–${usd(Math.max(...designers5))}, the other pay-per-photo options ${usd(perPhoto5[0].perListing)}${perPhoto5[0].from ? " (at least)" : ""} to ${usd(perPhoto5[perPhoto5.length - 1].perListing)}, one month of ${SUBSCRIPTION_NAME}'s ${typical.subscriptionOneOff.plan.photosPerMonth}-photo plan ${usd(typical.subscriptionOneOff.cost)}, and ORVIONIS ${usd(typical.ours.perListing)} with the MLS description included. For scale, NAR's 2025 Profile of Home Staging puts the median cost of a staging service (real furniture) at $${NAR_MEDIAN_STAGING_SERVICE.toLocaleString("en-US")} per home.`,
   },
   {
     q: "Is an AI subscription cheaper than paying per photo?",
-    a: `Only if you stage every month and use the credits. The ${smallPlan.name} plan is ${money(smallPlan.perMonth)} a month but billed as ${money(smallPlan.billedYearly)} a year up front, so a one-off listing of five photos is cheaper per photo (${money(typical.oneOff.cost)}). If you stage the same volume every month, the plan wins on price.`,
+    a: `It depends on how often you stage. Billed month to month, ${SUBSCRIPTION_NAME}'s smallest plan is ${usd(smallPlan.monthly)} for ${smallPlan.photosPerMonth} photos, and you can cancel after one listing. Billed yearly it is ${usd(smallPlan.yearlyPerMonth)} a month, but the ${usd(smallPlan.billedYearly)} is paid up front, so it only pays off if you stage every month and use the credits. Paying per photo costs nothing in the months you don't stage.`,
   },
   {
     q: "Where do these prices come from?",
-    a: "From each provider's own price page or pricing article, checked on the date shown, and from NAR's 2025 Profile of Home Staging. Sources are linked below. The calculator runs in your browser; nothing you type is sent anywhere.",
+    a: "From each company's own price page, checked on the date shown (the same table as our virtual staging cost guide), and from NAR's 2025 Profile of Home Staging. Sources are linked below. The calculator runs in your browser; nothing you type is sent anywhere.",
   },
 ];
 
+/** Each company's own price page (the guide's table), then NAR. */
 const SOURCES = [
-  { text: "BoxBrownie pricing: virtual staging US$30 per image (checked October 6, 2026)", href: "https://www.boxbrownie.com/pricing", label: "boxbrownie.com/pricing" },
-  { text: "BoxBrownie virtual staging: under 48 hours, free changes within 2 months", href: "https://www.boxbrownie.com/virtual-staging", label: "boxbrownie.com/virtual-staging" },
-  { text: "VirtualStaging.com pricing: $24 per image ($19.20 with their bulk discount), 24-hour ETA, 4–8-hour rush (checked October 6, 2026)", href: "https://virtualstaging.com/pricing", label: "virtualstaging.com/pricing" },
-  { text: "Virtual Staging AI plans with yearly billing: Basic $16/mo (6 photos, $192 a year) to Enterprise $79/mo (150 photos); billed monthly, the same plans are $25 to $139 a month (checked October 6, 2026)", href: "https://www.virtualstagingai.app/prices", label: "virtualstagingai.app/prices" },
-  { text: "NAR 2025 Profile of Home Staging: median $1,500 when a staging service staged the home", href: "https://www.nar.realtor/infographics/2025-profile-of-home-staging-snapshot", label: "nar.realtor" },
+  ...STAGING_PRICES.map((p) => ({ key: p.key, company: p.company, price: p.price, links: p.sources })),
+  {
+    key: "nar",
+    company: "NAR 2025 Profile of Home Staging",
+    price: "median $1,500 when a staging service staged the home",
+    links: [{ label: "nar.realtor", href: "https://www.nar.realtor/infographics/2025-profile-of-home-staging-snapshot" }],
+  },
 ];
 
 export default function StagingCostCalculatorPage() {
@@ -75,8 +90,9 @@ export default function StagingCostCalculatorPage() {
           <p className="eyebrow">Free tool · real estate agents</p>
           <h1 className="mt-3 max-w-3xl text-3xl font-extrabold tracking-tight sm:text-4xl">Virtual staging cost calculator</h1>
           <p className="mt-4 max-w-2xl text-lg text-gray-700">
-            How many photos per listing, how many listings a month — and what that costs with a human editor ({money(PER_PHOTO_OPTIONS[1].perPhoto)}–{money(priciest.perPhoto)} a photo), an AI subscription
-            (from {money(smallPlan.perMonth)} a month) or pay-per-photo AI ({money(cheapest.perPhoto)}). Published prices, checked {STAGING_PRICES_CHECKED}.
+            How many photos per listing, how many listings a month — and what that costs at nine companies: design services ({usd(ranges.designerOnePhoto[0])}–{usd(ranges.designerOnePhoto[1])} a photo), pay-per-photo AI
+            (from {usd(ranges.aiPerPhoto[0])}) and an AI subscription ({usd(smallPlan.monthly)}–{usd(bigPlan.monthly)} a month, or {usd(smallPlan.yearlyPerMonth)}–{usd(bigPlan.yearlyPerMonth)} billed yearly). Published prices, checked{" "}
+            {STAGING_PRICES_CHECKED}.
           </p>
         </div>
       </section>
@@ -90,7 +106,7 @@ export default function StagingCostCalculatorPage() {
         <ol className="mt-4 grid gap-4 lg:grid-cols-3">
           <li className="card">
             <p className="font-semibold text-fg">A listing now and then</p>
-            <p className="mt-2 text-sm text-gray-600">Pay per photo. A yearly subscription is paid up front, so it only pays off if you stage every month.</p>
+            <p className="mt-2 text-sm text-gray-600">Pay per photo, or take one month of a plan and cancel it. A yearly subscription is paid up front, so it only pays off if you stage every month.</p>
           </li>
           <li className="card">
             <p className="font-semibold text-fg">Dozens of photos every month</p>
@@ -135,11 +151,16 @@ export default function StagingCostCalculatorPage() {
         <h2 className="text-sm font-semibold tracking-wider text-gray-500 uppercase">Sources</h2>
         <ul className="mt-3 space-y-2 text-sm text-gray-600">
           {SOURCES.map((s) => (
-            <li key={s.href}>
-              {s.text}:{" "}
-              <a href={s.href} rel="nofollow noopener" target="_blank" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
-                {s.label}
-              </a>
+            <li key={s.key}>
+              {s.company} — {s.price}:{" "}
+              {s.links.map((l, i) => (
+                <span key={l.href}>
+                  {i > 0 ? " · " : null}
+                  <a href={l.href} rel="nofollow noopener" target="_blank" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
+                    {l.label}
+                  </a>
+                </span>
+              ))}
             </li>
           ))}
         </ul>

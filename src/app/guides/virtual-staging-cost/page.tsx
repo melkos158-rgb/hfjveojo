@@ -180,7 +180,7 @@ export default function VirtualStagingCostGuide() {
       <p className="mt-4">
         Want the number for your own listings? The free{" "}
         <Link href="/free/virtual-staging-cost-calculator">virtual staging cost calculator</Link> takes your photos per
-        listing and listings per month and compares paying per photo with a subscription.
+        listing and listings per month and prices them at the same nine companies, paying per photo or by subscription.
       </p>
 
       <h2>Extras that change the bill</h2>

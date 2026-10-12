@@ -62,15 +62,20 @@ export function applyDesignCoinsCost(coins: number): number {
   return round2(Math.min(...candidates.map((q) => q * priceAt(q))));
 }
 
-/** Virtual Staging AI billed month to month: one month of the smallest plan that covers the photos. */
-const VSAI_MONTHLY = [
-  { photos: 6, usd: 25 },
-  { photos: 20, usd: 35 },
-  { photos: 60, usd: 79 },
-  { photos: 150, usd: 139 },
+/**
+ * Virtual Staging AI's plans as published: billed month to month, or a lower monthly price billed yearly (paid up front,
+ * 12 × the monthly figure). The guide uses the month-to-month price; the calculator shows both.
+ */
+export type VsaiPlan = { name: string; photosPerMonth: number; monthly: number; yearlyPerMonth: number };
+export const VSAI_PLANS: VsaiPlan[] = [
+  { name: "Basic", photosPerMonth: 6, monthly: 25, yearlyPerMonth: 16 },
+  { name: "Standard", photosPerMonth: 20, monthly: 35, yearlyPerMonth: 19 },
+  { name: "Professional", photosPerMonth: 60, monthly: 79, yearlyPerMonth: 39 },
+  { name: "Enterprise", photosPerMonth: 150, monthly: 139, yearlyPerMonth: 79 },
 ];
+/** Virtual Staging AI billed month to month: one month of the smallest plan that covers the photos. */
 export function virtualStagingAiMonth(photos: number): number {
-  return (VSAI_MONTHLY.find((p) => p.photos >= photos) ?? VSAI_MONTHLY[VSAI_MONTHLY.length - 1]).usd;
+  return (VSAI_PLANS.find((p) => p.photosPerMonth >= photos) ?? VSAI_PLANS[VSAI_PLANS.length - 1]).monthly;
 }
 
 export const STAGING_PRICES: StagingPrice[] = [

@@ -73,7 +73,7 @@ export const GUIDES: Guide[] = [
     description: "Which services let you stage a photo free (a first image, a few AI designs, a free upload), the catches to check, and what a whole listing costs after. Checked October 2, 2026.",
     audience: "Real estate agents",
     topic: "pricing",
-    updated: "2026-10-06T10:30:00Z",
+    updated: "2026-10-12T13:05:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
