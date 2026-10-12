@@ -46,6 +46,12 @@ None yet.
 
 ## Log
 
+- 2026-10-12 07:05 UTC — **Weekly Search Console reading, 28 days (12 Sep – 9 Oct): 5 clicks, 216 impressions** (181 a week earlier), CTR 2.3 %, average position 26.7 (was 21.7). All 5 clicks went to the home page (https 3, http 1, the old Ride Lab `/en/` 1); no guide has a click yet.
+  - E10, the cost guide (rebuilt 6 Oct): **64 impressions at position 65.5** (baseline 48 at 56.8). The staging-cost queries doubled (41 impressions, 21 a week earlier), but every visible one sits at position 84–96: "virtual staging cost" 12 at 96.1, "how much does virtual staging cost" 7 at 92.9, "virtual staging pricing" 6 at 92.8, "virtual staging prices" 4 at 86.8, "how much is virtual staging" 4 at 87.2, "virtual staging costs" 3 at 92.0. Only 3–4 days after the rebuild fall in this window, so the verdict stays on 3 Nov (position under 30 or 100+ impressions; otherwise links from other sites, not more text).
+  - The photography pricing calculator: 30 impressions at 26.2 ("photography pricing calculator" 17 at 24.2, "wedding photography price calculator" 7 at 30.9, "real estate photography pricing calculator" 3 at 14.7).
+  - The fair-housing guide: 24 impressions at 5.5, 0 clicks (22 at 5.1 a week ago); still under the 50-impression rule for a title change.
+  - The new guides (Stellar MLS 8 Oct, ARMLS and photographers' pricing 9 Oct, disclaimer 10 Oct) show no impressions yet; the report's data ends on 9 Oct. Read them on 19 Oct.
+  - Week target (250 impressions in 28 days): 216, not reached.
 - 2026-10-11 18:55 UTC — **E19 day 7, evening.** Still 20 touches; the court's 50 by 20 Oct now needs more than 3 a day. Fiverr's midday look is blocked by the extension's site setting (asked the owner). Check-ins of 13 Oct scheduled; tomorrow (Monday) brings the Search Console reading and the week plan.
 - 2026-10-11 06:58 UTC — **E19 day 7: nothing sent since 8 Oct.** No overnight orders. The `/guides` hub now groups the guides by topic (s112), so the four disclosure pages sit together under one heading for crawlers and readers.
 - 2026-10-10 18:55 UTC — **E19 day 6, evening: still nothing sent since 8 Oct.** 20 touches; the court's 50 by 20 Oct needs 3 a day from tomorrow. Two days of zero-owner-minute work shipped instead: four guides in three days (ARMLS, photographers' pricing, disclaimer; Stellar on 8 Oct) and the tracker answers. Check-ins of 12 Oct scheduled: Search Console reading in the morning, the week plan for 13–19 Oct in the evening.
