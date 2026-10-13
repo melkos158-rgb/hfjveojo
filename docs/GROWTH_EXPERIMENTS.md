@@ -46,6 +46,7 @@ None yet.
 
 ## Log
 
+- 2026-10-13 06:58 UTC — **E19 day 9: nothing sent since 8 Oct.** No overnight orders or free photos (3 visits on 12 Oct). The week plan went to the owner last night: today's step is the 10 prepared messages in "Today"; no new research until they go out.
 - 2026-10-12 18:55 UTC — **Week plan 13–19 Oct (Monday plan, sent to the owner).** Goal: pass the court's first gate (50 owner-sent touches by 20 Oct) and get the first free-photo claims.
   - Where we stand after 17 days live: $0 revenue, 0 paid orders, 0 free photos claimed (the owner's self-test doesn't count). Spend: AI $4.25 in 30 days; ads €29.98 (E8, ended 1 Oct). Traffic: 663 / 180 page views and sessions in 30 days, 52 visits last week; Search Console 216 impressions and 5 clicks in 28 days (181 a week earlier). Outreach: 20 owner-sent touches, 1 human reply (Lesley, not ready; next contact ≈ 29 Oct), nothing sent since 8 Oct. Fiverr: 0 orders.
   - Court gates: 50+ touches by 20 Oct (20; 30 to go, about 4 a day, else passive mode: site and checkout stay live, 0 owner minutes, 0 new spend); 3+ real free photos by 27 Oct (0); first paid order by 5 Nov (none).

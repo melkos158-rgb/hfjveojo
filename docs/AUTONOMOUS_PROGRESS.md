@@ -258,7 +258,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-12 ≈ 18:55 UTC (evening check-in). `/api/health` ok, worker `web-555eaa41baf7-14` (s116 `910a77f`, CI #157 green). `/admin/analytics` 663 / 180, 0 paid. No sends since 8 Oct. Week plan 13–19 Oct sent; check-ins of 13 and 14 Oct exist.
+- Last verified: 2026-10-13 ≈ 06:58 UTC (morning check-in). `/api/health` ok, jobs 0 / 0 / 0, worker `web-e168ae406112-14` (s117 `420d451`, CI #158 green). `/admin/analytics` 664 / 181, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 14 Oct exist.
+- Earlier: 2026-10-12 ≈ 18:55 UTC (evening check-in). `/api/health` ok, worker `web-555eaa41baf7-14` (s116 `910a77f`, CI #157 green). `/admin/analytics` 663 / 180, 0 paid. No sends since 8 Oct. Week plan 13–19 Oct sent; check-ins of 13 and 14 Oct exist.
 - Earlier: 2026-10-12 ≈ 12:58 UTC (midday check-in). `/api/health` ok, worker `web-eabc8ea994dd-14` (s115 `c809c7c`, CI #156 green). `/admin/analytics` 663 / 180, 0 paid. Fiverr: the extension reads fiverr.com again; Manage Orders 0 in every status, inbox unchanged. No sends since 8 Oct.
 - Earlier: 2026-10-12 ≈ 07:05 UTC (morning check-in). `/api/health` ok, worker `web-a3a358f056c7-14` (s114 `4695b48`, CI #155 green). `/admin/analytics` 661 / 178, 0 paid, nothing overnight. Search Console (28 days to 9 Oct): 5 clicks, 216 impressions; the cost guide 64 at 65.5. No sends since 8 Oct. Check-ins of 13 Oct exist.
 - Earlier: 2026-10-11 ≈ 18:55 UTC (evening check-in). `/api/health` ok, worker `web-b1f0b22632f7-14` (s113 `4797891`, CI #154 green). `/admin/analytics` 661 / 178, 0 paid. No sends since 8 Oct. Check-ins of 12 and 13 Oct exist.
@@ -325,6 +326,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `420d451` (s117, docs, 2026-10-12 ≈ 18:57 UTC): evening check-in and the week plan 13–19 Oct. CI #158 green; Railway deployed by ≈ 18:59 UTC (worker `web-e168ae406112-14`).
 - `910a77f` (s116, 2026-10-12 ≈ 13:12 UTC): the staging cost calculator prices the guide's nine companies. CI #157 green; live by ≈ 13:16 UTC (worker `web-555eaa41baf7-14`; the page title reads "Virtual staging cost calculator: 9 companies compared (2026)" and the table starts with PhotoUp, Virtual Staging AI, ORVIONIS).
 - `c809c7c` (s115, docs, 2026-10-12 ≈ 07:04 UTC): morning check-in and the weekly Search Console reading. CI #156 green; Railway deployed by ≈ 07:06 UTC (worker `web-eabc8ea994dd-14`).
 - `4695b48` (s114, docs, 2026-10-11 ≈ 18:56 UTC): evening check-in. CI #155 green; Railway deployed by ≈ 18:59 UTC (worker `web-a3a358f056c7-14`).
