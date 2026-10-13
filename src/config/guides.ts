@@ -16,10 +16,10 @@ export const GUIDES: Guide[] = [
   {
     slug: "virtual-staging-disclaimer",
     title: "Virtual staging disclaimer: what to write and where",
-    description: "Copy-ready disclosure wording for the photo, the MLS caption, the remarks, ads and social, and what Stellar MLS, ARMLS, CRMLS, SABOR and California's AB 723 each require.",
+    description: "Copy-ready disclosure wording for the photo, the MLS caption, the remarks, ads and social, and what Stellar MLS, ARMLS, CRMLS, HAR, SABOR and California's AB 723 each require.",
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-10-10T13:00:00Z",
+    updated: "2026-10-13T13:06:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -47,6 +47,15 @@ export const GUIDES: Guide[] = [
     audience: "Arizona agents (ARMLS)",
     topic: "rules",
     updated: "2026-10-10T13:00:00Z",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
+    slug: "texas-virtual-staging-rules",
+    title: "Virtual staging in Texas: what HAR, SABOR and NTREIS allow",
+    description: "How HAR (Houston), SABOR (San Antonio) and NTREIS (Dallas–Fort Worth) treat virtually staged photos, the state's advertising rule, and a checklist for Texas listings.",
+    audience: "Texas agents (HAR, SABOR, NTREIS)",
+    topic: "rules",
+    updated: "2026-10-13T13:06:00Z",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

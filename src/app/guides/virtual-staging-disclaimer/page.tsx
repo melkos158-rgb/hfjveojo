@@ -25,7 +25,7 @@ const WORDING: { where: string; write: string; rule: string; ours?: boolean }[] 
   {
     where: "The MLS photo description or caption",
     write: "Virtually staged",
-    rule: "Stellar MLS: required in each staged photo's description. CRMLS: label the altered image in the photo description field. SABOR (San Antonio): pick “virtually staged” in the photo description list. Bay East: the Label option (“altered”, “digitally altered” or “AI altered”).",
+    rule: "Stellar MLS: required in each staged photo's description. CRMLS: label the altered image in the photo description field. HAR (Houston): clearly indicate in the photo description that the image is virtually staged. SABOR (San Antonio): pick “virtually staged” in the photo description list. Bay East: the Label option (“altered”, “digitally altered” or “AI altered”).",
   },
   {
     where: "The public remarks",
@@ -49,7 +49,7 @@ const WORDING: { where: string; write: string; rule: string; ours?: boolean }[] 
 const FAQ = [
   {
     q: "Do I have to disclose virtual staging?",
-    a: "In California, yes: AB 723 has required it for digitally altered listing photos since January 1, 2026. Elsewhere your MLS usually does: Stellar MLS, ARMLS, CRMLS and SABOR all have written rules for it. And NAR's Code of Ethics asks REALTORS® to present a true picture in their advertising.",
+    a: "In California, yes: AB 723 has required it for digitally altered listing photos since January 1, 2026. Elsewhere your MLS usually does: Stellar MLS, ARMLS, CRMLS, HAR and SABOR all have written rules for it. And NAR's Code of Ethics asks REALTORS® to present a true picture in their advertising.",
   },
   {
     q: "What's the difference between “virtually staged” and “digitally altered”?",
@@ -129,8 +129,9 @@ export default function VirtualStagingDisclaimerGuide() {
           immediately before or after; Bay East uses a Label option. <Link href="/guides/ab-723-virtual-staging">The AB 723 checklist</Link>.
         </li>
         <li>
-          <strong>SABOR (San Antonio):</strong> staging limited to furnishings and wall décor, disclosed by picking &ldquo;virtually staged&rdquo; in the photo description list
-          (rules revised September 18, 2024).
+          <strong>Texas:</strong> HAR (Houston) and SABOR (San Antonio) limit staging to furnishings and wall décor and want it marked in the photo description (on SABOR, the
+          &ldquo;virtually staged&rdquo; pick-list option); HAR adds a watermark and the unaltered photo next to any photo that changes the property itself.{" "}
+          <Link href="/guides/texas-virtual-staging-rules">The Texas rules</Link>, NTREIS included.
         </li>
         <li>
           <strong>Everywhere:</strong> NAR&apos;s Code of Ethics asks REALTORS® to present a &ldquo;true picture&rdquo; in their advertising, online images included. Check your own
@@ -197,6 +198,11 @@ export default function VirtualStagingDisclaimerGuide() {
           </a>
         </li>
         <li>
+          <a href="https://web.har.com/mls/MLSRules.pdf" target="_blank" rel="noopener noreferrer">
+            HAR (Houston REALTORS® Information Service) MLS Rules, dated December 1, 2023, Rule 1.25.1
+          </a>
+        </li>
+        <li>
           <a href="https://sabor.com/wp-content/uploads/2024/09/MLS-Rules-Update-Clean-copy-2.pdf" target="_blank" rel="noopener noreferrer">
             SABOR MLS Rules and Regulations (revised September 18, 2024), section 1.2(b)
           </a>
@@ -207,7 +213,7 @@ export default function VirtualStagingDisclaimerGuide() {
           </a>
         </li>
       </ul>
-      <p className="text-sm text-gray-500">General information, not legal advice. Checked against each source on October 10, 2026; rules change, so check the current version and your broker&apos;s policy.</p>
+      <p className="text-sm text-gray-500">General information, not legal advice. Checked against each source on October 10, 2026 (HAR on October 13); rules change, so check the current version and your broker&apos;s policy.</p>
     </div>
   );
 }

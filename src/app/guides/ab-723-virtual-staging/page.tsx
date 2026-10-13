@@ -71,7 +71,7 @@ export default function Ab723GuidePage() {
         <li><strong>SDMLS</strong>: altered images must be clearly disclosed and paired with the unaltered original, across all MLS displays and downstream IDX, VOW and syndication feeds.</li>
         <li><strong>Bay East</strong>: label altered photos &ldquo;altered&rdquo;, &ldquo;digitally altered&rdquo; or &ldquo;AI altered&rdquo; with the Label option, upload the original and show it immediately after the altered image.</li>
       </ul>
-      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark.</p>
+      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark and <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR in Texas</Link> want it in the photo description.</p>
 
       <h2>The checklist</h2>
       <ol>
