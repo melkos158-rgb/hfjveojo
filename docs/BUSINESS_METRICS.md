@@ -63,6 +63,22 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
 
+## Snapshot — 2026-10-14 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
+
+- The owner's computer is back. 666 / 183 page views and sessions (1 visit on 13 Oct by the daily report). Funnel 3 → 7 → 0; $0 revenue; AI $4.27; free first photos 0; prospect previews 0; photo warnings 0; delivered / review / failed 0 / 0 / 0; Pro credits 0 purchases.
+- E19: nothing sent since 8 Oct (20 touches); the tracker is unchanged. The court's 50 by 20 Oct needs 30 in 6 days (5 a day, within the 10-a-day cap).
+- Production: `/api/health` ok, jobs 0 / 0 / 0, worker `web-de1baa2e4def-14` (s120 `9904a50`).
+
+## Snapshot — 2026-10-14 12:58 UTC (midday check-in; `/admin/analytics` not read)
+
+- The owner's computer is still offline (no browser extension, no device bridge), so analytics, Fiverr and the transfer wait. The tracker is unchanged since the morning: nothing sent since 8 Oct.
+- Shipped without the computer: the tracker v11 (a "copy and open the chat" button per card).
+
+## Snapshot — 2026-10-14 06:58 UTC (morning check-in; `/admin/analytics` not read)
+
+- The owner's computer was offline (the browser extension and the device bridge didn't answer), so `/admin/analytics` and `/api/health` couldn't be opened from here. Production signal: the GitHub Uptime workflow, which checks `/api/health`, passed at 05:23 UTC (run #87).
+- E19: the tracker is unchanged overnight; nothing sent since 8 Oct (20 touches). Today's plan step: the 10 prepared messages.
+
 ## Snapshot — 2026-10-13 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
 
 - 665 / 182 page views and sessions (no change since midday). Funnel 3 → 7 → 0; $0 revenue; AI $4.26; free first photos 0; prospect previews 0; delivered / review / failed 0 / 0 / 0.
