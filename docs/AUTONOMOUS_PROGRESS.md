@@ -260,7 +260,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-14 ≈ 18:55 UTC (evening check-in). The owner's computer is back. `/api/health` ok, worker `web-de1baa2e4def-14` (s120 `9904a50`, CI #161 green). `/admin/analytics` 666 / 183, 0 paid. No sends since 8 Oct; the plan's steps moved again (Thu 10 new, Fri 9 reminders + Lesley, Sat next 10). Check-ins of 15 and 16 Oct exist.
+- Last verified: 2026-10-15 ≈ 06:58 UTC (morning check-in). `/api/health` ok, worker `web-665af4b9114b-14` (s121 `ba96bb3`, CI #162 green). `/admin/analytics` 669 / 186, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 16 Oct exist.
+- Earlier: 2026-10-14 ≈ 18:55 UTC (evening check-in). The owner's computer is back. `/api/health` ok, worker `web-de1baa2e4def-14` (s120 `9904a50`, CI #161 green). `/admin/analytics` 666 / 183, 0 paid. No sends since 8 Oct; the plan's steps moved again (Thu 10 new, Fri 9 reminders + Lesley, Sat next 10). Check-ins of 15 and 16 Oct exist.
 - Earlier: 2026-10-14 ≈ 12:58 UTC (midday check-in, partial). The owner's computer is still offline: no analytics, Fiverr or transfer. Tracker unchanged; v11 published (copy + open the chat in one tap).
 - Earlier: 2026-10-14 ≈ 06:58 UTC (morning check-in, partial). The owner's computer was offline: no browser, no device bridge, so no analytics read and no transfer this run. GitHub Uptime run #87 (05:23 UTC) passed against `/api/health`. Tracker unchanged; no sends since 8 Oct. Check-ins of 15 Oct exist.
 - Earlier: 2026-10-13 ≈ 18:55 UTC (evening check-in). `/api/health` ok, worker `web-0919fef5660e-14` (s119 `9746c86`, CI #160 green). `/admin/analytics` 665 / 182, 0 paid. No sends since 8 Oct (the plan's Tuesday step moved to Wednesday). Check-ins of 14 and 15 Oct exist.
@@ -333,6 +334,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `ba96bb3` (s121, docs, 2026-10-14 ≈ 18:56 UTC): the day's check-ins (computer offline until evening) and tracker v11. CI #162 green; Railway deployed by ≈ 18:58 UTC (worker `web-665af4b9114b-14`).
 - `9904a50` (s120, docs, 2026-10-13 ≈ 18:56 UTC): evening check-in. CI #161 green; Railway deployed by ≈ 18:59 UTC (worker `web-de1baa2e4def-14`).
 - `9746c86` (s119, 2026-10-13 ≈ 13:09 UTC): the Texas guide. CI #160 green; live by ≈ 13:14 UTC (worker `web-0919fef5660e-14`; `/guides/texas-virtual-staging-rules` loads with its title and all nine sections).
 - `6e2e376` (s118, docs, 2026-10-13 ≈ 06:56 UTC): morning check-in. CI #159 green; Railway deployed by ≈ 06:57 UTC (worker `web-94effea1847e-14`).
