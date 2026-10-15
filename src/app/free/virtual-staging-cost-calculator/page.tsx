@@ -115,7 +115,11 @@ export default function StagingCostCalculatorPage() {
           <li className="card">
             <p className="font-semibold text-fg">Price is not the only line</p>
             <p className="mt-2 text-sm text-gray-600">
-              Check turnaround, revisions and disclosure: most MLSs require virtually staged photos to be labeled. The{" "}
+              Check turnaround, revisions and disclosure: most MLSs require virtually staged photos to be labeled (the{" "}
+              <Link href="/guides/virtual-staging-disclaimer" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
+                wording for each place
+              </Link>
+              ). The{" "}
               <Link href="/guides/virtual-staging-cost" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
                 virtual staging cost guide
               </Link>{" "}

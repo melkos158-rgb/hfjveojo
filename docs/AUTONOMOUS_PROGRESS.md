@@ -51,6 +51,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## DONE (verified in production unless noted)
 
+- 2026-10-15 (s123, small): internal links from the pages with the most Search Console impressions to the newer guides — the cost guide's disclosure bullet (disclaimer examples, Stellar, ARMLS, Texas, AB 723), the photography pricing calculator (photographers' staging pricing guide), the fair-housing guide's checklist and the staging cost calculator's disclosure card (disclaimer examples).
 - 2026-10-14 (tracker v11, artifact only): every card in the Realtor DM Tracker leads with "Копіювати і відкрити чат ↗" (copies the message, opens `ig.me/m/<handle>`, the Instagram app's chat on a phone); reminders too; the profile link and plain copy stay for computers. Checked with the live rows in a headless browser at 390 px: 10 chat links on "Today", no errors, no overflow.
 - 2026-10-13 (s119): **guide `/guides/texas-virtual-staging-rules`** — HAR (Houston, Rule 1.25.1: furnishings and wall décor, disclosure in the Photo Description, a watermark and the original for photos that change the property), SABOR (San Antonio, Rule 1.2(b): the "virtually staged" pick-list option), NTREIS (Dallas–Fort Worth, from MetroTex's May 2026 article: staging acceptable, no virtual renovations, no text across photos) and the state's advertising rule (Occupations Code §1101.652(b)(23)); Unlock MLS's rules weren't public. The disclaimer guide lists HAR; the board guides, the tool FAQ and the order page link the Texas page.
 - 2026-10-12 (s116): **the staging cost calculator prices the same nine companies as the cost guide.** `src/lib/free/staging-cost.ts` now reads `src/content/staging-prices.ts` (one table for both pages; Virtual Staging AI's plans carry both the monthly and the yearly-billing price): every company is listed cheapest first for the visitor's numbers with ours highlighted, one month of a plan billed monthly counts as a one-off option, and the FAQ, hero, sources and meta description are written from the table. Before, the calculator compared ours with two design services only and called it the cheapest. `/guides/free-virtual-staging` quotes the design-service range from the same table.
@@ -260,7 +261,8 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-15 ≈ 06:58 UTC (morning check-in). `/api/health` ok, worker `web-665af4b9114b-14` (s121 `ba96bb3`, CI #162 green). `/admin/analytics` 669 / 186, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 16 Oct exist.
+- Last verified: 2026-10-15 ≈ 12:58 UTC (midday check-in). `/api/health` ok, worker `web-137f6fbe5ef2-14` (s122 `9e537d2`, CI #163 green). `/admin/analytics` 669 / 186, 0 paid. Fiverr 0 orders, inbox unchanged. No sends since 8 Oct.
+- Earlier: 2026-10-15 ≈ 06:58 UTC (morning check-in). `/api/health` ok, worker `web-665af4b9114b-14` (s121 `ba96bb3`, CI #162 green). `/admin/analytics` 669 / 186, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 16 Oct exist.
 - Earlier: 2026-10-14 ≈ 18:55 UTC (evening check-in). The owner's computer is back. `/api/health` ok, worker `web-de1baa2e4def-14` (s120 `9904a50`, CI #161 green). `/admin/analytics` 666 / 183, 0 paid. No sends since 8 Oct; the plan's steps moved again (Thu 10 new, Fri 9 reminders + Lesley, Sat next 10). Check-ins of 15 and 16 Oct exist.
 - Earlier: 2026-10-14 ≈ 12:58 UTC (midday check-in, partial). The owner's computer is still offline: no analytics, Fiverr or transfer. Tracker unchanged; v11 published (copy + open the chat in one tap).
 - Earlier: 2026-10-14 ≈ 06:58 UTC (morning check-in, partial). The owner's computer was offline: no browser, no device bridge, so no analytics read and no transfer this run. GitHub Uptime run #87 (05:23 UTC) passed against `/api/health`. Tracker unchanged; no sends since 8 Oct. Check-ins of 15 Oct exist.
@@ -334,6 +336,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `9e537d2` (s122, docs, 2026-10-15 ≈ 06:56 UTC): morning check-in. CI #163 green; Railway deployed by ≈ 06:58 UTC (worker `web-137f6fbe5ef2-14`).
 - `ba96bb3` (s121, docs, 2026-10-14 ≈ 18:56 UTC): the day's check-ins (computer offline until evening) and tracker v11. CI #162 green; Railway deployed by ≈ 18:58 UTC (worker `web-665af4b9114b-14`).
 - `9904a50` (s120, docs, 2026-10-13 ≈ 18:56 UTC): evening check-in. CI #161 green; Railway deployed by ≈ 18:59 UTC (worker `web-de1baa2e4def-14`).
 - `9746c86` (s119, 2026-10-13 ≈ 13:09 UTC): the Texas guide. CI #160 green; live by ≈ 13:14 UTC (worker `web-0919fef5660e-14`; `/guides/texas-virtual-staging-rules` loads with its title and all nine sections).

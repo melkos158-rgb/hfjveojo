@@ -205,7 +205,7 @@ export default function VirtualStagingCostGuide() {
       <ul className="mt-4">
         <li><strong>Versions and revisions.</strong> Check how many versions of each photo you get and what a redo costs.</li>
         <li><strong>Subscriptions.</strong> The per-photo price of a plan is only low if you use its credits every month, and the cheapest monthly price usually means paying for the year up front.</li>
-        <li><strong>Disclosure.</strong> Most MLSs, and California&apos;s AB 723, require staged photos to be disclosed; labeled copies save you time (see the <Link href="/guides/ab-723-virtual-staging">AB 723 checklist</Link>).</li>
+        <li><strong>Disclosure.</strong> Most MLSs, and California&apos;s AB 723, require staged photos to be disclosed; labeled copies save you time. The wording for each place is in our <Link href="/guides/virtual-staging-disclaimer">disclaimer examples</Link>, with checklists for <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS</Link>, <Link href="/guides/armls-virtual-staging">ARMLS</Link>, <Link href="/guides/texas-virtual-staging-rules">Texas</Link> and <Link href="/guides/ab-723-virtual-staging">AB 723</Link>.</li>
         <li><strong>The photo you start with.</strong> A dark, tilted or fisheye photo stages badly at any price (see <Link href="/guides/photographing-rooms-for-virtual-staging">10 photo tips</Link>).</li>
       </ul>
 

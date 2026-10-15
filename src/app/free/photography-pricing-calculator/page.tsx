@@ -185,6 +185,10 @@ export default function PricingCalculatorPage() {
               <Link href="/guides/virtual-staging-cost" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
                 See what virtual staging costs in 2026
               </Link>
+              , or, to sell it as an add-on,{" "}
+              <Link href="/guides/virtual-staging-pricing-for-photographers" className="underline decoration-accent/60 underline-offset-4 hover:text-fg">
+                what 12 real estate photographers charge for it
+              </Link>
               .
             </p>
           </div>

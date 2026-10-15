@@ -145,6 +145,10 @@ export default function FairHousingWordsGuide() {
           Paste the remarks into the <Link href="/free/fair-housing-checker">free fair housing checker</Link> — it highlights these phrases and counts characters against your MLS limit. Nothing you paste leaves your browser.
         </li>
         <li>Replace each flagged phrase with the feature it was hinting at: bedrooms, yard, layout, distances.</li>
+        <li>
+          If any photos are virtually staged, say so; some MLSs want a set line in the remarks (see the{" "}
+          <Link href="/guides/virtual-staging-disclaimer">virtual staging disclaimer examples</Link>).
+        </li>
       </ol>
 
       <div className="not-prose card mt-8">
