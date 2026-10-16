@@ -49,7 +49,7 @@ const WORDING: { where: string; write: string; rule: string; ours?: boolean }[] 
 const FAQ = [
   {
     q: "Do I have to disclose virtual staging?",
-    a: "In California, yes: AB 723 has required it for digitally altered listing photos since January 1, 2026. Elsewhere your MLS usually does: Stellar MLS, ARMLS, CRMLS, HAR and SABOR all have written rules for it. And NAR's Code of Ethics asks REALTORS® to present a true picture in their advertising.",
+    a: "In California, yes: AB 723 has required it for digitally altered listing photos since January 1, 2026, and Wisconsin's Act 69 adds a disclosure rule for advertising altered with technology from January 1, 2027. Elsewhere your MLS usually does: Stellar MLS, ARMLS, CRMLS, HAR and SABOR all have written rules for it. And NAR's Code of Ethics asks REALTORS® to present a true picture in their advertising.",
   },
   {
     q: "What's the difference between “virtually staged” and “digitally altered”?",
@@ -82,7 +82,7 @@ export default function VirtualStagingDisclaimerGuide() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-10-10",
-    dateModified: "2026-10-10",
+    dateModified: "2026-10-16",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -132,6 +132,12 @@ export default function VirtualStagingDisclaimerGuide() {
           <strong>Texas:</strong> HAR (Houston) and SABOR (San Antonio) limit staging to furnishings and wall décor and want it marked in the photo description (on SABOR, the
           &ldquo;virtually staged&rdquo; pick-list option); HAR adds a watermark and the unaltered photo next to any photo that changes the property itself.{" "}
           <Link href="/guides/texas-virtual-staging-rules">The Texas rules</Link>, NTREIS included.
+        </li>
+        <li>
+          <strong>Wisconsin (from January 1, 2027):</strong> 2025 Act 69 requires licensees to disclose in all advertising altered with technology, AI included, to add, remove or
+          change elements of the property &ldquo;that creates a false or misleading impression of the property&rdquo;. It doesn&apos;t say how or where, so label each staged
+          photo and note it in the remarks. New York and New Jersey have bills.{" "}
+          <Link href="/guides/virtual-staging-laws-by-state">Virtual staging laws by state</Link>.
         </li>
         <li>
           <strong>Everywhere:</strong> NAR&apos;s Code of Ethics asks REALTORS® to present a &ldquo;true picture&rdquo; in their advertising, online images included. Check your own
@@ -213,7 +219,7 @@ export default function VirtualStagingDisclaimerGuide() {
           </a>
         </li>
       </ul>
-      <p className="text-sm text-gray-500">General information, not legal advice. Checked against each source on October 10, 2026 (HAR on October 13); rules change, so check the current version and your broker&apos;s policy.</p>
+      <p className="text-sm text-gray-500">General information, not legal advice. Checked against each source on October 10, 2026 (HAR on October 13, Wisconsin on October 16); rules change, so check the current version and your broker&apos;s policy.</p>
     </div>
   );
 }

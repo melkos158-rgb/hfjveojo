@@ -33,7 +33,7 @@ export default function Ab723GuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-09-26",
-    dateModified: "2026-10-08",
+    dateModified: "2026-10-16",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/ab-723-virtual-staging`,
@@ -63,6 +63,7 @@ export default function Ab723GuidePage() {
         <li>A statement that the image has been altered, <strong>reasonably conspicuous and on or next to the image</strong> — &ldquo;Virtually staged&rdquo; or &ldquo;Digitally altered&rdquo;.</li>
         <li>Access to the original: on a website you control, show the unaltered version with the altered one (or link to it); everywhere else, a <strong>link, URL or QR code</strong> to a publicly accessible page with the original.</li>
         <li>It covers advertising and promotional materials for selling property by brokers, salespersons and anyone acting for them — portals, social posts, flyers and your own site, not just the MLS.</li>
+        <li>The law is section 10140.8 of the Business and Professions Code. The Department of Real Estate&apos;s March 17, 2026 advisory on AI repeats that licensees &ldquo;must also make the original, unaltered image available to consumers,&rdquo; and warns that skipping a review of AI-edited images &ldquo;may result in violations even if the alteration was unintentional.&rdquo;</li>
       </ul>
 
       <h2>How MLSs apply it</h2>
@@ -71,7 +72,7 @@ export default function Ab723GuidePage() {
         <li><strong>SDMLS</strong>: altered images must be clearly disclosed and paired with the unaltered original, across all MLS displays and downstream IDX, VOW and syndication feeds.</li>
         <li><strong>Bay East</strong>: label altered photos &ldquo;altered&rdquo;, &ldquo;digitally altered&rdquo; or &ldquo;AI altered&rdquo; with the Label option, upload the original and show it immediately after the altered image.</li>
       </ul>
-      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark and <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR in Texas</Link> want it in the photo description.</p>
+      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark and <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR in Texas</Link> want it in the photo description. Wisconsin&apos;s own law starts on January 1, 2027, and New York and New Jersey have bills: see <Link href="/guides/virtual-staging-laws-by-state">virtual staging laws by state</Link>.</p>
 
       <h2>The checklist</h2>
       <ol>
@@ -110,6 +111,9 @@ export default function Ab723GuidePage() {
       <ul>
         <li>
           <a href="https://legiscan.com/CA/text/AB723/id/3272851" target="_blank" rel="noopener noreferrer">AB 723 bill text (2025–2026 session)</a>
+        </li>
+        <li>
+          <a href="https://www.dre.ca.gov/Licensees/Advisories/Advisory_2026_03_17_AI_in_California_Real_Estate.html" target="_blank" rel="noopener noreferrer">California DRE — Artificial Intelligence in California Real Estate (advisory, March 17, 2026)</a>
         </li>
         <li>
           <a href="https://sdmls.com/ab-723-digitally-altered-images-sdmls-requirements/" target="_blank" rel="noopener noreferrer">SDMLS — AB 723: Digitally Altered Images requirements</a>

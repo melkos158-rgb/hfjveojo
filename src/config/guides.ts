@@ -19,7 +19,16 @@ export const GUIDES: Guide[] = [
     description: "Copy-ready disclosure wording for the photo, the MLS caption, the remarks, ads and social, and what Stellar MLS, ARMLS, CRMLS, HAR, SABOR and California's AB 723 each require.",
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-10-13T13:06:00Z",
+    updated: "2026-10-16",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
+    slug: "virtual-staging-laws-by-state",
+    title: "Virtual staging laws by state: California, Wisconsin, New York, New Jersey",
+    description: "Which states have a law for virtually staged and AI-edited listing photos: California's AB 723, Wisconsin's Act 69 from January 1, 2027, and the bills in New York and New Jersey.",
+    audience: "Real estate agents",
+    topic: "rules",
+    updated: "2026-10-16",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -28,7 +37,7 @@ export const GUIDES: Guide[] = [
     description: "What California's AB 723 requires for virtually staged listing photos since January 1, 2026 — and a 7-step checklist.",
     audience: "California agents",
     topic: "rules",
-    updated: "2026-10-09T07:15:00Z",
+    updated: "2026-10-16",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
