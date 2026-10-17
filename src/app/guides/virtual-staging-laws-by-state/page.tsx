@@ -107,7 +107,7 @@ export default function StateLawsGuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-10-16",
-    dateModified: "2026-10-16",
+    dateModified: "2026-10-17",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -278,8 +278,9 @@ export default function StateLawsGuidePage() {
         </li>
       </ul>
       <p>
-        The wording to paste in each place, the photo, the caption, the remarks, ads and social, is in our{" "}
-        <Link href="/guides/virtual-staging-disclaimer">virtual staging disclaimer examples</Link>.
+        More boards, from MRED in Chicago to Canopy MLS in Charlotte, are compared in{" "}
+        <Link href="/guides/virtual-staging-rules-by-mls">virtual staging rules by MLS</Link>. The wording to paste in each place, the photo, the caption, the remarks, ads and
+        social, is in our <Link href="/guides/virtual-staging-disclaimer">virtual staging disclaimer examples</Link>.
       </p>
 
       <h2>One checklist for every state</h2>

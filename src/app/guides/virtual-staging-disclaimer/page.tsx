@@ -82,7 +82,7 @@ export default function VirtualStagingDisclaimerGuide() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-10-10",
-    dateModified: "2026-10-16",
+    dateModified: "2026-10-17",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -132,6 +132,10 @@ export default function VirtualStagingDisclaimerGuide() {
           <strong>Texas:</strong> HAR (Houston) and SABOR (San Antonio) limit staging to furnishings and wall décor and want it marked in the photo description (on SABOR, the
           &ldquo;virtually staged&rdquo; pick-list option); HAR adds a watermark and the unaltered photo next to any photo that changes the property itself.{" "}
           <Link href="/guides/texas-virtual-staging-rules">The Texas rules</Link>, NTREIS included.
+        </li>
+        <li>
+          <strong>More boards:</strong> Bright MLS, MRED, Canopy MLS, FMLS, SmartMLS, MLS Now, NorthstarMLS and REcolorado each have their own rule, some with the label on
+          the photo, some in a field or the remarks. <Link href="/guides/virtual-staging-rules-by-mls">Virtual staging rules by MLS</Link>.
         </li>
         <li>
           <strong>Wisconsin (from January 1, 2027):</strong> 2025 Act 69 requires licensees to disclose in all advertising altered with technology, AI included, to add, remove or

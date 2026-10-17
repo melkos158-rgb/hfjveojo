@@ -1,3 +1,5 @@
+import { MLS_RULES } from "@/content/mls-staging-rules";
+
 /**
  * Every published guide — the /guides hub, the sitemap and the footer read this list, so a new guide is one entry here
  * plus its page under src/app/guides/<slug>/page.tsx.
@@ -19,7 +21,7 @@ export const GUIDES: Guide[] = [
     description: "Copy-ready disclosure wording for the photo, the MLS caption, the remarks, ads and social, and what Stellar MLS, ARMLS, CRMLS, HAR, SABOR and California's AB 723 each require.",
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-10-16",
+    updated: "2026-10-17",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -28,7 +30,16 @@ export const GUIDES: Guide[] = [
     description: "Which states have a law for virtually staged and AI-edited listing photos: California's AB 723, Wisconsin's Act 69 from January 1, 2027, and the bills in New York and New Jersey.",
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-10-16",
+    updated: "2026-10-17",
+    tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
+  },
+  {
+    slug: "virtual-staging-rules-by-mls",
+    title: `Virtual staging rules by MLS: ${MLS_RULES.length} boards compared`,
+    description: `Where ${MLS_RULES.length} MLSs want virtual staging disclosed (on the photo, in the caption, the remarks or a field), when the original must sit next to it, and what each bans.`,
+    audience: "Real estate agents",
+    topic: "rules",
+    updated: "2026-10-17",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
