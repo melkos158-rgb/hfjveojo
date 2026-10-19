@@ -63,6 +63,25 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
 
+## Snapshot — 2026-10-19 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
+
+- 676 / 192 page views and sessions (+1 / +1 since 18 Oct evening). The weekly report: 14 visits in 12–19 Oct, 52 the week before. Funnel 3 → 7 → 0; $0 revenue; AI $4.32; free first photos 0; prospect previews 0; delivered / review / failed 0 / 0 / 0.
+- Search Console, 28 days to 17 Oct: 248 impressions, 5 clicks (216 a week earlier).
+- E19: the tracker is unchanged (19 sent, 1 replied, 29 to do); nothing sent since 8 Oct. The gate is counted on 20 Oct.
+- Production: `/api/health` ok, worker `web-1f0b1e31d67f-14` (s129 `a9db951`, CI #170 green). The owner's computer was offline from the morning until the evening.
+
+## Snapshot — 2026-10-19 12:58 UTC (midday check-in; the owner's computer is still offline)
+
+- `/admin/analytics`, Search Console and Fiverr not read: no Chrome extension, no device bridge (retried). The site serves pages (the state laws guide loaded at 12:54 UTC, fetched from the cloud).
+- E19: the tracker is unchanged (19 sent, 1 replied, 29 to do); nothing sent since 8 Oct.
+- Prepared locally (ships with the next transfer): links from the Stellar, ARMLS and Texas guides to the MLS rules and state laws pages (s130).
+
+## Snapshot — 2026-10-19 06:58 UTC (morning check-in; the owner's computer is offline)
+
+- `/admin/analytics` and Search Console not read: the owner's computer is offline (no Chrome extension, no device bridge; retried). The site serves pages (the MLS rules guide loaded at 06:55 UTC, fetched from the cloud). The Search Console reading moves to the first run with the computer online.
+- E19: the tracker is unchanged (19 sent, 1 replied, 29 to do); nothing sent since 8 Oct. The court's 50 by 20 Oct needs 30 today and tomorrow.
+- Check-ins of 19 and 20 Oct exist.
+
 ## Snapshot — 2026-10-18 18:55 UTC (evening check-in, last 30 days, `/admin/analytics`)
 
 - 675 / 191 page views and sessions (+2 / +2 since 17 Oct evening; the daily report counts 1 visit on 17 Oct). Funnel 3 → 7 → 0; $0 revenue; AI $4.30; free first photos 0; prospect previews 0; delivered / review / failed 0 / 0 / 0.

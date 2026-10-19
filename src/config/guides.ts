@@ -57,7 +57,7 @@ export const GUIDES: Guide[] = [
     description: "How Stellar MLS wants virtually staged photos disclosed (description, checkbox, remarks), what you may not change, and a 7-step checklist.",
     audience: "Florida agents (Stellar MLS)",
     topic: "rules",
-    updated: "2026-10-09T07:15:00Z",
+    updated: "2026-10-19",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -66,7 +66,7 @@ export const GUIDES: Guide[] = [
     description: "How ARMLS wants staged photos disclosed since May 28, 2026: the Flexmls Digitally Altered watermark, the original next to it, the $200 fines from December, a checklist.",
     audience: "Arizona agents (ARMLS)",
     topic: "rules",
-    updated: "2026-10-10T13:00:00Z",
+    updated: "2026-10-19",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -75,7 +75,7 @@ export const GUIDES: Guide[] = [
     description: "How HAR (Houston), SABOR (San Antonio) and NTREIS (Dallas–Fort Worth) treat virtually staged photos, the state's advertising rule, and a checklist for Texas listings.",
     audience: "Texas agents (HAR, SABOR, NTREIS)",
     topic: "rules",
-    updated: "2026-10-13T13:06:00Z",
+    updated: "2026-10-19",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
