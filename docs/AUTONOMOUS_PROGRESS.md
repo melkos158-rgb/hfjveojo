@@ -265,7 +265,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## PRODUCTION STATUS
 
-- Last verified: 2026-10-19 ≈ 18:55 UTC (evening check-in). `/api/health` ok, worker `web-1f0b1e31d67f-14` (s129 `a9db951`, CI #170 green). `/admin/analytics` 676 / 192, 0 paid. Search Console 248 impressions / 5 clicks in 28 days. No sends since 8 Oct (20 of the court's 50 by 20 Oct; counted tomorrow evening). Week plan 20–26 Oct sent. Check-ins of 20 and 21 Oct exist.
+- Last verified: 2026-10-20 ≈ 06:58 UTC (morning check-in). `/api/health` ok, worker `web-ced3545b28a1-14` (s130 `13bd3b5`, CI #171 green). `/admin/analytics` 676 / 192, 0 paid, nothing overnight. Gate day: 20 owner-sent touches so far (counted again this evening). Check-ins of 20 and 21 Oct exist (21 Oct: `trig_01NPa9bLvAieMdAgbBmXD5PJ`, `trig_01Un2aHLykria9xbyyoreeUu`, `trig_01MaokxU7UdLtkr8LK6S9PCr`).
 - Earlier: 2026-10-15 ≈ 12:58 UTC (midday check-in). `/api/health` ok, worker `web-137f6fbe5ef2-14` (s122 `9e537d2`, CI #163 green). `/admin/analytics` 669 / 186, 0 paid. Fiverr 0 orders, inbox unchanged. No sends since 8 Oct.
 - Earlier: 2026-10-15 ≈ 06:58 UTC (morning check-in). `/api/health` ok, worker `web-665af4b9114b-14` (s121 `ba96bb3`, CI #162 green). `/admin/analytics` 669 / 186, 0 paid, nothing overnight. No sends since 8 Oct. Check-ins of 16 Oct exist.
 - Earlier: 2026-10-14 ≈ 18:55 UTC (evening check-in). The owner's computer is back. `/api/health` ok, worker `web-de1baa2e4def-14` (s120 `9904a50`, CI #161 green). `/admin/analytics` 666 / 183, 0 paid. No sends since 8 Oct; the plan's steps moved again (Thu 10 new, Fri 9 reminders + Lesley, Sat next 10). Check-ins of 15 and 16 Oct exist.
@@ -341,6 +341,7 @@ Never without his explicit yes: spending money or buying anything, publishing on
 
 ## LAST VERIFIED COMMIT
 
+- `13bd3b5` (s130, 2026-10-19 ≈ 18:58 UTC): board guides link the MLS rules and state laws pages; week plan 20–26 Oct. CI #171 green; Railway deployed by ≈ 19:04 UTC (worker `web-ced3545b28a1-14`; the ARMLS guide shows the new link).
 - `a9db951` (s129, docs, 2026-10-18 ≈ 18:56 UTC): check-ins of 18 Oct. CI #170 green; Railway deployed by ≈ 18:58 UTC (worker `web-1f0b1e31d67f-14`).
 - `ca5af49` (s128, docs, 2026-10-17 ≈ 18:57 UTC): evening check-in. CI #169 green; Railway deployed by ≈ 18:59 UTC (worker `web-2a3c9b91d6e6-14`).
 - `0a3625f` (s127, 2026-10-17 ≈ 13:22 UTC): MLS rules guide (17 boards). CI #168 green; Railway's image push was slow (≈ 10 minutes, Railway status fully operational), live by ≈ 13:36 UTC (worker `web-01b7ee7737fb-14`; the page and its sitemap entry, lastmod 17 Oct, checked). Search Console: "URL is not on Google", indexing requested ≈ 13:40 UTC.

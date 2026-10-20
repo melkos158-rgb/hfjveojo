@@ -46,6 +46,7 @@ None yet.
 
 ## Log
 
+- 2026-10-20 06:58 UTC — **E19 day 16, the court's gate day: 20 owner-sent touches so far.** Nothing sent since 8 Oct; the count closes at the evening run. Arizona cards (due today) moved to tomorrow so "Today" stays at 10.
 - 2026-10-19 19:05 UTC — **Week plan 20–26 Oct (Monday plan, sent to the owner).** Goal: take the court's gate count on 20 Oct and, in the expected passive mode, keep growing search traffic at zero cost.
   - Where we stand after 24 days live: $0 revenue, 0 paid orders, 0 free photos claimed. Spend: AI $4.32 in 30 days; ads €29.98 (E8, ended 1 Oct). Traffic: 676 / 192 page views and sessions in 30 days, 14 visits last week (52 the week before, when the group posts were fresh); Search Console 248 impressions and 5 clicks in 28 days (216 a week earlier). Outreach: 20 owner-sent touches, nothing since 8 Oct.
   - The gate (Tue 20 Oct, counted at the evening run): 50+ owner-sent touches by 20 Oct, now 20. Fewer than 50 means passive mode from 21 Oct (`docs/COURT_2026-10-06.md`): site and checkout stay live, 0 owner minutes, 0 new spend, the operator keeps shipping SEO. With 50+, the 10-a-day send pack continues (Arizona cards from 20 Oct).
