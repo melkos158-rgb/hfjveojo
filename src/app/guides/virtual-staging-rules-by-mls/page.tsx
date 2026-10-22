@@ -54,7 +54,7 @@ const FAQ = [
   },
   {
     q: "Can I put “Virtually staged” text on the photo?",
-    a: "On some boards you must (Canopy MLS, MLS Now, SmartMLS); on others you may not: Stellar MLS allows no words on photos and FMLS bans text superimposed on photos, while ARMLS allows only its own Flexmls watermark. Check your board's row before you upload, and keep a labeled copy for ads and social posts.",
+    a: "On some boards you must (Canopy MLS, Las Vegas REALTORS® MLS, MLS Now, MLSSAZ, SmartMLS); on others you may not: Stellar MLS allows no words on photos, BeachesMLS allows no text or overlays and FMLS bans text superimposed on photos, while ARMLS allows only its own Flexmls watermark. Check your board's row before you upload, and keep a labeled copy for ads and social posts.",
   },
   {
     q: "What if my MLS isn't listed?",
@@ -64,8 +64,9 @@ const FAQ = [
 
 /**
  * Board-by-board virtual staging rules (src/content/mls-staging-rules.ts). Eight boards were read on 17 Oct 2026 from
- * their own rules or help pages (Bright, NorthstarMLS, SmartMLS, MLS Now, REcolorado, MRED, Canopy, FMLS); the others
- * come from the board guides' sources. Rules we couldn't read are listed as such, never guessed.
+ * their own rules or help pages (Bright, NorthstarMLS, SmartMLS, MLS Now, REcolorado, MRED, Canopy, FMLS), two on
+ * 20 Oct 2026 (BeachesMLS, MLSSAZ) and two on 21 Oct 2026 (MetroList, Las Vegas REALTORS® MLS); the others come from
+ * the board guides' sources. Rules we couldn't read are listed as such, never guessed.
  */
 export default function MlsRulesGuidePage() {
   const articleLd = {
@@ -75,7 +76,7 @@ export default function MlsRulesGuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-10-17",
-    dateModified: "2026-10-17",
+    dateModified: "2026-10-21",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,

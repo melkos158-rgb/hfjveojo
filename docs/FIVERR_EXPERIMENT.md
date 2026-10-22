@@ -168,6 +168,8 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 3. Download the ZIP, **look at every image**, then deliver on Fiverr.
 
 ## LAST COMPLETED ACTION
+2026-10-20 12:57 UTC (midday check-in): **not checked**: the owner's computer was offline, so the browser extension couldn't be reached (third day running).
+
 2026-10-19 12:57 UTC (midday check-in): **not checked**: the owner's computer was offline, so the browser extension couldn't be reached (second day running).
 
 2026-10-18 12:57 UTC (midday check-in): **not checked**: the owner's computer was offline, so the browser extension couldn't be reached.
@@ -200,7 +202,7 @@ Follow `docs/FIVERR_GIG.md` → "Fulfilment through ORVIONIS":
 2026-09-28 11:20 UTC: Manage Orders shows 0 in every status. `/inbox` showed Fiverr's human check again, after a 45-second pause; it was left for the owner. The inbox is gated for the operator's visits every time, so from now on the second page is the seller dashboard (impressions / clicks), not the inbox.
 2026-09-27 11:05 UTC: Manage Orders shows 0 in every status. The inbox was behind Fiverr's human check, which was left for the owner. (26 Sep 22:20 UTC+2: gig verified Active, two phishing senders reported and blocked, owner's order-verification rules recorded.)
 ## NEXT EXACT ACTION
-1. Once a day at the 11:03 UTC check-in: **Manage Orders only** (the only order truth). The inbox (27–28 Sep) and the seller dashboard (29 Sep) both showed Fiverr's human check for the operator; the owner reads them. If the check shows anywhere, stop and leave it for the owner.
+1. Passive mode from 21 Oct (the court's gate): **once a week, at the Monday midday check-in** (before that, daily at midday): **Manage Orders only** (the only order truth). The inbox (27–28 Sep) and the seller dashboard (29 Sep) both showed Fiverr's human check for the operator; the owner reads them. If the check shows anywhere, stop and leave it for the owner.
 2. For any new inbox message, apply ORDER VERIFICATION RULES first. Replies to real buyers are drafted and sent only with the owner's approval.
 3. After 14 days live or 300 impressions: review pricing hypothesis H1.
 4. When a real order is delivered, ask the buyer's permission before adding it to the portfolio. Until then, the stock-photo sample is the only project.

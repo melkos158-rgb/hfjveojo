@@ -63,6 +63,36 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
 
+## Snapshot — 2026-10-21 18:55 UTC (evening check-in; the owner's computer is offline)
+
+- `/admin/analytics` not read: the computer has been offline since 20 Oct ≈ 07:00 UTC (no device bridge, no Chrome extension; retried). The site serves pages (the AB 723 guide loaded at 18:54 UTC, fetched from the cloud).
+- Tracker unchanged (20 touches, no new replies). No owner message: passive mode, nothing to report.
+- Check-ins of 22 and 23 Oct exist.
+
+## Snapshot — 2026-10-21 13:10 UTC (midday check-in; the owner's computer is offline)
+
+- `/admin/analytics` not read (no device bridge, no Chrome extension; retried). No Fiverr look: Mondays only in passive mode.
+- Prepared locally (ships with s132): MetroList and Las Vegas REALTORS® MLS on the MLS rules page (21 boards), MetroList in the AB 723 guide.
+
+## Snapshot — 2026-10-21 06:55 UTC (morning check-in, passive mode day 1; the owner's computer is offline)
+
+- `/admin/analytics` not read: the computer has been offline since 20 Oct ≈ 07:00 UTC (no device bridge, no Chrome extension; retried). The site serves pages: the MLS rules guide loaded at 06:55 UTC, still showing 17 boards because s132 hasn't shipped.
+- Tracker unchanged overnight: 20 owner-sent touches (19 sent, 1 replied), 29 to do; no new replies.
+- Check-ins of 21 and 22 Oct exist.
+
+## Snapshot — 2026-10-20 18:55 UTC (evening check-in; the owner's computer is offline)
+
+- **The court's gate: 20 owner-sent touches by 20 Oct (19 sent, 1 replied; the last on 8 Oct), below the 50 it set → passive mode from 21 Oct** (`docs/COURT_2026-10-06.md`).
+- `/admin/analytics` not read: the computer has been offline since ≈ 07:00 UTC (no device bridge, no Chrome extension; retried). The last reading (06:58 UTC) stands: 676 / 192, $0 revenue, 0 paid orders, 0 free photos, AI $4.33. The site serves pages (the state laws guide loaded at ≈ 18:55 UTC, fetched from the cloud).
+- Waiting for the computer: the s132 transfer (BeachesMLS and MLSSAZ on the MLS rules page, the gate docs), the s131 CI and deploy check, the vault.
+
+## Snapshot — 2026-10-20 12:58 UTC (midday check-in; the owner's computer is offline)
+
+- `/admin/analytics` and Fiverr not read: no device bridge, no Chrome extension (retried). The site serves pages (the MLS rules guide loaded during the check, fetched from the cloud).
+- E19: 20 owner-sent touches (19 sent, 1 replied), 29 to do; the only tracker change since the morning is the Arizona cards' new date (21 Oct). The gate is counted at the evening run.
+- s131 (`06601b1`, docs): CI and the deploy not confirmed yet. GitHub's commit list is closed to the cloud fetcher and its Actions page came back as an old copy, so both are checked at the evening run.
+- Prepared locally (ships with the next transfer): BeachesMLS and MLSSAZ on the MLS rules page (19 boards), with links from the Stellar and ARMLS guides (s132).
+
 ## Snapshot — 2026-10-20 06:58 UTC (morning check-in, last 30 days, `/admin/analytics`)
 
 - 676 / 192 page views and sessions (no change overnight; the daily report counts 1 visit on 19 Oct). No overnight orders, free photos, prospect previews, photo warnings or Pro credits purchases; funnel 3 → 7 → 0; $0 revenue; AI $4.33.

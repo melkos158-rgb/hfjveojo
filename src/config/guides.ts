@@ -39,7 +39,7 @@ export const GUIDES: Guide[] = [
     description: `Where ${MLS_RULES.length} MLSs want virtual staging disclosed (on the photo, in the caption, the remarks or a field), when the original must sit next to it, and what each bans.`,
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-10-17",
+    updated: "2026-10-21",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -48,7 +48,7 @@ export const GUIDES: Guide[] = [
     description: "What California's AB 723 requires for virtually staged listing photos since January 1, 2026 — and a 7-step checklist.",
     audience: "California agents",
     topic: "rules",
-    updated: "2026-10-16",
+    updated: "2026-10-21",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -57,7 +57,7 @@ export const GUIDES: Guide[] = [
     description: "How Stellar MLS wants virtually staged photos disclosed (description, checkbox, remarks), what you may not change, and a 7-step checklist.",
     audience: "Florida agents (Stellar MLS)",
     topic: "rules",
-    updated: "2026-10-19",
+    updated: "2026-10-20",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -66,7 +66,7 @@ export const GUIDES: Guide[] = [
     description: "How ARMLS wants staged photos disclosed since May 28, 2026: the Flexmls Digitally Altered watermark, the original next to it, the $200 fines from December, a checklist.",
     audience: "Arizona agents (ARMLS)",
     topic: "rules",
-    updated: "2026-10-19",
+    updated: "2026-10-20",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {

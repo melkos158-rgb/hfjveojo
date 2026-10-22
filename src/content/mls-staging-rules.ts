@@ -55,6 +55,30 @@ export const MLS_RULES: MlsRule[] = [
     guide: "/guides/stellar-mls-virtual-staging",
   },
   {
+    slug: "beachesmls",
+    name: "BeachesMLS",
+    area: "Southeast Florida",
+    state: "FL",
+    status: "rule",
+    disclose: ["caption", "remarks"],
+    discloseText:
+      "Staged photos identified as virtually staged within the first 180 characters of the public remarks and of the photo descriptions. No text or overlays on the photo, except to identify an exterior's location.",
+    original: "not-addressed",
+    originalText: "Not part of the rule.",
+    notes: [
+      "Photos may show only the property's physical characteristics and its vicinity; no watermarks other than the BeachesMLS logo.",
+      "A violation gets a courtesy notice with a 2–7 day grace period, then a fine if it isn't fixed (the page gives no amount).",
+    ],
+    source: { label: "Miami REALTORS® + RWorld — Compliance Center (BeachesMLS photo rules)", url: "https://rworld.com/compliance-center" },
+    extraSources: [
+      {
+        label: "BeachesMLS Rules and Regulations (effective September 24, 2019), 3.2.2",
+        url: "https://static1.squarespace.com/static/5dd6e5c4baf69652ee450b55/t/5e1cbab92bf3993c8a06180e/1578941114625/BeachesMLS%2BRules%2Band%2BRegulations%2B.pdf",
+      },
+    ],
+    checked: "2026-10-20",
+  },
+  {
     slug: "armls",
     name: "ARMLS",
     area: "Phoenix area, Arizona",
@@ -68,6 +92,30 @@ export const MLS_RULES: MlsRule[] = [
     source: { label: "ARMLS — Digitally Altered Media (Rule 8.23)", url: "https://armls.com/digitally-altered-media" },
     checked: "2026-10-09",
     guide: "/guides/armls-virtual-staging",
+  },
+  {
+    slug: "mlssaz",
+    name: "MLSSAZ",
+    area: "Tucson and Southern Arizona",
+    state: "AZ",
+    status: "rule",
+    disclose: ["photo"],
+    discloseText:
+      "A “virtual staged” disclosure placed prominently along the top of each staged photo. Other writing, banners, borders and logos aren't allowed on MLS photos.",
+    original: "required",
+    originalText: "An unmodified copy of the photo next to the staged one.",
+    notes: [
+      "Virtual home staging is on the list of allowed enhancements, with color saturation, brightness and contrast, and cropping (Rule 1.19(I)).",
+      "An artist's rendering needs an “Artist Rendering Only” banner on the photo (Rule 1.19(J)).",
+      "A Section 1.19 photo violation is a $150 fine (fine schedule in the July 2024 rules update).",
+      "The current rulebook is in the members' Flexmls library; the public copy we read is the edition effective March 22, 2022.",
+    ],
+    source: {
+      label: "MLSSAZ Rules and Regulations (effective March 22, 2022), 1.19(I)",
+      url: "https://www.tucsonrealtors.org/wp-content/uploads/MLSSAZ-Rules-Regulations-5.5.2022-MASTER-COPY-1.pdf",
+    },
+    extraSources: [{ label: "MLSSAZ Rules and Regulations Update (adopted July 29, 2024)", url: "https://mlssaz.com/wp-content/uploads/2024/09/MLSSAZ-Rules-and-Regulations-2024-Update.pdf" }],
+    checked: "2026-10-20",
   },
   {
     slug: "crmls",
@@ -112,6 +160,25 @@ export const MLS_RULES: MlsRule[] = [
     notes: ["Written for California's AB 723."],
     source: { label: "Bay East — Digitally Altered MLS Photo Rule", url: "https://bayeast.org/digitally-altered-mls-photo-rule/" },
     checked: "2026-10-10",
+    guide: "/guides/ab-723-virtual-staging",
+  },
+  {
+    slug: "metrolist",
+    name: "MetroList",
+    area: "Sacramento area, California",
+    state: "CA",
+    status: "rule",
+    disclose: ["caption"],
+    discloseText:
+      "A reasonably conspicuous statement on the altered photo or next to it that says it was altered, links to a public website, URL or QR code showing the unaltered original, and says the original can be seen there.",
+    original: "required",
+    originalText: "An unaltered version included with the listing, recommended right after the altered photo.",
+    notes: [
+      "Rule 11.6.1 writes California's AB 723 (Business and Professions Code §10140.8) into the MLS rules.",
+      "Rule 11.6 otherwise bars logos, contact information, text or graphics of any kind in MLS photos; photo violations draw citations under Addendum B.",
+    ],
+    source: { label: "MetroList MLS Rules (effective June 1, 2026), 11.6.1", url: "https://prospector.metrolist.net/documents/mls_rules/MLS_Rules.pdf" },
+    checked: "2026-10-21",
     guide: "/guides/ab-723-virtual-staging",
   },
   {
@@ -314,6 +381,25 @@ export const MLS_RULES: MlsRule[] = [
     ],
     source: { label: "FMLS Rules and Regulations (effective March 17, 2025), 20.1(e)", url: "https://firstmls.com/wp-content/uploads/2025/03/RR2.0_3_18_25-2.pdf" },
     checked: "2026-10-17",
+  },
+  {
+    slug: "las-vegas",
+    name: "Las Vegas REALTORS® MLS",
+    area: "Las Vegas, Nevada",
+    state: "NV",
+    status: "rule",
+    disclose: ["photo", "caption"],
+    discloseText: "“Virtually Staged” on the image in a clear, reasonably sized font, and again in the photo's description field.",
+    original: "not-addressed",
+    originalText: "Not part of the rule.",
+    notes: [
+      "Allowed: adding or replacing furniture, art, mirrors and plants; on exteriors, personal property only; renderings for homes under construction.",
+      "Banned: removing, altering or adding permanent fixtures, adding things outside the owner's control or hiding negative ones, and branding or people on the photos.",
+      "A violation means every photo but the front one comes down and a $250 fine per occurrence (Rule 9.7).",
+      "The public rulebook is the October 2022 revision; an April 2026 update changed listing procedures (Section 4), not the photo rule. The association was known as GLVAR.",
+    ],
+    source: { label: "Las Vegas REALTORS® MLS Rules and Regulations (revised October 2022), 9.7", url: "https://members.lasvegasrealtor.com/mls/pdf/MLS-Rules-And-Regulations.pdf" },
+    checked: "2026-10-21",
   },
 ];
 

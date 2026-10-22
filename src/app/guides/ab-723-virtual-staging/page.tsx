@@ -33,7 +33,7 @@ export default function Ab723GuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-09-26",
-    dateModified: "2026-10-16",
+    dateModified: "2026-10-21",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/ab-723-virtual-staging`,
@@ -67,12 +67,13 @@ export default function Ab723GuidePage() {
       </ul>
 
       <h2>How MLSs apply it</h2>
-      <p>Boards turned the law into listing rules, and the details differ — two examples:</p>
+      <p>Boards turned the law into listing rules, and the details differ — three examples:</p>
       <ul>
         <li><strong>SDMLS</strong>: altered images must be clearly disclosed and paired with the unaltered original, across all MLS displays and downstream IDX, VOW and syndication feeds.</li>
         <li><strong>Bay East</strong>: label altered photos &ldquo;altered&rdquo;, &ldquo;digitally altered&rdquo; or &ldquo;AI altered&rdquo; with the Label option, upload the original and show it immediately after the altered image.</li>
+        <li><strong>MetroList</strong> (Sacramento): a reasonably conspicuous statement on or next to the altered photo that links to a public page or QR code with the original, plus the unaltered version in the listing, recommended right after it (Rule 11.6.1).</li>
       </ul>
-      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark and <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR in Texas</Link> want it in the photo description. Wisconsin&apos;s own law starts on January 1, 2027, and New York and New Jersey have bills: see <Link href="/guides/virtual-staging-laws-by-state">virtual staging laws by state</Link>.</p>
+      <p>Check your own MLS&apos;s wording before you upload; the listing agent and broker stay responsible whoever edited the photos. These boards and CRMLS sit side by side with others in <Link href="/guides/virtual-staging-rules-by-mls">virtual staging rules by MLS</Link>. Outside California the rules differ: <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> bans words on photos and wants the disclosure in the description and remarks, while <Link href="/guides/armls-virtual-staging">ARMLS in Arizona</Link> requires its own &ldquo;Digitally Altered&rdquo; watermark and <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR in Texas</Link> want it in the photo description. Wisconsin&apos;s own law starts on January 1, 2027, and New York and New Jersey have bills: see <Link href="/guides/virtual-staging-laws-by-state">virtual staging laws by state</Link>.</p>
 
       <h2>The checklist</h2>
       <ol>
@@ -120,6 +121,9 @@ export default function Ab723GuidePage() {
         </li>
         <li>
           <a href="https://bayeast.org/digitally-altered-mls-photo-rule/" target="_blank" rel="noopener noreferrer">Bay East — Digitally Altered MLS Photo Rule</a>
+        </li>
+        <li>
+          <a href="https://prospector.metrolist.net/documents/mls_rules/MLS_Rules.pdf" target="_blank" rel="noopener noreferrer">MetroList MLS Rules (effective June 1, 2026), Rule 11.6.1</a>
         </li>
         <li>
           <a href="https://pfar.org/californias-new-altered-image-law-ab-723-what-real-estate-pros-need-to-know-starting-january-1st-2026/" target="_blank" rel="noopener noreferrer">Pasadena-Foothills REALTORS® — what real estate pros need to know</a>

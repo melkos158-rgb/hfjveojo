@@ -52,7 +52,7 @@ export default function ArmlsGuidePage() {
     description: DESCRIPTION,
     image: `${site.url}/img/sample-virtual-staging-og.jpg`,
     datePublished: "2026-10-09",
-    dateModified: "2026-10-19",
+    dateModified: "2026-10-20",
     author: { "@type": "Organization", name: site.name, url: site.url },
     publisher: { "@type": "Organization", name: site.name, logo: { "@type": "ImageObject", url: `${site.url}/brand/orvionis-logo-512.png` } },
     mainEntityOfPage: `${site.url}/guides/${SLUG}`,
@@ -178,7 +178,8 @@ export default function ArmlsGuidePage() {
         </Link>
       </p>
       <p>
-        Listing elsewhere? <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> wants no words or watermark on the photo at all, only a description,
+        Listing in Tucson? <Link href="/guides/virtual-staging-rules-by-mls#mlssaz">MLSSAZ</Link>, the Southern Arizona MLS, has its own rule: a &ldquo;virtual staged&rdquo;
+        label along the top of the photo and the unmodified photo next to it. Listing elsewhere? <Link href="/guides/stellar-mls-virtual-staging">Stellar MLS in Florida</Link> wants no words or watermark on the photo at all, only a description,
         a checkbox and a line in the remarks, and in California <Link href="/guides/ab-723-virtual-staging">AB 723</Link> puts the label on or next to the image and requires access to
         the original. In Texas, <Link href="/guides/texas-virtual-staging-rules">HAR and SABOR</Link> want the disclosure in the photo description. The wording for each place is in our <Link href="/guides/virtual-staging-disclaimer">virtual staging disclaimer examples</Link>. Other boards, from Bright MLS to Canopy MLS, are compared in <Link href="/guides/virtual-staging-rules-by-mls">virtual staging rules by MLS</Link>, and the state laws (California now, Wisconsin from 2027) in <Link href="/guides/virtual-staging-laws-by-state">virtual staging laws by state</Link>.
       </p>
