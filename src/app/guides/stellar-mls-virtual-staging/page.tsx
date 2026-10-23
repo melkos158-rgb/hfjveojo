@@ -6,7 +6,7 @@ import { STAGING_PRICE_LINE } from "@/config/staging-pricing";
 const SLUG = "stellar-mls-virtual-staging";
 const TITLE = "Virtual staging on Stellar MLS: the rules and a checklist (2026)";
 const DESCRIPTION =
-  "Stellar MLS allows virtual staging if you disclose it in the photo description, the checkbox and the remarks. No words on photos, no exteriors, no pre-construction.";
+  "Stellar MLS allows virtual staging disclosed in the photo description, the checkbox and the remarks. No words on photos, no exteriors, no pre-construction.";
 const RULE_URL = "https://rules.stellarmls.com/hc/en-us/articles/14692987795095-Article-04-04-Virtually-Staged-Photos";
 
 export const metadata: Metadata = {

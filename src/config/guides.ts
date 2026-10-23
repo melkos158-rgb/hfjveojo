@@ -48,7 +48,7 @@ export const GUIDES: Guide[] = [
     description: "What California's AB 723 requires for virtually staged listing photos since January 1, 2026 — and a 7-step checklist.",
     audience: "California agents",
     topic: "rules",
-    updated: "2026-10-21",
+    updated: "2026-10-22",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -57,7 +57,7 @@ export const GUIDES: Guide[] = [
     description: "How Stellar MLS wants virtually staged photos disclosed (description, checkbox, remarks), what you may not change, and a 7-step checklist.",
     audience: "Florida agents (Stellar MLS)",
     topic: "rules",
-    updated: "2026-10-20",
+    updated: "2026-10-22",
     tool: { slug: "virtual-staging", label: "Virtual Staging — first photo free" },
   },
   {
@@ -84,7 +84,7 @@ export const GUIDES: Guide[] = [
     description: "What the Fair Housing Act says about ads, what HUD's guidance allows, and the phrases to rewrite — each with a safer alternative.",
     audience: "Real estate agents",
     topic: "rules",
-    updated: "2026-09-26",
+    updated: "2026-10-22",
     tool: { slug: "listing-description", label: "Listing Description — $9" },
   },
   {

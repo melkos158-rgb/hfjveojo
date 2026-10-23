@@ -63,6 +63,23 @@ Currencies: revenue in USD (Stripe prices), ad spend in EUR. ROAS converts spend
 | 2026-10-03 | Marketing lab, room-type test: OpenAI image edits (gpt-image-2 medium) on 8 stock photos of two kitchens, two bathrooms, a dining room, an office, a porch and a pool, plus two quality tests (a living room at 480 px, a wide-angle living room); 15 runs × 2 versions | the owner's question: only living rooms and bedrooms had been tested, and bad photos may stage badly | room-specific prompt lines make every room type in the form keep the "fixtures untouched" promise | each room type in the form passes a lab run; failing ones get a fix or leave the form | lab contact sheets: fixtures kept, nothing added that isn't movable | the same code guard (35 % of the $5 daily AI budget, which allows 15 runs a day) | 3 rounds, 15 runs by 18:18 UTC, cost-log estimate **≈ $1.65**. `/admin/analytics` AI spend $2.07 (12:55 UTC) → $3.72 (18:55 UTC). Results: s77 room lines, bathroom in the form (s78), kitchen spotlights kept in round 3. The 16th run (the bathroom) ran after 00:00 UTC on 4 Oct, +$0.11 (AI $3.83 at 06:55 UTC); one version hung a new towel bar, so s80 adds round 4 (2 bathroom runs, ≈ $0.22, done by 07:09 UTC: all 4 versions clean). Used in `video-v10` |
 | 2026-10-02 | Higgsfield Pro plan (bought by the owner himself; price paid not recorded here) + AI video credits | E15 short videos: the owner asked for "the most awesome video" | an AI "room stages itself" shot built from the real before/after lifts views and clicks above v4–v6 | v7 beats v6 on views and on tagged visits (`tiktok`, `ig`, `instagram_dm`) within 7 days | views per video, tagged visits, free first photos claimed | operator's own cap: use credits only for the shots a video needs | 2 Oct: 4 test shots (Kling 8.75, MiniMax H3 10, Gemini Omni 22.5, Seedance 2.0 45) = **86.25 credits**, balance 678.65 → **592.4**. MiniMax H3 used in `video-v7` |
 
+## Snapshot — 2026-10-23 07:05 UTC (morning check-in, last 30 days, `/admin/analytics`)
+
+- 681 / 197 page views and sessions (676 / 192 on 20 Oct; the daily report counts 1 visit on 22 Oct). Funnel 3 → 7 → 0; $0 revenue; AI $4.35. Free first photos 0, prospect previews 0, photo warnings 0; delivered / review / failed 0 / 0 / 0; free tool uses 24. First touch: direct 577, google 39, www.google.com 26, fb_group 14.
+- Production: `/api/health` ok, jobs 0 / 0 / 0, new worker `web-5e4675267973-14` (8,142 ticks): Railway built and deployed s132–s133 on 22 Oct after its outage. The MLS rules page shows 21 boards, the ARMLS guide the Tucson line; CI #173 and #174 green.
+- Search Console: the MLS rules page is now "URL is on Google"; re-indexing requested after the 21-board update (≈ 07:00 UTC).
+
+## Snapshot — 2026-10-22 18:58 UTC (evening check-in; the owner's computer is offline)
+
+- s132 looks live: the sitemap lists the MLS rules and AB 723 guides with lastmod 21 Oct and the AB 723 guide names MetroList; two other cloud fetches (the MLS rules page, the ARMLS guide) still returned the old text, so the deploy is confirmed from the owner's computer at the next run. Railway (15:29 UTC): builds for Pro and Enterprise run, Hobby and Free not yet; incident open.
+- `/admin/analytics` not read (computer offline, no Chrome extension). Tracker unchanged. No owner message (passive mode; the Railway checklist went out this morning).
+- Check-ins of 23 and 24 Oct exist.
+
+## Snapshot — 2026-10-22 13:15 UTC (midday check-in; the owner's computer is offline again)
+
+- Railway (status page, 12:30 UTC): builds are back for Pro workspaces, not yet for Hobby or Free; the incident is still open. s132 is not live yet (the MLS rules page shows 17 boards).
+- `/admin/analytics` not read. Tracker unchanged. Prepared locally (ships with s134): shorter search snippets on the fair-housing, AB 723, Stellar and Virtual Staging pages.
+
 ## Snapshot — 2026-10-22 07:15 UTC (morning check-in; the computer is back, the Chrome extension isn't)
 
 - **Incident (not ours): Railway's security disclosure and platform outage of 21 Oct.** Customers' environment variables may have been read; builds and deploys are paused platform-wide. The owner got the key-rotation checklist. Production keeps serving: `/api/health` ok, jobs 0 / 0 / 0, worker `web-e6eae51c60bb-14`.

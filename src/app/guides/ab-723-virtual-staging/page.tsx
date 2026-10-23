@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
 
-const TITLE = "AB 723 and virtual staging: what California agents must do (2026 checklist)";
+const TITLE = "AB 723 virtual staging: what California agents must do (2026)";
 const DESCRIPTION =
-  "Since January 1, 2026, California's AB 723 requires a disclosure next to virtually staged and other digitally altered listing photos, plus access to the original. What counts, what MLSs ask for, and a 7-step checklist.";
+  "Since Jan 1, 2026, California's AB 723 requires a disclosure on or next to altered listing photos and access to the original. MLS rules and a checklist.";
 
 export const metadata: Metadata = {
   title: TITLE,

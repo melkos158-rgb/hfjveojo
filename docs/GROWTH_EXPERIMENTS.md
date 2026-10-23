@@ -46,6 +46,8 @@ None yet.
 
 ## Log
 
+- 2026-10-23 07:05 UTC — **Passive mode, day 3.** 681 / 197 in 30 days (+5 / +5 since 20 Oct), no orders, no free photos. s132–s133 are live (Railway deployed them on 22 Oct); the MLS rules page is on Google now. Tracker unchanged.
+- 2026-10-22 18:58 UTC — **Passive mode, day 2, evening.** s132 appears deployed (sitemap dates of 21 Oct, MetroList in the AB 723 guide), to be confirmed from the device. Tracker unchanged; no owner message.
 - 2026-10-22 07:15 UTC — **Passive mode, day 2: Railway incident.** The owner's computer is back and s132 went to GitHub (`b01f15f`, CI green), but Railway paused all builds after a security incident on 21 Oct (customers' environment variables may have been read), so the new MLS rows wait. The owner got the checklist to roll every production key; Stripe and OpenAI usage checks are part of it. Tracker unchanged.
 - 2026-10-21 18:55 UTC — **Passive mode, day 1, evening.** Tracker unchanged; the computer still offline, so no analytics and no transfer. Today's SEO item (MetroList and Las Vegas on the MLS rules page, MetroList in the AB 723 guide) waits in s132 with yesterday's work. No owner message (passive: Mondays, incidents and orders only).
 - 2026-10-21 06:55 UTC — **Passive mode, day 1.** The tracker is unchanged (20 touches, no new replies). The owner's computer has been offline since 20 Oct ≈ 07:00 UTC, so analytics and the s132 transfer wait; the site serves pages.

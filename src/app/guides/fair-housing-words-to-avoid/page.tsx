@@ -6,8 +6,8 @@ import { FAIR_HOUSING_RULES } from "@/lib/tools/qa";
 const PATH = "/guides/fair-housing-words-to-avoid";
 const OG_IMAGE = "/free/fair-housing-checker/opengraph-image";
 const TITLE = "Fair housing words to avoid in listing descriptions (2026)";
-const DESCRIPTION =
-  "The Fair Housing Act bars ads that show a preference based on race, color, religion, sex, disability, familial status or national origin. What HUD's guidance allows, the phrases to rewrite, and a safer alternative for each.";
+/** Search snippet, kept under ~155 characters so Google shows it whole; the count follows the phrase table. */
+const DESCRIPTION = `${FAIR_HOUSING_RULES.filter((r) => r.severity === "risk").length} risky listing phrases under fair housing rules, each with a safer rewrite, what HUD allows (“master bedroom” is fine) and a free checker.`;
 
 export const metadata: Metadata = {
   title: TITLE,

@@ -288,7 +288,7 @@ export const virtualStagingTool: ToolDefinition<VirtualStagingIntake> = {
   },
   seo: {
     title: "AI virtual staging — first photo free, then $15 per photo | ORVIONIS",
-    description: "Upload photos of empty rooms, pick one of six styles and get two photorealistic AI-staged versions of each photo in about two minutes. First photo free, then $15 a room or $49 for a whole listing, no subscription.",
+    description: "Two photorealistic staged versions of each empty room in about two minutes. First photo free, then $15 a room or $49 for a whole listing. No subscription.",
     keywords: ["virtual staging", "virtual staging software", "virtually staged photos", "AI virtual staging", "empty room staging"],
     ogImage: "img/sample-virtual-staging-og.jpg",
   },
