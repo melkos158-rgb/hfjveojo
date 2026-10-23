@@ -8,8 +8,20 @@ import { ToolCard, toolCardProps } from "@/components/ToolCard";
 import { formatUsd } from "@/lib/ai/pricing";
 import { CATEGORIES } from "@/config/categories";
 import { SAMPLE_MLS_DESCRIPTION } from "@/lib/tools/samples/listing-description";
+import { GUIDES, type Guide } from "@/config/guides";
 
 export const dynamic = "force-dynamic";
+
+/** The guides the home page links to directly: the pricing guide and the rules cluster that ranks (Search Console, Oct 2026). */
+const HOME_GUIDE_SLUGS = [
+  "virtual-staging-cost",
+  "virtual-staging-rules-by-mls",
+  "virtual-staging-laws-by-state",
+  "virtual-staging-disclaimer",
+  "ab-723-virtual-staging",
+  "fair-housing-words-to-avoid",
+];
+const HOME_GUIDES = HOME_GUIDE_SLUGS.map((slug) => GUIDES.find((g) => g.slug === slug)).filter((g): g is Guide => Boolean(g));
 
 /** Search-result copy for the home page: every product and price here comes from the tool registry (see /pricing). */
 export const metadata: Metadata = {
@@ -419,6 +431,25 @@ export default async function HomePage() {
             refund policy
           </Link>
           .
+        </p>
+      </section>
+
+      {/* GUIDES */}
+      <section className="container-x pb-16">
+        <p className="eyebrow">Free guides</p>
+        <h2 className="mt-2 text-2xl font-bold sm:text-3xl">Rules and costs, checked against the sources</h2>
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {HOME_GUIDES.map((g) => (
+            <Link key={g.slug} href={`/guides/${g.slug}`} className="card block transition hover:border-accent">
+              <div className="font-semibold text-fg">{g.title}</div>
+              <p className="mt-1 text-sm text-gray-600">{g.description}</p>
+            </Link>
+          ))}
+        </div>
+        <p className="mt-4 text-sm">
+          <Link href="/guides" className="underline">
+            All guides
+          </Link>
         </p>
       </section>
 

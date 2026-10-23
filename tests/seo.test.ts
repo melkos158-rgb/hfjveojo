@@ -134,3 +134,16 @@ describe("seo: short links for places without a clickable link", () => {
     }
   });
 });
+
+describe("seo: the home page links the key guides directly", () => {
+  it("every slug in HOME_GUIDE_SLUGS is a published guide", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync("src/app/page.tsx", "utf8");
+    const block = src.match(/const HOME_GUIDE_SLUGS = \[([\s\S]*?)\];/);
+    expect(block).not.toBeNull();
+    const slugs = [...(block?.[1] ?? "").matchAll(/"([a-z0-9-]+)"/g)].map((m) => m[1]);
+    expect(slugs.length).toBeGreaterThanOrEqual(4);
+    const published = new Set(GUIDES.map((g) => g.slug));
+    for (const slug of slugs) expect(published.has(slug), slug).toBe(true);
+  });
+});
