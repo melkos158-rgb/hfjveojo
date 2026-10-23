@@ -46,6 +46,7 @@ None yet.
 
 ## Log
 
+- 2026-10-23 18:55 UTC — **Passive mode, day 3, evening.** 682 / 198, no orders or free photos. Shipped today: shorter snippets on four pages (s134) and six guide links on the home page (s135), both live. The 27 Oct gate (3+ real free photos) stands at 0.
 - 2026-10-23 07:05 UTC — **Passive mode, day 3.** 681 / 197 in 30 days (+5 / +5 since 20 Oct), no orders, no free photos. s132–s133 are live (Railway deployed them on 22 Oct); the MLS rules page is on Google now. Tracker unchanged.
 - 2026-10-22 18:58 UTC — **Passive mode, day 2, evening.** s132 appears deployed (sitemap dates of 21 Oct, MetroList in the AB 723 guide), to be confirmed from the device. Tracker unchanged; no owner message.
 - 2026-10-22 07:15 UTC — **Passive mode, day 2: Railway incident.** The owner's computer is back and s132 went to GitHub (`b01f15f`, CI green), but Railway paused all builds after a security incident on 21 Oct (customers' environment variables may have been read), so the new MLS rows wait. The owner got the checklist to roll every production key; Stripe and OpenAI usage checks are part of it. Tracker unchanged.
