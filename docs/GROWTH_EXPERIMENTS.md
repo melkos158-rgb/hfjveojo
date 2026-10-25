@@ -46,6 +46,7 @@ None yet.
 
 ## Log
 
+- 2026-10-25 19:55 UTC — **Passive mode, days 4–5 (weekend).** 683 → 686 visits and 199 → 201 sessions in 30 days, no orders, no free photos, tracker unchanged. The week plan for 27 Oct – 2 Nov is drafted for Monday evening.
 - 2026-10-23 18:55 UTC — **Passive mode, day 3, evening.** 682 / 198, no orders or free photos. Shipped today: shorter snippets on four pages (s134) and six guide links on the home page (s135), both live. The 27 Oct gate (3+ real free photos) stands at 0.
 - 2026-10-23 07:05 UTC — **Passive mode, day 3.** 681 / 197 in 30 days (+5 / +5 since 20 Oct), no orders, no free photos. s132–s133 are live (Railway deployed them on 22 Oct); the MLS rules page is on Google now. Tracker unchanged.
 - 2026-10-22 18:58 UTC — **Passive mode, day 2, evening.** s132 appears deployed (sitemap dates of 21 Oct, MetroList in the AB 723 guide), to be confirmed from the device. Tracker unchanged; no owner message.
